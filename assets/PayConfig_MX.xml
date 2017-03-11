@@ -1,0 +1,13 @@
+Error decode xml
+java.io.IOException: Decode error: Version is not 3, position: 0x2
+	at jadx.core.xmlgen.CommonBinaryParser.die(CommonBinaryParser.java:96)
+	at jadx.core.xmlgen.BinaryXMLParser.decode(BinaryXMLParser.java:95)
+	at jadx.core.xmlgen.BinaryXMLParser.parse(BinaryXMLParser.java:88)
+	at jadx.api.ResourcesLoader.loadContent(ResourcesLoader.java:106)
+	at jadx.api.ResourcesLoader.access$000(ResourcesLoader.java:25)
+	at jadx.api.ResourcesLoader$1.decode(ResourcesLoader.java:89)
+	at jadx.api.ResourcesLoader.decodeStream(ResourcesLoader.java:63)
+	at jadx.api.ResourcesLoader.loadContent(ResourcesLoader.java:82)
+	at jadx.api.ResourceFile.getContent(ResourceFile.java:52)
+	at jadx.api.JadxDecompiler$2.run(JadxDecompiler.java:173)
+

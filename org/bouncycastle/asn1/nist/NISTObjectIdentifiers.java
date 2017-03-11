@@ -1,0 +1,82 @@
+package org.bouncycastle.asn1.nist;
+
+import com.americanexpress.sdkmodulelib.util.Constants;
+import com.samsung.android.spayfw.payprovider.discover.payment.data.DiscoverInAppCryptoData;
+import com.samsung.android.spayfw.payprovider.visa.transaction.TransactionInfo;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+
+public interface NISTObjectIdentifiers {
+    public static final ASN1ObjectIdentifier aes;
+    public static final ASN1ObjectIdentifier dsa_with_sha224;
+    public static final ASN1ObjectIdentifier dsa_with_sha256;
+    public static final ASN1ObjectIdentifier dsa_with_sha384;
+    public static final ASN1ObjectIdentifier dsa_with_sha512;
+    public static final ASN1ObjectIdentifier hashAlgs;
+    public static final ASN1ObjectIdentifier id_aes128_CBC;
+    public static final ASN1ObjectIdentifier id_aes128_CCM;
+    public static final ASN1ObjectIdentifier id_aes128_CFB;
+    public static final ASN1ObjectIdentifier id_aes128_ECB;
+    public static final ASN1ObjectIdentifier id_aes128_GCM;
+    public static final ASN1ObjectIdentifier id_aes128_OFB;
+    public static final ASN1ObjectIdentifier id_aes128_wrap;
+    public static final ASN1ObjectIdentifier id_aes192_CBC;
+    public static final ASN1ObjectIdentifier id_aes192_CCM;
+    public static final ASN1ObjectIdentifier id_aes192_CFB;
+    public static final ASN1ObjectIdentifier id_aes192_ECB;
+    public static final ASN1ObjectIdentifier id_aes192_GCM;
+    public static final ASN1ObjectIdentifier id_aes192_OFB;
+    public static final ASN1ObjectIdentifier id_aes192_wrap;
+    public static final ASN1ObjectIdentifier id_aes256_CBC;
+    public static final ASN1ObjectIdentifier id_aes256_CCM;
+    public static final ASN1ObjectIdentifier id_aes256_CFB;
+    public static final ASN1ObjectIdentifier id_aes256_ECB;
+    public static final ASN1ObjectIdentifier id_aes256_GCM;
+    public static final ASN1ObjectIdentifier id_aes256_OFB;
+    public static final ASN1ObjectIdentifier id_aes256_wrap;
+    public static final ASN1ObjectIdentifier id_dsa_with_sha2;
+    public static final ASN1ObjectIdentifier id_sha224;
+    public static final ASN1ObjectIdentifier id_sha256;
+    public static final ASN1ObjectIdentifier id_sha384;
+    public static final ASN1ObjectIdentifier id_sha512;
+    public static final ASN1ObjectIdentifier id_sha512_224;
+    public static final ASN1ObjectIdentifier id_sha512_256;
+    public static final ASN1ObjectIdentifier nistAlgorithm;
+
+    static {
+        nistAlgorithm = new ASN1ObjectIdentifier("2.16.840.1.101.3.4");
+        hashAlgs = nistAlgorithm.branch(TransactionInfo.VISA_TRANSACTIONSTATUS_REFUNDED);
+        id_sha256 = hashAlgs.branch(TransactionInfo.VISA_TRANSACTIONTYPE_REFUND);
+        id_sha384 = hashAlgs.branch(TransactionInfo.VISA_TRANSACTIONSTATUS_REFUNDED);
+        id_sha512 = hashAlgs.branch(TransactionInfo.VISA_TRANSACTIONSTATUS_DECLINED);
+        id_sha224 = hashAlgs.branch(DiscoverInAppCryptoData.DEFAULT_ECI_INDICATOR);
+        id_sha512_224 = hashAlgs.branch("5");
+        id_sha512_256 = hashAlgs.branch("6");
+        aes = nistAlgorithm.branch(TransactionInfo.VISA_TRANSACTIONTYPE_REFUND);
+        id_aes128_ECB = aes.branch(TransactionInfo.VISA_TRANSACTIONTYPE_REFUND);
+        id_aes128_CBC = aes.branch(TransactionInfo.VISA_TRANSACTIONSTATUS_REFUNDED);
+        id_aes128_OFB = aes.branch(TransactionInfo.VISA_TRANSACTIONSTATUS_DECLINED);
+        id_aes128_CFB = aes.branch(DiscoverInAppCryptoData.DEFAULT_ECI_INDICATOR);
+        id_aes128_wrap = aes.branch("5");
+        id_aes128_GCM = aes.branch("6");
+        id_aes128_CCM = aes.branch("7");
+        id_aes192_ECB = aes.branch("21");
+        id_aes192_CBC = aes.branch("22");
+        id_aes192_OFB = aes.branch("23");
+        id_aes192_CFB = aes.branch("24");
+        id_aes192_wrap = aes.branch("25");
+        id_aes192_GCM = aes.branch("26");
+        id_aes192_CCM = aes.branch("27");
+        id_aes256_ECB = aes.branch(Constants.TOKEN_META_VERSION_TAG);
+        id_aes256_CBC = aes.branch("42");
+        id_aes256_OFB = aes.branch("43");
+        id_aes256_CFB = aes.branch("44");
+        id_aes256_wrap = aes.branch(Constants.TOKEN_META_AID_TAG);
+        id_aes256_GCM = aes.branch(Constants.TOKEN_META_WALLETID_TAG);
+        id_aes256_CCM = aes.branch(Constants.TOKEN_META_DEVICEID_TAG);
+        id_dsa_with_sha2 = nistAlgorithm.branch(TransactionInfo.VISA_TRANSACTIONSTATUS_DECLINED);
+        dsa_with_sha224 = id_dsa_with_sha2.branch(TransactionInfo.VISA_TRANSACTIONTYPE_REFUND);
+        dsa_with_sha256 = id_dsa_with_sha2.branch(TransactionInfo.VISA_TRANSACTIONSTATUS_REFUNDED);
+        dsa_with_sha384 = id_dsa_with_sha2.branch(TransactionInfo.VISA_TRANSACTIONSTATUS_DECLINED);
+        dsa_with_sha512 = id_dsa_with_sha2.branch(DiscoverInAppCryptoData.DEFAULT_ECI_INDICATOR);
+    }
+}

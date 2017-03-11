@@ -1,0 +1,195 @@
+{
+  "binAttributes": [
+    {"bin": "2221", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "2222", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "2223", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "2224", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "2225", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "2226", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "2227", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "2228", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "2229", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "223", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "224", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "225", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "226", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "227", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "228", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "229", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "23", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "24", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "25", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "26", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "270", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "271", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "2720", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "4", "cardBrand": "VI", "eczb" : 14},
+    {"bin": "5", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "6", "cardBrand": "MC", "eczb" : 14},
+    {"bin": "34", "cardBrand": "AX", "eczb" : 13},
+    {"bin": "37", "cardBrand": "AX", "eczb" : 13},
+    {"bin": "6011", "cardBrand": "DS", "eczb" : 14},
+    {"bin": "534812", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "504677", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "504662", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "602052", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "603009", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "603459", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "603460", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "603461", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "603462", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "603464", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "601917", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "601918", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "601919", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "601920", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "601921", "cardBrand": "PL", "eczb" : 4},
+    {"bin": "604410", "cardBrand": "VI", "eczb" : 6},
+    {"bin": "706159", "cardBrand": "VI", "eczb" : 14},
+    {"bin": "601859", "cardBrand": "VI", "eczb" : 6},
+    {"bin": "604594", "cardBrand": "VI", "eczb" : 6},
+    {"bin": "604586", "cardBrand": "MC", "eczb" : 6},
+    {"bin": "478437", "cardBrand": "VI", "eczb" : 14},
+    {"bin": "419509", "cardBrand": "VI", "eczb" : 14},
+    {"bin": "447994", "cardBrand": "VI", "eczb" : 14},
+    {"bin": "447995", "cardBrand": "VI", "eczb" : 14},
+    {"bin": "447993", "cardBrand": "VI", "eczb" : 14},
+    {"bin": "466008", "cardBrand": "VI", "eczb" : 14},
+    {"bin": "524363", "cardBrand": "MC", "eczb" : 14}
+  ],
+  "countryAttributes": [
+    {
+      "cc2": "GB",
+      "binAttributes": [
+       { "cardBrand": "VI", "eczb" : 13},
+        { "cardBrand": "MC", "eczb" : 13},
+        { "cardBrand": "AX", "eczb" : 13}
+      ]
+    },
+    {
+      "cc2": "AE",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 0}
+      ]
+    },
+    {
+      "cc2": "SE",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 13}
+      ]
+    },
+    {
+      "cc2": "SG",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "PL", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 13}
+      ]
+    },
+    {
+      "cc2": "ES",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 13}
+      ]
+    },
+    {
+      "cc2": "AU",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "PL", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 13}
+      ]
+    },
+    {
+      "cc2": "BR",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        {"bin" :"603689", "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "PL", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 0}
+      ]
+    },
+    {
+      "cc2": "CH",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 13}
+      ]
+    },
+    {
+      "cc2": "RU",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 0}
+      ]
+    },
+    {
+      "cc2": "PL",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 0}
+      ]
+    },
+    {
+      "cc2": "HK",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 13}
+      ]
+    },
+    {
+      "cc2": "MY",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 0}
+      ]
+    },
+    {
+      "cc2": "TH",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 0}
+      ]
+    },
+    {
+      "cc2": "TW",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 0}
+      ]
+    },
+    {
+      "cc2": "CA",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 13}
+      ]
+    },
+    {
+      "cc2": "IN",
+      "binAttributes": [
+        { "cardBrand": "VI", "eczb" : 12},
+        { "cardBrand": "MC", "eczb" : 12},
+        { "cardBrand": "AX", "eczb" : 13}
+      ]
+    }
+  ]
+}
+

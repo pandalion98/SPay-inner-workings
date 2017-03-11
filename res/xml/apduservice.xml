@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<host-apdu-service android:description="0x7f040021" android:requireDeviceUnlock="false" android:apduServiceBanner="0x7f02001a">
+    <aid-group android:description="0x7f040022" android:category="payment">
+        <aid-filter android:name="325041592E5359532E4444463031" />
+        <aid-prefix-filter android:name="A000000004" />
+        <aid-filter android:name="A000000004" />
+        <aid-filter android:name="A0000000041010" />
+        <aid-filter android:name="A0000000042203" />
+        <aid-filter android:name="A0000000043060" />
+        <aid-prefix-filter android:name="A000000003" />
+        <aid-filter android:name="A000000003" />
+        <aid-filter android:name="A0000000031010" />
+        <aid-filter android:name="A0000000980840" />
+        <aid-filter android:name="A0000000032010" />
+        <aid-filter android:name="A0000000032020" />
+        <aid-prefix-filter android:name="A000000025" />
+        <aid-filter android:name="A00000002501" />
+        <aid-filter android:name="A000000025011001" />
+        <aid-filter android:name="A0000000250110" />
+        <aid-filter android:name="A000000025021001" />
+        <aid-filter android:name="A0000001523010" />
+        <aid-filter android:name="A0000001524010" />
+        <aid-filter android:name="A0000003241010" />
+        <aid-filter android:name="A00000048510010101" />
+        <aid-filter android:name="A000000476D0000101" />
+        <aid-filter android:name="4F53452E5641532E3031" />
+    </aid-group>
+</host-apdu-service>
