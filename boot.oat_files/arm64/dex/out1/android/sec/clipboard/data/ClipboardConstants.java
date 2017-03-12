@@ -1,0 +1,50 @@
+package android.sec.clipboard.data;
+
+import android.os.Build;
+import android.os.SystemProperties;
+import com.samsung.android.smartface.SmartFaceManager;
+
+public class ClipboardConstants {
+    public static final String ACTION_SECONTAINER_ADDED = "android.intent.action.SECONTAINER_ADDED";
+    public static final String ACTION_SECONTAINER_REMOVED = "android.intent.action.SECONTAINER_REMOVED";
+    public static final int ADD_ITEM = 1;
+    public static final int CAT_USERID_ADJUST_FACTOR = 1000;
+    public static final String CLIPBOARD_DELETE_CLIPS_PATH = "/data/clipboard/deletedClips.xml";
+    public static final String CLIPBOARD_DRAGNDROP = "clipboarddragNdrop";
+    public static final String CLIPBOARD_ROOT_PATH = "/data/clipboard";
+    public static final String CLIPBOARD_ROOT_PATH_TEMP = "/data/clipboard/temp/";
+    public static final String CLIPBOARD_SECONTAINER_ROOT_PATH = "/data/clipboard/secontainer";
+    public static final String CLIPBOARD_SHARED_PATH = "/shared";
+    public static boolean DEBUG = "eng".equals(Build.TYPE);
+    public static final int DELETEALL_ITEM = 3;
+    public static final int DELETE_ITEM = 2;
+    public static final int FILE_VERSION = 1;
+    public static final String FORMAT_BITMAP = "Bitmap";
+    public static final String FORMAT_HTML_FLAGMENT = "HTMLFlagment";
+    public static final String FORMAT_INTENT = "Intent";
+    public static final String FORMAT_MULTIPLE_TYPE = "MultipleType";
+    public static final String FORMAT_MULTIPLE_URI = "MultipleUri";
+    public static final String FORMAT_TEXT = "Text";
+    public static final String FORMAT_URI = "Uri";
+    public static final int GENERIC_CATEGORY_END = 500;
+    public static final int GENERIC_CATEGORY_START = 201;
+    public static final int GOOD_CATEGORY = 102;
+    public static final boolean HAS_KNOX_FEATURE = SystemProperties.get("ro.config.knox").equals("v30");
+    public static final String HTML_PREVIEW_IMAGE_NAME = "previewhtemlclipboarditem";
+    public static boolean INFO_DEBUG = false;
+    public static final String KNOX_CLIPBOARD_DELETE_CLIPS_PATH = "/com.sec.knox.bridge/shared_prefs/deletedClips.xml";
+    public static final int MAX_DATA_COUNT = 20;
+    public static final String MULTIWINDOW_DRAGNDROP = "MultiWindow_DragDrop";
+    public static final int PERSONA_CATEGORY_END = 1194;
+    public static final int PERSONA_CATEGORY_START = 1100;
+    public static final int PERSONA_USERID_END = 194;
+    public static final int PERSONA_USERID_START = 100;
+    public static final int SAFETY_STRING_LENGTH = 131072;
+    public static final boolean SUPPORT_KNOX = SmartFaceManager.PAGE_BOTTOM.equals(SystemProperties.get("ro.config.knox", SmartFaceManager.PAGE_MIDDLE));
+    public static final String THUMBNAIL_SUFFIX = "_thum.jpg";
+    public static final long TIMESTAMP_GAP = 100000;
+    public static final long TIMESTAMP_INTERVAL = 2592000;
+    public static final String USER_ADDED = "ADDED";
+    public static final String USER_REMOVED = "REMOVED";
+    public static final String USER_SWITCHED = "SWITCHED";
+}
