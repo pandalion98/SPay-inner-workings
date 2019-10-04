@@ -1,0 +1,38 @@
+<?xml version='1.0'?>
+<mstRetryType value="2"/>
+<default transmitTime="30" idleTime="0">
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D0)
+</default>
+<retryDelay value="30"/>
+<retry1 transmitTime="20" idleTime="0">
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D1500);
+	(t2, r300, LZ30, TZ30, D0)
+</retry1>

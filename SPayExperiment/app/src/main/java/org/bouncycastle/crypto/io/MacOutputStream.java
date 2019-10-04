@@ -1,0 +1,34 @@
+/*
+ * Decompiled with CFR 0.0.
+ * 
+ * Could not load the following classes:
+ *  java.io.OutputStream
+ */
+package org.bouncycastle.crypto.io;
+
+import java.io.OutputStream;
+import org.bouncycastle.crypto.Mac;
+
+public class MacOutputStream
+extends OutputStream {
+    protected Mac mac;
+
+    public MacOutputStream(Mac mac) {
+        this.mac = mac;
+    }
+
+    public byte[] getMac() {
+        byte[] arrby = new byte[this.mac.getMacSize()];
+        this.mac.doFinal(arrby, 0);
+        return arrby;
+    }
+
+    public void write(int n2) {
+        this.mac.update((byte)n2);
+    }
+
+    public void write(byte[] arrby, int n2, int n3) {
+        this.mac.update(arrby, n2, n3);
+    }
+}
+

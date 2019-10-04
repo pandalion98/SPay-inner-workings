@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.samsung.android.spayfw"
+    android:sharedUserId="android.uid.spay"
+    android:versionCode="273801000"
+    android:versionName="2.7.38">
+
+    <uses-permission android:name="android.permission.INJECT_EVENTS" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.REAL_GET_TASKS" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.PEERS_MAC_ADDRESS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS_PRIVILEGED" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
+    <uses-permission android:name="com.sec.enterprise.knox.permission.KNOX_ATTESTATION" />
+    <uses-permission android:name="android.permission.sec.ENTERPRISE_DEVICE_ADMIN" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.sec.enterprise.knox.permission.KNOX_KEYSTORE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="com.samsung.android.spayfw.permission.UPDATE_NOTIFICATION" />
+    <uses-permission android:name="com.samsung.android.spay.RESET_BROADCAST_PERMISSION" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.samsung.android.spayfw.permission.ACCESS_PF" />
+
+    <permission
+        android:name="com.samsung.android.spayfw.permission.ACCESS_PF"
+        android:label="Samsung Pay Framework"
+        android:protectionLevel="system" />
+    <permission
+        android:name="com.samsung.android.spayfw.permission.ACCESS_AF"
+        android:label="SamsungPayAnalyticsFramework"
+        android:protectionLevel="signatureOrSystem"
+        tools:ignore="SignatureOrSystemPermissions" />
+    <permission
+        android:name="com.samsung.android.spayfw.permission.UPDATE_NOTIFICATION"
+        android:label="update_noti_permission"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.samsung.android.spayfw.permission.ACCESS_AF" />
+    <application
+        android:name="com.samsung.android.spayfw.core.PaymentFrameworkApp"
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="Samsung Pay Framework"
+        android:manageSpaceActivity=".core.PaymentFrameworkStoreManage">
+        <meta-data
+            android:name="com.samsung.android.multiuser.install_only_owner"
+            android:value="true" />
+        <meta-data
+            android:name="com.samsung.android.icon_container.has_icon_container"
+            android:value="true" />
+        <meta-data
+            android:name="com.samsung.android.spayfw.interface_version"
+            android:value="84" />
+        <meta-data
+            android:name="com.samsung.android.spayauth.interface_version"
+            android:value="42" />
+
+        <activity
+            android:name="com.samsung.android.spayfw.core.PaymentFrameworkStoreManage"
+            android:permission="signatureOrSystem" />
+
+        <receiver
+            android:name="com.samsung.android.spayfw.core.FactoryResetDetector"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.samsung.android.spayfw.fraud.FraudReceiver"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_DATA_CLEARED" />
+                <data android:scheme="package" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SIM_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.samsung.android.spayfw.core.PackageStateReceiver"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <action android:name="android.intent.action.PACKAGE_CHANGED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.samsung.android.spayfw.payprovider.TokenReplenishReceiver"
+            android:enabled="false"
+            android:exported="true"
+            android:permission="com.samsung.android.spayfw.permission.UPDATE_NOTIFICATION">
+            <intent-filter>
+                <action android:name="com.samsung.android.spayfw.ACTION_REPLENISH_VISA_ALARM_EXECUTE" />
+                <action android:name="com.samsung.android.spayfw.ACTION_REPLENISH_AMEX_ALARM_EXECUTE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.samsung.android.spayfw.core.hce.SPayHCEReceiver"
+            android:enabled="false"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.nfc_extras.action.RF_FIELD_ON_DETECTED" />
+                <action android:name="com.android.nfc_extras.action.RF_FIELD_OFF_DETECTED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.samsung.android.spayfw.core.UpdateReceiver"
+            android:enabled="false"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.samsung.android.spayfw.core.PFGenericReceiver"
+            android:enabled="false"
+            android:exported="true"
+            android:permission="com.samsung.android.spayfw.permission.UPDATE_NOTIFICATION">
+            <intent-filter>
+                <action android:name="android.intent.action.DEVICE_INTEGRITY_VERIFICATION_FAIL" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.samsung.android.spayfw.core.PaymentFrameworkService"
+            android:exported="true" />
+        <service
+            android:name="com.samsung.android.spayauth.AuthFrameworkService"
+            android:exported="true" />
+        <service
+            android:name="com.samsung.android.analytics.AnalyticFrameworkService"
+            android:enabled="false"
+            android:exported="true"
+            android:permission="com.samsung.android.spayfw.permission.ACCESS_AF" />
+        <service
+            android:name="com.samsung.android.spayfw.core.hce.SPayHCEService"
+            android:enabled="false"
+            android:exported="true"
+            android:label="Samsung Pay"
+            android:permission="android.permission.BIND_NFC_SERVICE">
+            <intent-filter>
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.nfc.cardemulation.host_apdu_service"
+                android:resource="res/xml/apduservice.xml" />
+        </service>
+
+        <uses-library
+            android:name="com.sec.dcm"
+            android:required="false" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="7095000" />
+        <receiver
+            android:name="com.samsung.android.analytics.sdk.FactoryResetDetector"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <meta-data
+            android:name="com.samsung.contextclient.version"
+            android:value="1" />
+
+        <service
+            android:name="com.samsung.contextservice.system.ContextService"
+            android:exported="true"
+            android:permission="com.samsung.android.spayfw.permission.ACCESS_PF" />
+        <service
+            android:name="com.samsung.contextservice.server.TaskSchedulerService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <meta-data
+            android:name="SPDE.build.signature"
+            android:value="3392039/10446360/teeSpay_production/PaymentFramework-201000-2.7.38" />
+        <meta-data
+            android:name="SPDE.env.version"
+            android:value="2.1.3/L24.3.6/24.3.2" />
+    </application>
+</manifest>

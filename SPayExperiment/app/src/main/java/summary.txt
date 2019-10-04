@@ -1,0 +1,348 @@
+Summary for /storage/emulated/0/show-java/sources/com.samsung.android.spayfw/jar-files/1.jar
+Decompiled with CFR 0.0
+
+
+org.bouncycastle.jcajce.provider.asymmetric.ecgost.SignatureSpi
+----------------------------
+
+engineInitVerify(java.security.PublicKey )
+  Loose catch block
+
+
+org.bouncycastle.jcajce.provider.asymmetric.gost.SignatureSpi
+----------------------------
+
+engineInitVerify(java.security.PublicKey )
+  Loose catch block
+
+
+org.bouncycastle.jcajce.provider.asymmetric.rsa.CipherSpi
+----------------------------
+
+engineInit(int java.security.Key java.security.AlgorithmParameters java.security.SecureRandom )
+  Loose catch block
+
+
+org.bouncycastle.jcajce.provider.asymmetric.x509.PEMUtil
+----------------------------
+
+readPEMObject(java.io.InputStream )
+  Loose catch block
+
+
+org.bouncycastle.jcajce.provider.asymmetric.x509.X509CRLObject
+----------------------------
+
+isRevoked(java.security.cert.Certificate )
+  Loose catch block
+
+
+org.bouncycastle.jcajce.provider.asymmetric.x509.X509CertificateObject
+----------------------------
+
+<init>(org.bouncycastle.asn1.x509.Certificate )
+  Loose catch block
+getAlternativeNames(byte[] )
+  Loose catch block
+
+
+org.bouncycastle.jcajce.provider.symmetric.util.BaseKeyGenerator
+----------------------------
+
+engineInit(int java.security.SecureRandom )
+  Unable to fully structure code
+
+
+org.bouncycastle.jcajce.provider.keystore.bc.BcKeyStoreSpi
+----------------------------
+
+getObject(char[] )
+  Unable to fully structure code
+
+
+org.bouncycastle.jcajce.provider.keystore.pkcs12.PKCS12KeyStoreSpi
+----------------------------
+
+<init>(java.security.Provider org.bouncycastle.asn1.ASN1ObjectIdentifier org.bouncycastle.asn1.ASN1ObjectIdentifier )
+  Unable to fully structure code
+engineLoad(java.io.InputStream char[] )
+  Unable to fully structure code
+
+
+org.bouncycastle.jcajce.provider.symmetric.util.BaseBlockCipher
+----------------------------
+
+engineDoFinal(byte[] int int byte[] int )
+  Unable to fully structure code
+engineInit(int java.security.Key java.security.spec.AlgorithmParameterSpec java.security.SecureRandom )
+  Unable to fully structure code
+
+
+org.bouncycastle.jce.ECGOST3410NamedCurveTable
+----------------------------
+
+getParameterSpec(java.lang.String )
+  Loose catch block
+
+
+org.bouncycastle.jce.PKCS10CertificationRequest
+----------------------------
+
+verify(java.security.PublicKey java.lang.String )
+  Unable to fully structure code
+
+
+org.bouncycastle.jce.provider.BouncyCastleProvider
+----------------------------
+
+loadAlgorithms(java.lang.String java.lang.String[] )
+  Loose catch block
+
+
+org.bouncycastle.jce.provider.BrokenJCEBlockCipher
+----------------------------
+
+engineUnwrap(byte[] java.lang.String int )
+  Unable to fully structure code
+
+
+org.bouncycastle.jce.provider.CertPathValidatorUtilities
+----------------------------
+
+getCertStatus(java.util.Date java.security.cert.X509CRL java.lang.Object org.bouncycastle.jce.provider.CertStatus )
+  Loose catch block
+getValidCertDateFromValidityModel(org.bouncycastle.jcajce.PKIXExtendedParameters java.security.cert.CertPath int )
+  Loose catch block
+prepareNextCertB1(int java.util.List[] java.lang.String java.util.Map java.security.cert.X509Certificate )
+  Unable to fully structure code
+
+
+org.bouncycastle.jce.provider.JCEECPublicKey
+----------------------------
+
+populateFromPubKeyInfo(org.bouncycastle.asn1.x509.SubjectPublicKeyInfo )
+  Loose catch block
+
+
+org.bouncycastle.jce.provider.PKIXAttrCertPathBuilderSpi
+----------------------------
+
+build(org.bouncycastle.x509.X509AttributeCertificate java.security.cert.X509Certificate org.bouncycastle.jcajce.PKIXExtendedBuilderParameters java.util.List )
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Tried to end blocks [1[TRYBLOCK]], but top level block is 5[TRYBLOCK]
+
+
+org.bouncycastle.jce.provider.PKIXCertPathBuilderSpi
+----------------------------
+
+build(java.security.cert.X509Certificate org.bouncycastle.jcajce.PKIXExtendedBuilderParameters java.util.List )
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Tried to end blocks [1[TRYBLOCK]], but top level block is 5[TRYBLOCK]
+
+
+org.bouncycastle.jce.provider.PKIXCertPathValidatorSpi
+----------------------------
+
+engineValidate(java.security.cert.CertPath java.security.cert.CertPathParameters )
+  Unable to fully structure code
+
+
+org.bouncycastle.jce.provider.RFC3280CertPathUtilities
+----------------------------
+
+checkCRL(org.bouncycastle.asn1.x509.DistributionPoint org.bouncycastle.jcajce.PKIXExtendedParameters java.security.cert.X509Certificate java.util.Date java.security.cert.X509Certificate java.security.PublicKey org.bouncycastle.jce.provider.CertStatus org.bouncycastle.jce.provider.ReasonsMask java.util.List org.bouncycastle.jcajce.util.JcaJceHelper )
+  Loose catch block
+checkCRLs(org.bouncycastle.jcajce.PKIXExtendedParameters java.security.cert.X509Certificate java.util.Date java.security.cert.X509Certificate java.security.PublicKey java.util.List org.bouncycastle.jcajce.util.JcaJceHelper )
+  Unable to fully structure code
+prepareCertB(java.security.cert.CertPath int java.util.List[] org.bouncycastle.jce.provider.PKIXPolicyNode int )
+  Unable to fully structure code
+prepareNextCertG(java.security.cert.CertPath int org.bouncycastle.jce.provider.PKIXNameConstraintValidator )
+  Loose catch block
+prepareNextCertI1(java.security.cert.CertPath int int )
+  Loose catch block
+prepareNextCertI2(java.security.cert.CertPath int int )
+  Loose catch block
+processCRLB2(org.bouncycastle.asn1.x509.DistributionPoint java.lang.Object java.security.cert.X509CRL )
+  Unable to fully structure code
+processCRLC(java.security.cert.X509CRL java.security.cert.X509CRL org.bouncycastle.jcajce.PKIXExtendedParameters )
+  Unable to fully structure code
+processCertA(java.security.cert.CertPath org.bouncycastle.jcajce.PKIXExtendedParameters int java.security.PublicKey boolean org.bouncycastle.asn1.x500.X500Name java.security.cert.X509Certificate org.bouncycastle.jcajce.util.JcaJceHelper )
+  Loose catch block
+processCertD(java.security.cert.CertPath int java.util.Set org.bouncycastle.jce.provider.PKIXPolicyNode java.util.List[] int )
+  Unable to fully structure code
+wrapupCertB(java.security.cert.CertPath int int )
+  Loose catch block
+
+
+org.bouncycastle.jce.provider.RFC3281CertPathUtilities
+----------------------------
+
+checkCRL(org.bouncycastle.asn1.x509.DistributionPoint org.bouncycastle.x509.X509AttributeCertificate org.bouncycastle.jcajce.PKIXExtendedParameters java.util.Date java.security.cert.X509Certificate org.bouncycastle.jce.provider.CertStatus org.bouncycastle.jce.provider.ReasonsMask java.util.List org.bouncycastle.jcajce.util.JcaJceHelper )
+  Loose catch block
+checkCRLs(org.bouncycastle.x509.X509AttributeCertificate org.bouncycastle.jcajce.PKIXExtendedParameters java.security.cert.X509Certificate java.util.Date java.util.List org.bouncycastle.jcajce.util.JcaJceHelper )
+  Unable to fully structure code
+processAttrCert1(org.bouncycastle.x509.X509AttributeCertificate org.bouncycastle.jcajce.PKIXExtendedParameters )
+  Loose catch block
+processAttrCert2(java.security.cert.CertPath org.bouncycastle.jcajce.PKIXExtendedParameters )
+  Loose catch block
+processAttrCert7(org.bouncycastle.x509.X509AttributeCertificate java.security.cert.CertPath java.security.cert.CertPath org.bouncycastle.jcajce.PKIXExtendedParameters java.util.Set )
+  Loose catch block
+
+
+org.bouncycastle.jce.provider.X509CRLObject
+----------------------------
+
+isRevoked(java.security.cert.Certificate )
+  Loose catch block
+
+
+org.bouncycastle.jce.provider.X509CertificateObject
+----------------------------
+
+<init>(org.bouncycastle.asn1.x509.Certificate )
+  Loose catch block
+getAlternativeNames(byte[] )
+  Loose catch block
+
+
+org.bouncycastle.jce.provider.X509LDAPCertStoreSpi
+----------------------------
+
+search(java.lang.String java.lang.String java.lang.String[] )
+  Unable to fully structure code
+engineGetCertificates(java.security.cert.CertSelector )
+  Unable to fully structure code
+
+
+org.bouncycastle.math.ec.ECCurve
+----------------------------
+
+decompressPoint(int java.math.BigInteger )
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Extractable last case doesn't follow previous
+
+
+org.bouncycastle.math.ec.ECPoint
+----------------------------
+
+getInitialZCoords(org.bouncycastle.math.ec.ECCurve )
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Extractable last case doesn't follow previous
+
+
+org.bouncycastle.math.ec.WNafUtil
+----------------------------
+
+precompute(org.bouncycastle.math.ec.ECPoint int boolean )
+  Unable to fully structure code
+
+
+org.bouncycastle.pqc.crypto.gmss.GMSSPrivateKeyParameters
+----------------------------
+
+computeAuthPaths(int )
+  Unable to fully structure code
+
+
+org.bouncycastle.pqc.crypto.rainbow.util.ComputeInField
+----------------------------
+
+inverse(short[][] )
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Tried to end blocks [1[TRYBLOCK]], but top level block is 8[FORLOOP]
+
+
+org.bouncycastle.pqc.jcajce.provider.BouncyCastlePQCProvider
+----------------------------
+
+loadAlgorithms(java.lang.String java.lang.String[] )
+  Loose catch block
+
+
+org.bouncycastle.pqc.jcajce.provider.mceliece.McElieceCCA2KeyFactorySpi
+----------------------------
+
+generatePrivate(java.security.spec.KeySpec )
+  Unable to fully structure code
+
+
+org.bouncycastle.pqc.jcajce.provider.mceliece.McElieceKeyFactorySpi
+----------------------------
+
+generatePrivate(java.security.spec.KeySpec )
+  Unable to fully structure code
+
+
+org.bouncycastle.pqc.math.linearalgebra.GF2nField
+----------------------------
+
+invertMatrix(org.bouncycastle.pqc.math.linearalgebra.GF2Polynomial[] )
+  Unable to fully structure code
+
+
+org.bouncycastle.pqc.math.linearalgebra.GF2nONBField
+----------------------------
+
+invMatrix(int[][] )
+  Unable to fully structure code
+
+
+org.bouncycastle.util.IPAddress
+----------------------------
+
+isValidIPv4(java.lang.String )
+  Loose catch block
+isValidIPv6(java.lang.String )
+  Unable to fully structure code
+
+
+org.bouncycastle.x509.AttributeCertificateIssuer
+----------------------------
+
+getNames()
+  Loose catch block
+
+
+org.bouncycastle.x509.CertPathValidatorUtilities
+----------------------------
+
+findCertificates(org.bouncycastle.x509.X509CertStoreSelector java.util.List )
+  Unable to fully structure code
+findIssuerCerts(java.security.cert.X509Certificate java.util.List java.util.List )
+  Loose catch block
+getCertStatus(java.util.Date java.security.cert.X509CRL java.lang.Object org.bouncycastle.x509.CertStatus )
+  Loose catch block
+getValidCertDateFromValidityModel(org.bouncycastle.x509.ExtendedPKIXParameters java.security.cert.CertPath int )
+  Loose catch block
+prepareNextCertB1(int java.util.List[] java.lang.String java.util.Map java.security.cert.X509Certificate )
+  Unable to fully structure code
+
+
+org.bouncycastle.x509.PKIXCertPathReviewer
+----------------------------
+
+checkNameConstraints()
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Started 3 blocks at once
+checkPolicy()
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Tried to end blocks [0[TRYBLOCK]], but top level block is 3[TRYBLOCK]
+checkSignatures()
+  Unable to fully structure code
+processQcStatements(java.security.cert.X509Certificate int )
+  Unable to fully structure code
+checkCRLs(java.security.cert.PKIXParameters java.security.cert.X509Certificate java.util.Date java.security.cert.X509Certificate java.security.PublicKey java.util.Vector int )
+  Loose catch block
+
+
+org.bouncycastle.x509.X509AttributeCertStoreSelector
+----------------------------
+
+match(java.lang.Object )
+  Loose catch block
+
+
+org.bouncycastle.x509.util.LDAPStoreHelper
+----------------------------
+
+addToCache(java.lang.String java.util.List )
+  Unable to fully structure code
+attrCertSubjectSerialSearch(org.bouncycastle.x509.X509AttributeCertStoreSelector java.lang.String[] java.lang.String[] java.lang.String[] )
+  Unable to fully structure code
+createCrossCertificatePairs(java.util.List org.bouncycastle.x509.X509CertPairStoreSelector )
+  Unable to fully structure code
+search(java.lang.String[] java.lang.String java.lang.String[] )
+  Exception : org.benf.cfr.reader.util.ConfusedCFRException: Tried to end blocks [5[CATCHBLOCK]], but top level block is 7[CATCHBLOCK]

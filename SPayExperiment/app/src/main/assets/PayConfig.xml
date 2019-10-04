@@ -1,0 +1,103 @@
+<?xml version='1.0'?>
+<mstRetryType value="1"/>
+<default transmitTime="15" idleTime="1800" mstSequenceId="v0015.12.T2T2R.T2.T1T2R">
+    <!-- L22 -->
+    (t2, r200, LZ30, TZ15, D0);
+    (t2, r200, LZ15, TZ30, R, D950);
+    <!-- L22 -->
+    (t2, r200, LZ30, TZ15, D0);
+    (t2, r200, LZ15, TZ30, R, D950);
+    <!-- L2 -->
+    (t2, r800, LZ30, TZ30, D950);
+    <!-- L22 -->
+    (t2, r200, LZ30, TZ15, D0);
+    (t2, r200, LZ15, TZ30, R, D950);
+    <!-- L22 -->
+    (t2, r200, LZ30, TZ15, D0);
+    (t2, r200, LZ15, TZ30, R, D950);
+    <!-- L2 -->
+    (t2, r800, LZ30, TZ30, D950);
+    <!-- L22 -->
+    (t2, r200, LZ30, TZ15, D0);
+    (t2, r200, LZ15, TZ30, R, D950);
+    <!-- L22 -->
+    (t2, r200, LZ30, TZ15, D0);
+    (t2, r200, LZ15, TZ30, R, D950);
+    <!-- L2 -->
+    (t2, r800, LZ30, TZ30, D950);
+    <!-- L22 -->
+    (t2, r200, LZ30, TZ15, D0);
+    (t2, r200, LZ15, TZ30, R, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D0);
+</default>
+<retryDelay value="30"/>
+<retry1 transmitTime="13" idleTime="1000" mstSequenceId="v0016.11.T1NT2.T1T2R.T2T2R.T2">
+    <!-- L1n2-->
+    (t1n, r200, LZ30, TZ15, D0, LP1, LN0, LD0);
+    (t2, r200, LZ15, TZ30, D950);
+    <!-- L1n2 -->
+    (t1n, r200, LZ30, TZ15, D0, LP1, LN0, LD0);
+    (t2, r200, LZ15, TZ30, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L22 -->
+    (t2, r200, LZ30, TZ15, D0);
+    (t2, r200, LZ15, TZ30, R, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L2 -->
+    (t2, r800, LZ30, TZ30, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L22 -->
+    (t2, r200, LZ30, TZ15, D0);
+    (t2, r200, LZ15, TZ30, R, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L2 -->
+    (t2, r800, LZ30, TZ30, D0);
+</retry1>
+<AX_retry1 transmitTime="14" idleTime="1000" mstSequenceId="v0014.11.T1T2R.T2.T2T2R">
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L2 -->
+    (t2, r800, LZ30, TZ30, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L22 -->
+    (t2, r200, LZ30, TZ15, D0);
+    (t2, r200, LZ15, TZ30, R, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L2 -->
+    (t2, r800, LZ30, TZ30, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L22 -->
+    (t2, r200, LZ30, TZ15, D0);
+    (t2, r200, LZ15, TZ30, R, D950);
+    <!-- L12 -->
+    (t1, r300, LZ30, TZ4, D0);
+    (t2, r300, LZ6, TZ30, R, D950);
+    <!-- L2 -->
+    (t2, r800, LZ30, TZ30, D0);
+</AX_retry1>

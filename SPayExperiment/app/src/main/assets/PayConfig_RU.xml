@@ -1,0 +1,52 @@
+<?xml version='1.0'?>
+<mstRetryType value="2"/>
+    <!-- default config version: v0007.12.T2.T1T2R -->
+<default transmitTime="30" idleTime="2500">
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D0)
+</default>
+<retryDelay value="30"/>
+    <!-- retry config version: v0008.8.T1T2R.T2 -->
+<retry1 transmitTime="20" idleTime="2500">
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D1000);
+        (t2, r240, LZ30, TZ30, D0)
+</retry1>
