@@ -11,7 +11,8 @@
 package com.samsung.sensorframework.sdi.b;
 
 import android.content.Context;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.b;
 import org.json.JSONObject;
 
@@ -22,11 +23,11 @@ public class a {
      * Enabled aggressive exception aggregation
      */
     public static int b(String string, String string2, int n2) {
-        c.d("ConfigUtils", "getParameterFromPolicyJson()");
+        Log.d("ConfigUtils", "getParameterFromPolicyJson()");
         if (string != null && string.length() > 0 && string2 != null && string2.length() > 0) {
             try {
                 JSONObject jSONObject;
-                c.d("ConfigUtils", "getParameterFromPolicyJson() jsonPolicyStr: " + string + " key: " + string2 + " defaultValue: " + n2);
+                Log.d("ConfigUtils", "getParameterFromPolicyJson() jsonPolicyStr: " + string + " key: " + string2 + " defaultValue: " + n2);
                 JSONObject jSONObject2 = new JSONObject(string);
                 if (jSONObject2.has("policy") && (jSONObject = jSONObject2.getJSONObject("policy")) != null && jSONObject.has(string2)) {
                     int n3;
@@ -37,22 +38,22 @@ public class a {
                 exception.printStackTrace();
             }
         }
-        c.d("ConfigUtils", "getParameterFromPolicyJson() returning: " + n2);
+        Log.d("ConfigUtils", "getParameterFromPolicyJson() returning: " + n2);
         return n2;
     }
 
     public static String bp(Context context) {
-        c.d("ConfigUtils", "queryContextSensingPolicy()");
+        Log.d("ConfigUtils", "queryContextSensingPolicy()");
         b b2 = b.aM(context);
         String string = null;
         if (b2 != null) {
             string = b.aM(context).gG();
         }
         if (string != null) {
-            c.d("ConfigUtils", "queryContextSensingPolicy() policy: " + string);
+            Log.d("ConfigUtils", "queryContextSensingPolicy() policy: " + string);
             return string;
         }
-        c.d("ConfigUtils", "queryContextSensingPolicy() policy: null");
+        Log.d("ConfigUtils", "queryContextSensingPolicy() policy: null");
         return string;
     }
 
@@ -62,14 +63,14 @@ public class a {
      * Enabled aggressive exception aggregation
      */
     public static boolean cm(String string) {
-        c.d("ConfigUtils", "isContextSensingEnabled()");
+        Log.d("ConfigUtils", "isContextSensingEnabled()");
         boolean bl = false;
         if (string != null) {
             int n2 = string.length();
             bl = false;
             if (n2 > 0) {
                 try {
-                    c.d("ConfigUtils", "isContextSensingEnabled() policy: " + string);
+                    Log.d("ConfigUtils", "isContextSensingEnabled() policy: " + string);
                     JSONObject jSONObject = new JSONObject(string);
                     boolean bl2 = jSONObject.has("policy");
                     bl = false;
@@ -92,17 +93,17 @@ public class a {
                 }
             }
         }
-        c.d("ConfigUtils", "isContextSensingEnabled() enable: " + bl);
+        Log.d("ConfigUtils", "isContextSensingEnabled() enable: " + bl);
         return bl;
     }
 
     public static int d(String string, int n2) {
-        c.d("ConfigUtils", "getTriggerGlobalQuotaPerDay()");
+        Log.d("ConfigUtils", "getTriggerGlobalQuotaPerDay()");
         return a.b(string, "triggerGlobalQuotaPerDay", n2);
     }
 
     public static int e(String string, int n2) {
-        c.d("ConfigUtils", "getLocationQuotaPerDay()");
+        Log.d("ConfigUtils", "getLocationQuotaPerDay()");
         return a.b(string, "locationQuotaPerDay", n2);
     }
 }

@@ -7,8 +7,7 @@
  */
 package com.samsung.android.spayfw.payprovider.discover.payment.data.profile;
 
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverPaymentProfile;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.ByteBuffer;
 
 public class DiscoverPaymentProfileData {
@@ -39,17 +38,17 @@ public class DiscoverPaymentProfileData {
      */
     private void composeTransactionProfile() {
         if (this.mSelectedProfile == null) {
-            c.e(TAG, "composeTransactionProfile, selected profile is null.");
+            Log.e(TAG, "composeTransactionProfile, selected profile is null.");
             return;
         } else {
-            c.d(TAG, "composeTransactionProfile, set selected profile.");
+            Log.d(TAG, "composeTransactionProfile, set selected profile.");
             this.mTransactionProfile = this.mSelectedProfile;
             if (this.mSelectedProfilePRU == null) {
-                c.e(TAG, "composeTransactionProfile, selected profile PRU is null.");
+                Log.e(TAG, "composeTransactionProfile, selected profile PRU is null.");
                 return;
             }
             if (this.mSelectedProfilePRU.getSize() != 3) {
-                c.e(TAG, "composeTransactionProfile, selected profile PRU length is not equal 3, PRU length is " + this.mSelectedProfilePRU.getSize());
+                Log.e(TAG, "composeTransactionProfile, selected profile PRU length is not equal 3, PRU length is " + this.mSelectedProfilePRU.getSize());
                 return;
             }
             if (!this.mSelectedProfilePRU.checkBit(1, 8)) {

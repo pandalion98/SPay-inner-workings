@@ -45,7 +45,6 @@ package com.samsung.android.spaytui;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -53,21 +52,14 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.spay.ITAController;
-import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.WindowManager;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.utils.h;
-import com.samsung.android.spaytui.AuthNonce;
-import com.samsung.android.spaytui.AuthResult;
-import com.samsung.android.spaytui.SpayTuiTACommands;
-import com.samsung.android.spaytui.SpayTuiTAInfo;
-import com.samsung.android.spaytzsvc.api.Blob;
 import com.samsung.android.spaytzsvc.api.TAController;
 import com.samsung.android.spaytzsvc.api.TAInfo;
 import java.io.ByteArrayOutputStream;
@@ -77,7 +69,6 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import javolution.io.Struct;
 
 public class SpayTuiTAController
 extends TAController {
@@ -139,20 +130,20 @@ extends TAController {
 
     private int closeTui() {
         if (DEBUG) {
-            c.d(TAG, "Calling closeTui");
+            Log.d(TAG, "Calling closeTui");
         }
         if (this.mPaymentHandle == null) {
-            c.e(TAG, "Error: Payment Handle is null");
+            Log.e(TAG, "Error: Payment Handle is null");
             return -1;
         }
         TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.CloseTui.Request());
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: load_and_execute failed");
+            Log.e(TAG, "Error: load_and_execute failed");
             return -2;
         }
         SpayTuiTACommands.CloseTui.Response response = new SpayTuiTACommands.CloseTui.Response(tACommandResponse);
         if (DEBUG) {
-            c.d(TAG, "closeTui return " + response.mRetVal.retCode.get());
+            Log.d(TAG, "closeTui return " + response.mRetVal.retCode.get());
         }
         return (int)response.mRetVal.retCode.get();
     }
@@ -177,14 +168,14 @@ extends TAController {
     private float getDensity() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((WindowManager)mContext.getSystemService("window")).getDefaultDisplay().getMetrics(displayMetrics);
-        c.d(TAG, "getDensity " + displayMetrics.density);
+        Log.d(TAG, "getDensity " + displayMetrics.density);
         return displayMetrics.density;
     }
 
     private int getDensityDpi() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((WindowManager)mContext.getSystemService("window")).getDefaultDisplay().getMetrics(displayMetrics);
-        c.d(TAG, "getDensityDpi " + displayMetrics.densityDpi);
+        Log.d(TAG, "getDensityDpi " + displayMetrics.densityDpi);
         return displayMetrics.densityDpi;
     }
 
@@ -265,7 +256,7 @@ lbl28: // 2 sources:
                         var6_7.printStackTrace();
                     }
                     if (SpayTuiTAController.DEBUG == false) return null;
-                    c.d("SpayTuiTAController", "No Pin set up yet");
+                    Log.d("SpayTuiTAController", "No Pin set up yet");
                     return null;
                 }
             }
@@ -279,14 +270,14 @@ lbl28: // 2 sources:
         mPinExist = false;
         byte[] arrby = bl ? this.generateRandom() : this.getPinSO();
         if (arrby == null) {
-            c.e(TAG, "Failed to get PIN/random secure object!");
+            Log.e(TAG, "Failed to get PIN/random secure object!");
             return 393217;
         }
-        c.d(TAG, "PIN/random secure object size " + arrby.length);
-        c.i(TAG, "savePinSecureObjects: savePinSo");
+        Log.d(TAG, "PIN/random secure object size " + arrby.length);
+        Log.i(TAG, "savePinSecureObjects: savePinSo");
         int n2 = this.savePinSo(arrby);
         if (n2 != 0) {
-            c.e(TAG, "Failed to save PIN SO for PIN!");
+            Log.e(TAG, "Failed to save PIN SO for PIN!");
             return n2;
         }
         return this.writePinRandomFiles(true);
@@ -307,7 +298,7 @@ lbl28: // 2 sources:
             return 0;
         }
         catch (Exception exception) {
-            c.e(TAG, "Failed to save PIN SO!");
+            Log.e(TAG, "Failed to save PIN SO!");
             exception.printStackTrace();
             return 393217;
         }
@@ -317,12 +308,12 @@ lbl28: // 2 sources:
         if (bQC) {
             TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.StartSecureUI.Request());
             if (tACommandResponse == null) {
-                c.e(TAG, "Error: start secure UI failed");
+                Log.e(TAG, "Error: start secure UI failed");
                 return -2;
             }
             SpayTuiTACommands.StartSecureUI.Response response = new SpayTuiTACommands.StartSecureUI.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "Secure UI return " + response.mRetVal.retCode.get());
+                Log.d(TAG, "Secure UI return " + response.mRetVal.retCode.get());
             }
             return (int)response.mRetVal.retCode.get();
         }
@@ -345,42 +336,42 @@ lbl28: // 2 sources:
         for (int i2 = 0; i2 < arrstring.length; n4 += rect.height(), ++i2) {
             textPaint.getTextBounds(arrstring[i2], 0, arrstring[i2].length(), rect);
             if (DEBUG) {
-                c.d(TAG, "bounds.width = " + rect.width() + "  bounds.height = " + rect.height());
+                Log.d(TAG, "bounds.width = " + rect.width() + "  bounds.height = " + rect.height());
             }
             if (n3 >= rect.width()) continue;
             n3 = rect.width();
         }
         if (DEBUG) {
-            c.d(TAG, "maxWidth = " + n3 + "  totalHeight = " + n4);
+            Log.d(TAG, "maxWidth = " + n3 + "  totalHeight = " + n4);
         }
         if (bl) {
             if (DEBUG) {
-                c.d(TAG, "actionBarTextWidth = " + this.actionBarTextWidth + "  actionBarTextWidth = " + this.actionBarTextWidth);
+                Log.d(TAG, "actionBarTextWidth = " + this.actionBarTextWidth + "  actionBarTextWidth = " + this.actionBarTextWidth);
             }
             if (n3 > this.actionBarTextWidth) {
                 if (DEBUG) {
-                    c.d(TAG, "Change action bar text width from " + this.actionBarTextWidth + " to " + n3);
+                    Log.d(TAG, "Change action bar text width from " + this.actionBarTextWidth + " to " + n3);
                 }
                 this.actionBarTextWidth = n3;
                 if (DEBUG) {
-                    c.d(TAG, "actionBarTextWidth = " + this.actionBarTextWidth + "  actionBarTextWidth = " + this.actionBarTextWidth);
+                    Log.d(TAG, "actionBarTextWidth = " + this.actionBarTextWidth + "  actionBarTextWidth = " + this.actionBarTextWidth);
                 }
             }
             if (n4 + n5 * (-1 + arrstring.length) > this.actionBarTextHeight) {
                 this.actionBarTextHeight = n4 + n5 * (-1 + arrstring.length);
                 if (DEBUG) {
-                    c.d(TAG, "actionBarTextHeight = " + this.actionBarTextHeight + "  totalHeight = " + n4);
-                    c.d(TAG, "spacing = " + n5 + "  lines.length = " + arrstring.length);
+                    Log.d(TAG, "actionBarTextHeight = " + this.actionBarTextHeight + "  totalHeight = " + n4);
+                    Log.d(TAG, "spacing = " + n5 + "  lines.length = " + arrstring.length);
                 }
             }
             if (2 + this.actionBarTextWidth <= 0 || this.actionBarTextHeight <= 0) {
-                c.e(TAG, "Create Bitmap - Illegal Argument : check input");
+                Log.e(TAG, "Create Bitmap - Illegal Argument : check input");
                 return null;
             }
             bitmap = Bitmap.createBitmap((int)(2 + this.actionBarTextWidth), (int)this.actionBarTextHeight, (Bitmap.Config)Bitmap.Config.ARGB_8888);
         } else {
             if (n3 + 2 <= 0 || n4 + n5 * (-1 + arrstring.length) <= 0) {
-                c.e(TAG, "Create Bitmap - Illegal Argument : check input");
+                Log.e(TAG, "Create Bitmap - Illegal Argument : check input");
                 return null;
             }
             bitmap = Bitmap.createBitmap((int)(n3 + 2), (int)(n4 + n5 * (-1 + arrstring.length)), (Bitmap.Config)Bitmap.Config.ARGB_8888);
@@ -399,14 +390,14 @@ lbl28: // 2 sources:
             }
             textPaint.getTextBounds(arrstring[n7], 0, arrstring[n7].length(), rect);
             if (DEBUG) {
-                c.d(TAG, "Draw line " + n7 + " width: " + rect.width() + "  at ( " + (-rect.left + (n3 - rect.width()) / 2) + " , " + -rect.top + n6 + " )");
+                Log.d(TAG, "Draw line " + n7 + " width: " + rect.width() + "  at ( " + (-rect.left + (n3 - rect.width()) / 2) + " , " + -rect.top + n6 + " )");
             }
             if (bl && h.isRTL() || h.aq(this.getContext())) {
-                c.v(TAG, "action bar info, current language is RTL, so text2png uses Align.RIGHT and uses RTL version xPos.");
+                Log.v(TAG, "action bar info, current language is RTL, so text2png uses Align.RIGHT and uses RTL version xPos.");
                 textPaint.setTextAlign(Paint.Align.RIGHT);
                 n8 = canvas.getWidth();
             } else {
-                c.v(TAG, "text2png uses LTR version xPos.");
+                Log.v(TAG, "text2png uses LTR version xPos.");
                 n8 = -rect.left + (n3 - rect.width()) / 2;
             }
             canvas.drawText(arrstring[n7], (float)n8, (float)(n6 + -rect.top), (Paint)textPaint);
@@ -449,50 +440,50 @@ lbl28: // 2 sources:
             File file;
             byte[] arrby;
             if (tAController == null) {
-                c.e(TAG, "Error: TAController is null. Not created yet");
+                Log.e(TAG, "Error: TAController is null. Not created yet");
                 continue;
             }
             if (!tAController.usesPinRandom()) {
-                c.d(TAG, "This TA do not use Pin Random");
+                Log.d(TAG, "This TA do not use Pin Random");
                 continue;
             }
             TAInfo tAInfo = tAController.getTAInfo();
             if (!bl && (file = new File(TUI_DATA_DIR, tAInfo.getPinRandomFileName())).exists() && !file.isDirectory()) {
-                c.d(TAG, "Pin Random already exist for this TA");
+                Log.d(TAG, "Pin Random already exist for this TA");
                 continue;
             }
             if (bQC) {
-                c.d(TAG, "For QC only, trying to load TA: " + tAController.getTAInfo().getTAFileName());
+                Log.d(TAG, "For QC only, trying to load TA: " + tAController.getTAInfo().getTAFileName());
                 if (!tAController.loadTA()) {
-                    c.d(TAG, "Failed to load TA " + tAController.getTAInfo().getTAFileName());
+                    Log.d(TAG, "Failed to load TA " + tAController.getTAInfo().getTAFileName());
                     continue;
                 }
             }
             if ((arrby = this.getPinRandom(string = tAInfo.getTAId())) != null) {
                 if (DEBUG) {
-                    c.d(TAG, "Get SO (len=" + arrby.length + ")for " + string);
+                    Log.d(TAG, "Get SO (len=" + arrby.length + ")for " + string);
                 }
                 if (bQC) {
-                    c.d(TAG, "Now send the encapsulated buffer to TA " + string);
+                    Log.d(TAG, "Now send the encapsulated buffer to TA " + string);
                     tAController.setupPinRandom(arrby);
                     tAController.unloadTA();
                     continue;
                 }
                 String string2 = tAInfo.getPinRandomFileName();
-                c.d(TAG, "For tbase, file name is " + string2);
+                Log.d(TAG, "For tbase, file name is " + string2);
                 File file2 = new File(TUI_DATA_DIR, string2);
                 try {
                     SpayTuiTAController.writeFile(arrby, file2);
                     continue;
                 }
                 catch (Exception exception) {
-                    c.e(TAG, "Failed to save SO for " + string);
+                    Log.e(TAG, "Failed to save SO for " + string);
                     exception.printStackTrace();
                     this.deletePinSo();
                     return 393217;
                 }
             }
-            c.e(TAG, "Failed to get SO for " + string);
+            Log.e(TAG, "Failed to get SO for " + string);
             this.deletePinSo();
             return 393217;
         }
@@ -510,20 +501,20 @@ lbl28: // 2 sources:
             block9 : {
                 block8 : {
                     if (DEBUG) {
-                        c.d(TAG, "Calling checkTuiSession");
+                        Log.d(TAG, "Calling checkTuiSession");
                     }
                     if (this.mPaymentHandle != null) break block8;
-                    c.e(TAG, "Error: Payment Handle is null");
+                    Log.e(TAG, "Error: Payment Handle is null");
                     return -1;
                 }
                 tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.CheckTUISession.Request());
                 if (tACommandResponse != null) break block9;
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return -2;
             }
             SpayTuiTACommands.CheckTUISession.Response response = new SpayTuiTACommands.CheckTUISession.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "CheckTUISession return " + response.mRetVal.retCode.get());
+                Log.d(TAG, "CheckTUISession return " + response.mRetVal.retCode.get());
             }
             long l2 = response.mRetVal.retCode.get();
             return (int)l2;
@@ -541,20 +532,20 @@ lbl28: // 2 sources:
             block9 : {
                 block8 : {
                     if (DEBUG) {
-                        c.d(TAG, "Calling clearTuiState");
+                        Log.d(TAG, "Calling clearTuiState");
                     }
                     if (this.mPaymentHandle != null) break block8;
-                    c.e(TAG, "Error: Payment Handle is null");
+                    Log.e(TAG, "Error: Payment Handle is null");
                     return -1;
                 }
                 tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.ClearState.Request());
                 if (tACommandResponse != null) break block9;
-                c.e(TAG, "Error: load_    and_execute failed");
+                Log.e(TAG, "Error: load_    and_execute failed");
                 return -2;
             }
             SpayTuiTACommands.ClearState.Response response = new SpayTuiTACommands.ClearState.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "clearTuiState return " + response.mRetVal.retCode.get());
+                Log.d(TAG, "clearTuiState return " + response.mRetVal.retCode.get());
             }
             long l2 = response.mRetVal.retCode.get();
             return (int)l2;
@@ -569,14 +560,14 @@ lbl28: // 2 sources:
     public boolean deletePin() {
         SpayTuiTAController spayTuiTAController = this;
         synchronized (spayTuiTAController) {
-            c.i(TAG, "Delete PIN data");
+            Log.i(TAG, "Delete PIN data");
             for (TAController tAController : this.mSupportTAs) {
                 if (tAController == null) {
-                    c.e(TAG, "Error: TAController is null. Not created yet");
+                    Log.e(TAG, "Error: TAController is null. Not created yet");
                     continue;
                 }
                 if (!tAController.usesPinRandom()) {
-                    c.d(TAG, "This TA do not use Pin Random");
+                    Log.d(TAG, "This TA do not use Pin Random");
                     continue;
                 }
                 String string = tAController.getTAInfo().getPinRandomFileName();
@@ -589,7 +580,7 @@ lbl28: // 2 sources:
             if (bl) {
                 return true;
             }
-            c.e(TAG, "Unable to delete PIN SO!");
+            Log.e(TAG, "Unable to delete PIN SO!");
             return false;
         }
     }
@@ -631,11 +622,11 @@ lbl28: // 2 sources:
             for (int i2 = 0; i2 < n2; ++i2) {
                 String string4 = arrstring[i2];
                 if (string4 == null || !string4.equals((Object)this.mTAInfo.getTAFileName())) continue;
-                c.d(TAG, "Found TA file: " + string2);
+                Log.d(TAG, "Found TA file: " + string2);
                 return string2;
             }
         }
-        c.d(TAG, "Load default TUI for res: " + string);
+        Log.d(TAG, "Load default TUI for res: " + string);
         return TAInfo.getTARootDir() + File.separator + this.mTAInfo.getTAFileName();
     }
 
@@ -649,27 +640,27 @@ lbl28: // 2 sources:
         SpayTuiTAController spayTuiTAController = this;
         synchronized (spayTuiTAController) {
             if (DEBUG) {
-                c.d(TAG, "Calling generate Random");
+                Log.d(TAG, "Calling generate Random");
             }
             if (this.mPaymentHandle != null) {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.GenerateRandom.Request());
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     return null;
                 }
                 SpayTuiTACommands.GenerateRandom.Response response = new SpayTuiTACommands.GenerateRandom.Response(tACommandResponse);
                 if (response.mRetVal.retCode.get() != 0L) {
-                    c.e(TAG, "Error: get random return " + response.mRetVal.retCode.get());
+                    Log.e(TAG, "Error: get random return " + response.mRetVal.retCode.get());
                     return null;
                 }
-                c.i(TAG, "generateRandom: Existing Pin length=" + response.mRetVal.existPinLen.get());
+                Log.i(TAG, "generateRandom: Existing Pin length=" + response.mRetVal.existPinLen.get());
                 byte[] arrby2 = response.mRetVal.pinSo.getData();
                 if (!DEBUG) return arrby2;
-                c.d(TAG, "Get random/PIN so size: " + response.mRetVal.pinSo.size());
-                c.d(TAG, "Pin length: " + response.mRetVal.existPinLen.get() + "  It should be 0");
+                Log.d(TAG, "Get random/PIN so size: " + response.mRetVal.pinSo.size());
+                Log.d(TAG, "Pin length: " + response.mRetVal.existPinLen.get() + "  It should be 0");
                 return arrby2;
             }
-            c.e(TAG, "Error: Payment Handle is null");
+            Log.e(TAG, "Error: Payment Handle is null");
             return arrby;
         }
     }
@@ -686,52 +677,52 @@ lbl28: // 2 sources:
             block12 : {
                 SpayTuiTACommands.GetAuthResult.Request request;
                 if (DEBUG) {
-                    c.d(TAG, "Calling get auth result");
+                    Log.d(TAG, "Calling get auth result");
                 }
                 this.mNonce = null;
                 if (this.mPaymentHandle == null) break block12;
                 if (arrby == null || string == null || arrby2 == null) {
-                    c.e(TAG, "invalid input to getAuthResult()");
+                    Log.e(TAG, "invalid input to getAuthResult()");
                     return null;
                 }
                 try {
                     request = new SpayTuiTACommands.GetAuthResult.Request(arrby, string, arrby2);
                 }
                 catch (IllegalArgumentException illegalArgumentException) {
-                    c.e(TAG, illegalArgumentException.toString());
+                    Log.e(TAG, illegalArgumentException.toString());
                     illegalArgumentException.printStackTrace();
                     return null;
                 }
                 TACommandResponse tACommandResponse = this.executeNoLoad(request);
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     return null;
                 }
                 SpayTuiTACommands.GetAuthResult.Response response = new SpayTuiTACommands.GetAuthResult.Response(tACommandResponse);
                 if (DEBUG) {
-                    c.d(TAG, "get auth result return " + response.mRetVal.retCode.get());
+                    Log.d(TAG, "get auth result return " + response.mRetVal.retCode.get());
                 }
                 String string2 = response.mRetVal.authType.get() == 0L ? "PIN" : (response.mRetVal.authType.get() == 1L ? "FP" : (response.mRetVal.authType.get() == 2L ? "BACKUP PASSWORD" : (response.mRetVal.authType.get() == 3L ? "IRIS" : "NONE")));
                 long l2 = response.mRetVal.retCode.get() LCMP 0L;
                 authResult = null;
                 if (l2 != false) return authResult;
                 if (response.mRetVal.update_pin_so.get() != 0) {
-                    c.i(TAG, "getAuthResult: Existing PIN len=" + response.mRetVal.existPinLen.get());
+                    Log.i(TAG, "getAuthResult: Existing PIN len=" + response.mRetVal.existPinLen.get());
                     boolean bl = response.mRetVal.existPinLen.get() > 0L;
                     mPinExist = bl;
                     if (DEBUG) {
-                        c.d(TAG, "Need to update PIN SO! PIN exist: " + mPinExist + " pin len: " + response.mRetVal.existPinLen.get());
+                        Log.d(TAG, "Need to update PIN SO! PIN exist: " + mPinExist + " pin len: " + response.mRetVal.existPinLen.get());
                     }
-                    c.i(TAG, "getAuthResult: savePinSo");
+                    Log.i(TAG, "getAuthResult: savePinSo");
                     this.savePinSo(response.mRetVal.pin_so.getData());
                     return new AuthResult(response.mRetVal.so.getData(), string2);
                 } else {
                     if (!DEBUG) return new AuthResult(response.mRetVal.so.getData(), string2);
-                    c.d(TAG, "No need to update PIN SO");
+                    Log.d(TAG, "No need to update PIN SO");
                 }
                 return new AuthResult(response.mRetVal.so.getData(), string2);
             }
-            c.e(TAG, "Error: Payment Handle is null");
+            Log.e(TAG, "Error: Payment Handle is null");
             return authResult;
         }
     }
@@ -746,11 +737,11 @@ lbl28: // 2 sources:
         SpayTuiTAController spayTuiTAController = this;
         synchronized (spayTuiTAController) {
             if (DEBUG) {
-                c.d(TAG, "Calling getCachedNonce");
+                Log.d(TAG, "Calling getCachedNonce");
             }
             if (this.mPaymentHandle != null) {
                 if (this.mNonce != null && this.mNonce.length == n2) {
-                    c.d(TAG, "return existing nonce");
+                    Log.d(TAG, "return existing nonce");
                     return new AuthNonce(this.mNonce, true);
                 }
                 authNonce = null;
@@ -758,14 +749,14 @@ lbl28: // 2 sources:
                 this.mNonce = this.getNonce(n2);
                 return new AuthNonce(this.mNonce, false);
             }
-            c.e(TAG, "Error: Payment Handle is null");
+            Log.e(TAG, "Error: Payment Handle is null");
             return authNonce;
         }
     }
 
     public String getLocale() {
         String string = SpayTuiTAController.mContext.getResources().getConfiguration().locale.getLanguage();
-        c.d(TAG, "locale.getLanguage: " + string);
+        Log.d(TAG, "locale.getLanguage: " + string);
         return string;
     }
 
@@ -779,18 +770,18 @@ lbl28: // 2 sources:
         SpayTuiTAController spayTuiTAController = this;
         synchronized (spayTuiTAController) {
             if (DEBUG) {
-                c.d(TAG, "Calling get nonce");
+                Log.d(TAG, "Calling get nonce");
             }
             this.mNonce = null;
             if (this.mPaymentHandle != null) {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.GetNonce.Request(n2));
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     return null;
                 }
                 SpayTuiTACommands.GetNonce.Response response = new SpayTuiTACommands.GetNonce.Response(tACommandResponse);
                 if (DEBUG) {
-                    c.d(TAG, "get Nonce return " + response.mRetVal.retCode.get());
+                    Log.d(TAG, "get Nonce return " + response.mRetVal.retCode.get());
                 }
                 long l2 = response.mRetVal.retCode.get() LCMP 0L;
                 arrby = null;
@@ -798,7 +789,7 @@ lbl28: // 2 sources:
                 byte[] arrby2 = response.mRetVal.nonce.getData();
                 return arrby2;
             }
-            c.e(TAG, "Error: Payment Handle is null");
+            Log.e(TAG, "Error: Payment Handle is null");
             return arrby;
         }
     }
@@ -813,21 +804,21 @@ lbl28: // 2 sources:
         SpayTuiTAController spayTuiTAController = this;
         synchronized (spayTuiTAController) {
             if (DEBUG) {
-                c.d(TAG, "Calling get PIN random");
+                Log.d(TAG, "Calling get PIN random");
             }
             if (this.mPaymentHandle != null) {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.GetPinRandom.Request(string));
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     return null;
                 }
                 SpayTuiTACommands.GetPinRandom.Response response = new SpayTuiTACommands.GetPinRandom.Response(tACommandResponse);
                 byte[] arrby2 = response.mRetVal.result_so.getData();
                 if (!DEBUG) return arrby2;
-                c.d(TAG, "getPinRandom return " + response.mRetVal.retCode.get() + "auth_type = " + response.mRetVal.authType.get());
+                Log.d(TAG, "getPinRandom return " + response.mRetVal.retCode.get() + "auth_type = " + response.mRetVal.authType.get());
                 return arrby2;
             }
-            c.e(TAG, "Error: Payment Handle is null");
+            Log.e(TAG, "Error: Payment Handle is null");
             return arrby;
         }
     }
@@ -842,31 +833,31 @@ lbl28: // 2 sources:
         SpayTuiTAController spayTuiTAController = this;
         synchronized (spayTuiTAController) {
             if (DEBUG) {
-                c.d(TAG, "Calling get Pin SO");
+                Log.d(TAG, "Calling get Pin SO");
             }
             if (this.mPaymentHandle != null) {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.GetPinSO.Request());
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     return null;
                 }
                 SpayTuiTACommands.GetPinSO.Response response = new SpayTuiTACommands.GetPinSO.Response(tACommandResponse);
                 if (response.mRetVal.retCode.get() != 0L) {
-                    c.e(TAG, "Error: get PIN SO return " + response.mRetVal.retCode.get());
+                    Log.e(TAG, "Error: get PIN SO return " + response.mRetVal.retCode.get());
                     return null;
                 }
                 if (DEBUG) {
-                    c.d(TAG, "Get PIN SO size: " + response.mRetVal.pinSo.size());
+                    Log.d(TAG, "Get PIN SO size: " + response.mRetVal.pinSo.size());
                 }
                 boolean bl = response.mRetVal.existPinLen.get() > 0L;
                 mPinExist = bl;
-                c.i(TAG, "getPinSO: Existing Pin len=" + response.mRetVal.existPinLen.get());
+                Log.i(TAG, "getPinSO: Existing Pin len=" + response.mRetVal.existPinLen.get());
                 byte[] arrby2 = response.mRetVal.pinSo.getData();
                 if (!DEBUG) return arrby2;
-                c.d(TAG, "Pin len: " + response.mRetVal.existPinLen.get() + "  pin exist: " + mPinExist);
+                Log.d(TAG, "Pin len: " + response.mRetVal.existPinLen.get() + "  pin exist: " + mPinExist);
                 return arrby2;
             }
-            c.e(TAG, "Error: Payment Handle is null");
+            Log.e(TAG, "Error: Payment Handle is null");
             return arrby;
         }
     }
@@ -879,8 +870,8 @@ lbl28: // 2 sources:
         Configuration configuration = mContext.getResources().getConfiguration();
         DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
         int n2 = (int)((float)configuration.smallestScreenWidthDp * displayMetrics.density);
-        c.d(TAG, "disp.density: " + displayMetrics.density + ", conf.smallestScreenWidthDp: " + configuration.smallestScreenWidthDp);
-        c.d(TAG, "swidth: " + n2);
+        Log.d(TAG, "disp.density: " + displayMetrics.density + ", conf.smallestScreenWidthDp: " + configuration.smallestScreenWidthDp);
+        Log.d(TAG, "swidth: " + n2);
         String string2 = n2 < 800 ? "-xhdpi" : (n2 < 1100 ? "-xxhdpi" : "-xxxhdpi");
         if (!bQC) {
             Locale locale = Locale.US;
@@ -910,25 +901,25 @@ lbl28: // 2 sources:
             block8 : {
                 SpayTuiTACommands.GetSecureResult.Request request;
                 if (DEBUG) {
-                    c.d(TAG, "Calling get secure result");
+                    Log.d(TAG, "Calling get secure result");
                 }
                 if (this.mPaymentHandle == null) break block8;
                 try {
                     request = new SpayTuiTACommands.GetSecureResult.Request(arrby, string);
                 }
                 catch (IllegalArgumentException illegalArgumentException) {
-                    c.e(TAG, illegalArgumentException.toString());
+                    Log.e(TAG, illegalArgumentException.toString());
                     illegalArgumentException.printStackTrace();
                     return null;
                 }
                 TACommandResponse tACommandResponse = this.executeNoLoad(request);
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     return null;
                 }
                 SpayTuiTACommands.GetSecureResult.Response response = new SpayTuiTACommands.GetSecureResult.Response(tACommandResponse);
                 if (DEBUG) {
-                    c.d(TAG, "getSecureResult return " + response.mRetVal.retCode.get());
+                    Log.d(TAG, "getSecureResult return " + response.mRetVal.retCode.get());
                 }
                 long l2 = 0L LCMP response.mRetVal.retCode.get();
                 arrby2 = null;
@@ -936,7 +927,7 @@ lbl28: // 2 sources:
                 byte[] arrby3 = response.mRetVal.result_so.getData();
                 return arrby3;
             }
-            c.e(TAG, "Error: Payment Handle is null");
+            Log.e(TAG, "Error: Payment Handle is null");
             return arrby2;
         }
     }
@@ -948,7 +939,7 @@ lbl28: // 2 sources:
     public int inAppConfirm(String string, String string2, String string3, String string4, String string5, String string6, byte[] arrby) {
         int n2;
         if (string == null || string2 == null || string3 == null || string4 == null || string5 == null || string6 == null || arrby == null || arrby.length == 0) {
-            c.e(TAG, "inAppConfirm input is null");
+            Log.e(TAG, "inAppConfirm input is null");
             return -2;
         }
         TextPaint textPaint = new TextPaint(){
@@ -971,7 +962,7 @@ lbl28: // 2 sources:
         };
         Rect rect = new Rect();
         textPaint2.getTextBounds(string2, 0, string2.length(), rect);
-        c.d(TAG, "store length=" + (128.0f * this.getDensity() + (float)rect.width()));
+        Log.d(TAG, "store length=" + (128.0f * this.getDensity() + (float)rect.width()));
         if (128.0f * this.getDensity() + (float)rect.width() > 360.0f * this.getDensity()) {
             String string7 = string2.substring(0, string2.length() / 2);
             string2 = string7 + "...";
@@ -1019,22 +1010,22 @@ lbl28: // 2 sources:
         byte[] arrby6 = this.text2png(string5, textPaint5, Color.argb((int)0, (int)250, (int)250, (int)250), false);
         byte[] arrby7 = this.text2png(string6, textPaint6, Color.argb((int)0, (int)250, (int)250, (int)250), false);
         if (arrby2 == null || arrby3 == null || arrby4 == null || arrby5 == null || arrby6 == null || arrby7 == null) {
-            c.e(TAG, "inAppConfirm text2png is null");
+            Log.e(TAG, "inAppConfirm text2png is null");
             return -2;
         }
-        c.d(TAG, "Lengthes: " + arrby2.length + " " + arrby3.length + " " + arrby4.length + " " + arrby5.length + " " + arrby6.length + " " + arrby7.length + " " + arrby.length);
+        Log.d(TAG, "Lengthes: " + arrby2.length + " " + arrby3.length + " " + arrby4.length + " " + arrby5.length + " " + arrby6.length + " " + arrby7.length + " " + arrby.length);
         if (14 + (arrby2.length + arrby3.length + arrby4.length + arrby5.length + arrby6.length + arrby7.length + arrby.length) > 256000) {
-            c.e(TAG, "Out of buffer");
+            Log.e(TAG, "Out of buffer");
             return -2;
         }
         TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.InAppConfirm.Request(arrby2, arrby3, arrby4, arrby5, arrby6, arrby7, arrby));
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: load_and_execute failed");
+            Log.e(TAG, "Error: load_and_execute failed");
             return -2;
         }
         SpayTuiTACommands.InAppConfirm.Response response = new SpayTuiTACommands.InAppConfirm.Response(tACommandResponse);
         if (DEBUG) {
-            c.d(TAG, "InAppConfirm return " + response.mRetVal.retCode.get());
+            Log.d(TAG, "InAppConfirm return " + response.mRetVal.retCode.get());
         }
         if ((n2 = (int)response.mRetVal.retCode.get()) != 0) return n2;
         if (!bQC) return n2;
@@ -1058,23 +1049,23 @@ lbl28: // 2 sources:
             this.actionBarTextWidth = 0;
             this.actionBarTextHeight = 0;
             if (DEBUG) {
-                c.d(TAG, "Calling loadPin()");
+                Log.d(TAG, "Calling loadPin()");
             }
             if (this.mPaymentHandle == null) {
-                c.e(TAG, "Error: Payment Handle is null");
+                Log.e(TAG, "Error: Payment Handle is null");
                 return -1;
             }
             try {
                 request = new SpayTuiTACommands.LoadPin.Request(arrby);
             }
             catch (IllegalArgumentException illegalArgumentException) {
-                c.e(TAG, illegalArgumentException.toString());
+                Log.e(TAG, illegalArgumentException.toString());
                 illegalArgumentException.printStackTrace();
                 return -3;
             }
             TACommandResponse tACommandResponse = this.executeNoLoad(request);
             if (tACommandResponse == null) {
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return -2;
             }
             SpayTuiTACommands.LoadPin.Response response = new SpayTuiTACommands.LoadPin.Response(tACommandResponse);
@@ -1086,14 +1077,14 @@ lbl28: // 2 sources:
                 bl = false;
             }
             mPinExist = bl;
-            c.i(TAG, "loadPin: Existing PIN len=" + response.mRetVal.existPinLen.get());
+            Log.i(TAG, "loadPin: Existing PIN len=" + response.mRetVal.existPinLen.get());
             if (n2 == 413696) {
-                c.i(TAG, "loadPin: Saving upgraded pin so file");
+                Log.i(TAG, "loadPin: Saving upgraded pin so file");
                 this.savePinSo(response.mRetVal.updated_pin_so.getData());
                 this.writePinRandomFiles(true);
             }
             if (!DEBUG) return 0;
-            c.d(TAG, "Existing PIN len: " + response.mRetVal.existPinLen.get() + "  pin exist: " + mPinExist);
+            Log.d(TAG, "Existing PIN len: " + response.mRetVal.existPinLen.get() + "  pin exist: " + mPinExist);
             return 0;
         }
     }
@@ -1119,25 +1110,25 @@ lbl28: // 2 sources:
                 if (arrby != null && arrby.length > 0) {
                     int n3;
                     if (DEBUG) {
-                        c.d(TAG, "pin so: " + arrby.toString());
+                        Log.d(TAG, "pin so: " + arrby.toString());
                     }
                     if ((n3 = this.loadPin(Arrays.copyOfRange((byte[])arrby, (int)1, (int)arrby.length))) == 0) {
                         if (DEBUG) {
-                            c.d(TAG, "Existing Pin SO loaded, PIN exist: " + mPinExist + "  pin[0] = " + arrby[0]);
+                            Log.d(TAG, "Existing Pin SO loaded, PIN exist: " + mPinExist + "  pin[0] = " + arrby[0]);
                         }
                         this.writePinRandomFiles(false);
                         return bl;
                     }
-                    c.e(TAG, "Load PIN failed with ret = " + n3 + ": possibly invalid PIN secure object!");
+                    Log.e(TAG, "Load PIN failed with ret = " + n3 + ": possibly invalid PIN secure object!");
                     return false;
                 }
                 if (DEBUG) {
-                    c.d(TAG, "No PIN file found, generate the file only containing random");
+                    Log.d(TAG, "No PIN file found, generate the file only containing random");
                 }
                 if ((n2 = this.savePinSecureObjects(true)) == 0) return bl;
                 return false;
             }
-            c.e(TAG, "PF resetting... ");
+            Log.e(TAG, "PF resetting... ");
             return bl2;
         }
     }
@@ -1147,20 +1138,20 @@ lbl28: // 2 sources:
      */
     public int merchantSecureDisplay(byte[] arrby, int n2, int n3, int[] arrn) {
         if (arrby == null || arrby.length == 0 || arrn == null || arrn.length == 0) {
-            c.e(TAG, "merchantSecureDisplay input is null");
+            Log.e(TAG, "merchantSecureDisplay input is null");
             return -2;
         }
-        c.d(TAG, "merchantSecureDisplay: totalSize=" + n2 + " index=" + n3 + " screenPNG.length=" + arrby.length + " coordinates.length=" + arrn.length);
+        Log.d(TAG, "merchantSecureDisplay: totalSize=" + n2 + " index=" + n3 + " screenPNG.length=" + arrby.length + " coordinates.length=" + arrn.length);
         if (n3 == 0) {
             mScreenPNGBuf = new byte[n2];
         }
         System.arraycopy((Object)arrby, (int)0, (Object)mScreenPNGBuf, (int)n3, (int)arrby.length);
         if (n3 + arrby.length < n2) {
-            c.d(TAG, "merchantSecureDisplay: transfer not finished!");
+            Log.d(TAG, "merchantSecureDisplay: transfer not finished!");
             return 0;
         }
-        c.d(TAG, "merchantSecureDisplay: transfer finished!");
-        c.d(TAG, "merchantSecureDisplay before computation");
+        Log.d(TAG, "merchantSecureDisplay: transfer finished!");
+        Log.d(TAG, "merchantSecureDisplay before computation");
         byte[] arrby2 = new byte[5 + 3 * arrn.length];
         arrby2[0] = (byte)(255 & mScreenPNGBuf.length >> 16);
         arrby2[1] = (byte)(255 & mScreenPNGBuf.length >> 8);
@@ -1179,17 +1170,17 @@ lbl28: // 2 sources:
                 n4 = n7;
             }
         }
-        c.d(TAG, "merchantSecureDisplay after computation");
+        Log.d(TAG, "merchantSecureDisplay after computation");
         TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.MerchantSecureDisplay.Request(arrby2));
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: load_and_execute failed");
+            Log.e(TAG, "Error: load_and_execute failed");
             return -2;
         }
         int n8 = (int)new SpayTuiTACommands.MerchantSecureDisplay.Response((TACommandResponse)tACommandResponse).mRetVal.retCode.get();
         if (n8 != 0 && n8 != 3) {
             return n8;
         }
-        c.d(TAG, "Initial transfer size=" + mScreenPNGBuf.length);
+        Log.d(TAG, "Initial transfer size=" + mScreenPNGBuf.length);
         int n9 = mScreenPNGBuf.length;
         int n10 = 0;
         int n11 = n8;
@@ -1203,16 +1194,16 @@ lbl28: // 2 sources:
                 n9 = 0;
             }
             byte[] arrby3 = new byte[n12];
-            c.d(TAG, "size=" + n12 + " left=" + n9 + " tmpBuf=" + arrby3.length);
+            Log.d(TAG, "size=" + n12 + " left=" + n9 + " tmpBuf=" + arrby3.length);
             System.arraycopy((Object)mScreenPNGBuf, (int)n10, (Object)arrby3, (int)0, (int)n12);
             int n13 = n12 + n10;
             TACommandResponse tACommandResponse2 = this.executeNoLoad(new SpayTuiTACommands.MerchantSecureDisplay.Request(arrby3));
             if (tACommandResponse2 == null) {
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return n11;
             }
             n11 = (int)new SpayTuiTACommands.MerchantSecureDisplay.Response((TACommandResponse)tACommandResponse2).mRetVal.retCode.get();
-            c.d(TAG, "Response.mRetVal.retCode.get()=" + n11);
+            Log.d(TAG, "Response.mRetVal.retCode.get()=" + n11);
             n10 = n13;
         }
         return n11;
@@ -1220,10 +1211,10 @@ lbl28: // 2 sources:
 
     public int merchantSecureInit(int n2, int[] arrn) {
         if (arrn == null || arrn.length == 0) {
-            c.e(TAG, "merchantSecureInit input is null");
+            Log.e(TAG, "merchantSecureInit input is null");
             return -2;
         }
-        c.d(TAG, "merchantSecureInit before computation totalSize=" + n2 + " coordinates.len=" + arrn.length);
+        Log.d(TAG, "merchantSecureInit before computation totalSize=" + n2 + " coordinates.len=" + arrn.length);
         byte[] arrby = new byte[5 + 3 * arrn.length];
         arrby[0] = (byte)(255 & n2 >> 16);
         arrby[1] = (byte)(255 & n2 >> 8);
@@ -1242,10 +1233,10 @@ lbl28: // 2 sources:
                 n3 = n6;
             }
         }
-        c.d(TAG, "merchantSecureInit after computation");
+        Log.d(TAG, "merchantSecureInit after computation");
         TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.MerchantSecureInit.Request(arrby));
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: load_and_execute failed");
+            Log.e(TAG, "Error: load_and_execute failed");
             return -2;
         }
         return (int)new SpayTuiTACommands.MerchantSecureInit.Response((TACommandResponse)tACommandResponse).mRetVal.retCode.get();
@@ -1256,13 +1247,13 @@ lbl28: // 2 sources:
      */
     public int[] merchantSecureTouch() {
         int[] arrn = new int[]{-2, 0};
-        c.d(TAG, "Before start_secure_touch()");
+        Log.d(TAG, "Before start_secure_touch()");
         if (bQC) {
             arrn[0] = this.start_secure_touch();
         } else {
             TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.MerchantSecureTouch.Request());
             if (tACommandResponse == null) {
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return arrn;
             }
             arrn[0] = (int)new SpayTuiTACommands.MerchantSecureTouch.Response((TACommandResponse)tACommandResponse).mRetVal.retCode.get();
@@ -1271,7 +1262,7 @@ lbl28: // 2 sources:
             arrn[1] = 4095 & arrn[0];
             arrn[0] = 0;
         }
-        c.d(TAG, "After start_secure_touch(): ret[0]=" + arrn[0] + ", ret[1]=" + arrn[1]);
+        Log.d(TAG, "After start_secure_touch(): ret[0]=" + arrn[0] + ", ret[1]=" + arrn[1]);
         return arrn;
     }
 
@@ -1280,32 +1271,32 @@ lbl28: // 2 sources:
      */
     public int merchantSendSecureImg(byte[] arrby, int n2, int n3, int n4, int n5) {
         if (arrby == null || arrby.length == 0) {
-            c.e(TAG, "merchantSendSecureImg input is null");
+            Log.e(TAG, "merchantSendSecureImg input is null");
             return -2;
         }
-        c.d(TAG, "merchantSendSecureImg: totalSize=" + n2 + " index=" + n3 + " screenPNG.length=" + arrby.length + " x=" + n4 + " y=" + n5);
+        Log.d(TAG, "merchantSendSecureImg: totalSize=" + n2 + " index=" + n3 + " screenPNG.length=" + arrby.length + " x=" + n4 + " y=" + n5);
         if (n3 == 0) {
             mScreenPNGBuf = new byte[n2];
         }
         System.arraycopy((Object)arrby, (int)0, (Object)mScreenPNGBuf, (int)n3, (int)arrby.length);
         if (n3 + arrby.length < n2) {
-            c.d(TAG, "merchantSendSecureImg: transfer not finished!");
+            Log.d(TAG, "merchantSendSecureImg: transfer not finished!");
             return 0;
         }
-        c.d(TAG, "merchantSendSecureImg: transfer finished!");
-        c.d(TAG, "merchantSendSecureImg before computation");
+        Log.d(TAG, "merchantSendSecureImg: transfer finished!");
+        Log.d(TAG, "merchantSendSecureImg before computation");
         byte[] arrby2 = new byte[]{(byte)(255 & mScreenPNGBuf.length >> 16), (byte)(255 & mScreenPNGBuf.length >> 8), (byte)(255 & mScreenPNGBuf.length), (byte)(255 & n4 >> 16), (byte)(255 & n4 >> 8), (byte)(n4 & 255), (byte)(255 & n5 >> 16), (byte)(255 & n5 >> 8), (byte)(n5 & 255)};
-        c.d(TAG, "merchantSendSecureImg after computation");
+        Log.d(TAG, "merchantSendSecureImg after computation");
         TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.MerchantSendSecureImg.Request(arrby2));
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: load_and_execute failed");
+            Log.e(TAG, "Error: load_and_execute failed");
             return -2;
         }
         int n6 = (int)new SpayTuiTACommands.MerchantSendSecureImg.Response((TACommandResponse)tACommandResponse).mRetVal.retCode.get();
         if (n6 != 0 && n6 != 3) {
             return n6;
         }
-        c.d(TAG, "Initial transfer size=" + mScreenPNGBuf.length);
+        Log.d(TAG, "Initial transfer size=" + mScreenPNGBuf.length);
         int n7 = mScreenPNGBuf.length;
         int n8 = 0;
         int n9 = n6;
@@ -1319,16 +1310,16 @@ lbl28: // 2 sources:
                 n7 = 0;
             }
             byte[] arrby3 = new byte[n10];
-            c.d(TAG, "size=" + n10 + " left=" + n7 + " tmpBuf=" + arrby3.length);
+            Log.d(TAG, "size=" + n10 + " left=" + n7 + " tmpBuf=" + arrby3.length);
             System.arraycopy((Object)mScreenPNGBuf, (int)n8, (Object)arrby3, (int)0, (int)n10);
             int n11 = n10 + n8;
             TACommandResponse tACommandResponse2 = this.executeNoLoad(new SpayTuiTACommands.MerchantSendSecureImg.Request(arrby3));
             if (tACommandResponse2 == null) {
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return n9;
             }
             n9 = (int)new SpayTuiTACommands.MerchantSendSecureImg.Response((TACommandResponse)tACommandResponse2).mRetVal.retCode.get();
-            c.d(TAG, " =" + n9);
+            Log.d(TAG, " =" + n9);
             n8 = n11;
         }
         return n9;
@@ -1352,28 +1343,28 @@ lbl28: // 2 sources:
                 block10 : {
                     SpayTuiTACommands.PreloadFpSecureResult.Request request;
                     if (DEBUG) {
-                        c.d(TAG, "Calling preloadFpSecureResult");
+                        Log.d(TAG, "Calling preloadFpSecureResult");
                     }
                     if (this.mPaymentHandle == null) {
-                        c.e(TAG, "Error: Payment Handle is null");
+                        Log.e(TAG, "Error: Payment Handle is null");
                         return -1;
                     }
                     try {
                         request = new SpayTuiTACommands.PreloadFpSecureResult.Request(arrby);
                     }
                     catch (IllegalArgumentException illegalArgumentException) {
-                        c.e(TAG, illegalArgumentException.toString());
+                        Log.e(TAG, illegalArgumentException.toString());
                         illegalArgumentException.printStackTrace();
                         break block9;
                     }
                     tACommandResponse = this.executeNoLoad(request);
                     if (tACommandResponse != null) break block10;
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     break block9;
                 }
                 SpayTuiTACommands.PreloadFpSecureResult.Response response = new SpayTuiTACommands.PreloadFpSecureResult.Response(tACommandResponse);
                 if (DEBUG) {
-                    c.d(TAG, "PreloadFpSecureResult return " + response.mRetVal.retCode.get());
+                    Log.d(TAG, "PreloadFpSecureResult return " + response.mRetVal.retCode.get());
                 }
                 if (0L != response.mRetVal.retCode.get()) return n2;
                 long l2 = response.mRetVal.retCode.get();
@@ -1396,20 +1387,20 @@ lbl28: // 2 sources:
                 block11 : {
                     block10 : {
                         if (DEBUG) {
-                            c.d(TAG, "Calling resume");
+                            Log.d(TAG, "Calling resume");
                         }
                         if (this.mPaymentHandle != null) break block10;
-                        c.e(TAG, "Error: Payment Handle is null");
+                        Log.e(TAG, "Error: Payment Handle is null");
                         return -1;
                     }
                     tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.Resume.Request(false));
                     if (tACommandResponse != null) break block11;
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     return -2;
                 }
                 SpayTuiTACommands.Resume.Response response = new SpayTuiTACommands.Resume.Response(tACommandResponse);
                 if (DEBUG) {
-                    c.d(TAG, "Resume return " + response.mRetVal.retCode.get());
+                    Log.d(TAG, "Resume return " + response.mRetVal.retCode.get());
                 }
                 if ((n2 = (int)response.mRetVal.retCode.get()) != 0) break block12;
                 if (!bQC) break block12;
@@ -1434,20 +1425,20 @@ lbl28: // 2 sources:
                 block12 : {
                     block11 : {
                         if (DEBUG) {
-                            c.d(TAG, "Calling resume, update_display_only = " + bl);
+                            Log.d(TAG, "Calling resume, update_display_only = " + bl);
                         }
                         if (this.mPaymentHandle != null) break block11;
-                        c.e(TAG, "Error: Payment Handle is null");
+                        Log.e(TAG, "Error: Payment Handle is null");
                         return -1;
                     }
                     tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.Resume.Request(bl));
                     if (tACommandResponse != null) break block12;
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     return -2;
                 }
                 SpayTuiTACommands.Resume.Response response = new SpayTuiTACommands.Resume.Response(tACommandResponse);
                 if (DEBUG) {
-                    c.d(TAG, "Resume return " + response.mRetVal.retCode.get());
+                    Log.d(TAG, "Resume return " + response.mRetVal.retCode.get());
                 }
                 if ((n2 = (int)response.mRetVal.retCode.get()) != 0) break block13;
                 if (!bQC || bl) break block13;
@@ -1472,10 +1463,10 @@ lbl28: // 2 sources:
                 float f2;
                 SpayTuiTACommands.SetActionBarText.Request request;
                 if (DEBUG) {
-                    c.d(TAG, "Set action bar text");
+                    Log.d(TAG, "Set action bar text");
                 }
                 if (this.mPaymentHandle == null) {
-                    c.e(TAG, "Error: Payment Handle is null");
+                    Log.e(TAG, "Error: Payment Handle is null");
                     return -1;
                 }
                 DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -1517,18 +1508,18 @@ lbl28: // 2 sources:
                     request = new SpayTuiTACommands.SetActionBarText.Request(arrby);
                 }
                 catch (IllegalArgumentException illegalArgumentException) {
-                    c.e(TAG, illegalArgumentException.toString());
+                    Log.e(TAG, illegalArgumentException.toString());
                     illegalArgumentException.printStackTrace();
                     break block12;
                 }
                 TACommandResponse tACommandResponse = this.executeNoLoad(request);
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     return -2;
                 }
                 SpayTuiTACommands.SetActionBarText.Response response = new SpayTuiTACommands.SetActionBarText.Response(tACommandResponse);
                 if (DEBUG) {
-                    c.d(TAG, "Set Action Bar Text return " + response.mRetVal.retCode.get());
+                    Log.d(TAG, "Set Action Bar Text return " + response.mRetVal.retCode.get());
                 }
                 long l2 = response.mRetVal.retCode.get();
                 return (int)l2;
@@ -1547,28 +1538,28 @@ lbl28: // 2 sources:
         synchronized (spayTuiTAController) {
             SpayTuiTACommands.SetBackgroundImg.Request request;
             if (DEBUG) {
-                c.d(TAG, "Calling setup background image");
+                Log.d(TAG, "Calling setup background image");
             }
             if (this.mPaymentHandle == null) {
-                c.e(TAG, "Error: Payment Handle is null");
+                Log.e(TAG, "Error: Payment Handle is null");
                 return -1;
             }
             try {
                 request = new SpayTuiTACommands.SetBackgroundImg.Request(arrby, n2, n3);
             }
             catch (IllegalArgumentException illegalArgumentException) {
-                c.e(TAG, illegalArgumentException.toString());
+                Log.e(TAG, illegalArgumentException.toString());
                 illegalArgumentException.printStackTrace();
                 return -3;
             }
             TACommandResponse tACommandResponse = this.executeNoLoad(request);
             if (tACommandResponse == null) {
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return -2;
             }
             SpayTuiTACommands.SetBackgroundImg.Response response = new SpayTuiTACommands.SetBackgroundImg.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "Set background image return " + response.mRetVal.retCode.get());
+                Log.d(TAG, "Set background image return " + response.mRetVal.retCode.get());
             }
             long l2 = response.mRetVal.retCode.get();
             return (int)l2;
@@ -1585,28 +1576,28 @@ lbl28: // 2 sources:
         synchronized (spayTuiTAController) {
             SpayTuiTACommands.SetCancelBtn.Request request;
             if (DEBUG) {
-                c.d(TAG, "Calling set cancel");
+                Log.d(TAG, "Calling set cancel");
             }
             if (this.mPaymentHandle == null) {
-                c.e(TAG, "Error: Payment Handle is null");
+                Log.e(TAG, "Error: Payment Handle is null");
                 return -1;
             }
             try {
                 request = new SpayTuiTACommands.SetCancelBtn.Request(arrby, arrby2, n2, n3);
             }
             catch (IllegalArgumentException illegalArgumentException) {
-                c.e(TAG, illegalArgumentException.toString());
+                Log.e(TAG, illegalArgumentException.toString());
                 illegalArgumentException.printStackTrace();
                 return -3;
             }
             TACommandResponse tACommandResponse = this.executeNoLoad(request);
             if (tACommandResponse == null) {
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return -2;
             }
             SpayTuiTACommands.SetCancelBtn.Response response = new SpayTuiTACommands.SetCancelBtn.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "Set cancel return " + response.mRetVal.retCode.get());
+                Log.d(TAG, "Set cancel return " + response.mRetVal.retCode.get());
             }
             long l2 = response.mRetVal.retCode.get();
             return (int)l2;
@@ -1623,28 +1614,28 @@ lbl28: // 2 sources:
         synchronized (spayTuiTAController) {
             SpayTuiTACommands.SetPinBox.Request request;
             if (DEBUG) {
-                c.d(TAG, "Calling Set Pinbox");
+                Log.d(TAG, "Calling Set Pinbox");
             }
             if (this.mPaymentHandle == null) {
-                c.e(TAG, "Error: Payment Handle is null");
+                Log.e(TAG, "Error: Payment Handle is null");
                 return -1;
             }
             try {
                 request = new SpayTuiTACommands.SetPinBox.Request(arrby, arrby2, n2, n3, n4, n5, n6);
             }
             catch (IllegalArgumentException illegalArgumentException) {
-                c.e(TAG, illegalArgumentException.toString());
+                Log.e(TAG, illegalArgumentException.toString());
                 illegalArgumentException.printStackTrace();
                 return -3;
             }
             TACommandResponse tACommandResponse = this.executeNoLoad(request);
             if (tACommandResponse == null) {
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return -2;
             }
             SpayTuiTACommands.SetPinBox.Response response = new SpayTuiTACommands.SetPinBox.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "Set Pin Box return " + response.mRetVal.retCode.get());
+                Log.d(TAG, "Set Pin Box return " + response.mRetVal.retCode.get());
             }
             long l2 = response.mRetVal.retCode.get();
             return (int)l2;
@@ -1661,28 +1652,28 @@ lbl28: // 2 sources:
         synchronized (spayTuiTAController) {
             SpayTuiTACommands.SetPrompt.Request request;
             if (DEBUG) {
-                c.d(TAG, "Calling Set prompt with img");
+                Log.d(TAG, "Calling Set prompt with img");
             }
             if (this.mPaymentHandle == null) {
-                c.e(TAG, "Error: Payment Handle is null");
+                Log.e(TAG, "Error: Payment Handle is null");
                 return -1;
             }
             try {
                 request = new SpayTuiTACommands.SetPrompt.Request(arrby, n2, n3);
             }
             catch (IllegalArgumentException illegalArgumentException) {
-                c.e(TAG, illegalArgumentException.toString());
+                Log.e(TAG, illegalArgumentException.toString());
                 illegalArgumentException.printStackTrace();
                 return -3;
             }
             TACommandResponse tACommandResponse = this.executeNoLoad(request);
             if (tACommandResponse == null) {
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return -2;
             }
             SpayTuiTACommands.SetPrompt.Response response = new SpayTuiTACommands.SetPrompt.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "SetPrompt return " + response.mRetVal.retCode.get());
+                Log.d(TAG, "SetPrompt return " + response.mRetVal.retCode.get());
             }
             long l2 = response.mRetVal.retCode.get();
             return (int)l2;
@@ -1701,10 +1692,10 @@ lbl28: // 2 sources:
             block10 : {
                 SpayTuiTACommands.SetPrompt.Request request;
                 if (DEBUG) {
-                    c.d(TAG, "Calling Set prompt with string");
+                    Log.d(TAG, "Calling Set prompt with string");
                 }
                 if (this.mPaymentHandle == null) {
-                    c.e(TAG, "Error: Payment Handle is null");
+                    Log.e(TAG, "Error: Payment Handle is null");
                     return -1;
                 }
                 byte[] arrby = this.text2png(arrstring, textPaint, 0, false);
@@ -1713,18 +1704,18 @@ lbl28: // 2 sources:
                     request = new SpayTuiTACommands.SetPrompt.Request(arrby, n2, n3);
                 }
                 catch (IllegalArgumentException illegalArgumentException) {
-                    c.e(TAG, illegalArgumentException.toString());
+                    Log.e(TAG, illegalArgumentException.toString());
                     illegalArgumentException.printStackTrace();
                     break block10;
                 }
                 TACommandResponse tACommandResponse = this.executeNoLoad(request);
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     return -2;
                 }
                 SpayTuiTACommands.SetPrompt.Response response = new SpayTuiTACommands.SetPrompt.Response(tACommandResponse);
                 if (DEBUG) {
-                    c.d(TAG, "SetPrompt return " + response.mRetVal.retCode.get());
+                    Log.d(TAG, "SetPrompt return " + response.mRetVal.retCode.get());
                 }
                 long l2 = response.mRetVal.retCode.get();
                 return (int)l2;
@@ -1734,19 +1725,19 @@ lbl28: // 2 sources:
     }
 
     public void setResetStatus(boolean bl) {
-        c.d(TAG, "setResetStatus:  " + bl);
+        Log.d(TAG, "setResetStatus:  " + bl);
         mResetPending = bl;
     }
 
     public int setRtl(boolean bl) {
-        c.d(TAG, "setRtl=" + bl);
+        Log.d(TAG, "setRtl=" + bl);
         TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.SetRtl.Request(bl));
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: load_and_execute failed");
+            Log.e(TAG, "Error: load_and_execute failed");
             return -2;
         }
         int n2 = (int)new SpayTuiTACommands.SetRtl.Response((TACommandResponse)tACommandResponse).mRetVal.retCode.get();
-        c.d(TAG, "ret=" + n2);
+        Log.d(TAG, "ret=" + n2);
         return n2;
     }
 
@@ -1764,10 +1755,10 @@ lbl28: // 2 sources:
                 float f2;
                 SpayTuiTACommands.SetSecureModeText.Request request;
                 if (DEBUG) {
-                    c.d(TAG, "Set secure mode text");
+                    Log.d(TAG, "Set secure mode text");
                 }
                 if (this.mPaymentHandle == null) {
-                    c.e(TAG, "Error: Payment Handle is null");
+                    Log.e(TAG, "Error: Payment Handle is null");
                     return -1;
                 }
                 DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -1799,18 +1790,18 @@ lbl28: // 2 sources:
                     request = new SpayTuiTACommands.SetSecureModeText.Request(arrby);
                 }
                 catch (IllegalArgumentException illegalArgumentException) {
-                    c.e(TAG, illegalArgumentException.toString());
+                    Log.e(TAG, illegalArgumentException.toString());
                     illegalArgumentException.printStackTrace();
                     break block12;
                 }
                 TACommandResponse tACommandResponse = this.executeNoLoad(request);
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                     return -2;
                 }
                 SpayTuiTACommands.SetSecureModeText.Response response = new SpayTuiTACommands.SetSecureModeText.Response(tACommandResponse);
                 if (DEBUG) {
-                    c.d(TAG, "Set Secure Mode Text return " + response.mRetVal.retCode.get());
+                    Log.d(TAG, "Set Secure Mode Text return " + response.mRetVal.retCode.get());
                 }
                 long l2 = response.mRetVal.retCode.get();
                 return (int)l2;
@@ -1836,28 +1827,28 @@ lbl28: // 2 sources:
                 SpayTuiTACommands.SetupBio.Request request;
                 block10 : {
                     if (DEBUG) {
-                        c.d(TAG, "Calling setup BIO");
+                        Log.d(TAG, "Calling setup BIO");
                     }
                     if (this.mPaymentHandle != null) break block10;
-                    c.e(TAG, "Error: Payment Handle is null");
+                    Log.e(TAG, "Error: Payment Handle is null");
                     break block9;
                 }
                 try {
                     request = new SpayTuiTACommands.SetupBio.Request(arrby, arrby2);
                 }
                 catch (IllegalArgumentException illegalArgumentException) {
-                    c.e(TAG, illegalArgumentException.toString());
+                    Log.e(TAG, illegalArgumentException.toString());
                     illegalArgumentException.printStackTrace();
                     break block9;
                 }
                 TACommandResponse tACommandResponse = this.executeNoLoad(request);
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: load_and_execute setup bio failed");
+                    Log.e(TAG, "Error: load_and_execute setup bio failed");
                     return -2;
                 }
                 SpayTuiTACommands.SetupBio.Response response = new SpayTuiTACommands.SetupBio.Response(tACommandResponse);
                 if (response.mRetVal.retCode.get() != 0L) {
-                    c.e(TAG, "Error: SetupBio return " + response.mRetVal.retCode.get());
+                    Log.e(TAG, "Error: SetupBio return " + response.mRetVal.retCode.get());
                 }
                 if (response.mRetVal.retCode.get() == 0L && bQC) {
                     return this.start_secure_touch();
@@ -1880,20 +1871,20 @@ lbl28: // 2 sources:
             block10 : {
                 block9 : {
                     if (DEBUG) {
-                        c.d(TAG, "Calling Setup Pin");
+                        Log.d(TAG, "Calling Setup Pin");
                     }
                     if (this.mPaymentHandle != null) break block9;
-                    c.e(TAG, "Error: Payment Handle is null");
+                    Log.e(TAG, "Error: Payment Handle is null");
                     return -1;
                 }
                 tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.SetupPin.Request());
                 if (tACommandResponse != null) break block10;
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return -2;
             }
             SpayTuiTACommands.SetupPin.Response response = new SpayTuiTACommands.SetupPin.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "Setup Pin return " + response.mRetVal.retCode.get());
+                Log.d(TAG, "Setup Pin return " + response.mRetVal.retCode.get());
             }
             this.mNonce = null;
             if (response.mRetVal.retCode.get() == 0L && bQC) {
@@ -1915,20 +1906,20 @@ lbl28: // 2 sources:
             block10 : {
                 block9 : {
                     if (DEBUG) {
-                        c.d(TAG, "Calling Setup Pin with secure object");
+                        Log.d(TAG, "Calling Setup Pin with secure object");
                     }
                     if (this.mPaymentHandle != null) break block9;
-                    c.e(TAG, "Error: Payment Handle is null");
+                    Log.e(TAG, "Error: Payment Handle is null");
                     return -1;
                 }
                 tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.SetupPin.Request(arrby));
                 if (tACommandResponse != null) break block10;
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return -2;
             }
             SpayTuiTACommands.SetupPin.Response response = new SpayTuiTACommands.SetupPin.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "Setup Pin return " + response.mRetVal.retCode.get());
+                Log.d(TAG, "Setup Pin return " + response.mRetVal.retCode.get());
             }
             this.mNonce = null;
             if (response.mRetVal.retCode.get() == 0L && bQC) {
@@ -1951,7 +1942,7 @@ lbl28: // 2 sources:
             this.mNonce = null;
             if (this.mPaymentHandle == null) {
                 if (DEBUG) {
-                    c.d(TAG, "unloadTA: mPaymentHandle is null");
+                    Log.d(TAG, "unloadTA: mPaymentHandle is null");
                 }
             } else {
                 this.closeTui();
@@ -1970,35 +1961,35 @@ lbl28: // 2 sources:
         SpayTuiTAController spayTuiTAController = this;
         synchronized (spayTuiTAController) {
             if (DEBUG) {
-                c.d(TAG, "Calling UpateFP with secure object");
+                Log.d(TAG, "Calling UpateFP with secure object");
             }
             if (this.mPaymentHandle == null) {
-                c.e(TAG, "Error: Payment Handle is null");
+                Log.e(TAG, "Error: Payment Handle is null");
                 return -1;
             }
             TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.UpdateFP.Request(arrby));
             if (tACommandResponse == null) {
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return -2;
             }
             SpayTuiTACommands.UpdateFP.Response response = new SpayTuiTACommands.UpdateFP.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "UpdateFP return " + response.mRetVal.retCode.get());
+                Log.d(TAG, "UpdateFP return " + response.mRetVal.retCode.get());
             }
             if (response.mRetVal.retCode.get() != 0L) return (int)response.mRetVal.retCode.get();
             if (response.mRetVal.update_pin_so.get() != 0) {
-                c.i(TAG, "updateFP: Existing Pin len=" + response.mRetVal.existPinLen.get());
+                Log.i(TAG, "updateFP: Existing Pin len=" + response.mRetVal.existPinLen.get());
                 boolean bl = response.mRetVal.existPinLen.get() > 0L;
                 mPinExist = bl;
                 if (DEBUG) {
-                    c.d(TAG, "Need to update PIN SO! PIN exist: " + mPinExist + " pin len: " + response.mRetVal.existPinLen.get());
+                    Log.d(TAG, "Need to update PIN SO! PIN exist: " + mPinExist + " pin len: " + response.mRetVal.existPinLen.get());
                 }
-                c.i(TAG, "updateFP: savePinSo");
+                Log.i(TAG, "updateFP: savePinSo");
                 this.savePinSo(response.mRetVal.pin_so.getData());
                 return (int)response.mRetVal.retCode.get();
             } else {
                 if (!DEBUG) return (int)response.mRetVal.retCode.get();
-                c.d(TAG, "No need to update PIN SO");
+                Log.d(TAG, "No need to update PIN SO");
             }
             return (int)response.mRetVal.retCode.get();
         }
@@ -2014,18 +2005,18 @@ lbl28: // 2 sources:
         SpayTuiTAController spayTuiTAController = this;
         synchronized (spayTuiTAController) {
             if (DEBUG) {
-                c.d(TAG, "Calling verify (unclose TUI)");
+                Log.d(TAG, "Calling verify (unclose TUI)");
             }
             if (this.mPaymentHandle == null) {
-                c.e(TAG, "Error: Payment Handle is null");
+                Log.e(TAG, "Error: Payment Handle is null");
             } else {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.Verify.Request(false, false));
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: load_and_execute failed");
+                    Log.e(TAG, "Error: load_and_execute failed");
                 } else {
                     SpayTuiTACommands.Verify.Response response = new SpayTuiTACommands.Verify.Response(tACommandResponse);
                     if (DEBUG) {
-                        c.d(TAG, "Verify return " + response.mRetVal.retCode.get());
+                        Log.d(TAG, "Verify return " + response.mRetVal.retCode.get());
                     }
                     if ((n2 = (int)response.mRetVal.retCode.get()) != 0) return n2;
                     if (!bQC) return n2;
@@ -2049,20 +2040,20 @@ lbl28: // 2 sources:
             block11 : {
                 block10 : {
                     if (DEBUG) {
-                        c.d(TAG, "Calling verify: close_tui = " + bl + " display_only = " + bl2);
+                        Log.d(TAG, "Calling verify: close_tui = " + bl + " display_only = " + bl2);
                     }
                     if (this.mPaymentHandle != null) break block10;
-                    c.e(TAG, "Error: PaymFent Handle is null");
+                    Log.e(TAG, "Error: PaymFent Handle is null");
                     return -1;
                 }
                 tACommandResponse = this.executeNoLoad(new SpayTuiTACommands.Verify.Request(bl, bl2));
                 if (tACommandResponse != null) break block11;
-                c.e(TAG, "Error: load_and_execute failed");
+                Log.e(TAG, "Error: load_and_execute failed");
                 return -2;
             }
             SpayTuiTACommands.Verify.Response response = new SpayTuiTACommands.Verify.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "Verify return " + response.mRetVal.retCode.get());
+                Log.d(TAG, "Verify return " + response.mRetVal.retCode.get());
             }
             if ((n2 = (int)response.mRetVal.retCode.get()) != 0) return n2;
             if (!bQC) return n2;

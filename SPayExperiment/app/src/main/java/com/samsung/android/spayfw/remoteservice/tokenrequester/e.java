@@ -10,17 +10,11 @@
  */
 package com.samsung.android.spayfw.remoteservice.tokenrequester;
 
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Client;
 import com.samsung.android.spayfw.remoteservice.c;
 import com.samsung.android.spayfw.remoteservice.models.Art;
 import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
-import com.samsung.android.spayfw.remoteservice.models.Eula;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.f;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.CardInfo;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.CardIssuerAppInfo;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.CardIssuerInfo;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.IdvOptionsData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenRequestData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenResponseData;
@@ -91,7 +85,7 @@ extends m<TokenRequestData, TokenResponseData, f, e> {
             errorResponseData = this.Al.fromJson(string, ErrorResponseData.class);
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("ProvisionRequest", exception.getMessage(), exception);
+            Log.c("ProvisionRequest", exception.getMessage(), exception);
             errorResponseData = null;
             return new f(errorResponseData, n2);
         }

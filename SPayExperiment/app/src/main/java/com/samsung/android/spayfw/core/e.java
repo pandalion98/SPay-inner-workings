@@ -15,9 +15,8 @@
 package com.samsung.android.spayfw.core;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import com.samsung.android.spayfw.core.a;
-import com.samsung.android.spayfw.core.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.DeviceInfo;
 import com.samsung.android.spayfw.storage.b;
 import java.io.File;
@@ -74,13 +73,13 @@ public class e {
         }
         switch (n2) {
             default: {
-                com.samsung.android.spayfw.b.c.w("ConfigurationManager", "validateInput: Invalid Key = " + string);
+                Log.w("ConfigurationManager", "validateInput: Invalid Key = " + string);
                 return -5;
             }
             case 0: {
                 a a2 = a.a(this.mContext, null);
                 if (a2 == null) {
-                    com.samsung.android.spayfw.b.c.e("ConfigurationManager", "reconcileDefaultCardConfig- account is null");
+                    Log.e("ConfigurationManager", "reconcileDefaultCardConfig- account is null");
                     return -5;
                 }
                 if (a2.r(string2) == null) return -5;
@@ -94,7 +93,7 @@ public class e {
                 String string3 = (String)this.jd.get((Object)string);
                 if (string3 == null || string3.isEmpty()) return 0;
                 {
-                    com.samsung.android.spayfw.b.c.i("ConfigurationManager", "setConfig - Wallet id cannot be set more than once - current value = " + string3);
+                    Log.i("ConfigurationManager", "setConfig - Wallet id cannot be set more than once - current value = " + string3);
                     return -3;
                 }
             }
@@ -102,7 +101,7 @@ public class e {
                 String string4 = (String)this.jd.get((Object)string);
                 if (string4 == null || string4.isEmpty()) return 0;
                 {
-                    com.samsung.android.spayfw.b.c.i("ConfigurationManager", "setConfig - Instance id cannot be set more than once - current value = " + string4);
+                    Log.i("ConfigurationManager", "setConfig - Instance id cannot be set more than once - current value = " + string4);
                     return -3;
                 }
             }
@@ -118,17 +117,17 @@ public class e {
     private void af() {
         String string = (String)this.jd.get((Object)"CONFIG_DEFAULT_CARD");
         if (string == null) {
-            com.samsung.android.spayfw.b.c.d("ConfigurationManager", "No Default Card");
+            Log.d("ConfigurationManager", "No Default Card");
             return;
         } else {
             a a2 = a.a(this.mContext, null);
             if (a2 == null) {
-                com.samsung.android.spayfw.b.c.e("ConfigurationManager", "reconcileDefaultCardConfig- account is null");
+                Log.e("ConfigurationManager", "reconcileDefaultCardConfig- account is null");
                 return;
             }
             if (a2.r(string) != null) return;
             {
-                com.samsung.android.spayfw.b.c.w("ConfigurationManager", "Removing Default Card");
+                Log.w("ConfigurationManager", "Removing Default Card");
                 this.je.bm("CONFIG_DEFAULT_CARD");
                 this.je.bm("CONFIG_ENABLE_TAP_N_GO");
                 this.jd.remove((Object)"CONFIG_DEFAULT_CARD");
@@ -153,11 +152,11 @@ public class e {
     public static boolean i(Context context) {
         String string = e.h(context).getConfig("CONFIG_ENABLE_TAP_N_GO");
         if (string == null) {
-            com.samsung.android.spayfw.b.c.d("ConfigurationManager", "Tap N Go Null");
+            Log.d("ConfigurationManager", "Tap N Go Null");
             return false;
         }
         if (string.equals((Object)"FALSE")) {
-            com.samsung.android.spayfw.b.c.d("ConfigurationManager", "Tap N Go False");
+            Log.d("ConfigurationManager", "Tap N Go False");
             return false;
         }
         return true;
@@ -190,7 +189,7 @@ public class e {
             this.jd = map;
         }
         String string = this.mContext.getFilesDir().getParent() + "/shared_prefs/" + "SpayFw" + ".xml";
-        com.samsung.android.spayfw.b.c.d("ConfigurationManager", "prepareConfigCache: shared prefs file path = " + string);
+        Log.d("ConfigurationManager", "prepareConfigCache: shared prefs file path = " + string);
         File file = new File(string);
         if (file != null && file.exists()) {
             String string2;
@@ -212,7 +211,7 @@ public class e {
         String string2;
         if (string.equals((Object)"CONFIG_DEVICE_ID")) {
             string2 = DeviceInfo.getDeviceId(this.mContext);
-            com.samsung.android.spayfw.b.c.d("ConfigurationManager", "DeviceId: " + string2);
+            Log.d("ConfigurationManager", "DeviceId: " + string2);
             return string2;
         } else {
             if (string.equals((Object)"CONFIG_RESET_REASON")) {
@@ -244,7 +243,7 @@ public class e {
             this.jd.put((Object)string, (Object)string2);
         }
         if (!"CONFIG_JWT_TOKEN".equals((Object)string)) return n2;
-        com.samsung.android.spayfw.b.c.i("ConfigurationManager", "JWT Token Updated");
+        Log.i("ConfigurationManager", "JWT Token Updated");
         com.samsung.android.spayfw.core.retry.a.bj().bk();
         return n2;
     }

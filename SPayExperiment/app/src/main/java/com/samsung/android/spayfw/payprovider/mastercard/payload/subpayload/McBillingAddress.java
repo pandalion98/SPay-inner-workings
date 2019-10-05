@@ -7,7 +7,7 @@
  */
 package com.samsung.android.spayfw.payprovider.mastercard.payload.subpayload;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 
 public class McBillingAddress {
     public static final int INVALID_BILLING_ADDRESS = 0;
@@ -104,7 +104,7 @@ public class McBillingAddress {
                 this.postalCode = this.postalCode.substring(0, 16);
             }
         }
-        c.d(TAG, this.line1 + ", " + this.line2 + ", " + this.city + ", " + this.countrySubdivision + ", " + this.postalCode + ", " + this.country);
+        Log.d(TAG, this.line1 + ", " + this.line2 + ", " + this.city + ", " + this.countrySubdivision + ", " + this.postalCode + ", " + this.country);
     }
 }
 

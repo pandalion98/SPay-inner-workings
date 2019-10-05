@@ -28,7 +28,7 @@ import android.content.Context;
 import android.os.Bundle;
 import com.samsung.android.spayfw.appinterface.TransactionData;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.d;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
@@ -37,14 +37,12 @@ import com.samsung.android.spayfw.payprovider.visa.b;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.cashcard.models.CashCardInfo;
 import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.j;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenReport;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
@@ -85,13 +83,13 @@ extends b {
      */
     public a(Context context, String string, f f2) {
         super(context, "VI", f2);
-        c.e("CashCardPayProvider", "CashCardPayProvider()");
+        Log.e("CashCardPayProvider", "CashCardPayProvider()");
         try {
             this.jJ = TokenRecordStorage.ae(this.mContext);
         }
         catch (Exception exception) {
-            c.c("Processor", exception.getMessage(), exception);
-            c.e("Processor", "Exception when initializing Dao");
+            Log.c("Processor", exception.getMessage(), exception);
+            Log.e("Processor", "Exception when initializing Dao");
             this.jJ = null;
         }
         this.kT = com.samsung.android.spayfw.remoteservice.cashcard.a.I(this.mContext);
@@ -107,7 +105,7 @@ extends b {
         int n3 = 0;
         while (n3 < n2) {
             CashCardInfo.TransactionInfo transactionInfo = arrtransactionInfo[n3];
-            c.d("CashCardPayProvider", transactionInfo.toString());
+            Log.d("CashCardPayProvider", transactionInfo.toString());
             TransactionData transactionData = new TransactionData();
             transactionData.setAmount(transactionInfo.getAmount() + "");
             transactionData.setCurrencyCode(transactionInfo.getCurrency());
@@ -115,15 +113,15 @@ extends b {
             try {
                 Date date = new Date();
                 date.setTime(transactionInfo.getTime());
-                c.d("CashCardPayProvider", date.toString());
+                Log.d("CashCardPayProvider", date.toString());
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone((String)"GMT"));
                 String string = simpleDateFormat.format(date);
-                c.d("CashCardPayProvider", string);
+                Log.d("CashCardPayProvider", string);
                 transactionData.setTransactionDate(string);
             }
             catch (Exception exception) {
-                c.e("CashCardPayProvider", exception.getMessage());
+                Log.e("CashCardPayProvider", exception.getMessage());
             }
             transactionData.setTransactionId(transactionInfo.getId());
             if (transactionInfo.getType().equalsIgnoreCase("Purchase")) {
@@ -156,12 +154,12 @@ extends b {
                 hashSet.add((Object)transactionInfo.getId());
             } else {
                 String string = transactionInfo.getId();
-                c.d("CashCardPayProvider", "Old Tid " + string);
-                c.d("CashCardPayProvider", "Type " + transactionInfo.getType());
+                Log.d("CashCardPayProvider", "Old Tid " + string);
+                Log.d("CashCardPayProvider", "Type " + transactionInfo.getType());
                 while (hashSet.contains((Object)string)) {
                     string = Long.toString((long)(1L + Long.parseLong((String)string)));
                 }
-                c.d("CashCardPayProvider", "New Tid " + string);
+                Log.d("CashCardPayProvider", "New Tid " + string);
                 transactionInfo.setId(string);
                 hashSet.add((Object)string);
             }
@@ -174,7 +172,7 @@ extends b {
     public int getTransactionData(final Bundle bundle, final i i2) {
         com.samsung.android.spayfw.storage.models.a a2 = this.jJ.bq(this.mProviderTokenKey.getTrTokenId());
         if (a2 == null || a2.fx() == null || a2.fx().isEmpty()) {
-            c.e("CashCardPayProvider", "Unable to find Token Id OR Cash Card Id from db " + this.mProviderTokenKey.getTrTokenId());
+            Log.e("CashCardPayProvider", "Unable to find Token Id OR Cash Card Id from db " + this.mProviderTokenKey.getTrTokenId());
             return -4;
         }
         this.kT.b(a2.fx(), false).a(new Request.a<com.samsung.android.spayfw.remoteservice.c<CashCardInfo>, com.samsung.android.spayfw.remoteservice.cashcard.c>(){
@@ -185,7 +183,7 @@ extends b {
             @Override
             public void a(int n2, com.samsung.android.spayfw.remoteservice.c<CashCardInfo> c2) {
                 ErrorResponseData errorResponseData;
-                c.d("CashCardPayProvider", "process : onRequestComplete: code: " + n2);
+                Log.d("CashCardPayProvider", "process : onRequestComplete: code: " + n2);
                 e e2 = new e();
                 switch (n2) {
                     default: {
@@ -204,18 +202,18 @@ extends b {
                             e2.setErrorCode(0);
                             a.this.a(arrtransactionInfo);
                             a.this.rZ = arrtransactionInfo;
-                            c.i("CashCardPayProvider", "TransactionInfo is Same Fetch from Card Network");
+                            Log.i("CashCardPayProvider", "TransactionInfo is Same Fetch from Card Network");
                             int n4 = a.super.getTransactionData(bundle, i2);
                             if (n4 == 0) {
-                                c.i("CashCardPayProvider", "Success in fetching TransactionInfo from Card Network");
+                                Log.i("CashCardPayProvider", "Success in fetching TransactionInfo from Card Network");
                                 return;
                             }
-                            c.i("CashCardPayProvider", "Error in fetching TransactionInfo from Card Network");
+                            Log.i("CashCardPayProvider", "Error in fetching TransactionInfo from Card Network");
                             e2.setErrorCode(n4);
                             e2.as("Error in fetching TransactionInfo from Card Network");
                             n3 = 0;
                         } else {
-                            c.i("CashCardPayProvider", "TransactionInfo is NULL or EMPTY");
+                            Log.i("CashCardPayProvider", "TransactionInfo is NULL or EMPTY");
                             n3 = -5;
                             e2.setErrorCode(n3);
                             e2.as("CashCardInfo.TransactionInfo is NULL or EMPTY");
@@ -226,7 +224,7 @@ extends b {
                 }
                 e2.setErrorCode(-7);
                 if (errorResponseData != null && errorResponseData.getMessage() != null) {
-                    c.e("CashCardPayProvider", errorResponseData.getMessage());
+                    Log.e("CashCardPayProvider", errorResponseData.getMessage());
                     e2.as(n2 + " : " + errorResponseData.getMessage());
                 }
                 i2.a(a.this.mProviderTokenKey, 0, null, e2);
@@ -241,7 +239,7 @@ extends b {
     @Override
     protected TransactionDetails processTransactionData(Object object) {
         if (object == null) {
-            c.e("CashCardPayProvider", "Raw Transaction Data is empty");
+            Log.e("CashCardPayProvider", "Raw Transaction Data is empty");
             return null;
         }
         if (object instanceof CashCardInfo) {
@@ -257,7 +255,7 @@ extends b {
                 transactionDetails.setBalanceCurrencyCode(cashCardInfo.getFunds().getCurrency());
                 return transactionDetails;
             }
-            c.e("CashCardPayProvider", "Raw Transaction Data is empty");
+            Log.e("CashCardPayProvider", "Raw Transaction Data is empty");
             return null;
         }
         TransactionDetails transactionDetails = new TransactionDetails();
@@ -268,23 +266,23 @@ extends b {
         transactionDetails.setTransactionData((List<TransactionData>)arrayList);
         TransactionDetails transactionDetails2 = super.processTransactionData(object);
         if (transactionDetails2 == null) {
-            c.e("CashCardPayProvider", "Transaction Details is null from Card Network Provider");
+            Log.e("CashCardPayProvider", "Transaction Details is null from Card Network Provider");
             return transactionDetails;
         }
         List<TransactionData> list = transactionDetails2.getTransactionData();
         if (list == null) {
-            c.e("CashCardPayProvider", "Transaction Data List is null from Card Network Provider");
+            Log.e("CashCardPayProvider", "Transaction Data List is null from Card Network Provider");
             return transactionDetails;
         }
         Iterator iterator = list.iterator();
         do {
             if (!iterator.hasNext()) {
-                c.d("CashCardPayProvider", "Converted List " + list.toString());
+                Log.d("CashCardPayProvider", "Converted List " + list.toString());
                 transactionDetails.getTransactionData().addAll(list);
                 return transactionDetails;
             }
             TransactionData transactionData = (TransactionData)iterator.next();
-            c.d("CashCardPayProvider", transactionData.toString());
+            Log.d("CashCardPayProvider", transactionData.toString());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone((String)"GMT"));
             transactionData.setTransactionId(Long.toString((long)simpleDateFormat.parse(transactionData.getTransactionDate(), new ParsePosition(0)).getTime()));
@@ -298,7 +296,7 @@ extends b {
             } else if (transactionData.getTransactionType().equalsIgnoreCase("Refund")) {
                 transactionData.setAmount(transactionData.getAmount().replace((CharSequence)"-", (CharSequence)""));
             }
-            c.d("CashCardPayProvider", transactionData.toString());
+            Log.d("CashCardPayProvider", transactionData.toString());
         } while (true);
     }
 
@@ -310,13 +308,13 @@ extends b {
     @Override
     public void updateRequestStatus(d d2) {
         try {
-            c.d("CashCardPayProvider", "updateRequestStatus : " + d2.getRequestType() + " " + d2.ci());
+            Log.d("CashCardPayProvider", "updateRequestStatus : " + d2.getRequestType() + " " + d2.ci());
             if (d2.ck() != null) {
-                c.d("CashCardPayProvider", "updateRequestStatus : " + d2.ck().cn());
+                Log.d("CashCardPayProvider", "updateRequestStatus : " + d2.ck().cn());
             }
             switch (d2.ci()) {
                 default: {
-                    c.i("CashCardPayProvider", "Ignore status");
+                    Log.i("CashCardPayProvider", "Ignore status");
                     return;
                 }
                 case 0: 
@@ -330,7 +328,7 @@ extends b {
                     this.kT.a(a2.fx(), tokenReport).fe();
                     return;
                 }
-                c.e("CashCardPayProvider", "Token Record is null");
+                Log.e("CashCardPayProvider", "Token Record is null");
                 return;
             }
         }

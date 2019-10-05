@@ -22,10 +22,12 @@ package com.samsung.android.spayfw.storage;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.CacheMetaData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Sequence;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Wifi;
-import com.samsung.android.spayfw.storage.DbAdapter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +42,7 @@ extends DbAdapter {
         this.execSQL("CREATE TABLE IF NOT EXISTS rsc_cache_meta_data (id TEXT NOT NULL, type TEXT NOT NULL, href TEXT NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY (id, type) )");
         this.execSQL("CREATE TABLE IF NOT EXISTS rsc_cache_wifi_scan (cache_id TEXT NOT NULL, scan_id TEXT NOT NULL, store_name TEXT NOT NULL, bssid TEXT NOT NULL, ssid TEXT NOT NULL, rssi INTEGER, frequency INTEGER, distance REAL, mst_sequence_id TEXT NOT NULL )");
         this.execSQL("CREATE TABLE IF NOT EXISTS rsc_cache_mst_sequence (key TEXT NOT NULL, mst_sequence_id TEXT PRIMARY KEY, transmit INTEGER, idle INTEGER, config TEXT NOT NULL, cache_id TEXT NOT NULL, scan_id TEXT NOT NULL )");
-        com.samsung.android.spayfw.b.c.i("MstConfigurationStorage", "Create RscCache Tables If Not Exists");
+        Log.i("MstConfigurationStorage", "Create RscCache Tables If Not Exists");
     }
 
     public static final c ac(Context context) {
@@ -56,9 +58,9 @@ extends DbAdapter {
     }
 
     public int a(String string, String string2, Sequence sequence) {
-        com.samsung.android.spayfw.b.c.d("MstConfigurationStorage", "addWifiScan : " + string + " " + string2 + " " + sequence);
+        Log.d("MstConfigurationStorage", "addWifiScan : " + string + " " + string2 + " " + sequence);
         if (string == null || string2 == null || sequence == null) {
-            com.samsung.android.spayfw.b.c.e("MstConfigurationStorage", "cacheId/scanId/sequence is NULL");
+            Log.e("MstConfigurationStorage", "cacheId/scanId/sequence is NULL");
             return -1;
         }
         ContentValues contentValues = new ContentValues();
@@ -73,9 +75,9 @@ extends DbAdapter {
     }
 
     public int a(String string, String string2, String string3, String string4, Wifi wifi) {
-        com.samsung.android.spayfw.b.c.d("MstConfigurationStorage", "addWifiScan : " + string + " " + string2 + " " + wifi);
+        Log.d("MstConfigurationStorage", "addWifiScan : " + string + " " + string2 + " " + wifi);
         if (string == null || string2 == null || wifi == null) {
-            com.samsung.android.spayfw.b.c.e("MstConfigurationStorage", "cacheId/scanId/Wifi is NULL");
+            Log.e("MstConfigurationStorage", "cacheId/scanId/Wifi is NULL");
             return -1;
         }
         ContentValues contentValues = new ContentValues();
@@ -99,9 +101,9 @@ extends DbAdapter {
      * Lifted jumps to return sites
      */
     public Map<String, a> a(List<Wifi> var1_1, double var2_2) {
-        com.samsung.android.spayfw.b.c.d("MstConfigurationStorage", "getMatchingScanSequenceCounts : " + var1_1 + " " + var2_2);
+        Log.d("MstConfigurationStorage", "getMatchingScanSequenceCounts : " + var1_1 + " " + var2_2);
         if (var1_1 == null || var2_2 <= 0.0) {
-            com.samsung.android.spayfw.b.c.e("MstConfigurationStorage", "localWifis or distanceRange is NULL or Less than/equal 0");
+            Log.e("MstConfigurationStorage", "localWifis or distanceRange is NULL or Less than/equal 0");
             return null;
         }
         var4_3 = new StringBuilder();
@@ -133,7 +135,7 @@ extends DbAdapter {
             block12 : {
                 if (var14_15.getCount() > 0) break block12;
 lbl30: // 2 sources:
-                com.samsung.android.spayfw.b.c.e("MstConfigurationStorage", "Cursor is NULL");
+                Log.e("MstConfigurationStorage", "Cursor is NULL");
                 c.a(var14_15);
                 return null;
             }
@@ -170,9 +172,9 @@ lbl49: // 2 sources:
         Cursor cursor2;
         block6 : {
             cursor = null;
-            com.samsung.android.spayfw.b.c.d("MstConfigurationStorage", "getMstSequence : " + string);
+            Log.d("MstConfigurationStorage", "getMstSequence : " + string);
             if (string == null) {
-                com.samsung.android.spayfw.b.c.e("MstConfigurationStorage", "mstSeqId is NULL");
+                Log.e("MstConfigurationStorage", "mstSeqId is NULL");
                 return null;
             }
             String[] arrstring = new String[]{string};
@@ -191,7 +193,7 @@ lbl49: // 2 sources:
             return sequence;
         }
         try {
-            com.samsung.android.spayfw.b.c.e("MstConfigurationStorage", "Cursor is NULL");
+            Log.e("MstConfigurationStorage", "Cursor is NULL");
         }
         catch (Throwable throwable) {
             cursor = cursor2;
@@ -206,18 +208,18 @@ lbl49: // 2 sources:
     }
 
     public int bo(String string) {
-        com.samsung.android.spayfw.b.c.d("MstConfigurationStorage", "removeWifiScan : " + string);
+        Log.d("MstConfigurationStorage", "removeWifiScan : " + string);
         if (string == null) {
-            com.samsung.android.spayfw.b.c.e("MstConfigurationStorage", "cacheId is NULL");
+            Log.e("MstConfigurationStorage", "cacheId is NULL");
             return -1;
         }
         return this.delete("rsc_cache_wifi_scan", "cache_id=?", new String[]{string});
     }
 
     public int c(CacheMetaData cacheMetaData) {
-        com.samsung.android.spayfw.b.c.d("MstConfigurationStorage", "addCache : " + cacheMetaData);
+        Log.d("MstConfigurationStorage", "addCache : " + cacheMetaData);
         if (cacheMetaData == null) {
-            com.samsung.android.spayfw.b.c.e("MstConfigurationStorage", "CacheMetaData is NULL");
+            Log.e("MstConfigurationStorage", "CacheMetaData is NULL");
             return -1;
         }
         ContentValues contentValues = new ContentValues();
@@ -237,7 +239,7 @@ lbl49: // 2 sources:
      */
     public Map<String, a> ft() {
         block6 : {
-            com.samsung.android.spayfw.b.c.d("MstConfigurationStorage", "getAllScanSequenceCounts");
+            Log.d("MstConfigurationStorage", "getAllScanSequenceCounts");
             var1_1 = new HashMap();
             var4_2 = this.query("rsc_cache_wifi_scan", new String[]{"scan_id", "mst_sequence_id", "COUNT(scan_id) AS scan_count"}, null, null, "scan_id", null, null);
             if (var4_2 == null) break block6;
@@ -252,7 +254,7 @@ lbl49: // 2 sources:
             return var1_1;
         }
         try {
-            com.samsung.android.spayfw.b.c.e("MstConfigurationStorage", "Cursor is NULL");
+            Log.e("MstConfigurationStorage", "Cursor is NULL");
             ** GOTO lbl23
         }
         catch (Throwable var2_5) {
@@ -281,9 +283,9 @@ lbl23: // 1 sources:
         Cursor cursor2;
         block6 : {
             cursor = null;
-            com.samsung.android.spayfw.b.c.d("MstConfigurationStorage", "getCacheMetaData : " + string + " " + string2);
+            Log.d("MstConfigurationStorage", "getCacheMetaData : " + string + " " + string2);
             if (string == null || string2 == null) {
-                com.samsung.android.spayfw.b.c.e("MstConfigurationStorage", "Id or Type is NULL");
+                Log.e("MstConfigurationStorage", "Id or Type is NULL");
                 return null;
             }
             String[] arrstring = new String[]{string, string2};
@@ -299,7 +301,7 @@ lbl23: // 1 sources:
             return cacheMetaData;
         }
         try {
-            com.samsung.android.spayfw.b.c.e("MstConfigurationStorage", "Cursor is NULL");
+            Log.e("MstConfigurationStorage", "Cursor is NULL");
         }
         catch (Throwable throwable) {
             cursor = cursor2;

@@ -17,12 +17,10 @@ package com.samsung.android.spayfw.fraud.a;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.fraud.a.a.a;
 import com.samsung.android.spayfw.fraud.a.a.b;
-import com.samsung.android.spayfw.fraud.a.c;
-import com.samsung.android.spayfw.fraud.a.d;
-import com.samsung.android.spayfw.fraud.a.e;
-import com.samsung.android.spayfw.fraud.a.g;
 import com.samsung.android.spayfw.utils.h;
 import java.util.ArrayList;
 
@@ -43,7 +41,7 @@ public class f {
             return -1L;
         }
         if (this.bH() == null) {
-            com.samsung.android.spayfw.b.c.e("FraudDao", "addTokenStatusHistory: cannot get db adapter");
+            Log.e("FraudDao", "addTokenStatusHistory: cannot get db adapter");
             return -1L;
         }
         return ne.a(a2);
@@ -88,7 +86,7 @@ public class f {
             return -1;
         }
         if (this.bH() == null) {
-            com.samsung.android.spayfw.b.c.e("FraudDao", "updateCardTokenId: cannot get db adapter");
+            Log.e("FraudDao", "updateCardTokenId: cannot get db adapter");
             return -1;
         }
         String[] arrstring = new String[]{Long.toString((long)l2)};
@@ -102,11 +100,11 @@ public class f {
      */
     public int a(String string, int n2) {
         if (string == null) {
-            com.samsung.android.spayfw.b.c.e("FraudDao", "updateTokenRecord: tokenRefKey is null");
+            Log.e("FraudDao", "updateTokenRecord: tokenRefKey is null");
             return -1;
         }
         if (this.bH() == null) {
-            com.samsung.android.spayfw.b.c.e("FraudDao", "updateTokenRecord: cannot get db adapter");
+            Log.e("FraudDao", "updateTokenRecord: cannot get db adapter");
             return -1;
         }
         String[] arrstring = new String[]{e.b(string, e.salt)};
@@ -120,9 +118,9 @@ public class f {
                 long l2 = cursor.getLong(cursor.getColumnIndex("id"));
                 ne.a("ftoken", contentValues, "token_ref_key = ?", arrstring);
                 this.a(new d.a(0L, l2, n2, h.am(this.mContext)));
-                com.samsung.android.spayfw.b.c.d("FraudDao", "update token status history for token index " + l2);
+                Log.d("FraudDao", "update token status history for token index " + l2);
             } else {
-                com.samsung.android.spayfw.b.c.e("FraudDao", "the number of tokens is wrong:" + cursor.getCount());
+                Log.e("FraudDao", "the number of tokens is wrong:" + cursor.getCount());
             }
             int n3 = cursor.getCount();
             return n3;
@@ -134,13 +132,13 @@ public class f {
 
     public long a(a a2) {
         if (this.bI() == null) {
-            com.samsung.android.spayfw.b.c.e("FraudDao", "addDeviceRecord: cannot get db adapter");
+            Log.e("FraudDao", "addDeviceRecord: cannot get db adapter");
             return -1L;
         }
         String string = "time < ? OR id not in (select id from " + a2.bB() + " order by " + "time" + " desc limit ? )";
         String[] arrstring = new String[]{this.w(90), "1000"};
         int n2 = nf.b(a2.bB(), string, arrstring);
-        com.samsung.android.spayfw.b.c.d("FraudDao", "addDeviceRecord: delCount = " + n2);
+        Log.d("FraudDao", "addDeviceRecord: delCount = " + n2);
         return nf.a(a2);
     }
 
@@ -154,7 +152,7 @@ public class f {
             return -1L;
         }
         if (this.bH() == null) {
-            com.samsung.android.spayfw.b.c.e("FraudDao", "addCardRecord: cannot get db adapter");
+            Log.e("FraudDao", "addCardRecord: cannot get db adapter");
             return -1L;
         }
         String[] arrstring = new String[]{b2.getAccountId(), b2.bD()};
@@ -174,7 +172,7 @@ public class f {
                 g2.a("fcard", contentValues, "id = ? ", arrstring2);
                 return l3;
             }
-            com.samsung.android.spayfw.b.c.e("FraudDao", "more than one card is found");
+            Log.e("FraudDao", "more than one card is found");
             return -1L;
         }
         finally {
@@ -187,7 +185,7 @@ public class f {
             return -1L;
         }
         if (this.bH() == null) {
-            com.samsung.android.spayfw.b.c.e("FraudDao", "addProvisionCounter: cannot get db adapter");
+            Log.e("FraudDao", "addProvisionCounter: cannot get db adapter");
             return -1L;
         }
         return ne.a(c2);
@@ -195,11 +193,11 @@ public class f {
 
     public long a(d.b b2) {
         if (b2 == null) {
-            com.samsung.android.spayfw.b.c.e("FraudDao", "addTransactionDetail: td is null");
+            Log.e("FraudDao", "addTransactionDetail: td is null");
             return -1L;
         }
         if (this.bH() == null) {
-            com.samsung.android.spayfw.b.c.e("FraudDao", "addTransactionDetail: cannot get db adapter");
+            Log.e("FraudDao", "addTransactionDetail: cannot get db adapter");
             return -1L;
         }
         return ne.a(b2);
@@ -218,32 +216,32 @@ public class f {
                     return -1L;
                 }
                 if (this.bH() == null) {
-                    com.samsung.android.spayfw.b.c.e("FraudDao", "addTokenRecord: cannot get db adapter");
+                    Log.e("FraudDao", "addTokenRecord: cannot get db adapter");
                     return -1L;
                 }
                 String[] arrstring = new String[]{d2.bF(), Long.toString((long)d2.bG())};
                 Cursor cursor = ne.a("ftoken", "token_ref_key = ? AND card_id = ?", arrstring);
                 if (cursor == null) {
-                    com.samsung.android.spayfw.b.c.e("FraudDao", "addTokenRecord: cursor is null");
+                    Log.e("FraudDao", "addTokenRecord: cursor is null");
                     return -1L;
                 }
                 if (cursor.getCount() == 0) {
                     long l3;
-                    com.samsung.android.spayfw.b.c.d("FraudDao", "adding a new token record");
+                    Log.d("FraudDao", "adding a new token record");
                     l2 = l3 = ne.a(d2);
                 } else {
                     if (cursor.getCount() != 1) break block10;
                     cursor.moveToNext();
                     l2 = cursor.getLong(cursor.getColumnIndex("id"));
-                    com.samsung.android.spayfw.b.c.d("FraudDao", "get an existing token record");
+                    Log.d("FraudDao", "get an existing token record");
                 }
                 if (l2 <= 0L) break block11;
                 this.a(new d.a(0L, l2, d2.getStatus(), h.am(this.mContext)));
             }
-            com.samsung.android.spayfw.b.c.d("FraudDao", "a new ftoken is added");
+            Log.d("FraudDao", "a new ftoken is added");
             return l2;
         }
-        com.samsung.android.spayfw.b.c.e("FraudDao", "more than one token is found");
+        Log.e("FraudDao", "more than one token is found");
         return -1L;
     }
 
@@ -258,7 +256,7 @@ public class f {
         block9 : {
             block8 : {
                 if (this.bH() == null) {
-                    com.samsung.android.spayfw.b.c.e("FraudDao", "getTokenRecord: cannot get db adapter");
+                    Log.e("FraudDao", "getTokenRecord: cannot get db adapter");
                     return null;
                 }
                 var2_2 = new String[]{e.b(var1_1, e.salt)};
@@ -291,15 +289,15 @@ lbl18: // 1 sources:
         }
         f.a(var5_3);
         if (var6_9 == null) {
-            com.samsung.android.spayfw.b.c.e("FraudDao", "cannot create token record list");
+            Log.e("FraudDao", "cannot create token record list");
             return null;
         }
         if (var6_9.size() < 1) {
-            com.samsung.android.spayfw.b.c.e("FraudDao", "cannot find token record");
+            Log.e("FraudDao", "cannot find token record");
             return null;
         }
         if (var6_9.size() <= 1) return (d)var6_9.get(0);
-        com.samsung.android.spayfw.b.c.e("FraudDao", "dupicated token record " + var6_9.size());
+        Log.e("FraudDao", "dupicated token record " + var6_9.size());
         return (d)var6_9.get(0);
     }
 }

@@ -14,14 +14,14 @@
 package com.samsung.android.spayfw.payprovider.plcc.service;
 
 import android.content.Context;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.plcc.domain.PlccCard;
-import com.samsung.android.spayfw.payprovider.plcc.service.PlccPayProviderService;
 import com.samsung.android.spayfw.payprovider.plcc.tzsvc.PlccTAController;
 import com.samsung.android.spayfw.payprovider.plcc.tzsvc.PlccTAException;
 import com.samsung.android.spayfw.payprovider.plcc.util.Util;
 import com.samsung.android.spayfw.utils.h;
-import com.samsung.android.spaytzsvc.api.TAInfo;
+
 import java.io.File;
 import java.util.HashMap;
 
@@ -44,7 +44,7 @@ implements PlccPayProviderService {
             return arrby2;
         }
         catch (PlccTAException plccTAException) {
-            c.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return null;
         }
     }
@@ -56,7 +56,7 @@ implements PlccPayProviderService {
             return bl;
         }
         catch (PlccTAException plccTAException) {
-            c.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return false;
         }
     }
@@ -80,7 +80,7 @@ implements PlccPayProviderService {
         catch (PlccTAException plccTAException) {
             hashMap = null;
             PlccTAException plccTAException2 = plccTAException;
-            c.c(TAG, plccTAException2.getMessage(), (Throwable)((Object)plccTAException2));
+            Log.c(TAG, plccTAException2.getMessage(), (Throwable)((Object)plccTAException2));
             return hashMap;
         }
         hashMap.put((Object)"cert_enc", (Object)tACerts.encryptcert);
@@ -99,7 +99,7 @@ implements PlccPayProviderService {
             return arrby;
         }
         catch (PlccTAException plccTAException) {
-            c.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return new byte[]{0};
         }
     }
@@ -124,14 +124,14 @@ implements PlccPayProviderService {
             return this.mPlccTAController.mstTransmit(Util.hexStringToBytes(plccCard.getTzEncCard()), n2, arrby);
         }
         catch (InterruptedException interruptedException) {
-            c.c(TAG, interruptedException.getMessage(), interruptedException);
+            Log.c(TAG, interruptedException.getMessage(), interruptedException);
             do {
                 return false;
                 break;
             } while (true);
         }
         catch (PlccTAException plccTAException) {
-            c.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return false;
         }
     }
@@ -146,7 +146,7 @@ implements PlccPayProviderService {
             return;
         }
         catch (PlccTAException plccTAException) {
-            c.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return;
         }
     }
@@ -159,16 +159,16 @@ implements PlccPayProviderService {
     @Override
     public boolean stopMstTransmit() {
         boolean bl;
-        c.i(TAG, "clearMstData: start " + System.currentTimeMillis());
+        Log.i(TAG, "clearMstData: start " + System.currentTimeMillis());
         try {
             boolean bl2;
             bl = bl2 = this.mPlccTAController.clearMstData();
         }
         catch (PlccTAException plccTAException) {
-            c.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             bl = false;
         }
-        c.i(TAG, "clearMstData: end " + System.currentTimeMillis());
+        Log.i(TAG, "clearMstData: end " + System.currentTimeMillis());
         return bl;
     }
 
@@ -176,13 +176,13 @@ implements PlccPayProviderService {
     public byte[] utilityEnc4ServerTransport(byte[] arrby) {
         try {
             long l2 = h.am(this.mContext);
-            c.d(TAG, "Network Time = " + l2);
+            Log.d(TAG, "Network Time = " + l2);
             PlccTAController plccTAController = this.mPlccTAController;
             byte[] arrby2 = plccTAController.utility_enc4Server_Transport("PLCC", arrby, l2);
             return arrby2;
         }
         catch (PlccTAException plccTAException) {
-            c.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c(TAG, plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return new byte[]{0};
         }
     }

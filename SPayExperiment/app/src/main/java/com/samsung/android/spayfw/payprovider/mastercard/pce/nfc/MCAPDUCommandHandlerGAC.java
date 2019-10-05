@@ -9,9 +9,7 @@
 package com.samsung.android.spayfw.payprovider.mastercard.pce.nfc;
 
 import com.mastercard.mcbp.core.mcbpcards.profile.AlternateContactlessPaymentData;
-import com.mastercard.mcbp.core.mcbpcards.profile.CardRiskManagementData;
 import com.mastercard.mcbp.core.mcbpcards.profile.ContactlessPaymentData;
-import com.mastercard.mcbp.core.mcbpcards.profile.DC_CP_MPP;
 import com.mastercard.mcbp.core.mpplite.states.CheckTable;
 import com.mastercard.mcbp.crypto.MCBPCryptoService;
 import com.mastercard.mobile_api.bytes.ByteArray;
@@ -20,17 +18,12 @@ import com.mastercard.mobile_api.utils.TLV;
 import com.mastercard.mobile_api.utils.Utils;
 import com.mastercard.mobile_api.utils.apdu.emv.GenACRespApdu;
 import com.mastercard.mobile_api.utils.apdu.emv.GenerateACApdu;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.MCTransactionException;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.context.MTBPTransactionContext;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCCVMResult;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCCryptoOutput;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCProfilesTable;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionCredentials;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionInformation;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionResult;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.nfc.MCCAPDUBaseCommandHandler;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.nfc.MCCommandResult;
 import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McTAController;
 
 public class MCAPDUCommandHandlerGAC
@@ -56,13 +49,13 @@ extends MCCAPDUBaseCommandHandler {
             this.mCVR.setByte(1, (byte)(by2 | 64));
         }
         if (this.getTransactionContext().isAlternateAID()) {
-            c.e(TAG, "AAC: Alternate profile");
+            Log.e(TAG, "AAC: Alternate profile");
             this.getTransactionContext().getTransactionCredentials().setProfileType(this.getTransactionContext().getTransactionCredentials().getTAProfilesTable().getTAProfileReference(MCProfilesTable.TAProfile.PROFILE_CL_ALT_TA_GAC_DECLINE_NO_CVM));
         } else if (this.getTransactionContext().getTransactionCredentials().getCVMResult().getResultCode() == 0L) {
-            c.e(TAG, "AAC: CL profile");
+            Log.e(TAG, "AAC: CL profile");
             this.getTransactionContext().getTransactionCredentials().setProfileType(this.getTransactionContext().getTransactionCredentials().getTAProfilesTable().getTAProfileReference(MCProfilesTable.TAProfile.PROFILE_CL_TA_GAC_DECLINE_CVM));
         } else {
-            c.e(TAG, "tap&Go: AAC profile");
+            Log.e(TAG, "tap&Go: AAC profile");
             this.getTransactionContext().getTransactionCredentials().setProfileType(this.getTransactionContext().getTransactionCredentials().getTAProfilesTable().getTAProfileReference(MCProfilesTable.TAProfile.PROFILE_CL_TA_GAC_DECLINE_NO_CVM));
         }
         if (this.getTransactionContext().getTransactionError() == null || this.getTransactionContext().getTransactionError() == MCTransactionResult.CONTEXT_CONFLICT_PASS) {
@@ -84,18 +77,18 @@ extends MCCAPDUBaseCommandHandler {
             this.mCVR.setByte(1, (byte)(by3 | 64));
         }
         if (this.getTransactionContext().isAlternateAID()) {
-            c.i(TAG, "ARQC: Alternate profile");
+            Log.i(TAG, "ARQC: Alternate profile");
             this.getTransactionContext().getTransactionCredentials().setProfileType(this.getTransactionContext().getTransactionCredentials().getTAProfilesTable().getTAProfileReference(MCProfilesTable.TAProfile.PROFILE_CL_ALT_TA_GAC_ONLINE_NO_CVM));
             return;
         } else {
             if (this.getTransactionContext().getTransactionCredentials().getCVMResult() != null && this.getTransactionContext().getTransactionCredentials().getCVMResult().getResultCode() == 0L) {
-                c.i(TAG, "ARQC: CL profile");
+                Log.i(TAG, "ARQC: CL profile");
                 this.getTransactionContext().getTransactionCredentials().setProfileType(this.getTransactionContext().getTransactionCredentials().getTAProfilesTable().getTAProfileReference(MCProfilesTable.TAProfile.PROFILE_CL_TA_GAC_ONLINE_CVM));
                 return;
             }
             if (this.getTransactionContext().getTransactionCredentials().getCVMResult() == null || this.getTransactionContext().getTransactionCredentials().getCVMResult().getResultCode() == 0L) return;
             {
-                c.i(TAG, "tap&Go: ARQC profile");
+                Log.i(TAG, "tap&Go: ARQC profile");
                 this.getTransactionContext().getTransactionCredentials().setProfileType(this.getTransactionContext().getTransactionCredentials().getTAProfilesTable().getTAProfileReference(MCProfilesTable.TAProfile.PROFILE_CL_TA_GAC_ONLINE_NO_CVM));
                 return;
             }
@@ -216,16 +209,16 @@ extends MCCAPDUBaseCommandHandler {
 
     private boolean checkMchipParameters() {
         if (this.mClData.getCIAC_Decline() == null) {
-            c.e(TAG, "GAC check MChip parameters: CIAC_decline is null.");
+            Log.e(TAG, "GAC check MChip parameters: CIAC_decline is null.");
         }
         if (this.mClData.getCVR_MaskAnd() == null) {
-            c.e(TAG, "GAC check MChip parameters: CVRMaskAnd is null.");
+            Log.e(TAG, "GAC check MChip parameters: CVRMaskAnd is null.");
         }
         if (this.mClData.getIssuerApplicationData() == null) {
-            c.e(TAG, "GAC check MChip parameters: issuer application data is null.");
+            Log.e(TAG, "GAC check MChip parameters: issuer application data is null.");
         }
         if (this.mClData.getICC_privateKey_a() == null) {
-            c.e(TAG, "GAC check MChip parameters: ICC_privateKey_a is null.");
+            Log.e(TAG, "GAC check MChip parameters: ICC_privateKey_a is null.");
         }
         return this.mClData.getCIAC_Decline() != null && this.mClData.getCVR_MaskAnd() != null && this.mClData.getIssuerApplicationData() != null && this.mClData.getICC_privateKey_a() != null;
     }
@@ -237,34 +230,34 @@ extends MCCAPDUBaseCommandHandler {
      */
     private MCCommandResult composeCardholderVerificationResult() {
         byte by = 1;
-        c.i(TAG, "check CVR");
+        Log.i(TAG, "check CVR");
         try {
             this.checkCVRFromTerminal();
         }
         catch (MCTransactionException mCTransactionException) {
-            c.e(TAG, "Unexpected MCTransactionException: " + mCTransactionException.getMessage());
+            Log.e(TAG, "Unexpected MCTransactionException: " + mCTransactionException.getMessage());
             mCTransactionException.printStackTrace();
             this.aac(this.mGenACApdu);
             return this.completeCommand();
         }
-        c.i(TAG, "check CVM");
+        Log.i(TAG, "check CVM");
         byte by2 = (byte)(-64 & this.mP1);
         if (by2 == 0) {
             this.getTransactionContext().setTransactionResult(MCTransactionResult.TRANSACTION_COMPLETED);
             this.getTransactionContext().setPOSCII(this.baf.getByteArray(3));
-            c.e(TAG, "GAC compose CVR: AAC requested by terminal, p1 = " + by2);
+            Log.e(TAG, "GAC compose CVR: AAC requested by terminal, p1 = " + by2);
             this.aac(this.mGenACApdu);
             return this.completeCommand();
         }
         if (!Utils.isZero(this.mCVR.copyOfRange(3, 6).bitWiseAnd(this.mClData.getCIAC_Decline()))) {
             this.getTransactionContext().setTransactionResult(MCTransactionResult.TRANSACTION_COMPLETED);
             this.getTransactionContext().setPOSCII(this.baf.getByteArray(3));
-            c.e(TAG, "GAC compose CVR: found match in CIAC_decline");
+            Log.e(TAG, "GAC compose CVR: found match in CIAC_decline");
             this.aac(this.mGenACApdu);
             return this.completeCommand();
         }
         if (this.getTransactionContext().getTransactionCredentials().getCVMResult() == null || this.getTransactionContext().getTransactionCredentials().getCVMResult().getResultCode() != 0L) {
-            c.i(TAG, "tap&Go: CVM check flow");
+            Log.i(TAG, "tap&Go: CVM check flow");
             ByteArray byteArray = this.mGenACApdu.getCvmResults();
             byte by3 = (byte)(63 & byteArray.getByte(0));
             if (by3 != by && by3 != 4 || byteArray.getByte(2) != 2) {
@@ -274,13 +267,13 @@ extends MCCAPDUBaseCommandHandler {
                 byte by4 = this.mCVR.getByte(3);
                 this.mCVR.setByte(3, (byte)(by4 | 1));
                 this.errorCdcvmRequired();
-                c.e(TAG, "tap&go: return AAC 5.5");
+                Log.e(TAG, "tap&go: return AAC 5.5");
                 this.aac(this.mGenACApdu);
                 return this.completeCommand();
             }
             if (this.getTransactionContext().getTransactionCredentials().getCVMResult() != null && this.getTransactionContext().getTransactionCredentials().getCVMResult().isCVMRequired()) {
                 this.errorCdcvmRequired();
-                c.e(TAG, "tap&go: return AAC 5.7");
+                Log.e(TAG, "tap&go: return AAC 5.7");
                 this.aac(this.mGenACApdu);
                 return this.completeCommand();
             }
@@ -288,12 +281,12 @@ extends MCCAPDUBaseCommandHandler {
         this.getTransactionContext().setTransactionResult(MCTransactionResult.TRANSACTION_COMPLETED);
         if (!this.getTransactionContext().isOnlineAllowed()) {
             this.getTransactionContext().setPOSCII(this.baf.getByteArray(3));
-            c.e(TAG, "GAC compose CVR: online transaction not alowed, AAC");
+            Log.e(TAG, "GAC compose CVR: online transaction not alowed, AAC");
             this.aac(this.mGenACApdu);
             return this.completeCommand();
         }
         this.arqc(this.mGenACApdu);
-        c.d(TAG, "CVM OK, ARQC");
+        Log.d(TAG, "CVM OK, ARQC");
         return this.completeCommand();
     }
 
@@ -308,7 +301,7 @@ extends MCCAPDUBaseCommandHandler {
     private byte[] computeCryptoInputData2() {
         ContactlessPaymentData contactlessPaymentData;
         int n2 = 255;
-        c.i(TAG, "Compute input data 2");
+        Log.i(TAG, "Compute input data 2");
         if (this.getTransactionContext().isAlternateAID()) {
             AlternateContactlessPaymentData alternateContactlessPaymentData = this.getPaymentProfile().getContactlessPaymentData().getAlternateContactlessPaymentData();
             contactlessPaymentData = this.getPaymentProfile().getContactlessPaymentData();
@@ -323,10 +316,10 @@ extends MCCAPDUBaseCommandHandler {
         this.mUnmaskedCVR = this.mCVR.clone();
         this.mCVR = this.mCVR.bitWiseAnd(contactlessPaymentData.getCVR_MaskAnd());
         ByteArray byteArray = this.mCVR.copyOfRange(1, this.mCVR.getLength());
-        c.d(TAG, "Compute input data 2 Done");
+        Log.d(TAG, "Compute input data 2 Done");
         if ((64 & this.mUnmaskedCVR.getByte(3)) != 64) {
-            c.d(TAG, "RRP MAX RRP time " + Utils.readShort(contactlessPaymentData.getMaxRRTime()));
-            c.d(TAG, "RRP MIN RRP time " + Utils.readShort(contactlessPaymentData.getMinRRTime()));
+            Log.d(TAG, "RRP MAX RRP time " + Utils.readShort(contactlessPaymentData.getMaxRRTime()));
+            Log.d(TAG, "RRP MIN RRP time " + Utils.readShort(contactlessPaymentData.getMinRRTime()));
             ByteArray byteArray2 = this.getTransactionContext().getCryptoOutput().getIssuerApplicationData();
             int n3 = 65535 & Utils.readShort(contactlessPaymentData.getMaxRRTime()) / 10;
             if (n3 > n2) {
@@ -340,10 +333,10 @@ extends MCCAPDUBaseCommandHandler {
             byteArray2.setByte(25, (byte)n2);
             this.getTransactionContext().getCryptoOutput().setIssuerApplicationData(byteArray2);
             contactlessPaymentData.setIssuerApplicationData(byteArray2);
-            c.d(TAG, "RRP performed: IAD after RRP counters " + contactlessPaymentData.getIssuerApplicationData().getHexString());
+            Log.d(TAG, "RRP performed: IAD after RRP counters " + contactlessPaymentData.getIssuerApplicationData().getHexString());
         }
         if ((1 & this.getTransactionContext().getCryptoOutput().getIssuerApplicationData().getByte(1)) == 1) {
-            c.i(TAG, "CVN requires to add counters.");
+            Log.i(TAG, "CVN requires to add counters.");
             byteArray.append(this.getTransactionContext().getCryptoOutput().getIssuerApplicationData().copyOfRange(10, 26));
         }
         return byteArray.clone().getBytes();
@@ -353,7 +346,7 @@ extends MCCAPDUBaseCommandHandler {
         ByteArray byteArray;
         int n2;
         byteArray = this.getTransactionContext().getCryptoOutput().getIssuerApplicationData().clone();
-        c.d(TAG, "computeIssuerApplicationData, iad: " + byteArray.getHexString());
+        Log.d(TAG, "computeIssuerApplicationData, iad: " + byteArray.getHexString());
         ByteArray byteArray2 = this.mGenACApdu.getCDOL();
         for (int i2 = 0; i2 < 6; ++i2) {
             byteArray.setByte(i2 + 2, this.mCVR.getByte(i2));
@@ -383,9 +376,9 @@ extends MCCAPDUBaseCommandHandler {
     }
 
     private MCCommandResult initializeTransactionContext() {
-        c.i(TAG, "initTransactionContext...");
+        Log.i(TAG, "initTransactionContext...");
         if (MCAPDUCommandHandlerGAC.isTerminalOffline(this.mGenACApdu.getTerminalType())) {
-            c.e(TAG, "GAC check transaction context: offline terminal.");
+            Log.e(TAG, "GAC check transaction context: offline terminal.");
             return this.ERROR(27013);
         }
         MCTransactionInformation mCTransactionInformation = this.getTransactionContext().getTransactionInformation();
@@ -406,12 +399,12 @@ extends MCCAPDUBaseCommandHandler {
 
     @Override
     public MCCommandResult checkP1P2Parameters(byte by, byte by2) {
-        c.d(TAG, "GAC check p1/p2: start checking P1/P2 parameters");
+        Log.d(TAG, "GAC check p1/p2: start checking P1/P2 parameters");
         if ((by & 47) != 0 || by2 != 0 || (by & 192) == 192) {
-            c.e(TAG, "GAC check p1/p2: p1 = " + by + ", p2 = " + by2);
+            Log.e(TAG, "GAC check p1/p2: p1 = " + by + ", p2 = " + by2);
             return this.ERROR(27270);
         }
-        c.d(TAG, "GAC check p1/p2: Checking P1/P2 parameters OK");
+        Log.d(TAG, "GAC check p1/p2: Checking P1/P2 parameters OK");
         return this.completeCommand();
     }
 
@@ -446,7 +439,7 @@ extends MCCAPDUBaseCommandHandler {
                 byteArray2 = byteArray3;
                 break block7;
             }
-            c.e(TAG, "GAC generate RAPDU: IDN is null.");
+            Log.e(TAG, "GAC generate RAPDU: IDN is null.");
             return this.ERROR(27013);
             catch (Exception exception) {
                 Exception exception2;
@@ -458,7 +451,7 @@ extends MCCAPDUBaseCommandHandler {
                         bl = true;
                     }
                 }
-                c.e(TAG, "GAC generate RAPDU: Unexpected exception: " + exception2.getMessage());
+                Log.e(TAG, "GAC generate RAPDU: Unexpected exception: " + exception2.getMessage());
                 exception2.printStackTrace();
                 byteArray2 = byteArray3;
             }
@@ -479,43 +472,43 @@ extends MCCAPDUBaseCommandHandler {
         byte[] arrby;
         MCCommandResult mCCommandResult = this.verifyPaymentProfile(byteArray);
         if (!MCTransactionResult.COMMAND_COMPLETED.equals((Object)mCCommandResult.getResponseCode())) {
-            c.e(TAG, "GAC process command: verify payment profile failed.");
+            Log.e(TAG, "GAC process command: verify payment profile failed.");
             return mCCommandResult;
         }
         MCCommandResult mCCommandResult2 = this.initializeTransactionContext();
         if (!MCTransactionResult.COMMAND_COMPLETED.equals((Object)mCCommandResult2.getResponseCode())) {
-            c.e(TAG, "GAC process command: init transaction context failed.");
+            Log.e(TAG, "GAC process command: init transaction context failed.");
             return mCCommandResult2;
         }
         MCCryptoOutput mCCryptoOutput = new MCCryptoOutput();
         if (this.getTransactionContext().isAlternateAID()) {
             mCCryptoOutput.setIssuerApplicationData(this.mPaymentProfile.getContactlessPaymentData().getAlternateContactlessPaymentData().getIssuerApplicationData().clone());
-            c.d(TAG, "processCommand, iad: " + mCCryptoOutput.getIssuerApplicationData().getHexString());
+            Log.d(TAG, "processCommand, iad: " + mCCryptoOutput.getIssuerApplicationData().getHexString());
         } else {
             mCCryptoOutput.setIssuerApplicationData(this.mPaymentProfile.getContactlessPaymentData().getIssuerApplicationData().clone());
         }
         this.getTransactionContext().setCryptoOutput(mCCryptoOutput);
         MCCommandResult mCCommandResult3 = this.composeCardholderVerificationResult();
         if (!MCTransactionResult.COMMAND_COMPLETED.equals((Object)mCCommandResult3.getResponseCode())) {
-            c.e(TAG, "GAC process command: compose CVR failed.");
+            Log.e(TAG, "GAC process command: compose CVR failed.");
             return mCCommandResult3;
         }
         byte[] arrby2 = this.computeCryptoInputData1();
         if (arrby2 == null) {
-            c.e(TAG, "GAC process command: input data 1 is null.");
+            Log.e(TAG, "GAC process command: input data 1 is null.");
             return this.ERROR(27013);
         }
         byte[] arrby3 = this.computeCryptoInputData2();
         if (arrby3 == null) {
-            c.e(TAG, "GAC process command: input data 2 is null.");
+            Log.e(TAG, "GAC process command: input data 2 is null.");
             return this.ERROR(27013);
         }
         if (this.getTransactionContext().getTransactionCredentials().getATC() == null) {
-            c.e(TAG, "GAC process command: ATC value is empty...");
+            Log.e(TAG, "GAC process command: ATC value is empty...");
             return this.ERROR(27013);
         }
         if (this.getTransactionContext().getTransactionCredentials().getProfileType() == 0) {
-            c.e(TAG, "GAC process command: cannot find correct crypto profile...");
+            Log.e(TAG, "GAC process command: cannot find correct crypto profile...");
             return this.ERROR(27013);
         }
         try {
@@ -523,7 +516,7 @@ extends MCCAPDUBaseCommandHandler {
             arrby = arrby4 = McTAController.getInstance().generateMAC(this.getTransactionContext().getTransactionCredentials().getProfileType(), arrby2, arrby3, this.getTransactionContext().getTransactionInformation().getUN().getBytes());
         }
         catch (Exception exception) {
-            c.e(TAG, "GAC process command: unexpected TAException");
+            Log.e(TAG, "GAC process command: unexpected TAException");
             exception.printStackTrace();
             arrby = null;
         }
@@ -531,7 +524,7 @@ extends MCCAPDUBaseCommandHandler {
             this.getTransactionContext().getCryptoOutput().setCryptogram(this.baf.getByteArray((byte[])arrby.clone(), arrby.length));
             return this.generateResponseAPDU();
         }
-        c.e(TAG, "GAC process command: ");
+        Log.e(TAG, "GAC process command: ");
         return this.ERROR(27013);
     }
 
@@ -539,7 +532,7 @@ extends MCCAPDUBaseCommandHandler {
      * Enabled aggressive block sorting
      */
     public MCCommandResult verifyPaymentProfile(ByteArray byteArray) {
-        c.i(TAG, "Start checkPaymentData...");
+        Log.i(TAG, "Start checkPaymentData...");
         this.mGenACApdu = new GenerateACApdu(byteArray);
         this.mP1 = byteArray.getByte(2);
         int n2 = 255 & byteArray.getByte(4);
@@ -555,13 +548,13 @@ extends MCCAPDUBaseCommandHandler {
             this.mClData = this.getPaymentProfile().getContactlessPaymentData();
         }
         if (!this.checkMchipParameters()) {
-            c.e(TAG, "GAC process command: check MCHIP parameters failed.");
+            Log.e(TAG, "GAC process command: check MCHIP parameters failed.");
             return this.ERROR(27013);
         }
         if (n2 >= 43 && n2 == this.mClData.getCDOL1_RelatedDataLength()) {
             return this.completeCommand();
         }
-        c.e(TAG, "GAC: lc wrong length, lc: " + n2 + ", CDOL1 related data length: " + this.mClData.getCDOL1_RelatedDataLength());
+        Log.e(TAG, "GAC: lc wrong length, lc: " + n2 + ", CDOL1 related data length: " + this.mClData.getCDOL1_RelatedDataLength());
         return this.ERROR(26368);
     }
 }

@@ -25,26 +25,20 @@ import android.os.RemoteException;
 import com.google.gson.JsonObject;
 import com.samsung.android.spayfw.appinterface.IPushMessageCallback;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.a;
-import com.samsung.android.spayfw.core.a.o;
-import com.samsung.android.spayfw.core.a.z;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.m;
-import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.d;
 import com.samsung.android.spayfw.payprovider.e;
-import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.g;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenResponseData;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
 import com.samsung.android.spayfw.utils.h;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class v
 extends o
@@ -63,9 +57,9 @@ implements Runnable {
     }
 
     private void Q(String string) {
-        com.samsung.android.spayfw.b.c.i("TokenChangeChecker", "deleting token id = " + string);
+        Log.i("TokenChangeChecker", "deleting token id = " + string);
         if (this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Co, string) < 1) {
-            com.samsung.android.spayfw.b.c.e("TokenChangeChecker", "Not able to delete Token from DB");
+            Log.e("TokenChangeChecker", "Not able to delete Token from DB");
         }
         this.iJ.t(string);
     }
@@ -90,11 +84,11 @@ implements Runnable {
             Handler handler = z.getHandler();
             v v2 = (v)mo.get((Object)string);
             if (v2 == null) {
-                com.samsung.android.spayfw.b.c.i("TokenChangeChecker", "New Instance of Token Change Checker");
+                Log.i("TokenChangeChecker", "New Instance of Token Change Checker");
                 v2 = new v(context, string);
                 v2.mq = l2;
             } else {
-                com.samsung.android.spayfw.b.c.i("TokenChangeChecker", "Update Instance of Token Change Checker");
+                Log.i("TokenChangeChecker", "Update Instance of Token Change Checker");
                 handler.removeCallbacks((Runnable)v2);
                 v2.mq = l2;
             }
@@ -102,7 +96,7 @@ implements Runnable {
                 handler.postDelayed((Runnable)v2, v2.mq);
             }
             if ((long)v2.mr >= 10L) {
-                com.samsung.android.spayfw.b.c.w("TokenChangeChecker", "Token Change Checker Retry Limit Reached. Try Token Replenisher.");
+                Log.w("TokenChangeChecker", "Token Change Checker Retry Limit Reached. Try Token Replenisher.");
                 v.remove(string);
                 a a2 = a.a(context, null);
                 if (a2 != null) {
@@ -110,10 +104,10 @@ implements Runnable {
                     if (c2 != null) {
                         mp.a(c2.ac().aQ());
                     } else {
-                        com.samsung.android.spayfw.b.c.e("TokenChangeChecker", "Card is NULL");
+                        Log.e("TokenChangeChecker", "Card is NULL");
                     }
                 } else {
-                    com.samsung.android.spayfw.b.c.e("TokenChangeChecker", "Account is NULL");
+                    Log.e("TokenChangeChecker", "Account is NULL");
                 }
             } else {
                 mo.put((Object)string, (Object)v2);
@@ -134,10 +128,10 @@ implements Runnable {
             Handler handler = z.getHandler();
             v v2 = (v)mo.get((Object)string);
             if (v2 == null) {
-                com.samsung.android.spayfw.b.c.i("TokenChangeChecker", "New Instance of Token Change Checker");
+                Log.i("TokenChangeChecker", "New Instance of Token Change Checker");
                 v2 = new v(context, string);
             } else {
-                com.samsung.android.spayfw.b.c.i("TokenChangeChecker", "Update Instance of Token Change Checker");
+                Log.i("TokenChangeChecker", "Update Instance of Token Change Checker");
                 handler.removeCallbacks((Runnable)v2);
             }
             v2.mq = 0L;
@@ -153,7 +147,7 @@ implements Runnable {
     public static void remove(String string) {
         Class<v> class_ = v.class;
         synchronized (v.class) {
-            com.samsung.android.spayfw.b.c.i("TokenChangeChecker", "Remove Instance of Token Change Checker");
+            Log.i("TokenChangeChecker", "Remove Instance of Token Change Checker");
             v v2 = (v)mo.remove((Object)string);
             z.getHandler().removeCallbacks((Runnable)v2);
             // ** MonitorExit[var3_1] (shouldn't be in output)
@@ -164,7 +158,7 @@ implements Runnable {
     public static void restart() {
         Class<v> class_ = v.class;
         synchronized (v.class) {
-            com.samsung.android.spayfw.b.c.i("TokenChangeChecker", "restart");
+            Log.i("TokenChangeChecker", "restart");
             Handler handler = z.getHandler();
             for (Map.Entry entry : mo.entrySet()) {
                 if (((v)entry.getValue()).mq != -1L) continue;
@@ -181,12 +175,12 @@ implements Runnable {
     }
 
     public void run() {
-        com.samsung.android.spayfw.b.c.d("TokenChangeChecker", "Entered token change checker : tokenId " + this.mTokenId);
-        com.samsung.android.spayfw.b.c.i("TokenChangeChecker", "Entered token change checker : retryCount " + this.mr);
+        Log.d("TokenChangeChecker", "Entered token change checker : tokenId " + this.mTokenId);
+        Log.i("TokenChangeChecker", "Entered token change checker : retryCount " + this.mr);
         this.mr = 1 + this.mr;
         final c c2 = this.iJ.r(this.mTokenId);
         if (c2 == null) {
-            com.samsung.android.spayfw.b.c.e("TokenChangeChecker", " unable to get card based on tokenId. ignore replenish request");
+            Log.e("TokenChangeChecker", " unable to get card based on tokenId. ignore replenish request");
             return;
         }
         final String string = c2.getCardBrand();
@@ -214,7 +208,7 @@ implements Runnable {
                         int n4 = 0;
                         e2 = null;
                         string2 = c2.ac().getTokenStatus();
-                        com.samsung.android.spayfw.b.c.i("TokenChangeChecker", "onRequestComplete: Token change: code " + n2);
+                        Log.i("TokenChangeChecker", "onRequestComplete: Token change: code " + n2);
                         c3 = v.this.iJ.r(v.this.mTokenId);
                         switch (n2) {
                             default: {
@@ -225,7 +219,7 @@ implements Runnable {
                             case 200: {
                                 TokenResponseData tokenResponseData = c22.getResult();
                                 if (tokenResponseData == null) {
-                                    com.samsung.android.spayfw.b.c.e("TokenChangeChecker", "TokenResponseData is null");
+                                    Log.e("TokenChangeChecker", "TokenResponseData is null");
                                     bl2 = true;
                                     string4 = string2;
                                     bl = false;
@@ -235,13 +229,13 @@ implements Runnable {
                                 } else {
                                     com.samsung.android.spayfw.storage.models.a a2 = v.this.jJ.bq(v.this.mTokenId);
                                     if (c3 == null || a2 == null) {
-                                        com.samsung.android.spayfw.b.c.e("TokenChangeChecker", "unable to get card object ");
+                                        Log.e("TokenChangeChecker", "unable to get card object ");
                                         if (a2 != null) {
-                                            com.samsung.android.spayfw.b.c.i("TokenChangeChecker", "delete record from db ");
+                                            Log.i("TokenChangeChecker", "delete record from db ");
                                             v.this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Cn, a2.getEnrollmentId());
                                         }
                                         if (c3 != null) {
-                                            com.samsung.android.spayfw.b.c.e("TokenChangeChecker", "delete card object");
+                                            Log.e("TokenChangeChecker", "delete card object");
                                             v.this.iJ.s(c3.getEnrollmentId());
                                         }
                                         TokenStatus tokenStatus2 = new TokenStatus("DISPOSED", null);
@@ -285,7 +279,7 @@ implements Runnable {
                             }
                             case 404: 
                             case 410: {
-                                com.samsung.android.spayfw.b.c.w("TokenChangeChecker", "unable to find the token on server. something wrong. deleting the token");
+                                Log.w("TokenChangeChecker", "unable to find the token on server. something wrong. deleting the token");
                                 TokenStatus tokenStatus4 = new TokenStatus("DISPOSED", null);
                                 e e3 = null;
                                 if (c3 != null) {
@@ -345,7 +339,7 @@ implements Runnable {
                     bl = false;
                 }
                 if (n3 != 0) {
-                    com.samsung.android.spayfw.b.c.e("TokenChangeChecker", "Replenish Token Failed - Error Code = " + n3);
+                    Log.e("TokenChangeChecker", "Replenish Token Failed - Error Code = " + n3);
                     if (c3 != null) {
                         d d2 = new d(23, -1, c3.ac().aQ());
                         c3.ad().updateRequestStatus(d2);
@@ -358,7 +352,7 @@ implements Runnable {
                     if (bl) {
                         v.this.a(null, v.this.mTokenId, string4, "TOKEN_CHANGE", c.y(string), e2, true);
                     } else {
-                        com.samsung.android.spayfw.b.c.e("TokenChangeChecker", "processTokenChange:Send error report to TR server");
+                        Log.e("TokenChangeChecker", "processTokenChange:Send error report to TR server");
                         v.this.b(null, v.this.mTokenId, string4, "TOKEN_CHANGE", c.y(string), e2, true);
                     }
                 }
@@ -373,7 +367,7 @@ implements Runnable {
                         v.this.lS.onTokenReplenished(v.this.lU, v.this.mTokenId);
                     }
                     catch (RemoteException remoteException) {
-                        com.samsung.android.spayfw.b.c.c("TokenChangeChecker", remoteException.getMessage(), remoteException);
+                        Log.c("TokenChangeChecker", remoteException.getMessage(), remoteException);
                     }
                     v.this.lS = null;
                     return;

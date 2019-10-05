@@ -11,7 +11,8 @@
 package com.samsung.android.spayfw.payprovider.discover.payment.data;
 
 import android.text.TextUtils;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.ByteBuffer;
 
 public class DiscoverCDCVM {
@@ -29,23 +30,23 @@ public class DiscoverCDCVM {
 
     public static DiscoverCDCVMType aG(String string) {
         if (string == null || TextUtils.isEmpty((CharSequence)string)) {
-            c.d("DCSDK_DiscoverCDCVM", "getCDCVMTypeByFWAuthType, PF auth type is empty, return CVM_TYPE_NO_VALIDATION");
+            Log.d("DCSDK_DiscoverCDCVM", "getCDCVMTypeByFWAuthType, PF auth type is empty, return CVM_TYPE_NO_VALIDATION");
             return DiscoverCDCVMType.tJ;
         }
         if ("BACKUP PASSWORD".equals((Object)string)) {
-            c.d("DCSDK_DiscoverCDCVM", "getCDCVMTypeByFWAuthType, PF auth type is AUTHTYPE_BACKUPPASSWORD, return CVM_TYPE_PASSWORD");
+            Log.d("DCSDK_DiscoverCDCVM", "getCDCVMTypeByFWAuthType, PF auth type is AUTHTYPE_BACKUPPASSWORD, return CVM_TYPE_PASSWORD");
             return DiscoverCDCVMType.tK;
         }
         if ("FP".equals((Object)string)) {
-            c.d("DCSDK_DiscoverCDCVM", "getCDCVMTypeByFWAuthType, PF auth type is AUTHTYPE_FP, return CVM_TYPE_FINGERPRINT");
+            Log.d("DCSDK_DiscoverCDCVM", "getCDCVMTypeByFWAuthType, PF auth type is AUTHTYPE_FP, return CVM_TYPE_FINGERPRINT");
             return DiscoverCDCVMType.tL;
         }
         if ("PIN".equals((Object)string)) {
-            c.d("DCSDK_DiscoverCDCVM", "getCDCVMTypeByFWAuthType, PF auth type is AUTHTYPE_TRUSTED_PIN, return CVM_TYPE_LOCAL_PASSCODE");
+            Log.d("DCSDK_DiscoverCDCVM", "getCDCVMTypeByFWAuthType, PF auth type is AUTHTYPE_TRUSTED_PIN, return CVM_TYPE_LOCAL_PASSCODE");
             return DiscoverCDCVMType.tQ;
         }
         if ("IRIS".equals((Object)string)) {
-            c.d("DCSDK_DiscoverCDCVM", "getCDCVMTypeByFWAuthType, PF auth type is AUTHTYPE_IRIS, return CVM_TYPE_RETINA_SCAN");
+            Log.d("DCSDK_DiscoverCDCVM", "getCDCVMTypeByFWAuthType, PF auth type is AUTHTYPE_IRIS, return CVM_TYPE_RETINA_SCAN");
             return DiscoverCDCVMType.tO;
         }
         return DiscoverCDCVMType.tJ;

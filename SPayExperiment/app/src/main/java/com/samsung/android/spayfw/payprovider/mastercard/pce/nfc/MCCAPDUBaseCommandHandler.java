@@ -11,11 +11,9 @@ import com.mastercard.mcbp.core.mcbpcards.profile.DC_CP;
 import com.mastercard.mcbp.core.mcbpcards.profile.DC_CP_MPP;
 import com.mastercard.mobile_api.bytes.ByteArray;
 import com.mastercard.mobile_api.bytes.ByteArrayFactory;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.context.MTBPTransactionContext;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionCredentials;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionResult;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.nfc.MCCommandResult;
 
 public abstract class MCCAPDUBaseCommandHandler {
     protected static final String TAG = "mcpce_MCCAPDUBaseCommandHandler";
@@ -80,30 +78,30 @@ public abstract class MCCAPDUBaseCommandHandler {
 
     public MCCommandResult processAPDU(ByteArray byteArray) {
         if (byteArray == null || byteArray.getLength() == 0) {
-            c.e("mcpce_MCCAPDUBaseCommandHandler", "Empty apdu. Return error code 27013");
+            Log.e("mcpce_MCCAPDUBaseCommandHandler", "Empty apdu. Return error code 27013");
             return this.ERROR(27013);
         }
-        c.i("mcpce_MCCAPDUBaseCommandHandler", "apdu:" + byteArray.getHexString());
-        c.d("mcpce_MCCAPDUBaseCommandHandler", "Check APDU parameters.");
+        Log.i("mcpce_MCCAPDUBaseCommandHandler", "apdu:" + byteArray.getHexString());
+        Log.d("mcpce_MCCAPDUBaseCommandHandler", "Check APDU parameters.");
         MCCommandResult mCCommandResult = this.checkP1P2Parameters(byteArray.getByte(2), byteArray.getByte(3));
         if (mCCommandResult != null) {
-            c.d("mcpce_MCCAPDUBaseCommandHandler", "checkP1P2Parameters response result: " + (Object)((Object)mCCommandResult.getResponseCode()));
+            Log.d("mcpce_MCCAPDUBaseCommandHandler", "checkP1P2Parameters response result: " + (Object)((Object)mCCommandResult.getResponseCode()));
         }
         if (!MCTransactionResult.COMMAND_COMPLETED.equals((Object)((Object)mCCommandResult.getResponseCode()))) {
-            c.e("mcpce_MCCAPDUBaseCommandHandler", "checkP1P2Parameters execution error, error code " + (Object)((Object)mCCommandResult.getResponseCode()));
+            Log.e("mcpce_MCCAPDUBaseCommandHandler", "checkP1P2Parameters execution error, error code " + (Object)((Object)mCCommandResult.getResponseCode()));
             return mCCommandResult;
         }
-        c.d("mcpce_MCCAPDUBaseCommandHandler", "Process APDU.");
+        Log.d("mcpce_MCCAPDUBaseCommandHandler", "Process APDU.");
         MCCommandResult mCCommandResult2 = this.processCommand(byteArray);
         if (!MCTransactionResult.COMMAND_COMPLETED.equals((Object)((Object)mCCommandResult2.getResponseCode()))) {
             if (MCTransactionResult.TRANSACTION_COMPLETED.equals((Object)((Object)mCCommandResult2.getResponseCode()))) {
-                c.i("mcpce_MCCAPDUBaseCommandHandler", "ProccessAPDU Transaction completed  " + (Object)((Object)mCCommandResult2.getResponseCode()));
+                Log.i("mcpce_MCCAPDUBaseCommandHandler", "ProccessAPDU Transaction completed  " + (Object)((Object)mCCommandResult2.getResponseCode()));
                 return mCCommandResult2;
             }
-            c.e("mcpce_MCCAPDUBaseCommandHandler", "ProccessAPDU execution error, error code " + (Object)((Object)mCCommandResult2.getResponseCode()));
+            Log.e("mcpce_MCCAPDUBaseCommandHandler", "ProccessAPDU execution error, error code " + (Object)((Object)mCCommandResult2.getResponseCode()));
             return mCCommandResult2;
         }
-        c.i("mcpce_MCCAPDUBaseCommandHandler", "Generate APDU response.");
+        Log.i("mcpce_MCCAPDUBaseCommandHandler", "Generate APDU response.");
         return this.generateResponseAPDU();
     }
 

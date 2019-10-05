@@ -30,34 +30,26 @@
  */
 package com.samsung.android.spayfw.core.a;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.samsung.android.spayfw.appinterface.InAppTransactionInfo;
-import com.samsung.android.spayfw.core.a;
-import com.samsung.android.spayfw.core.a.o;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.c;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.j;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.DeviceInfo;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Wifi;
 import com.samsung.android.spayfw.storage.models.PaymentDetailsRecord;
 import com.samsung.android.spayfw.utils.h;
-import java.util.ArrayList;
+
 import java.util.UUID;
 
 public class b
@@ -80,14 +72,14 @@ extends o {
                 String string = paymentDetailsRecord != null ? paymentDetailsRecord.getTrTokenId() : null;
                 c c2 = string != null ? b.this.iJ.r(string) : null;
                 if (c2 == null) {
-                    com.samsung.android.spayfw.b.c.e("AnalyticsReporter", " unable to get card based on tokenId. ignore report request");
+                    Log.e("AnalyticsReporter", " unable to get card based on tokenId. ignore report request");
                     return;
                 }
                 String string2 = c2.getCardBrand();
                 if (string2 == null) {
-                    com.samsung.android.spayfw.b.c.e("AnalyticsReporter", "card brand is null. ignore report request");
+                    Log.e("AnalyticsReporter", "card brand is null. ignore report request");
                 }
-                com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "Entered AnalyticsReporter: tokenId " + string);
+                Log.d("AnalyticsReporter", "Entered AnalyticsReporter: tokenId " + string);
                 PaymentDetailsRecord paymentDetailsRecord2 = b.this.c(paymentDetailsRecord);
                 b.this.a(string2, paymentDetailsRecord2);
                 com.samsung.android.spayfw.fraud.a a2 = com.samsung.android.spayfw.fraud.a.x(b.this.mContext);
@@ -112,7 +104,7 @@ extends o {
                 packageInfo = this.mContext.getPackageManager().getPackageInfo(string, 0);
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.e("getPackageVersion", "Exception = " + (Object)((Object)exception));
+                Log.e("getPackageVersion", "Exception = " + (Object)((Object)exception));
             }
         }
         if (packageInfo != null) {
@@ -144,7 +136,7 @@ extends o {
      * Lifted jumps to return sites
      */
     private PaymentDetailsRecord c(PaymentDetailsRecord var1_1) {
-        com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "Starting to updatetransmission record");
+        Log.d("AnalyticsReporter", "Starting to updatetransmission record");
         if (var1_1 == null) ** GOTO lbl29
         try {
             var1_1.setTimeStamp(System.currentTimeMillis());
@@ -172,18 +164,18 @@ extends o {
                     var4_3.setAccuracy(String.valueOf((float)var3_2.getAccuracy()));
                     var4_3.setTime(String.valueOf((long)var3_2.getTime()));
                     var1_1.setLocation(var4_3);
-                    com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "location = " + var4_3);
+                    Log.d("AnalyticsReporter", "location = " + var4_3);
                 }
                 var1_1.setWifi(DeviceInfo.getWifiDetails(this.mContext));
             } else {
-                com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "In App Payment record");
+                Log.d("AnalyticsReporter", "In App Payment record");
             }
 lbl29: // 3 sources:
-            com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "Completed updating the transmission record");
+            Log.d("AnalyticsReporter", "Completed updating the transmission record");
             return var1_1;
         }
         catch (Exception var2_4) {
-            com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "Exception while updating the transmission record");
+            Log.d("AnalyticsReporter", "Exception while updating the transmission record");
             return var1_1;
         }
     }
@@ -224,18 +216,18 @@ lbl29: // 3 sources:
     protected void a(String string, PaymentDetailsRecord paymentDetailsRecord) {
         b b2 = this;
         synchronized (b2) {
-            com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "Sending Payment Data Report");
+            Log.d("AnalyticsReporter", "Sending Payment Data Report");
             if (paymentDetailsRecord == null) {
-                com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "Payment Record is null");
+                Log.d("AnalyticsReporter", "Payment Record is null");
             } else {
                 JsonObject jsonObject = this.b(paymentDetailsRecord);
                 if (jsonObject == null) {
-                    com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "Json Report Data Empty");
+                    Log.d("AnalyticsReporter", "Json Report Data Empty");
                 } else {
-                    com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "Report Data = " + (Object)jsonObject);
-                    com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "Payment Type =" + c.y(string));
+                    Log.d("AnalyticsReporter", "Report Data = " + (Object)jsonObject);
+                    Log.d("AnalyticsReporter", "Payment Type =" + c.y(string));
                     if ("GI".equals((Object)string)) {
-                        com.samsung.android.spayfw.b.c.d("AnalyticsReporter", "If Card Brand equals Gift, Use plcc Server TR for Analytics");
+                        Log.d("AnalyticsReporter", "If Card Brand equals Gift, Use plcc Server TR for Analytics");
                         string = "PL";
                     }
                     this.lQ.b(c.y(string), jsonObject).ff();

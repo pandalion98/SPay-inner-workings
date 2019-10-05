@@ -37,25 +37,24 @@ import com.samsung.android.spayfw.appinterface.SecuredObject;
 import com.samsung.android.spayfw.appinterface.SelectCardResult;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.c;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.payprovider.i;
-import com.samsung.android.spayfw.payprovider.plcc.PlccPayProviderSdk;
 import com.samsung.android.spayfw.payprovider.plcc.domain.PlccCard;
 import com.samsung.android.spayfw.payprovider.plcc.exception.PlccException;
 import com.samsung.android.spayfw.payprovider.plcc.tzsvc.PlccTAController;
 import com.samsung.android.spayfw.payprovider.plcc.util.SequenceUtils;
 import com.samsung.android.spayfw.payprovider.plcc.util.Util;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
-import com.samsung.android.spaytzsvc.api.TAController;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 
 public class PlccPayProvider
@@ -77,7 +76,7 @@ extends PaymentNetworkProvider {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("pan", enrollCardPanInfo.getPAN());
         jsonObject.addProperty("cvv2", enrollCardPanInfo.getCVV());
-        com.samsung.android.spayfw.b.c.d(TAG, "debug cvv = " + enrollCardPanInfo.getCVV());
+        Log.d(TAG, "debug cvv = " + enrollCardPanInfo.getCVV());
         JsonObject jsonObject2 = new JsonObject();
         jsonObject2.addProperty("encrypted", this.mSdk.utilityEnc4ServerTransport(jsonObject.toString()));
         return jsonObject2;
@@ -88,13 +87,13 @@ extends PaymentNetworkProvider {
             MessageDigest messageDigest = MessageDigest.getInstance((String)"SHA-256");
             messageDigest.update(string.getBytes());
             byte[] arrby = messageDigest.digest();
-            com.samsung.android.spayfw.b.c.d(TAG, "getEmailAddressHash: digest " + Arrays.toString((byte[])arrby));
+            Log.d(TAG, "getEmailAddressHash: digest " + Arrays.toString((byte[])arrby));
             String string2 = Base64.encodeToString((byte[])arrby, (int)11);
-            com.samsung.android.spayfw.b.c.d(TAG, "getEmailAddressHash: emailAddress " + string + " Hash: " + string2);
+            Log.d(TAG, "getEmailAddressHash: emailAddress " + string + " Hash: " + string2);
             return string2;
         }
         catch (NoSuchAlgorithmException noSuchAlgorithmException) {
-            com.samsung.android.spayfw.b.c.c(TAG, noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
+            Log.c(TAG, noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
             return null;
         }
     }
@@ -127,8 +126,8 @@ extends PaymentNetworkProvider {
             return arrby;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e(TAG, "decryptUserSignature Error occured while gettting decrypted data from TA");
-            com.samsung.android.spayfw.b.c.c(TAG, exception.getMessage(), exception);
+            Log.e(TAG, "decryptUserSignature Error occured while gettting decrypted data from TA");
+            Log.c(TAG, exception.getMessage(), exception);
             return null;
         }
     }
@@ -139,7 +138,7 @@ extends PaymentNetworkProvider {
             this.mSdk.removeCard(this.mProviderTokenKey.cn());
             return;
         }
-        com.samsung.android.spayfw.b.c.d(TAG, "Provider Key null");
+        Log.d(TAG, "Provider Key null");
     }
 
     /*
@@ -157,8 +156,8 @@ extends PaymentNetworkProvider {
             if (arrby2 == null) return null;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e(TAG, "encryptUserSignature Error occured while gettting encypted data from TA");
-            com.samsung.android.spayfw.b.c.c(TAG, exception.getMessage(), exception);
+            Log.e(TAG, "encryptUserSignature Error occured while gettting encypted data from TA");
+            Log.c(TAG, exception.getMessage(), exception);
             return null;
         }
         return Base64.encodeToString((byte[])arrby2, (int)2);
@@ -206,7 +205,7 @@ extends PaymentNetworkProvider {
         c2.setErrorCode(0);
         if (enrollCardInfo == null || billingInfo == null) {
             c2.setErrorCode(-4);
-            com.samsung.android.spayfw.b.c.e(TAG, "getEnrollmentRequestData: invalid input ");
+            Log.e(TAG, "getEnrollmentRequestData: invalid input ");
             return c2;
         }
         if (enrollCardInfo instanceof EnrollCardPanInfo) {
@@ -233,7 +232,7 @@ extends PaymentNetworkProvider {
             iterator = this.mSdk.listCard().iterator();
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c(TAG, exception.getMessage(), exception);
+            Log.c(TAG, exception.getMessage(), exception);
             return string;
         }
         while (iterator.hasNext()) {
@@ -259,7 +258,7 @@ extends PaymentNetworkProvider {
             mstPayConfig = SequenceUtils.buildSequenceFromString(this.mSdk.getPayConfig(string));
         }
         catch (PlccException plccException) {
-            com.samsung.android.spayfw.b.c.c(TAG, plccException.getMessage(), (Throwable)((Object)plccException));
+            Log.c(TAG, plccException.getMessage(), (Throwable)((Object)plccException));
             return null;
         }
         payConfig.setMstPayConfig(mstPayConfig);
@@ -377,12 +376,12 @@ extends PaymentNetworkProvider {
     @Override
     public boolean startMstPay(int n2, byte[] arrby) {
         try {
-            com.samsung.android.spayfw.b.c.i(TAG, "Mstpayconfig length = " + arrby.length);
+            Log.i(TAG, "Mstpayconfig length = " + arrby.length);
             boolean bl = this.mSdk.startMstTransmit(n2, arrby);
             return bl;
         }
         catch (PlccException plccException) {
-            com.samsung.android.spayfw.b.c.c(TAG, plccException.getMessage(), (Throwable)((Object)plccException));
+            Log.c(TAG, plccException.getMessage(), (Throwable)((Object)plccException));
             return false;
         }
     }

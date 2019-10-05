@@ -47,13 +47,7 @@ import android.spay.ITAController;
 import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
 
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spaytzsvc.api.Blob;
-import com.samsung.android.spaytzsvc.api.IPaymentSvcDeathReceiver;
-import com.samsung.android.spaytzsvc.api.PaymentTZServiceIF;
-import com.samsung.android.spaytzsvc.api.TACommands;
-import com.samsung.android.spaytzsvc.api.TAException;
-import com.samsung.android.spaytzsvc.api.TAInfo;
+import com.samsung.android.spayfw.b.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,8 +56,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-
-import javolution.io.Struct;
 
 public class TAController
         implements IPaymentSvcDeathReceiver {
@@ -106,7 +98,7 @@ public class TAController
 
     public static String getEfsDirectory() {
         if (DEBUG) {
-            c.d(TAG, "getEfsDirectory: my UID = " + Process.myUid());
+            Log.d(TAG, "getEfsDirectory: my UID = " + Process.myUid());
         }
         if (Process.myUid() == 1000) {
             return PF_EFS_ROOT_DIR_SYSTEM_UID;
@@ -128,7 +120,7 @@ public class TAController
         taFileDescriptor = null;
         try {
             if (TAController.DEBUG) {
-                c.d("TAController", "getTA: " + this.mTAInfo.getTAFileName());
+                Log.d("TAController", "getTA: " + this.mTAInfo.getTAFileName());
             }
             boolean var8_4 = TAController.DEBUG;
             taFileDescriptor = null;
@@ -142,7 +134,7 @@ public class TAController
                         taFileDescriptor = null;
                         if (var11_7 >= var10_6) break;
                         String var12_8 = var9_5[var11_7];
-                        c.d("TAController", "File : " + var12_8);
+                        Log.d("TAController", "File : " + var12_8);
                         ++var11_7;
                     } while (true);
                 }
@@ -151,14 +143,14 @@ public class TAController
                 String var5_10 = this.findTAByDeviceModel(var1_1);
                 try {
                     taFileDescriptor = var1_1.openFd(var5_10);
-                    c.d("TAController", "Found TA file: " + var5_10);
+                    Log.d("TAController", "Found TA file: " + var5_10);
                     return taFileDescriptor;
                 } catch (FileNotFoundException var14_11) {
-                    c.e("TAController", "TA file not found: " + var5_10);
+                    Log.e("TAController", "TA file not found: " + var5_10);
                     return taFileDescriptor;
                 }
             } catch (Exception var7_12) {
-                c.e("TAController", "general exception");
+                Log.e("TAController", "general exception");
                 var7_12.printStackTrace();
                 return taFileDescriptor;
             }
@@ -173,45 +165,45 @@ public class TAController
         long l2;
         if (this.bMeasurementVerified) {
             if (DEBUG) {
-                c.d(TAG, "initTA need not be called as measurement is already verified");
+                Log.d(TAG, "initTA need not be called as measurement is already verified");
             }
             return;
         }
         if (DEBUG) {
-            c.d(TAG, "Calling initTA");
+            Log.d(TAG, "Calling initTA");
         }
         if ((tACommandResponse = this.executeNoLoad(new TACommands.Init.Request(null))) == null) {
-            c.e(TAG, "Error: execute failed");
+            Log.e(TAG, "Error: execute failed");
             throw new TAException("Error: executeNoLoad failed", 1);
         }
         TACommands.Init.Response response = new TACommands.Init.Response(tACommandResponse);
         if (response.mRetVal.result.get() == 65547L) {
             TACommandResponse tACommandResponse2;
             if (DEBUG) {
-                c.d(TAG, "ReInitializing TA - Reason : Received Error Code TZ_COMMON_INIT_UNINITIALIZED_SECURE_MEM");
+                Log.d(TAG, "ReInitializing TA - Reason : Received Error Code TZ_COMMON_INIT_UNINITIALIZED_SECURE_MEM");
             }
             if ((tACommandResponse2 = this.executeNoLoad(new TACommands.Init.Request(PaymentTZServiceIF.getInstance().getMeasurementFile()))) == null) {
-                c.e(TAG, "Error: execute failed");
+                Log.e(TAG, "Error: execute failed");
                 throw new TAException("Error: executeNoLoad failed", 1);
             }
             response = new TACommands.Init.Response(tACommandResponse2);
         }
         if ((l2 = response.mRetVal.result.get()) != 0L) {
-            c.e(TAG, "Error: initTA failed");
+            Log.e(TAG, "Error: initTA failed");
             if (l2 == 65548L || l2 == 65549L || l2 == 65550L) {
                 throw new TAException("Error: initTA failed", 2);
             }
             throw new TAException("Error: initTA failed", 1);
         }
         if (DEBUG) {
-            c.d(TAG, "initTA called Successfully");
+            Log.d(TAG, "initTA called Successfully");
         }
         this.bMeasurementVerified = true;
     }
 
     private static final boolean isAndroidMAndAbove() {
         if (Build.VERSION.SDK_INT > 22) {
-            c.d(TAG, "You are using Android Version " + Build.VERSION.SDK_INT);
+            Log.d(TAG, "You are using Android Version " + Build.VERSION.SDK_INT);
             return true;
         }
         return false;
@@ -230,13 +222,13 @@ public class TAController
     // WARNING: Hand-reconstruction unverified.
     private int loadPinRandom() throws FileNotFoundException {
         if (!this.usesPinRandom()) {
-            c.i("TAController", "No need to load PIN random for TA " + this.mTAInfo);
+            Log.i("TAController", "No need to load PIN random for TA " + this.mTAInfo);
             return 0;
         }
         String randPinFileName = this.mTAInfo.getPinRandomFileName();
         File pinFile = new File(TAController.getEfsDirectory(), randPinFileName);
         if (!pinFile.isFile()) {
-            c.e("TAController", "Cannot load PIN random for TA " + this.mTAInfo + ", file " + pinFile.getAbsolutePath() + " not found");
+            Log.e("TAController", "Cannot load PIN random for TA " + this.mTAInfo + ", file " + pinFile.getAbsolutePath() + " not found");
             return 0;
         }
         byte[] pinFileReadBuffer = new byte[(int) pinFile.length()];
@@ -258,12 +250,12 @@ public class TAController
             taCommandResponse =
                     this.executeNoLoad(new TACommands.LoadPinRandom.Request(pinFileReadBuffer));
             if (taCommandResponse != null) {
-                c.e("TAController", "Error: execute failed");
+                Log.e("TAController", "Error: execute failed");
                 throw new TAException("Error: executeNoLoad failed", 1);
             }
 
         } catch (FileNotFoundException e) {
-            c.e("TAController", "Cannot load PIN random for TA " + this.mTAInfo);
+            Log.e("TAController", "Cannot load PIN random for TA " + this.mTAInfo);
             e.printStackTrace();
 
             if (pinFis == null) return 0;
@@ -277,12 +269,12 @@ public class TAController
             }
         } catch (IOException e) {
             if (new TACommands.LoadPinRandom.Response(taCommandResponse).mRetVal.result.get() == 0L) {
-                c.e("TAController", "Load PIN random failed for TA " + this.mTAInfo);
+                Log.e("TAController", "Load PIN random failed for TA " + this.mTAInfo);
                 return 0;
             }
 
             if (TAController.DEBUG) {
-                c.d("TAController", "Load PIN random succeeded for TA " + this.mTAInfo);
+                Log.d("TAController", "Load PIN random succeeded for TA " + this.mTAInfo);
             }
 
 
@@ -316,7 +308,7 @@ public class TAController
                             this.mContext.getSharedPreferences(
                                     "shared_preferences_test", Context.MODE_MULTI_PROCESS);
                     int n2 = sharedPreferences.getInt(this.mTAInfo.getTAFileName(), 1000);
-                    c.d(TAG, "fromSystem=" + n2);
+                    Log.d(TAG, "fromSystem=" + n2);
                     if (n2 == 1) break block5;
                     if (n2 == 1000) {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -335,10 +327,10 @@ public class TAController
         TAController tAController = this;
         synchronized (tAController) {
             if (DEBUG) {
-                c.d(TAG, "abortMstTransmission is called");
+                Log.d(TAG, "abortMstTransmission is called");
             }
             if (!this.makeSystemCall(3)) {
-                c.e(TAG, "abortMstTransmission: Failed to abort MST");
+                Log.e(TAG, "abortMstTransmission: Failed to abort MST");
             }
             return;
         }
@@ -352,10 +344,10 @@ public class TAController
         try {
             if (this.mPaymentHandle != null) {
                 Method method = this.mPaymentHandle.getClass().getMethod("checkCertInfo", new Class[]{List.class});
-                c.d(TAG, "Using checkCertInfo API");
+                Log.d(TAG, "Using checkCertInfo API");
                 return (CertInfo) method.invoke((Object) this.mPaymentHandle, new Object[]{list});
             }
-            c.e(TAG, "mPaymentHandle is null");
+            Log.e(TAG, "mPaymentHandle is null");
             return null;
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -371,16 +363,16 @@ public class TAController
     public boolean clearDeviceCertificates(String string) {
         try {
             if (this.mPaymentHandle == null) {
-                c.e(TAG, "mPaymentHandle is null");
+                Log.e(TAG, "mPaymentHandle is null");
                 return false;
             }
             if (string != null) {
                 Method method = this.mPaymentHandle.getClass().getMethod("clearDeviceCertificates", new Class[]{String.class});
-                c.i(TAG, "Using NEW clearDeviceCertificates API");
+                Log.i(TAG, "Using NEW clearDeviceCertificates API");
                 return (Boolean) method.invoke((Object) this.mPaymentHandle, new Object[]{string});
             }
             Method method = this.mPaymentHandle.getClass().getMethod("clearDeviceCertificates", new Class[0]);
-            c.i(TAG, "Using OLD clearDeviceCertificates API");
+            Log.i(TAG, "Using OLD clearDeviceCertificates API");
             return (Boolean) method.invoke((Object) this.mPaymentHandle, new Object[0]);
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -396,10 +388,10 @@ public class TAController
         try {
             if (this.mPaymentHandle != null) {
                 Method method = this.mPaymentHandle.getClass().getMethod("copyMctoRst", new Class[0]);
-                c.d(TAG, "Using copyMctoRst API");
+                Log.d(TAG, "Using copyMctoRst API");
                 return (Boolean) method.invoke((Object) this.mPaymentHandle, new Object[0]);
             }
-            c.e(TAG, "mPaymentHandle is null");
+            Log.e(TAG, "mPaymentHandle is null");
             return false;
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -410,16 +402,16 @@ public class TAController
     public byte[] decapsulateAndWrap(byte[] arrby) throws TAException {
         TACommandResponse tACommandResponse = this.executeNoLoad(new TACommands.MoveServiceKey.Request(arrby));
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: execute failed");
+            Log.e(TAG, "Error: execute failed");
             throw new TAException("Error: executeNoLoad failed", 1);
         }
         TACommands.MoveServiceKey.Response response = new TACommands.MoveServiceKey.Response(tACommandResponse);
         if (response.mRetVal.return_code.get() != 0L) {
-            c.d(TAG, "Error: decapsulateAndWrap failed - response.mRetVal = " + response.mErrorMsg);
+            Log.d(TAG, "Error: decapsulateAndWrap failed - response.mRetVal = " + response.mErrorMsg);
             throw new TAException("Error: decapsulateAndWrap failed" + response.mErrorMsg, 4);
         }
         if (DEBUG) {
-            c.d(TAG, "decapsulateAndWrap called Successfully");
+            Log.d(TAG, "decapsulateAndWrap called Successfully");
         }
         return response.mRetVal.wrapped_msg.getData();
     }
@@ -433,7 +425,7 @@ public class TAController
             Object[] arrobject = new Object[]{by};
             stringBuilder.append(String.format((String) "%02X ", (Object[]) arrobject));
         }
-        c.d(string, string2 + " " + stringBuilder.toString());
+        Log.d(string, string2 + " " + stringBuilder.toString());
     }
 
     /*
@@ -446,7 +438,7 @@ public class TAController
         TAController tAController = this;
         synchronized (tAController) {
             if (!this.isTALoaded()) {
-                c.e(TAG, "TA has to be loaded before calling executeNoLoad");
+                Log.e(TAG, "TA has to be loaded before calling executeNoLoad");
             } else {
                 try {
                     ITAController iTAController = this.mPaymentHandle;
@@ -455,11 +447,11 @@ public class TAController
                         tACommandResponse = this.mPaymentHandle.processTACommand(tACommandRequest);
                         if (tACommandResponse == null) return tACommandResponse;
                         if (!DEBUG) return tACommandResponse;
-                        c.d(TAG, "executeNoLoad: Response Code = " + tACommandResponse.mResponseCode);
-                        c.d(TAG, "executeNoLoad: Error Message = " + tACommandResponse.mErrorMsg);
-                        c.d(TAG, "executeNoLoad: Response Len = " + tACommandResponse.mResponse.length + " Buf = " + Arrays.toString((byte[]) tACommandResponse.mResponse));
+                        Log.d(TAG, "executeNoLoad: Response Code = " + tACommandResponse.mResponseCode);
+                        Log.d(TAG, "executeNoLoad: Error Message = " + tACommandResponse.mErrorMsg);
+                        Log.d(TAG, "executeNoLoad: Response Len = " + tACommandResponse.mResponse.length + " Buf = " + Arrays.toString((byte[]) tACommandResponse.mResponse));
                     }
-                    c.e(TAG, "executeNoLoad: mPaymentHandle is null");
+                    Log.e(TAG, "executeNoLoad: mPaymentHandle is null");
                     return null;
                 } catch (Exception exception) {
                     exception.printStackTrace();
@@ -484,10 +476,10 @@ public class TAController
             try {
                 if (this.mPaymentHandle != null) {
                     Method method = this.mPaymentHandle.getClass().getMethod("getCertInfo", null);
-                    c.d(TAG, "Using getCertInfo API");
+                    Log.d(TAG, "Using getCertInfo API");
                     return (CertInfo) method.invoke((Object) this.mPaymentHandle, null);
                 }
-                c.e(TAG, "mPaymentHandle is null");
+                Log.e(TAG, "mPaymentHandle is null");
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -524,12 +516,12 @@ public class TAController
     public boolean isDeviceCertificateMigratable() {
         try {
             if (this.mPaymentHandle.getClass().getMethod("checkCertInfo", new Class[]{List.class}) == null) {
-                c.d(TAG, "API checkCertInfo Not found");
+                Log.d(TAG, "API checkCertInfo Not found");
                 return false;
             }
             return true;
         } catch (NoSuchMethodException noSuchMethodException) {
-            c.d(TAG, "API checkCertInfo Not found");
+            Log.d(TAG, "API checkCertInfo Not found");
             return false;
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -561,20 +553,20 @@ public class TAController
         // MONITORENTER : tAController
 
         if (!this.loadTA()) {
-            c.e(TAG, "TA Loading failed");
+            Log.e(TAG, "TA Loading failed");
             // MONITOREXIT : tAController
             return tACommandResponse;
         }
 
         if (this.mPaymentHandle == null) {
-            c.e(TAG, "execute: mPaymentHandle is null");
+            Log.e(TAG, "execute: mPaymentHandle is null");
         }
 
         tACommandResponse = this.mPaymentHandle.processTACommand(tACommandRequest);
         if (tACommandResponse != null && DEBUG) {
-            c.d(TAG, "execute: Response Code = " + tACommandResponse.mResponseCode);
-            c.d(TAG, "execute: Error Message = " + tACommandResponse.mErrorMsg);
-            c.d(TAG, "execute: Response Len = " + tACommandResponse.mResponse.length + " Buf = " + Arrays.toString((byte[]) tACommandResponse.mResponse));
+            Log.d(TAG, "execute: Response Code = " + tACommandResponse.mResponseCode);
+            Log.d(TAG, "execute: Error Message = " + tACommandResponse.mErrorMsg);
+            Log.d(TAG, "execute: Response Len = " + tACommandResponse.mResponse.length + " Buf = " + Arrays.toString((byte[]) tACommandResponse.mResponse));
         }
 
 
@@ -586,28 +578,455 @@ public class TAController
      * Exception decompiling
      */
     public boolean loadTA() {
-        // This method has failed to decompile.  When submitting a bug report, please provide this stack trace, and (if you hold appropriate legal rights) the relevant class file.
-        // org.benf.cfr.reader.util.ConfusedCFRException: Tried to end blocks [53[FORLOOP]], but top level block is 13[TRYBLOCK]
-        // org.benf.cfr.reader.b.a.a.j.a(Op04StructuredStatement.java:432)
-        // org.benf.cfr.reader.b.a.a.j.d(Op04StructuredStatement.java:484)
-        // org.benf.cfr.reader.b.a.a.i.a(Op03SimpleStatement.java:607)
-        // org.benf.cfr.reader.b.f.a(CodeAnalyser.java:692)
-        // org.benf.cfr.reader.b.f.a(CodeAnalyser.java:182)
-        // org.benf.cfr.reader.b.f.a(CodeAnalyser.java:127)
-        // org.benf.cfr.reader.entities.attributes.f.c(AttributeCode.java:96)
-        // org.benf.cfr.reader.entities.g.p(Method.java:396)
-        // org.benf.cfr.reader.entities.d.e(ClassFile.java:890)
-        // org.benf.cfr.reader.entities.d.b(ClassFile.java:792)
-        // org.benf.cfr.reader.b.a(Driver.java:128)
-        // org.benf.cfr.reader.a.a(CfrDriverImpl.java:63)
-        // com.njlabs.showjava.decompilers.JavaExtractionWorker.decompileWithCFR(JavaExtractionWorker.kt:61)
-        // com.njlabs.showjava.decompilers.JavaExtractionWorker.doWork(JavaExtractionWorker.kt:130)
-        // com.njlabs.showjava.decompilers.BaseDecompiler.withAttempt(BaseDecompiler.kt:108)
-        // com.njlabs.showjava.workers.DecompilerWorker$b.run(DecompilerWorker.kt:118)
-        // java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
-        // java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
-        // java.lang.Thread.run(Thread.java:764)
-        throw new IllegalStateException("Decompilation failed");
+        TAController r12 = this;
+        ITAController r0 = r12.mPaymentHandle;
+        int r4 = 0, r8 = 1, r7 = 0;
+
+        // TODO: Synchronize the entire thing. monitor-enter(r12);
+        // if (r0 != 0) goto L_0x0013
+        if (r0 == null) {
+//            r0 = "TAController";	 Catch:{ all -> 0x0077 }
+//            r1 = "loadTA: mPaymentHandle is null";	 Catch:{ all -> 0x0077 }
+//            com.samsung.android.spayfw.p002b.Log.m286e(r0, r1);	 Catch:{ all -> 0x0077 }
+//            r0 = r7;
+            String stringR0 = "TAController";
+            String stringR1 = "loadTA: mPaymentHandle is null";
+            Log.e(stringR0, stringR1);
+            return false;
+        } else {
+            boolean boolean0 = r12.bLoaded;
+            if (boolean0) { // L_0x001b
+                String stringR0 = "TAController";
+                String stringR1 = "loadTA: mPaymentHandle is null";
+                Log.d(stringR0, stringR1);
+                return true;
+            } else { // L_0x0024
+                AssetFileDescriptor taFd = r12.getTaFd();
+                if (taFd != null) {
+                    /*
+                        r6 = r0.getParcelFileDescriptor();	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+                        r2 = r0.getStartOffset();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+                        r0 = r0.getLength();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+                        if (r6 == 0) goto L_0x009c;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+                    */
+
+                    ParcelFileDescriptor pfd = taFd.getParcelFileDescriptor();
+                    long startOffset = taFd.getStartOffset();
+                    long taFdLength = taFd.getLength();
+
+                    int r9 = (startOffset > r4 ? 1 : (startOffset == r4 ? 0 : -1));
+                    int r9_1 = taFdLength > r4 ? 1 : (taFdLength == r4 ? 0 : -1);
+
+                    if (pfd == null || r9 < 0) {
+                        Log.e("TAController", "pfd is null");
+                        return false;
+                    } else {
+                        if (r9_1 >= 0) {
+                            boolean taFromSystem = r12.shouldLoadTAFromSystem();
+                            if (taFromSystem) {
+                                ParcelFileDescriptor dummyPfd = r12.createDummyFD();
+                                r0 = r12.mPaymentHandle;
+                                try {
+                                    boolean loaded = r0.loadTA(dummyPfd, 0, 0);
+                                    if (!loaded) {
+                                        if (dummyPfd == null) {
+                                            return false;
+                                        } else {
+                                            try {
+                                                dummyPfd.close();
+                                                return false;
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                                return false;
+                                            }
+                                        }
+                                    } else {
+                                        r12.bLoaded = true;
+                                        r12.loadPinRandom();
+                                    }
+                                } catch (RemoteException | FileNotFoundException e) {
+                                    e.printStackTrace();
+                                    return false;
+                                }
+                            } else {
+                                return false;
+                            }
+                        } else {
+                            Log.e("TAController", "pfd is null");
+                            return false;
+                        }
+
+                        try {
+                            pfd.close();
+                            return false;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+                    }
+                } else {
+                    boolean taFromSystem = r12.shouldLoadTAFromSystem();
+                    if (taFromSystem) {
+                        ParcelFileDescriptor dummyPfd = r12.createDummyFD();
+                        r0 = r12.mPaymentHandle;
+                        try {
+                            boolean loaded = r0.loadTA(dummyPfd, 0, 0);
+                            if (!loaded) {
+                                if (dummyPfd == null) {
+                                    return false;
+                                } else {
+                                    try {
+                                        dummyPfd.close();
+                                        return false;
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        return false;
+                                    }
+                                }
+                            } else {
+                                r12.bLoaded = true;
+                                r12.loadPinRandom();
+                                try {
+                                    dummyPfd.close();
+                                    return true;
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    return true;
+                                }
+                                //return true;
+                            }
+                        } catch (RemoteException | FileNotFoundException e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            }
+
+        }
+
+
+
+
+        /*
+        r12 = this;
+        r4 = 0;
+        r8 = 1;
+        r7 = 0;
+        monitor-enter(r12);
+        r0 = r12.mPaymentHandle;	 Catch:{ all -> 0x0077 }
+        if (r0 != 0) goto L_0x0013;	 Catch:{ all -> 0x0077 }
+    L_0x0009:
+        r0 = "TAController";	 Catch:{ all -> 0x0077 }
+        r1 = "loadTA: mPaymentHandle is null";	 Catch:{ all -> 0x0077 }
+        com.samsung.android.spayfw.p002b.Log.m286e(r0, r1);	 Catch:{ all -> 0x0077 }
+        r0 = r7;
+    L_0x0011:
+        monitor-exit(r12);
+        return r0;
+    L_0x0013:
+        r0 = r12.bLoaded;	 Catch:{ all -> 0x0077 }
+        if (r0 == 0) goto L_0x0024;	 Catch:{ all -> 0x0077 }
+    L_0x0017:
+        r0 = DEBUG;	 Catch:{ all -> 0x0077 }
+        if (r0 == 0) goto L_0x0022;	 Catch:{ all -> 0x0077 }
+    L_0x001b:
+        r0 = "TAController";	 Catch:{ all -> 0x0077 }
+        r1 = "TA is already loaded";	 Catch:{ all -> 0x0077 }
+        com.samsung.android.spayfw.p002b.Log.m285d(r0, r1);	 Catch:{ all -> 0x0077 }
+    L_0x0022:
+        r0 = r8;
+        goto L_0x0011;
+    L_0x0024:
+        r1 = 0;
+        r0 = r12.getTaFd();	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        if (r0 != 0) goto L_0x0086;	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+    L_0x002b:
+        r0 = r12.shouldLoadTAFromSystem();	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        if (r0 == 0) goto L_0x007a;	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+    L_0x0031:
+        r0 = DEBUG;	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        if (r0 == 0) goto L_0x0055;	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+    L_0x0035:
+        r0 = "TAController";	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        r2 = new java.lang.StringBuilder;	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        r2.<init>();	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        r3 = "load TA ";	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        r2 = r2.append(r3);	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        r3 = r12.mTAInfo;	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        r2 = r2.append(r3);	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        r3 = " from system";	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        r2 = r2.append(r3);	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        r2 = r2.toString();	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        com.samsung.android.spayfw.p002b.Log.m285d(r0, r2);	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+    L_0x0055:
+        r1 = r12.createDummyFD();	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        r0 = r12.mPaymentHandle;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r2 = 0;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r4 = 0;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r0 = r0.loadTA(r1, r2, r4);	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        if (r0 != r8) goto L_0x007a;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+    L_0x0065:
+    // TODO: Checkpoint.
+
+        r0 = 1;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r12.bLoaded = r0;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r12.loadPinRandom();	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        if (r1 == 0) goto L_0x0070;
+    L_0x006d:
+        r1.close();	 Catch:{ IOException -> 0x0072 }
+    L_0x0070:
+        r0 = r8;
+        goto L_0x0011;
+    L_0x0072:
+        r0 = move-exception;
+        r0.printStackTrace();	 Catch:{ all -> 0x0077 }
+        goto L_0x0070;
+    L_0x0077:
+        r0 = move-exception;
+        monitor-exit(r12);
+        throw r0;
+    L_0x007a:
+        if (r1 == 0) goto L_0x007f;
+    L_0x007c:
+        r1.close();	 Catch:{ IOException -> 0x0081 }
+    L_0x007f:
+        r0 = r7;
+        goto L_0x0011;
+    L_0x0081:
+        r0 = move-exception;
+        r0.printStackTrace();	 Catch:{ all -> 0x0077 }
+        goto L_0x007f;
+    L_0x0086:
+        r6 = r0.getParcelFileDescriptor();	 Catch:{ RemoteException -> 0x0196, TAException -> 0x01a8, Exception -> 0x01b8, all -> 0x01cf }
+        r2 = r0.getStartOffset();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r0 = r0.getLength();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        if (r6 == 0) goto L_0x009c;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+    L_0x0094:
+        r9 = (r2 > r4 ? 1 : (r2 == r4 ? 0 : -1));	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        if (r9 < 0) goto L_0x009c;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+    L_0x0098:
+        r9 = (r0 > r4 ? 1 : (r0 == r4 ? 0 : -1));	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        if (r9 >= 0) goto L_0x00b0;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+    L_0x009c:
+        r0 = "TAController";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r1 = "pfd is null";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        com.samsung.android.spayfw.p002b.Log.m286e(r0, r1);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        if (r6 == 0) goto L_0x00a8;
+    L_0x00a5:
+        r6.close();	 Catch:{ IOException -> 0x00ab }
+    L_0x00a8:
+        r0 = r7;
+        goto L_0x0011;
+    L_0x00ab:
+        r0 = move-exception;
+        r0.printStackTrace();	 Catch:{ all -> 0x0077 }
+        goto L_0x00a8;
+    L_0x00b0:
+        r9 = DEBUG;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        if (r9 == 0) goto L_0x00e4;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+    L_0x00b4:
+        r9 = "TAController";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r10 = new java.lang.StringBuilder;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r10.<init>();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r11 = "TA fd=";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r10 = r10.append(r11);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r11 = r6.getFd();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r10 = r10.append(r11);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r11 = " offset=";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r10 = r10.append(r11);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r10 = r10.append(r2);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r11 = " len=";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r10 = r10.append(r11);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r10 = r10.append(r0);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r10 = r10.toString();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        com.samsung.android.spayfw.p002b.Log.m285d(r9, r10);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+    L_0x00e4:
+        r9 = r12.shouldLoadTAFromSystem();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        if (r9 == 0) goto L_0x0131;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+    L_0x00ea:
+        r0 = DEBUG;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        if (r0 == 0) goto L_0x010e;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+    L_0x00ee:
+        r0 = "TAController";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r1 = new java.lang.StringBuilder;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r1.<init>();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r2 = "load TA ";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r1 = r1.append(r2);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r2 = r12.mTAInfo;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r1 = r1.append(r2);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r2 = " from system";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r1 = r1.append(r2);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r1 = r1.toString();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        com.samsung.android.spayfw.p002b.Log.m285d(r0, r1);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+    L_0x010e:
+        r1 = r12.createDummyFD();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r2 = r4;
+    L_0x0113:
+        r6 = r7;
+        r0 = r7;
+    L_0x0115:
+        r9 = 5;
+        if (r6 >= r9) goto L_0x0120;
+    L_0x0118:
+        r0 = r12.mPaymentHandle;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r0 = r0.loadTA(r1, r2, r4);	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        if (r0 != r8) goto L_0x0158;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+    L_0x0120:
+        if (r0 != 0) goto L_0x0178;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+    L_0x0122:
+        r0 = "TAController";	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r2 = "TA Load failed";	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        com.samsung.android.spayfw.p002b.Log.m286e(r0, r2);	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        if (r1 == 0) goto L_0x012e;
+    L_0x012b:
+        r1.close();	 Catch:{ IOException -> 0x0173 }
+    L_0x012e:
+        r0 = r7;
+        goto L_0x0011;
+    L_0x0131:
+        r4 = DEBUG;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        if (r4 == 0) goto L_0x0155;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+    L_0x0135:
+        r4 = "TAController";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r5 = new java.lang.StringBuilder;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r5.<init>();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r9 = "load TA ";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r5 = r5.append(r9);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r9 = r12.mTAInfo;	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r5 = r5.append(r9);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r9 = " from app";	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r5 = r5.append(r9);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        r5 = r5.toString();	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+        com.samsung.android.spayfw.p002b.Log.m285d(r4, r5);	 Catch:{ RemoteException -> 0x01ee, TAException -> 0x01e9, Exception -> 0x01e4 }
+    L_0x0155:
+        r4 = r0;
+        r1 = r6;
+        goto L_0x0113;
+    L_0x0158:
+        r9 = "TAController";	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r10 = new java.lang.StringBuilder;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r10.<init>();	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r11 = "TA loading failure: ";	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r10 = r10.append(r11);	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r10 = r10.append(r6);	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r10 = r10.toString();	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        com.samsung.android.spayfw.p002b.Log.m286e(r9, r10);	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r6 = r6 + 1;
+        goto L_0x0115;
+    L_0x0173:
+        r0 = move-exception;
+        r0.printStackTrace();	 Catch:{ all -> 0x0077 }
+        goto L_0x012e;
+    L_0x0178:
+        r0 = 1;
+        r12.bLoaded = r0;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r0 = DEBUG;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        if (r0 == 0) goto L_0x0186;	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+    L_0x017f:
+        r0 = "TAController";	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        r2 = "TA Loaded Successfully";	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        com.samsung.android.spayfw.p002b.Log.m285d(r0, r2);	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+    L_0x0186:
+        r12.loadPinRandom();	 Catch:{ RemoteException -> 0x01eb, TAException -> 0x01e6, Exception -> 0x01e1, all -> 0x01dc }
+        if (r1 == 0) goto L_0x018e;
+    L_0x018b:
+        r1.close();	 Catch:{ IOException -> 0x0191 }
+    L_0x018e:
+        r0 = r8;
+        goto L_0x0011;
+    L_0x0191:
+        r0 = move-exception;
+        r0.printStackTrace();	 Catch:{ all -> 0x0077 }
+        goto L_0x018e;
+    L_0x0196:
+        r0 = move-exception;
+        r6 = r1;
+    L_0x0198:
+        r0.printStackTrace();	 Catch:{ all -> 0x01df }
+        if (r6 == 0) goto L_0x01a0;
+    L_0x019d:
+        r6.close();	 Catch:{ IOException -> 0x01a3 }
+    L_0x01a0:
+        r0 = r7;
+        goto L_0x0011;
+    L_0x01a3:
+        r0 = move-exception;
+        r0.printStackTrace();	 Catch:{ all -> 0x0077 }
+        goto L_0x01a0;
+    L_0x01a8:
+        r0 = move-exception;
+        r6 = r1;
+    L_0x01aa:
+        r0.printStackTrace();	 Catch:{ all -> 0x01df }
+        if (r6 == 0) goto L_0x01a0;
+    L_0x01af:
+        r6.close();	 Catch:{ IOException -> 0x01b3 }
+        goto L_0x01a0;
+    L_0x01b3:
+        r0 = move-exception;
+        r0.printStackTrace();	 Catch:{ all -> 0x0077 }
+        goto L_0x01a0;
+    L_0x01b8:
+        r0 = move-exception;
+        r6 = r1;
+    L_0x01ba:
+        r1 = "TAController";	 Catch:{ all -> 0x01df }
+        r2 = "Generic exception";	 Catch:{ all -> 0x01df }
+        com.samsung.android.spayfw.p002b.Log.m286e(r1, r2);	 Catch:{ all -> 0x01df }
+        r0.printStackTrace();	 Catch:{ all -> 0x01df }
+        if (r6 == 0) goto L_0x01a0;
+    L_0x01c6:
+        r6.close();	 Catch:{ IOException -> 0x01ca }
+        goto L_0x01a0;
+    L_0x01ca:
+        r0 = move-exception;
+        r0.printStackTrace();	 Catch:{ all -> 0x0077 }
+        goto L_0x01a0;
+    L_0x01cf:
+        r0 = move-exception;
+        r6 = r1;
+    L_0x01d1:
+        if (r6 == 0) goto L_0x01d6;
+    L_0x01d3:
+        r6.close();	 Catch:{ IOException -> 0x01d7 }
+    L_0x01d6:
+        throw r0;	 Catch:{ all -> 0x0077 }
+    L_0x01d7:
+        r1 = move-exception;	 Catch:{ all -> 0x0077 }
+        r1.printStackTrace();	 Catch:{ all -> 0x0077 }
+        goto L_0x01d6;
+    L_0x01dc:
+        r0 = move-exception;
+        r6 = r1;
+        goto L_0x01d1;
+    L_0x01df:
+        r0 = move-exception;
+        goto L_0x01d1;
+    L_0x01e1:
+        r0 = move-exception;
+        r6 = r1;
+        goto L_0x01ba;
+    L_0x01e4:
+        r0 = move-exception;
+        goto L_0x01ba;
+    L_0x01e6:
+        r0 = move-exception;
+        r6 = r1;
+        goto L_0x01aa;
+    L_0x01e9:
+        r0 = move-exception;
+        goto L_0x01aa;
+    L_0x01eb:
+        r0 = move-exception;
+        r6 = r1;
+        goto L_0x0198;
+    L_0x01ee:
+        r0 = move-exception;
+        goto L_0x0198;
+        */
     }
 
     /*
@@ -619,7 +1038,7 @@ public class TAController
             if (this.mPaymentHandle != null) {
                 return this.mPaymentHandle.makeSystemCall(n2);
             }
-            c.e(TAG, "mPaymentHandle is null");
+            Log.e(TAG, "mPaymentHandle is null");
             return false;
         } catch (RemoteException remoteException) {
             remoteException.printStackTrace();
@@ -637,14 +1056,14 @@ public class TAController
         synchronized (tAController) {
             if (bQC) {
                 if (DEBUG) {
-                    c.d(TAG, "moveSecOsToCore4: QSEE do not need core migration");
+                    Log.d(TAG, "moveSecOsToCore4: QSEE do not need core migration");
                 }
             } else {
                 if (DEBUG) {
-                    c.d(TAG, "moveSecOsToCore4 is called");
+                    Log.d(TAG, "moveSecOsToCore4 is called");
                 }
                 if (!this.makeSystemCall(5)) {
-                    c.e(TAG, "moveSecOsToCore4: Failed to move sec OS to core2");
+                    Log.e(TAG, "moveSecOsToCore4: Failed to move sec OS to core2");
                 }
             }
             return;
@@ -661,14 +1080,14 @@ public class TAController
         synchronized (tAController) {
             if (bQC) {
                 if (DEBUG) {
-                    c.d(TAG, "moveSecOsToDefaultCore: QSEE do not need core migration");
+                    Log.d(TAG, "moveSecOsToDefaultCore: QSEE do not need core migration");
                 }
             } else {
                 if (DEBUG) {
-                    c.d(TAG, "moveSecOsToDefaultCore is called");
+                    Log.d(TAG, "moveSecOsToDefaultCore is called");
                 }
                 if (!this.makeSystemCall(6)) {
-                    c.e(TAG, "moveSecOsToDefaultCore: Failed to move sec OS to core0");
+                    Log.e(TAG, "moveSecOsToDefaultCore: Failed to move sec OS to core0");
                 }
             }
             return;
@@ -688,11 +1107,11 @@ public class TAController
             return true;
         }
         if (!this.loadTA()) {
-            c.e(TAG, "Error: loadTA failed");
+            Log.e(TAG, "Error: loadTA failed");
             return false;
         }
         if (!this.initTA()) {
-            c.e(TAG, "Error: initTA failed");
+            Log.e(TAG, "Error: initTA failed");
             return false;
         }
         this.unloadTA();
@@ -703,10 +1122,10 @@ public class TAController
         TAController tAController = this;
         synchronized (tAController) {
             if (DEBUG) {
-                c.d(TAG, "resetMstFlag is called");
+                Log.d(TAG, "resetMstFlag is called");
             }
             if (!this.makeSystemCall(4)) {
-                c.e(TAG, "resetMstFlag: Failed to reset MST flag");
+                Log.e(TAG, "resetMstFlag: Failed to reset MST flag");
             }
             return;
         }
@@ -720,10 +1139,10 @@ public class TAController
         try {
             if (this.mPaymentHandle != null) {
                 Method method = this.mPaymentHandle.getClass().getMethod("setCertInfo", new Class[]{CertInfo.class});
-                c.d(TAG, "Using setCertInfo API");
+                Log.d(TAG, "Using setCertInfo API");
                 return (Boolean) method.invoke((Object) this.mPaymentHandle, new Object[]{certInfo});
             }
-            c.e(TAG, "mPaymentHandle is null");
+            Log.e(TAG, "mPaymentHandle is null");
             return false;
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -768,9 +1187,9 @@ public class TAController
         TAController tAController = this;
         synchronized (tAController) {
             if (this.mPaymentHandle == null) {
-                c.e(TAG, "unloadTA: mPaymentHandle is null");
+                Log.e(TAG, "unloadTA: mPaymentHandle is null");
             } else if (!this.bLoaded) {
-                c.e(TAG, "TA is never loaded. Unload is noop");
+                Log.e(TAG, "TA is never loaded. Unload is noop");
             } else {
                 try {
                     this.mPaymentHandle.unloadTA();

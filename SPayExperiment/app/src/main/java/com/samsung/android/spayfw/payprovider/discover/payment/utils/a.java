@@ -16,10 +16,9 @@
  */
 package com.samsung.android.spayfw.payprovider.discover.payment.utils;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.payment.data.DiscoverCLTransactionContext;
-import com.samsung.android.spayfw.payprovider.discover.payment.utils.ByteBuffer;
-import com.samsung.android.spayfw.payprovider.discover.payment.utils.b;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,21 +66,21 @@ public class a {
      */
     public static b F(ByteBuffer byteBuffer) {
         if (byteBuffer == null) {
-            c.e("DCSDK_", "parseFCI, fci is null, parsing failed.");
+            Log.e("DCSDK_", "parseFCI, fci is null, parsing failed.");
             return null;
         }
-        c.d("DCSDK_", "parseFCI, parse FCI Template tag.");
+        Log.d("DCSDK_", "parseFCI, parse FCI Template tag.");
         b b2 = a.c(byteBuffer.getBytes(), 0, byteBuffer.getSize());
         if (b2 != null && b2.O(com.samsung.android.spayfw.payprovider.discover.payment.data.c.vO.getInt()) != null) {
             List<ByteBuffer> list = b2.O(com.samsung.android.spayfw.payprovider.discover.payment.data.c.vO.getInt());
             if (list == null || list.isEmpty()) return null;
             {
                 b b3 = a.c(((ByteBuffer)list.get(0)).getBytes(), 0, ((ByteBuffer)list.get(0)).getSize());
-                c.d("DCSDK_", "parseFCI, returned parsed FCI.");
+                Log.d("DCSDK_", "parseFCI, returned parsed FCI.");
                 return b3;
             }
         }
-        c.e("DCSDK_", "parseFCI, FCI template not found.");
+        Log.e("DCSDK_", "parseFCI, FCI template not found.");
         return null;
     }
 
@@ -92,84 +91,84 @@ public class a {
         Iterator iterator;
         ArrayList arrayList = new ArrayList();
         if (byteBuffer == null || byteBuffer.getSize() == 0) {
-            c.e("DCSDK_", "parsePPSE_FCI, fci is null, parsing failed.");
+            Log.e("DCSDK_", "parsePPSE_FCI, fci is null, parsing failed.");
             return null;
         }
-        c.d("DCSDK_", "parsePPSE_FCI, parse FCI Template tag.");
+        Log.d("DCSDK_", "parsePPSE_FCI, parse FCI Template tag.");
         b b2 = a.c(byteBuffer.getBytes(), 0, byteBuffer.getSize());
         if (b2 != null && b2.O(com.samsung.android.spayfw.payprovider.discover.payment.data.c.vO.getInt()) != null) {
             List<ByteBuffer> list = b2.O(com.samsung.android.spayfw.payprovider.discover.payment.data.c.vO.getInt());
             if (list == null || list.isEmpty()) {
-                c.e("DCSDK_", "parsePPSE_FCI, fci template list is empty.");
+                Log.e("DCSDK_", "parsePPSE_FCI, fci template list is empty.");
                 return null;
             }
             ByteBuffer byteBuffer2 = (ByteBuffer)list.get(0);
             if (byteBuffer2 == null) {
-                c.e("DCSDK_", "parsePPSE_FCI, fci template is empty.");
+                Log.e("DCSDK_", "parsePPSE_FCI, fci template is empty.");
                 return null;
             }
-            c.d("DCSDK_", "parsePPSE_FCI, fciTemplate: " + byteBuffer2.toHexString());
+            Log.d("DCSDK_", "parsePPSE_FCI, fciTemplate: " + byteBuffer2.toHexString());
             b b3 = a.c(byteBuffer2.getBytes(), 0, byteBuffer2.getSize());
-            c.d("DCSDK_", "parsePPSE_FCI, returned parsed proprietaryTemplate.");
+            Log.d("DCSDK_", "parsePPSE_FCI, returned parsed proprietaryTemplate.");
             if (b3 == null || b3.O(com.samsung.android.spayfw.payprovider.discover.payment.data.c.vQ.getInt()) == null) {
-                c.e("DCSDK_", "parsePPSE_FCI, proprietary template template is empty.");
+                Log.e("DCSDK_", "parsePPSE_FCI, proprietary template template is empty.");
                 return null;
             }
             List<ByteBuffer> list2 = b3.O(com.samsung.android.spayfw.payprovider.discover.payment.data.c.vQ.getInt());
             if (list2 == null || list2.isEmpty()) {
-                c.e("DCSDK_", "parsePPSE_FCI, proprietary template data list is empty.");
+                Log.e("DCSDK_", "parsePPSE_FCI, proprietary template data list is empty.");
                 return null;
             }
             ByteBuffer byteBuffer3 = (ByteBuffer)list2.get(0);
             if (byteBuffer3 == null) {
-                c.e("DCSDK_", "parsePPSE_FCI, proprietary template data is empty.");
+                Log.e("DCSDK_", "parsePPSE_FCI, proprietary template data is empty.");
                 return null;
             }
-            c.d("DCSDK_", "parsePPSE_FCI, proprietaryTemplateData: " + byteBuffer3.toHexString());
+            Log.d("DCSDK_", "parsePPSE_FCI, proprietaryTemplateData: " + byteBuffer3.toHexString());
             b b4 = a.c(byteBuffer3.getBytes(), 0, byteBuffer3.getSize());
-            c.d("DCSDK_", "parsePPSE_FCI, returned parsed fci idd.");
+            Log.d("DCSDK_", "parsePPSE_FCI, returned parsed fci idd.");
             short s2 = (short)(65535 & (com.samsung.android.spayfw.payprovider.discover.payment.data.c.vR.getByte(0) << 8 | 255 & com.samsung.android.spayfw.payprovider.discover.payment.data.c.vR.getByte(1)));
-            c.d("DCSDK_", "parsePPSE_FCI, tag int: " + com.samsung.android.spayfw.payprovider.discover.payment.data.c.vR.getInt());
-            c.d("DCSDK_", "parsePPSE_FCI, tag short: " + s2);
+            Log.d("DCSDK_", "parsePPSE_FCI, tag int: " + com.samsung.android.spayfw.payprovider.discover.payment.data.c.vR.getInt());
+            Log.d("DCSDK_", "parsePPSE_FCI, tag short: " + s2);
             if (b4 == null || b4.O(s2) == null) {
-                c.e("DCSDK_", "parsePPSE_FCI, FCI IDD is empty.");
+                Log.e("DCSDK_", "parsePPSE_FCI, FCI IDD is empty.");
                 return null;
             }
             ByteBuffer byteBuffer4 = b4.O(s2) != null ? (ByteBuffer)b4.O(s2).get(0) : null;
             if (byteBuffer4 == null) {
-                c.e("DCSDK_", "parsePPSE_FCI, FCI IDD is empty.");
+                Log.e("DCSDK_", "parsePPSE_FCI, FCI IDD is empty.");
                 return null;
             }
-            c.d("DCSDK_", "parsePPSE_FCI, FCI_IDD_data: " + byteBuffer4.toHexString());
+            Log.d("DCSDK_", "parsePPSE_FCI, FCI_IDD_data: " + byteBuffer4.toHexString());
             b b5 = a.c(byteBuffer4.getBytes(), 0, byteBuffer4.getSize());
             if (b5 == null) return arrayList;
-            c.d("DCSDK_", "parsePPSE_FCI, directory entries.");
+            Log.d("DCSDK_", "parsePPSE_FCI, directory entries.");
             HashMap<Integer, List<ByteBuffer>> hashMap = b5.ef();
             if (hashMap == null) {
-                c.e("DCSDK_", "parsePPSE_FCI, DE tags list is empty.");
+                Log.e("DCSDK_", "parsePPSE_FCI, DE tags list is empty.");
                 return null;
             }
             List list3 = (List)hashMap.get((Object)com.samsung.android.spayfw.payprovider.discover.payment.data.c.vT.getInt());
             if (list3 == null) return arrayList;
             iterator = list3.iterator();
         } else {
-            c.e("DCSDK_", "parseFCI, FCI template not found.");
+            Log.e("DCSDK_", "parseFCI, FCI template not found.");
             return arrayList;
         }
         while (iterator.hasNext()) {
             ByteBuffer byteBuffer5 = (ByteBuffer)iterator.next();
-            c.d("DCSDK_", "parsePPSE_FCI, tagValue: " + byteBuffer5);
+            Log.d("DCSDK_", "parsePPSE_FCI, tagValue: " + byteBuffer5);
             if (byteBuffer5 == null) continue;
-            c.d("DCSDK_", "parsePPSE_FCI, tagValue: " + byteBuffer5.toHexString());
+            Log.d("DCSDK_", "parsePPSE_FCI, tagValue: " + byteBuffer5.toHexString());
             b b6 = a.c(byteBuffer5.getBytes(), 0, byteBuffer5.getSize());
-            c.d("DCSDK_", "parsePPSE_FCI, dfEntry: " + b6);
+            Log.d("DCSDK_", "parsePPSE_FCI, dfEntry: " + b6);
             if (b6 == null) continue;
             List<ByteBuffer> list = b6.O(com.samsung.android.spayfw.payprovider.discover.payment.data.c.vS.getInt());
-            c.d("DCSDK_", "parsePPSE_FCI, aid: " + list);
+            Log.d("DCSDK_", "parsePPSE_FCI, aid: " + list);
             if (list == null || list.isEmpty() || list.get(0) == null) continue;
-            c.d("DCSDK_", "parsePPSE_FCI, aid: " + ((ByteBuffer)list.get(0)).toHexString());
+            Log.d("DCSDK_", "parsePPSE_FCI, aid: " + ((ByteBuffer)list.get(0)).toHexString());
             if (((ByteBuffer)list.get(0)).toHexString().startsWith(DiscoverCLTransactionContext.DiscoverClTransactionType.up.getAid().toHexString())) {
-                c.d("DCSDK_", "parsePPSE_FCI, Skipping zip aid aid" + ((ByteBuffer)list.get(0)).toHexString());
+                Log.d("DCSDK_", "parsePPSE_FCI, Skipping zip aid aid" + ((ByteBuffer)list.get(0)).toHexString());
                 continue;
             }
             arrayList.add(list.get(0));
@@ -282,7 +281,7 @@ public class a {
         int n4 = n2 + n3;
         ByteBuffer byteBuffer = new ByteBuffer(arrby);
         b b2 = new b();
-        c.d("DCSDK_", "last_offset " + n4);
+        Log.d("DCSDK_", "last_offset " + n4);
         while (n2 < n4) {
             int n5;
             int n6 = 255 & arrby[n2];

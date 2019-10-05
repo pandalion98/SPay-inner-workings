@@ -11,10 +11,10 @@
  */
 package com.samsung.sensorframework.sda.e;
 
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.SDAException;
 import com.samsung.sensorframework.sda.b;
 import com.samsung.sensorframework.sda.d.b.j;
-import com.samsung.sensorframework.sda.e.a;
 
 public class c
 extends a
@@ -71,7 +71,7 @@ lbl-1000: // 2 sources:
                 }
             }
             this.KM.gY();
-            com.samsung.android.spayfw.b.c.d(this.he(), "Stopped PushSensorTask.");
+            Log.d(this.he(), "Stopped PushSensorTask.");
             return;
             catch (SecurityException var2_3) {}
 lbl-1000: // 2 sources:

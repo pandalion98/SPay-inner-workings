@@ -17,10 +17,9 @@ package com.samsung.android.spayfw.payprovider.discover.db.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.db.DcDbException;
-import com.samsung.android.spayfw.payprovider.discover.db.dao.b;
 import com.samsung.android.spayfw.payprovider.discover.db.models.CardDetails;
 
 public class a
@@ -31,11 +30,11 @@ extends b<CardDetails> {
 
     protected ContentValues a(CardDetails cardDetails) {
         if (cardDetails == null) {
-            c.e("DCSDK_CardDetailsDaoImpl", "getContentValues: Data null");
+            Log.e("DCSDK_CardDetailsDaoImpl", "getContentValues: Data null");
             return null;
         }
         if (cardDetails.getCardMasterId() == -1L) {
-            c.e("DCSDK_CardDetailsDaoImpl", "getContentValues: INVALID_ROW_ID");
+            Log.e("DCSDK_CardDetailsDaoImpl", "getContentValues: INVALID_ROW_ID");
             return null;
         }
         ContentValues contentValues = new ContentValues();
@@ -97,7 +96,7 @@ extends b<CardDetails> {
 lbl22: // 2 sources:
             do {
                 try {
-                    c.e("DCSDK_CardDetailsDaoImpl", "NPE occured during getData");
+                    Log.e("DCSDK_CardDetailsDaoImpl", "NPE occured during getData");
                     throw new DcDbException("NP Exception Occurred", 6);
                 }
                 catch (Throwable var9_10) {
@@ -115,7 +114,7 @@ lbl29: // 2 sources:
 
     protected CardDetails b(Cursor cursor) {
         if (cursor == null) {
-            c.e("DCSDK_CardDetailsDaoImpl", "getDataValues: cursor null");
+            Log.e("DCSDK_CardDetailsDaoImpl", "getDataValues: cursor null");
             return null;
         }
         return new CardDetails(cursor.getLong(cursor.getColumnIndex("cardMasterId")), cursor.getLong(cursor.getColumnIndex("dataId")), cursor.getBlob(cursor.getColumnIndex("data")));

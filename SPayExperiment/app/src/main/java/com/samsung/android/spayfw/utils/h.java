@@ -64,12 +64,8 @@
 package com.samsung.android.spayfw.utils;
 
 import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -77,28 +73,25 @@ import android.os.Environment;
 import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
-import android.util.Log;
 import android.util.NtpTrustedTime;
 import android.util.Patterns;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.e.d;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 import org.json.JSONObject;
 
 public class h {
@@ -144,7 +137,7 @@ public class h {
         boolean bl;
         block3 : {
             block2 : {
-                Log.v((String)"Utils", (String)("Current Display Language: " + Locale.getDefault().getDisplayLanguage()));
+                android.util.Log.v((String)"Utils", (String)("Current Display Language: " + Locale.getDefault().getDisplayLanguage()));
                 byte by = Character.getDirectionality((char)locale.getDisplayName().charAt(0));
                 if (1 == by) break block2;
                 bl = false;
@@ -154,7 +147,7 @@ public class h {
         }
         StringBuilder stringBuilder = new StringBuilder().append("Current Language direction: ");
         String string = bl ? "RTL" : "LTR";
-        Log.v((String)"Utils", (String)stringBuilder.append(string).toString());
+        android.util.Log.v((String)"Utils", (String)stringBuilder.append(string).toString());
         return bl;
     }
 
@@ -178,17 +171,17 @@ public class h {
         }
         catch (NoSuchAlgorithmException noSuchAlgorithmException) {
             string = string2;
-            c.c("Utils", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
+            Log.c("Utils", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
         }
         catch (UnsupportedEncodingException unsupportedEncodingException) {
             string = string2;
-            c.c("Utils", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
+            Log.c("Utils", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
         }
         catch (Exception exception) {
             string = string2;
-            c.c("Utils", exception.getMessage(), exception);
+            Log.c("Utils", exception.getMessage(), exception);
         }
-        c.d("Utils", "Encoded Device ID : " + string);
+        Log.d("Utils", "Encoded Device ID : " + string);
         return string;
     }
 
@@ -208,7 +201,7 @@ public class h {
     public static boolean aj(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService("connectivity");
         boolean bl = connectivityManager != null && connectivityManager.getNetworkInfo(1) != null ? connectivityManager.getNetworkInfo(1).isConnected() : false;
-        c.d("Utils", "isConnectedOnWifi:  " + bl);
+        Log.d("Utils", "isConnectedOnWifi:  " + bl);
         return bl;
     }
 
@@ -220,10 +213,10 @@ public class h {
         boolean bl = connectivityManager != null && connectivityManager.getNetworkInfo(1) != null ? connectivityManager.getNetworkInfo(1).isConnected() : false;
         boolean bl2 = connectivityManager != null && connectivityManager.getNetworkInfo(0) != null ? connectivityManager.getNetworkInfo(0).isConnected() : false;
         boolean bl3 = connectivityManager != null && connectivityManager.getNetworkInfo(7) != null ? connectivityManager.getNetworkInfo(7).isConnected() : false;
-        c.d("Utils", "isDataConnectionAvailable:  wifi: " + bl + " mobileData: " + "Bluetooth : " + bl3);
+        Log.d("Utils", "isDataConnectionAvailable:  wifi: " + bl + " mobileData: " + "Bluetooth : " + bl3);
         NetworkInfo networkInfo = connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null;
         if (networkInfo != null && networkInfo.isConnected()) {
-            c.i("Utils", "Data connection is active");
+            Log.i("Utils", "Data connection is active");
             return true;
         }
         if (bl) return true;
@@ -242,10 +235,10 @@ public class h {
         synchronized (h.class) {
             block4 : {
                 if (!NtpTrustedTime.getInstance((Context)context).hasCache()) break block4;
-                c.d("Utils", "Real Time Available");
+                Log.d("Utils", "Real Time Available");
                 return true;
             }
-            c.d("Utils", "Real Time NOT Available");
+            Log.d("Utils", "Real Time NOT Available");
             return false;
         }
     }
@@ -261,7 +254,7 @@ public class h {
             block6 : {
                 ntpTrustedTime = NtpTrustedTime.getInstance((Context)context);
                 if (ntpTrustedTime.hasCache()) break block6;
-                c.d("Utils", "Network Time cache empty. Return System Time : " + System.currentTimeMillis());
+                Log.d("Utils", "Network Time cache empty. Return System Time : " + System.currentTimeMillis());
                 long l2 = System.currentTimeMillis();
                 if (Df != null) return l2;
                 Df = new Thread(new Runnable(){
@@ -275,12 +268,12 @@ public class h {
                 return l2;
             }
             try {
-                c.d("Utils", "Network Time : " + ntpTrustedTime.currentTimeMillis());
+                Log.d("Utils", "Network Time : " + ntpTrustedTime.currentTimeMillis());
                 long l3 = ntpTrustedTime.currentTimeMillis();
                 return l3;
             }
             catch (Exception exception) {
-                c.e("Utils", exception.getMessage());
+                Log.e("Utils", exception.getMessage());
                 long l4 = System.currentTimeMillis();
                 return l4;
             }
@@ -293,11 +286,11 @@ public class h {
             if (!ntpTrustedTime.hasCache()) {
                 ntpTrustedTime.forceRefresh();
             }
-            c.d("Utils", "Network Time : " + ntpTrustedTime.currentTimeMillis());
+            Log.d("Utils", "Network Time : " + ntpTrustedTime.currentTimeMillis());
             return;
         }
         catch (Exception exception) {
-            c.e("Utils", exception.getMessage());
+            Log.e("Utils", exception.getMessage());
             return;
         }
     }
@@ -322,20 +315,20 @@ public class h {
             return true;
         }
         catch (Exception exception) {
-            c.e("Utils", "isForegroundSpay fail : " + exception.getMessage());
-            c.c("Utils", exception.getMessage(), exception);
+            Log.e("Utils", "isForegroundSpay fail : " + exception.getMessage());
+            Log.c("Utils", exception.getMessage(), exception);
         }
         return false;
     }
 
     public static boolean aq(Context context) {
         int n2 = context.getResources().getConfiguration().getLayoutDirection();
-        Log.v((String)"Utils", (String)("Layout dir value: " + n2));
+        android.util.Log.v((String)"Utils", (String)("Layout dir value: " + n2));
         if (n2 == 0) {
-            Log.d((String)"Utils", (String)"Layout dir: LAYOUT_DIRECTION_LTR");
+            android.util.Log.d((String)"Utils", (String)"Layout dir: LAYOUT_DIRECTION_LTR");
             return false;
         }
-        Log.d((String)"Utils", (String)"Layout dir: LAYOUT_DIRECTION_RTL");
+        android.util.Log.d((String)"Utils", (String)"Layout dir: LAYOUT_DIRECTION_RTL");
         return true;
     }
 
@@ -355,15 +348,15 @@ public class h {
             return null;
         }
         try {
-            c.d("Utils:getHash", string);
+            Log.d("Utils:getHash", string);
             MessageDigest messageDigest = MessageDigest.getInstance((String)"SHA-256");
             messageDigest.update(string.getBytes());
             String string2 = Base64.encodeToString((byte[])messageDigest.digest(), (int)2);
-            c.d("Utils:getHash", string2);
+            Log.d("Utils:getHash", string2);
             return string2;
         }
         catch (NoSuchAlgorithmException noSuchAlgorithmException) {
-            c.c("Utils", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
+            Log.c("Utils", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
             return null;
         }
     }
@@ -378,7 +371,7 @@ public class h {
             return arrby;
         }
         catch (IllegalArgumentException illegalArgumentException) {
-            c.e("Utils", "Decode cert fail");
+            Log.e("Utils", "Decode cert fail");
             return null;
         }
     }
@@ -393,7 +386,7 @@ public class h {
         while (n2 < arrstring.length) {
             byte[] arrby = h.bD(arrstring[n2]);
             if (arrby == null || arrby.length == 0) {
-                c.e("Utils", "Decode cert fail, skip it");
+                Log.e("Utils", "Decode cert fail, skip it");
             } else {
                 arrayList.add((Object)arrby);
             }
@@ -478,15 +471,15 @@ lbl27: // 1 sources:
             return;
         }
         catch (NoSuchMethodException noSuchMethodException) {
-            c.c("Utils", noSuchMethodException.getMessage(), noSuchMethodException);
+            Log.c("Utils", noSuchMethodException.getMessage(), noSuchMethodException);
             return;
         }
         catch (IllegalAccessException illegalAccessException) {
-            c.c("Utils", illegalAccessException.getMessage(), illegalAccessException);
+            Log.c("Utils", illegalAccessException.getMessage(), illegalAccessException);
             return;
         }
         catch (InvocationTargetException invocationTargetException) {
-            c.c("Utils", invocationTargetException.getMessage(), invocationTargetException);
+            Log.c("Utils", invocationTargetException.getMessage(), invocationTargetException);
             return;
         }
     }
@@ -524,7 +517,7 @@ lbl27: // 1 sources:
             return n2;
         }
         catch (PackageManager.NameNotFoundException nameNotFoundException) {
-            c.e("getPackageVersion", "Exception = " + (Object)((Object)nameNotFoundException));
+            Log.e("getPackageVersion", "Exception = " + (Object)((Object)nameNotFoundException));
             return 0;
         }
     }
@@ -554,44 +547,44 @@ lbl27: // 1 sources:
             l2 = simpleDateFormat.parse("2015-09-17 15:00:00").getTime();
         }
         catch (ParseException parseException) {
-            c.e("Utils", "security patch date has error!");
-            c.c("Utils", parseException.getMessage(), parseException);
+            Log.e("Utils", "security patch date has error!");
+            Log.c("Utils", parseException.getMessage(), parseException);
             return false;
         }
-        c.e("Utils", "buildUTC " + l3 + " securitydatye " + l2);
+        Log.e("Utils", "buildUTC " + l3 + " securitydatye " + l2);
         if (l2 <= l3) return true;
-        c.e("Utils", "securitypachDate is later then kernelBuildDate -> need to get binary");
+        Log.e("Utils", "securitypachDate is later then kernelBuildDate -> need to get binary");
         return false;
         catch (NumberFormatException numberFormatException) {
-            c.e("Utils", "ro.build.date.utc error!");
-            c.c("Utils", numberFormatException.getMessage(), numberFormatException);
+            Log.e("Utils", "ro.build.date.utc error!");
+            Log.c("Utils", numberFormatException.getMessage(), numberFormatException);
             return false;
         }
     }
 
     public static final boolean fN() {
-        c.d("Utils", "useCcm start");
+        Log.d("Utils", "useCcm start");
         String[] arrstring = new String[]{"MSM8939", "MSM8976", "MSM8952", "MSM8953", "MSM8996", "MSM8937", "MSM8998", "MSMCOBALT"};
         String[] arrstring2 = new String[]{"a5x", "a7x", "a9x", "a3y", "a5y", "a7y", "hero", "c5", "c7", "c9", "on5x", "on7x", "grace", "veyron", "j5y", "j7y", "dream", "a8xe"};
         String string = Build.BOARD;
         String string2 = Build.DEVICE;
-        c.e("Utils", "board is " + Build.BOARD);
-        c.e("Utils", "project is " + Build.DEVICE);
+        Log.e("Utils", "board is " + Build.BOARD);
+        Log.e("Utils", "project is " + Build.DEVICE);
         for (int i2 = 0; i2 < arrstring.length; ++i2) {
             if (!arrstring[i2].equalsIgnoreCase(string)) continue;
-            c.d("Utils", "Board is " + string);
+            Log.d("Utils", "Board is " + string);
             return true;
         }
         for (int i3 = 0; i3 < arrstring2.length; ++i3) {
             if (!string2.startsWith(arrstring2[i3])) continue;
-            c.d("Utils", "Project is " + string2);
+            Log.d("Utils", "Project is " + string2);
             return true;
         }
         if (!h.fO()) {
-            c.d("Utils", "isDcmAvail is false - Ccm");
+            Log.d("Utils", "isDcmAvail is false - Ccm");
             return true;
         }
-        c.d("Utils", "useCcm is false");
+        Log.d("Utils", "useCcm is false");
         return false;
     }
 
@@ -600,15 +593,15 @@ lbl27: // 1 sources:
             try {
                 Class.forName((String)"com.sec.dcm.DcmKeyManager");
                 if (Build.VERSION.SDK_INT < 23) break block3;
-                c.d("Utils", "isDcmAvail is false : " + Build.VERSION.SDK_INT);
+                Log.d("Utils", "isDcmAvail is false : " + Build.VERSION.SDK_INT);
                 return false;
             }
             catch (ClassNotFoundException classNotFoundException) {
-                c.d("Utils", "isDcmAvail is false");
+                Log.d("Utils", "isDcmAvail is false");
                 return false;
             }
         }
-        c.d("Utils", "isDcmAvail is true");
+        Log.d("Utils", "isDcmAvail is true");
         return true;
     }
 
@@ -656,7 +649,7 @@ lbl26: // 2 sources:
                     return var8;
                 }
                 catch (IOException var23_10) {
-                    c.c("Utils", var23_10.getMessage(), var23_10);
+                    Log.c("Utils", var23_10.getMessage(), var23_10);
                     return var8;
                 }
                 break;
@@ -674,7 +667,7 @@ lbl26: // 2 sources:
 lbl44: // 3 sources:
             do {
                 var8 = d.get("ro.csc.countryiso_code");
-                c.c("Utils", var9_14.getMessage(), var9_14);
+                Log.c("Utils", var9_14.getMessage(), var9_14);
                 h.Dh = var8;
                 if (var7_13 == null) ** continue;
                 try {
@@ -682,7 +675,7 @@ lbl44: // 3 sources:
                     return var8;
                 }
                 catch (IOException var11_15) {
-                    c.c("Utils", var11_15.getMessage(), var11_15);
+                    Log.c("Utils", var11_15.getMessage(), var11_15);
                     return var8;
                 }
                 break;
@@ -704,7 +697,7 @@ lbl65: // 4 sources:
                     break;
                 } while (true);
                 catch (IOException var5_20) {
-                    c.c("Utils", var5_20.getMessage(), var5_20);
+                    Log.c("Utils", var5_20.getMessage(), var5_20);
                     ** continue;
                 }
                 break;
@@ -781,7 +774,7 @@ lbl65: // 4 sources:
                 }
                 catch (PackageManager.NameNotFoundException var3_8) lbl-1000: // 2 sources:
                 {
-                    c.e("getPackageVersion", "Exception = " + (Object)var3_9);
+                    Log.e("getPackageVersion", "Exception = " + (Object)var3_9);
                     return var2_2;
                 }
                 try {
@@ -799,7 +792,7 @@ lbl65: // 4 sources:
             }
             var2_2 = var6_5;
         }
-        c.d("Utils", "You are using new version scheme");
+        Log.d("Utils", "You are using new version scheme");
         return var2_2;
     }
 
@@ -839,7 +832,7 @@ lbl65: // 4 sources:
             return string3;
         }
         catch (Exception exception) {
-            c.c("Utils", exception.getMessage(), exception);
+            Log.c("Utils", exception.getMessage(), exception);
             return null;
         }
     }
@@ -847,7 +840,7 @@ lbl65: // 4 sources:
     private static String[] splitPem(String string) {
         String[] arrstring = string.split("-----BEGIN CERTIFICATE-----");
         String[] arrstring2 = new String[-1 + arrstring.length];
-        c.d("Utils", "pem size: " + arrstring2.length);
+        Log.d("Utils", "pem size: " + arrstring2.length);
         for (int i2 = 1; i2 < arrstring.length; ++i2) {
             arrstring2[i2 - 1] = "-----BEGIN CERTIFICATE-----" + arrstring[i2];
         }

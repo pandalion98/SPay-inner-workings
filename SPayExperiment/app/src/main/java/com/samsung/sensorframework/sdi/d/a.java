@@ -12,12 +12,10 @@
  */
 package com.samsung.sensorframework.sdi.d;
 
-import android.location.Location;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.b.a.p;
-import com.samsung.sensorframework.sdi.d.b;
-import com.samsung.sensorframework.sdi.d.c;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class a {
@@ -31,7 +29,7 @@ public class a {
     public static b a(p var0, List<String> var1_1, int var2_2) {
         var3_3 = new ArrayList();
         if (!com.samsung.sensorframework.sda.f.a.a(var0) || var1_1 == null || var1_1.size() <= 0) {
-            com.samsung.android.spayfw.b.c.d("POIProximityDetector", "getNearbyPoIs() location is invalid or poiList is null or empty");
+            Log.d("POIProximityDetector", "getNearbyPoIs() location is invalid or poiList is null or empty");
             var4_6 = Double.MAX_VALUE;
             return new b((List<String>)var3_3, var4_6);
         }
@@ -58,10 +56,10 @@ public class a {
                             if (var17_13 != null && var17_13.length() > 0) {
                                 var3_3.add((Object)var17_13);
                             }
-                            com.samsung.android.spayfw.b.c.d("POIProximityDetector", "getNearbyPoIs() User is near a POI location: " + c.cr(var17_13) + ", Distance: " + var13_11 + " Trigger radius: " + var15_12);
+                            Log.d("POIProximityDetector", "getNearbyPoIs() User is near a POI location: " + c.cr(var17_13) + ", Distance: " + var13_11 + " Trigger radius: " + var15_12);
                             break block8;
 lbl28: // 1 sources:
-                            com.samsung.android.spayfw.b.c.d("POIProximityDetector", "getNearbyPoIs() User is not in proximity to: " + c.cr(var8_7) + ", Distance: " + var13_11 + " Trigger radius: " + var15_12);
+                            Log.d("POIProximityDetector", "getNearbyPoIs() User is not in proximity to: " + c.cr(var8_7) + ", Distance: " + var13_11 + " Trigger radius: " + var15_12);
                             break block8;
                         }
                         catch (Exception var11_9) {

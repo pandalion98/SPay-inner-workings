@@ -13,6 +13,8 @@
 package com.samsung.android.spayfw.core.retry;
 
 import android.os.RemoteException;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.a.z;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -32,7 +34,7 @@ public class c {
     public static void a(z z2) {
         Class<c> class_ = c.class;
         synchronized (c.class) {
-            com.samsung.android.spayfw.b.c.d("ReplenishRetryRequester", "addInQueue: adding token in queue = " + z2.getTokenId());
+            Log.d("ReplenishRetryRequester", "addInQueue: adding token in queue = " + z2.getTokenId());
             if (mP != null && !mP.contains((Object)z2)) {
                 mP.add((Object)z2);
             }
@@ -44,7 +46,7 @@ public class c {
     public static void b(z z2) {
         Class<c> class_ = c.class;
         synchronized (c.class) {
-            com.samsung.android.spayfw.b.c.d("ReplenishRetryRequester", "scheduleTimer: scheduling replenish timer for token = " + z2.getTokenId());
+            Log.d("ReplenishRetryRequester", "scheduleTimer: scheduling replenish timer for token = " + z2.getTokenId());
             Timer timer = new Timer();
             c c2 = c.bl();
             c2.getClass();
@@ -77,12 +79,12 @@ public class c {
             int n2 = mP.size();
             for (int i2 = 0; i2 < n2; ++i2) {
                 z z2 = (z)mP.get(0);
-                com.samsung.android.spayfw.b.c.d("ReplenishRetryRequester", "flushReplenishQueue: trTokenId = " + z2.getTokenId());
+                Log.d("ReplenishRetryRequester", "flushReplenishQueue: trTokenId = " + z2.getTokenId());
                 try {
                     z2.process();
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("ReplenishRetryRequester", remoteException.getMessage(), remoteException);
+                    Log.c("ReplenishRetryRequester", remoteException.getMessage(), remoteException);
                 }
                 mP.remove((Object)z2);
                 int n3 = mP.size();
@@ -102,13 +104,13 @@ public class c {
         }
 
         public void run() {
-            com.samsung.android.spayfw.b.c.d("ReplenishRetryRequester", "run : ReplenishRetryTimerTask - tokenId = " + this.mQ.getTokenId());
+            Log.d("ReplenishRetryRequester", "run : ReplenishRetryTimerTask - tokenId = " + this.mQ.getTokenId());
             try {
                 this.mQ.process();
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("ReplenishRetryRequester", remoteException.getMessage(), remoteException);
+                Log.c("ReplenishRetryRequester", remoteException.getMessage(), remoteException);
                 return;
             }
         }

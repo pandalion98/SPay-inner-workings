@@ -15,26 +15,18 @@ package com.samsung.android.spayfw.core.a;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.RemoteException;
 import com.google.gson.JsonObject;
 import com.samsung.android.spayfw.appinterface.IVerifyIdvCallback;
-import com.samsung.android.spayfw.appinterface.Token;
-import com.samsung.android.spayfw.appinterface.TokenMetaData;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
 import com.samsung.android.spayfw.appinterface.VerifyIdvInfo;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
-import com.samsung.android.spayfw.core.a.o;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.l;
 import com.samsung.android.spayfw.core.m;
 import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
-import com.samsung.android.spayfw.payprovider.e;
-import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.remoteservice.Request;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenRequestData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenResponseData;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
 
@@ -59,14 +51,14 @@ extends o {
      * Lifted jumps to return sites
      */
     public void process() {
-        com.samsung.android.spayfw.b.c.d("IdvVerifier", "verifyIdv()");
+        Log.d("IdvVerifier", "verifyIdv()");
         if (this.mEnrollmentId == null || this.lr == null || this.iJ == null || this.ls == null || this.ls.getValue() == null) {
             var1_1 = -5;
             if (this.iJ == null) {
-                com.samsung.android.spayfw.b.c.e("IdvVerifier", "verifyIdv  - Failed to initialize account");
+                Log.e("IdvVerifier", "verifyIdv  - Failed to initialize account");
                 var1_1 = -1;
             } else {
-                com.samsung.android.spayfw.b.c.e("IdvVerifier", "verifyIdv Failed - Invalid inputs");
+                Log.e("IdvVerifier", "verifyIdv Failed - Invalid inputs");
             }
             if (this.lr == null) return;
             try {
@@ -74,38 +66,38 @@ extends o {
                 return;
             }
             catch (RemoteException var2_2) {
-                com.samsung.android.spayfw.b.c.c("IdvVerifier", var2_2.getMessage(), var2_2);
+                Log.c("IdvVerifier", var2_2.getMessage(), var2_2);
                 return;
             }
         }
         var3_3 = this.iJ.q(this.mEnrollmentId);
         if (var3_3 == null) {
-            com.samsung.android.spayfw.b.c.e("IdvVerifier", "verifyIdv Failed - unable to find the card in memory. delete card in db");
+            Log.e("IdvVerifier", "verifyIdv Failed - unable to find the card in memory. delete card in db");
             try {
                 this.lr.onFail(this.mEnrollmentId, -6, null);
                 return;
             }
             catch (RemoteException var12_4) {
-                com.samsung.android.spayfw.b.c.c("IdvVerifier", var12_4.getMessage(), var12_4);
+                Log.c("IdvVerifier", var12_4.getMessage(), var12_4);
                 return;
             }
         }
         if (var3_3.ac() == null || var3_3.ac().getTokenStatus() == null || !"PENDING_PROVISION".equals((Object)var3_3.ac().getTokenStatus())) {
-            com.samsung.android.spayfw.b.c.e("IdvVerifier", "verifyIdv Failed - token is null or token staus is not correct. ");
+            Log.e("IdvVerifier", "verifyIdv Failed - token is null or token staus is not correct. ");
             if (var3_3.ac() != null && var3_3.ac().getTokenStatus() != null) {
-                com.samsung.android.spayfw.b.c.e("IdvVerifier", "verifyIdv Failed - token status:  " + var3_3.ac().getTokenStatus());
+                Log.e("IdvVerifier", "verifyIdv Failed - token status:  " + var3_3.ac().getTokenStatus());
             }
             try {
                 this.lr.onFail(this.mEnrollmentId, -4, null);
                 return;
             }
             catch (RemoteException var4_5) {
-                com.samsung.android.spayfw.b.c.c("IdvVerifier", var4_5.getMessage(), var4_5);
+                Log.c("IdvVerifier", var4_5.getMessage(), var4_5);
                 return;
             }
         }
         var5_6 = System.currentTimeMillis();
-        com.samsung.android.spayfw.b.c.d("IdvVerifier", "Verify Idv Info : " + this.ls.toString());
+        Log.d("IdvVerifier", "Verify Idv Info : " + this.ls.toString());
         var7_7 = var3_3.ad().getVerifyIdvRequestDataTA(this.ls);
         if (var7_7 == null || var7_7.cg() == null) ** GOTO lbl-1000
         var11_8 = var7_7.cg().getString("tac");
@@ -117,13 +109,13 @@ extends o {
             var8_9 = null;
         }
         if (this.ls.getType().equals((Object)"APP") && (var8_9 == null || var8_9.isEmpty())) {
-            com.samsung.android.spayfw.b.c.d("IdvVerifier", "No TAC, status via push");
+            Log.d("IdvVerifier", "No TAC, status via push");
             try {
                 this.lr.onSuccess(this.mEnrollmentId, null);
                 return;
             }
             catch (RemoteException var10_10) {
-                com.samsung.android.spayfw.b.c.c("IdvVerifier", var10_10.getMessage(), var10_10);
+                Log.c("IdvVerifier", var10_10.getMessage(), var10_10);
                 return;
             }
         }
@@ -154,7 +146,7 @@ extends o {
                 block30 : {
                     block31 : {
                         block28 : {
-                            com.samsung.android.spayfw.b.c.d("IdvVerifier", "VerifyIdv : onRequestComplete:  " + var1_1);
+                            Log.d("IdvVerifier", "VerifyIdv : onRequestComplete:  " + var1_1);
                             var3_3 = false;
                             var4_4 = null;
                             block2 : switch (var1_1) {
@@ -186,13 +178,13 @@ lbl17: // 2 sources:
                                     var30_12 = k.this.iJ.q(this.mEnrollmentId);
                                     var31_13 = k.this.jJ.bp(this.mEnrollmentId);
                                     if (var30_12 != null && var31_13 != null) ** GOTO lbl42
-                                    com.samsung.android.spayfw.b.c.e("IdvVerifier", "unable to get card object ");
+                                    Log.e("IdvVerifier", "unable to get card object ");
                                     if (var31_13 != null) {
-                                        com.samsung.android.spayfw.b.c.i("IdvVerifier", "delete record from db ");
+                                        Log.i("IdvVerifier", "delete record from db ");
                                         k.this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Cn, this.mEnrollmentId);
                                     }
                                     if (var30_12 != null) {
-                                        com.samsung.android.spayfw.b.c.e("IdvVerifier", "delete card object");
+                                        Log.e("IdvVerifier", "delete card object");
                                         k.this.iJ.s(this.mEnrollmentId);
                                     }
                                     var7_10 = -8;
@@ -206,7 +198,7 @@ lbl17: // 2 sources:
                                     ** GOTO lbl13
 lbl42: // 1 sources:
                                     if (var2_2 != null && var2_2.getResult() != null && var2_2.getResult().getId() != null) ** GOTO lbl53
-                                    com.samsung.android.spayfw.b.c.e("IdvVerifier", "VerifyIdv - onRequestComplete: resultData/TrTokenId is null");
+                                    Log.e("IdvVerifier", "VerifyIdv - onRequestComplete: resultData/TrTokenId is null");
                                     var8_11 = null;
                                     var9_5 = false;
                                     var10_7 = null;
@@ -232,7 +224,7 @@ lbl53: // 1 sources:
 lbl65: // 2 sources:
                                     do {
                                         if (var39_19 != null) ** GOTO lbl77
-                                        com.samsung.android.spayfw.b.c.e("IdvVerifier", "Provision Token- onRequestComplete: provider not returning tokenref");
+                                        Log.e("IdvVerifier", "Provision Token- onRequestComplete: provider not returning tokenref");
                                         var7_10 = -1;
                                         var8_11 = null;
                                         var9_5 = false;
@@ -251,7 +243,7 @@ lbl79: // 2 sources:
                                         }
                                         var31_13.setTrTokenId(var34_14);
                                         if (!k.this.a(var31_13)) ** GOTO lbl99
-                                        com.samsung.android.spayfw.b.c.e("IdvVerifier", "Duplicate Token Ref Id / Tr Token Id");
+                                        Log.e("IdvVerifier", "Duplicate Token Ref Id / Tr Token Id");
                                         var41_20 = new TokenStatus("DISPOSED", null);
                                         var30_12.ad().updateTokenStatusTA(null, var41_20);
                                         k.this.iJ.s(this.mEnrollmentId);
@@ -282,7 +274,7 @@ lbl99: // 1 sources:
                                 }
                                 case 202: {
                                     if (var2_2 != null && var2_2.getResult() != null && var2_2.getResult().getStatus() != null) ** GOTO lbl120
-                                    com.samsung.android.spayfw.b.c.e("IdvVerifier", "VerifyIdv::onRequestComplete: resultData/status is null");
+                                    Log.e("IdvVerifier", "VerifyIdv::onRequestComplete: resultData/status is null");
                                     var8_11 = null;
                                     var9_5 = false;
                                     var10_7 = null;
@@ -296,13 +288,13 @@ lbl120: // 1 sources:
                                     var19_22 = k.this.iJ.q(this.mEnrollmentId);
                                     var20_23 = k.this.jJ.bp(this.mEnrollmentId);
                                     if (var19_22 != null && var20_23 != null) ** GOTO lbl139
-                                    com.samsung.android.spayfw.b.c.e("IdvVerifier", "unable to get card object ");
+                                    Log.e("IdvVerifier", "unable to get card object ");
                                     if (var20_23 != null) {
-                                        com.samsung.android.spayfw.b.c.i("IdvVerifier", "delete record from db ");
+                                        Log.i("IdvVerifier", "delete record from db ");
                                         k.this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Cn, this.mEnrollmentId);
                                     }
                                     if (var19_22 != null) {
-                                        com.samsung.android.spayfw.b.c.e("IdvVerifier", "delete card object");
+                                        Log.e("IdvVerifier", "delete card object");
                                         k.this.iJ.s(this.mEnrollmentId);
                                     }
                                     var7_10 = -8;
@@ -319,7 +311,7 @@ lbl139: // 1 sources:
                                     var24_25 = var23_24.getId();
                                     var25_26 = var19_22.getCardBrand();
                                     if (var19_22.ac() != null && var19_22.ac().aQ() != null) ** GOTO lbl166
-                                    com.samsung.android.spayfw.b.c.i("IdvVerifier", "VerifyIdv::onRequestComplete: Token Ref id is null. no need to inform to provider");
+                                    Log.i("IdvVerifier", "VerifyIdv::onRequestComplete: Token Ref id is null. no need to inform to provider");
 lbl144: // 3 sources:
                                     while (var3_3) {
                                         var26_27 = new TokenStatus(m.a(var23_24), var23_24.getStatus().getReason());
@@ -351,14 +343,14 @@ lbl157: // 2 sources:
 lbl166: // 1 sources:
                                     var4_4 = var19_22.ad().updateTokenStatusTA(null, var23_24.getStatus());
                                     if (var4_4 != null && var4_4.getErrorCode() == 0) ** GOTO lbl171
-                                    com.samsung.android.spayfw.b.c.e("IdvVerifier", "VerifyIdv::onRequestComplete: updateTokenStatus failed on provider side");
+                                    Log.e("IdvVerifier", "VerifyIdv::onRequestComplete: updateTokenStatus failed on provider side");
                                     var3_3 = false;
                                     ** GOTO lbl144
 lbl171: // 1 sources:
                                     var3_3 = true;
                                     ** GOTO lbl144
 lbl173: // 1 sources:
-                                    com.samsung.android.spayfw.b.c.d("IdvVerifier", "VerifyIdv::onRequestComplete: updateFTokenRecordStatus cannot get data");
+                                    Log.d("IdvVerifier", "VerifyIdv::onRequestComplete: updateFTokenRecordStatus cannot get data");
                                     ** continue;
                                 }
                                 case 403: 
@@ -473,11 +465,11 @@ lbl204: // 1 sources:
                                 this.lr.onFail(this.mEnrollmentId, var7_10, var8_11);
                             }
                             catch (RemoteException var14_34) {
-                                com.samsung.android.spayfw.b.c.c("IdvVerifier", var14_34.getMessage(), var14_34);
+                                Log.c("IdvVerifier", var14_34.getMessage(), var14_34);
                             }
                             ** while (true)
                         }
-                        com.samsung.android.spayfw.b.c.e("IdvVerifier", "error happend during token status change. report to server");
+                        Log.e("IdvVerifier", "error happend during token status change. report to server");
                         k.this.b(null, var10_7, var11_8, "STATUS_CHANGE", c.y(var13_6), var4_4, false);
                         return;
                     }

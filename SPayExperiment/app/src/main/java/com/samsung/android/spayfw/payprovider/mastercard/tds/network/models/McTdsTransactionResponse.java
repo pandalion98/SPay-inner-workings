@@ -18,8 +18,7 @@ package com.samsung.android.spayfw.payprovider.mastercard.tds.network.models;
 import android.text.TextUtils;
 import com.samsung.android.spayfw.appinterface.TransactionData;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.tds.network.models.McTdsCommonResponse;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.utils.DateUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -55,7 +54,7 @@ extends McTdsCommonResponse {
 lbl14: // 2 sources:
                     do {
                         var6_8.printStackTrace();
-                        c.e("e_McTdsTransactionResponse", "tdsHistoryCompartor: Error : " + var6_8.getMessage());
+                        Log.e("e_McTdsTransactionResponse", "tdsHistoryCompartor: Error : " + var6_8.getMessage());
                         if (var7_4 != null) {
                             var9_6 = null;
                             if (false) break block15;
@@ -95,7 +94,7 @@ lbl23: // 2 sources:
 
     public String convertAuthorizationStatusForPayApp(String string) {
         if (TextUtils.isEmpty((CharSequence)string)) {
-            c.e(TDS_TAG_ERROR, "convertAuthorizationStatusForPayApp: invalid type: " + string);
+            Log.e(TDS_TAG_ERROR, "convertAuthorizationStatusForPayApp: invalid type: " + string);
             return null;
         }
         if (string.equalsIgnoreCase("AUTHORIZED")) {
@@ -110,7 +109,7 @@ lbl23: // 2 sources:
         if (string.equalsIgnoreCase("REVERSED")) {
             return "Refunded";
         }
-        c.e(TDS_TAG_ERROR, "convertAuthorizationStatusForPayApp: invalid type: " + string);
+        Log.e(TDS_TAG_ERROR, "convertAuthorizationStatusForPayApp: invalid type: " + string);
         return null;
     }
 
@@ -121,17 +120,17 @@ lbl23: // 2 sources:
         }
         catch (DateParseException dateParseException) {
             dateParseException.printStackTrace();
-            c.e(TDS_TAG_ERROR, "convertDateForPayApp: Error parsing timestampData: " + dateParseException.getMessage());
+            Log.e(TDS_TAG_ERROR, "convertDateForPayApp: Error parsing timestampData: " + dateParseException.getMessage());
             return null;
         }
         String string2 = DateUtils.convertToIso8601Basic(date, false);
-        c.d(TAG, "convertDateForPayApp: converted timestamp for app: " + string2);
+        Log.d(TAG, "convertDateForPayApp: converted timestamp for app: " + string2);
         return string2;
     }
 
     public String convertTransactionTypeForPayApp(String string) {
         if (TextUtils.isEmpty((CharSequence)string)) {
-            c.e(TDS_TAG_ERROR, "convertTransactionTypeForPayApp: invalid type: " + string);
+            Log.e(TDS_TAG_ERROR, "convertTransactionTypeForPayApp: invalid type: " + string);
             return null;
         }
         if (string.equalsIgnoreCase("PURCHASE")) {
@@ -140,7 +139,7 @@ lbl23: // 2 sources:
         if (string.equalsIgnoreCase("REFUND")) {
             return "Refund";
         }
-        c.e(TDS_TAG_ERROR, "convertTransactionTypeForPayApp: invalid type: " + string);
+        Log.e(TDS_TAG_ERROR, "convertTransactionTypeForPayApp: invalid type: " + string);
         return null;
     }
 
@@ -179,7 +178,7 @@ lbl23: // 2 sources:
         if (arrayList.size() <= 0) {
             bl = false;
         }
-        c.i(TDS_TAG_INFO, "getTransactionDetailsForApp: " + bl);
+        Log.i(TDS_TAG_INFO, "getTransactionDetailsForApp: " + bl);
         return transactionDetails;
     }
 

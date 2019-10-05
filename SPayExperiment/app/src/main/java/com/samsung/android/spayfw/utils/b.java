@@ -26,7 +26,9 @@ import android.os.Process;
 import android.os.ServiceManager;
 import android.service.tima.ITimaService;
 import android.util.Base64;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
+
 import java.lang.reflect.Method;
 
 public class b {
@@ -40,7 +42,7 @@ public class b {
     public static String bx(String string) {
         CT = ITimaService.Stub.asInterface((IBinder)ServiceManager.getService((String)"tima"));
         if (CT == null) {
-            c.e("AttestationHelper", "TIMA service is not available!!!");
+            Log.e("AttestationHelper", "TIMA service is not available!!!");
             return null;
         }
         byte[] arrby = b.getByteArray(string);
@@ -48,11 +50,11 @@ public class b {
             byte[] arrby2;
             try {
                 Method method = CT.getClass().getMethod("attestation", new Class[]{byte[].class});
-                c.d("AttestationHelper", "Using old Attestaion API");
+                Log.d("AttestationHelper", "Using old Attestaion API");
                 arrby2 = (byte[])method.invoke((Object)CT, new Object[]{arrby});
             }
             catch (NoSuchMethodException noSuchMethodException) {
-                c.d("AttestationHelper", "Using new Attestaion API");
+                Log.d("AttestationHelper", "Using new Attestaion API");
                 Class class_ = CT.getClass();
                 Class[] arrclass = new Class[]{byte[].class, Integer.TYPE};
                 Method method = class_.getMethod("attestation", arrclass);
@@ -61,11 +63,11 @@ public class b {
                 arrby2 = (byte[])method.invoke((Object)iTimaService, arrobject);
             }
             if (arrby2 == null) {
-                c.e("AttestationHelper", "Blob from TIMA is invalid");
+                Log.e("AttestationHelper", "Blob from TIMA is invalid");
                 return null;
             }
             if (!b.n(arrby2)) {
-                c.e("AttestationHelper", "Error in exit code byte array");
+                Log.e("AttestationHelper", "Error in exit code byte array");
                 return null;
             }
             byte[] arrby3 = new byte[-1 + arrby2.length];
@@ -76,12 +78,12 @@ public class b {
                 int n3 = Byte.valueOf((byte)arrby3[1]).intValue();
                 byte[] arrby4 = new byte[n3];
                 System.arraycopy((Object)arrby3, (int)2, (Object)arrby4, (int)0, (int)n3);
-                c.e("AttestationHelper", "Blob is not valid. ErrorCode = " + n2 + " Message = " + new String(arrby4));
+                Log.e("AttestationHelper", "Blob is not valid. ErrorCode = " + n2 + " Message = " + new String(arrby4));
                 return null;
             }
         }
         catch (Exception exception) {
-            c.e("AttestationHelper", "Failed talking with attestation policy/Invalid Nonce length" + c.getStackTraceString(exception));
+            Log.e("AttestationHelper", "Failed talking with attestation policy/Invalid Nonce length" + Log.getStackTraceString(exception));
             return null;
         }
     }

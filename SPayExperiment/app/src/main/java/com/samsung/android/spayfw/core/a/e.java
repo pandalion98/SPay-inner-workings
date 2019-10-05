@@ -38,7 +38,6 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.os.RemoteException;
 import com.samsung.android.spayfw.appinterface.BillingInfo;
-import com.samsung.android.spayfw.appinterface.CardIssuer;
 import com.samsung.android.spayfw.appinterface.EnrollCardReferenceInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardResult;
 import com.samsung.android.spayfw.appinterface.ICommonCallback;
@@ -48,14 +47,11 @@ import com.samsung.android.spayfw.appinterface.IPushMessageCallback;
 import com.samsung.android.spayfw.appinterface.ITransactionDetailsCallback;
 import com.samsung.android.spayfw.appinterface.ProvisionTokenResult;
 import com.samsung.android.spayfw.appinterface.PushMessage;
-import com.samsung.android.spayfw.appinterface.Token;
-import com.samsung.android.spayfw.appinterface.TokenMetaData;
-import com.samsung.android.spayfw.appinterface.TokenStatus;
 import com.samsung.android.spayfw.appinterface.TransactionData;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.a;
-import com.samsung.android.spayfw.core.a.o;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.j;
 import com.samsung.android.spayfw.core.p;
@@ -66,7 +62,6 @@ import com.samsung.android.spayfw.remoteservice.cashcard.models.CashCardInfo;
 import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Collection;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.ErrorReport;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Expiry;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.PatchData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenReport;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
@@ -110,12 +105,12 @@ extends o {
     }
 
     private boolean L(String string) {
-        com.samsung.android.spayfw.b.c.d("CashCardProcessor", "Card Id : " + string);
+        Log.d("CashCardProcessor", "Card Id : " + string);
         List<com.samsung.android.spayfw.storage.models.a> list = this.jJ.c(TokenRecordStorage.TokenGroup.TokenColumn.CD, string);
         if (list != null && list.size() > 0) {
-            com.samsung.android.spayfw.b.c.d("CashCardProcessor", "TokenRecord Size : " + list.size());
+            Log.d("CashCardProcessor", "TokenRecord Size : " + list.size());
             com.samsung.android.spayfw.storage.models.a a2 = (com.samsung.android.spayfw.storage.models.a)list.get(0);
-            com.samsung.android.spayfw.b.c.d("CashCardProcessor", "Token Id : " + a2.getTrTokenId());
+            Log.d("CashCardProcessor", "Token Id : " + a2.getTrTokenId());
             if (a2.getTrTokenId() != null) {
                 return true;
             }
@@ -134,7 +129,7 @@ extends o {
      */
     private void a(final CashCardInfo cashCardInfo) {
         if (cashCardInfo == null || cashCardInfo.getEncryptedPAN() == null || cashCardInfo.getEncryptedPAN().isEmpty()) {
-            com.samsung.android.spayfw.b.c.e("CashCardProcessor", "Cash Card Info is null");
+            Log.e("CashCardProcessor", "Cash Card Info is null");
             try {
                 this.kV.onFail(this.kU.getNotificationId(), -6);
                 String string = cashCardInfo != null ? cashCardInfo.getId() : "NoCardID";
@@ -164,14 +159,14 @@ extends o {
         enrollCardReferenceInfo.setUserId(com.samsung.android.spayfw.core.e.h(this.mContext).getConfig("CONFIG_USER_ID"));
         enrollCardReferenceInfo.setWalletId(com.samsung.android.spayfw.core.e.h(this.mContext).getConfig("CONFIG_WALLET_ID"));
         AccountManager accountManager = (AccountManager)this.mContext.getSystemService("account");
-        com.samsung.android.spayfw.b.c.v("CashCardProcessor", "enrollCashCard.Account : " + accountManager.getAccounts().length);
+        Log.v("CashCardProcessor", "enrollCashCard.Account : " + accountManager.getAccounts().length);
         for (Account account : accountManager.getAccounts()) {
-            com.samsung.android.spayfw.b.c.v("CashCardProcessor", "enrollCashCar.Account : " + account.name);
-            com.samsung.android.spayfw.b.c.v("CashCardProcessor", "enrollCashCard.Account : " + account.type);
+            Log.v("CashCardProcessor", "enrollCashCar.Account : " + account.name);
+            Log.v("CashCardProcessor", "enrollCashCard.Account : " + account.type);
         }
         Account[] arraccount = accountManager.getAccountsByType("com.osp.app.signin");
         if (arraccount != null && arraccount.length > 0) {
-            com.samsung.android.spayfw.b.c.v("CashCardProcessor", "enrollCashCard.Account : " + arraccount.toString());
+            Log.v("CashCardProcessor", "enrollCashCard.Account : " + arraccount.toString());
             enrollCardReferenceInfo.setUserEmail(arraccount[0].name);
         } else {
             enrollCardReferenceInfo.setUserEmail("SamsungPayUser@samsung.com");
@@ -184,9 +179,9 @@ extends o {
 
             @Override
             public void onFail(int n2, EnrollCardResult enrollCardResult) {
-                com.samsung.android.spayfw.b.c.e("CashCardProcessor", "enrollCashCard.onFail : " + n2);
+                Log.e("CashCardProcessor", "enrollCashCard.onFail : " + n2);
                 if (n2 == -3) {
-                    com.samsung.android.spayfw.b.c.i("CashCardProcessor", "enrollCashCard.onFail : already enrolled, proceed with provisioning");
+                    Log.i("CashCardProcessor", "enrollCashCard.onFail : already enrolled, proceed with provisioning");
                     e.this.a(cashCardInfo, enrollCardResult);
                     return;
                 }
@@ -203,7 +198,7 @@ extends o {
 
             @Override
             public void onSuccess(EnrollCardResult enrollCardResult) {
-                com.samsung.android.spayfw.b.c.e("CashCardProcessor", "enrollCashCard.onSuccess : " + enrollCardResult);
+                Log.e("CashCardProcessor", "enrollCashCard.onSuccess : " + enrollCardResult);
                 e.this.a(cashCardInfo, enrollCardResult);
             }
         });
@@ -220,7 +215,7 @@ extends o {
             this.iJ = a.a(this.mContext, null);
         }
         if (enrollCardResult == null || enrollCardResult.getEnrollmentId() == null || enrollCardResult.getEnrollmentId().isEmpty() || this.iJ == null) {
-            com.samsung.android.spayfw.b.c.e("CashCardProcessor", "Enroll Card Result/Account is null");
+            Log.e("CashCardProcessor", "Enroll Card Result/Account is null");
             try {
                 this.kV.onFail(this.kU.getNotificationId(), -6);
                 this.h(cashCardInfo.getId(), "Enrollment to TR Server has Empty/Null Data");
@@ -245,7 +240,7 @@ extends o {
 
                 @Override
                 public void onFail(String string, int n2, ProvisionTokenResult provisionTokenResult) {
-                    com.samsung.android.spayfw.b.c.e("CashCardProcessor", "provisionCashCard.onFail : " + n2);
+                    Log.e("CashCardProcessor", "provisionCashCard.onFail : " + n2);
                     try {
                         e.this.kV.onFail(e.this.kU.getNotificationId(), n2);
                         e.this.h(cashCardInfo.getId(), "Provisioning to TR Server Failed : " + n2);
@@ -266,7 +261,7 @@ extends o {
                 @Override
                 public void onSuccess(String string, final ProvisionTokenResult provisionTokenResult) {
                     com.samsung.android.spayfw.storage.models.a a2;
-                    com.samsung.android.spayfw.b.c.i("CashCardProcessor", "provisionCashCard.onSuccess : " + provisionTokenResult);
+                    Log.i("CashCardProcessor", "provisionCashCard.onSuccess : " + provisionTokenResult);
                     if (provisionTokenResult == null) return;
                     if (provisionTokenResult.getToken() == null) return;
                     if (provisionTokenResult.getToken().getMetadata() == null) return;
@@ -277,7 +272,7 @@ extends o {
                         provisionTokenResult.getToken().getMetadata().getCardIssuer().setAccountNumber(cashCardInfo.getNumber());
                     }
                     if ((a2 = e.this.jJ.bq(provisionTokenResult.getToken().getTokenId())) == null || a2.fx() == null || a2.fx().isEmpty()) {
-                        com.samsung.android.spayfw.b.c.e("CashCardProcessor", "Unable to find Token Id OR Cash Card Id from db " + provisionTokenResult.getToken().getTokenId());
+                        Log.e("CashCardProcessor", "Unable to find Token Id OR Cash Card Id from db " + provisionTokenResult.getToken().getTokenId());
                         try {
                             e.this.kV.onFail(e.this.kU.getNotificationId(), -6);
                             e.this.h(cashCardInfo.getId(), "Provisioning to TR Server Failed : -6");
@@ -318,7 +313,7 @@ extends o {
                         }, 1000L);
                         return;
                     }
-                    com.samsung.android.spayfw.b.c.d("CashCardProcessor", "Get Transaction Details : " + provisionTokenResult.getToken().getTokenId());
+                    Log.d("CashCardProcessor", "Get Transaction Details : " + provisionTokenResult.getToken().getTokenId());
                     Message message = j.a(37, provisionTokenResult.getToken().getTokenId(), -1L, -1L, -1, new ITransactionDetailsCallback(){
 
                         public IBinder asBinder() {
@@ -327,13 +322,13 @@ extends o {
 
                         @Override
                         public void onFail(String string, int n2) {
-                            com.samsung.android.spayfw.b.c.e("CashCardProcessor", "onFail : " + n2);
+                            Log.e("CashCardProcessor", "onFail : " + n2);
                         }
 
                         @Override
                         public void onTransactionUpdate(String string, TransactionDetails transactionDetails) {
-                            com.samsung.android.spayfw.b.c.d("CashCardProcessor", "onTransactionUpdate : tokenId " + string);
-                            com.samsung.android.spayfw.b.c.d("CashCardProcessor", "onTransactionUpdate : transactionDetails " + transactionDetails);
+                            Log.d("CashCardProcessor", "onTransactionUpdate : tokenId " + string);
+                            Log.d("CashCardProcessor", "onTransactionUpdate : transactionDetails " + transactionDetails);
                             Intent intent = new Intent("com.samsung.android.spayfw.action.notification");
                             intent.putExtra("notiType", "transactionDetailsReceived");
                             intent.putExtra("tokenId", string);
@@ -350,16 +345,16 @@ extends o {
             return;
         }
         if (c2 == null) {
-            com.samsung.android.spayfw.b.c.e("CashCardProcessor", "acceptTnc Failed - Invalid Enrollment Id");
+            Log.e("CashCardProcessor", "acceptTnc Failed - Invalid Enrollment Id");
         } else {
-            com.samsung.android.spayfw.b.c.e("CashCardProcessor", "acceptTnc Failed - unable to find Enrollment Id from db");
+            Log.e("CashCardProcessor", "acceptTnc Failed - unable to find Enrollment Id from db");
         }
         try {
             this.kV.onFail(this.kU.getNotificationId(), -6);
             return;
         }
         catch (RemoteException remoteException) {
-            com.samsung.android.spayfw.b.c.c("CashCardProcessor", remoteException.getMessage(), remoteException);
+            Log.c("CashCardProcessor", remoteException.getMessage(), remoteException);
             return;
         }
     }
@@ -374,7 +369,7 @@ extends o {
         int n3 = 0;
         while (n3 < n2) {
             CashCardInfo.TransactionInfo transactionInfo = arrtransactionInfo[n3];
-            com.samsung.android.spayfw.b.c.d("CashCardProcessor", transactionInfo.toString());
+            Log.d("CashCardProcessor", transactionInfo.toString());
             TransactionData transactionData = new TransactionData();
             transactionData.setAmount(transactionInfo.getAmount() + "");
             transactionData.setCurrencyCode(transactionInfo.getCurrency());
@@ -382,15 +377,15 @@ extends o {
             try {
                 Date date = new Date();
                 date.setTime(transactionInfo.getTime());
-                com.samsung.android.spayfw.b.c.d("CashCardProcessor", date.toString());
+                Log.d("CashCardProcessor", date.toString());
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone((String)"GMT"));
                 String string = simpleDateFormat.format(date);
-                com.samsung.android.spayfw.b.c.d("CashCardProcessor", string);
+                Log.d("CashCardProcessor", string);
                 transactionData.setTransactionDate(string);
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.e("CashCardProcessor", exception.getMessage());
+                Log.e("CashCardProcessor", exception.getMessage());
             }
             transactionData.setTransactionId(transactionInfo.getId());
             if (transactionInfo.getType().equalsIgnoreCase("Purchase")) {
@@ -412,24 +407,24 @@ extends o {
     private void aW() {
         final com.samsung.android.spayfw.storage.models.a a2 = this.jJ.bp(this.mEnrollmentId);
         if (a2 == null) {
-            com.samsung.android.spayfw.b.c.e("CashCardProcessor", "Unable to find Enrollment Id from db");
+            Log.e("CashCardProcessor", "Unable to find Enrollment Id from db");
             try {
                 this.kX.onFail(this.mEnrollmentId, -6);
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("CashCardProcessor", remoteException.getMessage(), remoteException);
+                Log.c("CashCardProcessor", remoteException.getMessage(), remoteException);
                 return;
             }
         }
         if (a2.fx() == null || a2.fx().isEmpty()) {
-            com.samsung.android.spayfw.b.c.e("CashCardProcessor", "Unable to find Cash Card Id from db");
+            Log.e("CashCardProcessor", "Unable to find Cash Card Id from db");
             try {
                 this.kX.onFail(this.mEnrollmentId, -5);
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("CashCardProcessor", remoteException.getMessage(), remoteException);
+                Log.c("CashCardProcessor", remoteException.getMessage(), remoteException);
                 return;
             }
         }
@@ -448,7 +443,7 @@ extends o {
              */
             @Override
             public void a(int var1_1, com.samsung.android.spayfw.remoteservice.c<String> var2_2) {
-                com.samsung.android.spayfw.b.c.d("CashCardProcessor", "process : onRequestComplete: code: " + var1_1);
+                Log.d("CashCardProcessor", "process : onRequestComplete: code: " + var1_1);
                 switch (var1_1) {
                     default: {
                         var6_3 = null;
@@ -469,7 +464,7 @@ extends o {
                         var4_4 = -4;
                     }
                 }
-                com.samsung.android.spayfw.b.c.e("CashCardProcessor", "Error Code : " + var4_4);
+                Log.e("CashCardProcessor", "Error Code : " + var4_4);
                 if (var4_4 == 0) ** GOTO lbl22
                 try {
                     e.a(e.this).onFail(a2.fx(), var4_4);
@@ -497,7 +492,7 @@ lbl22: // 1 sources:
             @Override
             public void a(int n2, com.samsung.android.spayfw.remoteservice.c<CashCardInfo> c2) {
                 int n3;
-                com.samsung.android.spayfw.b.c.d("CashCardProcessor", "process : onRequestComplete: code: " + n2);
+                Log.d("CashCardProcessor", "process : onRequestComplete: code: " + n2);
                 switch (n2) {
                     default: {
                         ErrorResponseData errorResponseData = null;
@@ -517,7 +512,7 @@ lbl22: // 1 sources:
                     }
                 }
                 if (n3 == 0) return;
-                com.samsung.android.spayfw.b.c.e("CashCardProcessor", "Error Code : " + n3);
+                Log.e("CashCardProcessor", "Error Code : " + n3);
                 try {
                     e.this.kV.onFail(e.this.kU.getNotificationId(), n3);
                     if (n2 == -206) return;
@@ -554,7 +549,7 @@ lbl22: // 1 sources:
                 block9 : {
                     ErrorResponseData errorResponseData;
                     string = null;
-                    com.samsung.android.spayfw.b.c.d("CashCardProcessor", "process : onRequestComplete: code: " + n2);
+                    Log.d("CashCardProcessor", "process : onRequestComplete: code: " + n2);
                     switch (n2) {
                         default: {
                             errorResponseData = c2 != null ? c2.fa() : null;
@@ -579,7 +574,7 @@ lbl22: // 1 sources:
                     n3 = p.a(n2, errorResponseData);
                 }
                 if (n3 == 0) return;
-                com.samsung.android.spayfw.b.c.e("CashCardProcessor", "Error Code : " + n3);
+                Log.e("CashCardProcessor", "Error Code : " + n3);
                 try {
                     e.this.kV.onFail(e.this.kU.getNotificationId(), n3);
                     if (n2 == -206) return;

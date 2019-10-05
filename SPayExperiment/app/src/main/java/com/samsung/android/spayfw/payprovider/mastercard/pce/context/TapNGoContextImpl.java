@@ -14,8 +14,8 @@
 package com.samsung.android.spayfw.payprovider.mastercard.pce.context;
 
 import android.os.Bundle;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.context.AbstractTransactionContextImpl;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.context.filtercriteria.MCFilterCriteria;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.context.filtercriteria.MCUkFilterCriteriaImpl;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionCompleteResult;
@@ -40,7 +40,7 @@ extends AbstractTransactionContextImpl {
 
     public TapNGoContextImpl(MCTransactionCredentials mCTransactionCredentials) {
         super(mCTransactionCredentials);
-        c.i(TAG, "TAP&Go detected. Setting filters");
+        Log.i(TAG, "TAP&Go detected. Setting filters");
         this.mFilters = TapNGoContextImpl.getTapNGoFilters();
     }
 
@@ -52,10 +52,10 @@ extends AbstractTransactionContextImpl {
 
     @Override
     public void checkContext() {
-        c.d(TAG, "checkContext");
+        Log.d(TAG, "checkContext");
         MCTransactionResult mCTransactionResult = this.filterCheck((List<MCFilterCriteria>)this.mFilters);
         if (mCTransactionResult != null && mCTransactionResult.equals((Object)MCTransactionResult.CONTEXT_CONFLICT_PASS)) {
-            c.d(TAG, "checkContext Passed");
+            Log.d(TAG, "checkContext Passed");
             this.setTransactionError(mCTransactionResult);
             return;
         }
@@ -92,21 +92,21 @@ extends AbstractTransactionContextImpl {
         }
         MCTransactionResult mCTransactionResult = mCTransactionCompleteResult.getTransactionError();
         if (mCTransactionResult == null) {
-            c.e(TAG, "Tap&Go No Err set:");
+            Log.e(TAG, "Tap&Go No Err set:");
             return;
         }
         if (mCTransactionResult.equals((Object)MCTransactionResult.CONTEXT_CONFLICT_PASS)) {
             bundle.putInt("tapNGotransactionErrorCode", 0);
-            c.d(TAG, "Tap&Go Success bundle:" + bundle.toString());
+            Log.d(TAG, "Tap&Go Success bundle:" + bundle.toString());
             return;
         }
         Integer n2 = (Integer)sSdkToAppErrorCodeMap.get((Object)mCTransactionResult);
         if (n2 == null) {
-            c.e(TAG, "Tap&Go: Invalid resultCode for tap&Go: " + mCTransactionResult.name());
+            Log.e(TAG, "Tap&Go: Invalid resultCode for tap&Go: " + mCTransactionResult.name());
             return;
         }
         bundle.putInt("tapNGotransactionErrorCode", n2.intValue());
-        c.e(TAG, "Tap&Go: error bundle:" + bundle.toString());
+        Log.e(TAG, "Tap&Go: error bundle:" + bundle.toString());
     }
 
     @Override
@@ -115,7 +115,7 @@ extends AbstractTransactionContextImpl {
         this.setNfcError(bundle);
         this.setTransitCheckResult(bundle);
         this.setMerchantNameLocation(bundle);
-        c.d(TAG, "tapNGo Bundle StopNfc: " + bundle.toString());
+        Log.d(TAG, "tapNGo Bundle StopNfc: " + bundle.toString());
         return bundle;
     }
 }

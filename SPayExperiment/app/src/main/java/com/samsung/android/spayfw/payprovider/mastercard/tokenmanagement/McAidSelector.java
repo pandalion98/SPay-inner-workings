@@ -11,7 +11,7 @@
  */
 package com.samsung.android.spayfw.payprovider.mastercard.tokenmanagement;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.utils.CryptoUtils;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -122,7 +122,7 @@ public class McAidSelector {
             this.mSelectedAidLists.add((Object)PLCC_AID);
             return;
         }
-        c.e(TAG, "McAidSelector : Wrong PAN number");
+        Log.e(TAG, "McAidSelector : Wrong PAN number");
     }
 
     private String composeAppletInstanceAids(String string, long l2) {
@@ -144,7 +144,7 @@ public class McAidSelector {
 
     public String getAid() {
         if (this.mSelectedAidLists == null) {
-            c.e(TAG, "getAid : input PAN is null or empty");
+            Log.e(TAG, "getAid : input PAN is null or empty");
             return null;
         }
         return (String)this.mSelectedAidLists.get(this.PAN_INIT_INDEX);

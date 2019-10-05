@@ -21,7 +21,8 @@ import com.samsung.android.spayfw.appinterface.MstPayConfig;
 import com.samsung.android.spayfw.appinterface.MstPayConfigEntry;
 import com.samsung.android.spayfw.appinterface.MstPayConfigEntryItem;
 import com.samsung.android.spayfw.appinterface.PayConfig;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,7 +40,7 @@ public class h {
             for (int i2 = 0; i2 < arrobject.length; ++i2) {
                 arrobject[i2] = arrobject[i2].trim();
             }
-            c.d("PayConfigurator", "getSanitizedSequence: sequence.arr = " + Arrays.toString((Object[])arrobject) + "; len = " + arrobject.length);
+            Log.d("PayConfigurator", "getSanitizedSequence: sequence.arr = " + Arrays.toString((Object[])arrobject) + "; len = " + arrobject.length);
             return arrobject;
         }
         return null;
@@ -50,7 +51,7 @@ public class h {
      */
     private static a D(String string) {
         String string2 = string.substring(0, -1 + string.length());
-        c.d("PayConfigurator", "mstConfig :" + string2);
+        Log.d("PayConfigurator", "mstConfig :" + string2);
         a a2 = new a();
         String[] arrstring = string2.split(",");
         int n2 = 0;
@@ -59,7 +60,7 @@ public class h {
             switch (string3.charAt(0)) {
                 case 't': {
                     a2.track = h.E(string3);
-                    c.d("PayConfigurator", "Track: " + a2.track);
+                    Log.d("PayConfigurator", "Track: " + a2.track);
                     break;
                 }
                 case 'r': {
@@ -72,17 +73,17 @@ public class h {
                     }
                     if (string3.charAt(1) == 'P') {
                         a2.extraParams.putInt("panLength", Integer.parseInt((String)string3.substring(2)));
-                        c.d("PayConfigurator", "PAN Length:" + Integer.parseInt((String)string3.substring(2)));
+                        Log.d("PayConfigurator", "PAN Length:" + Integer.parseInt((String)string3.substring(2)));
                         break;
                     }
                     if (string3.charAt(1) == 'N') {
                         a2.extraParams.putInt("nameLength", Integer.parseInt((String)string3.substring(2)));
-                        c.d("PayConfigurator", "Name Length:" + Integer.parseInt((String)string3.substring(2)));
+                        Log.d("PayConfigurator", "Name Length:" + Integer.parseInt((String)string3.substring(2)));
                         break;
                     }
                     if (string3.charAt(1) != 'D') break;
                     a2.extraParams.putInt("dataLength", Integer.parseInt((String)string3.substring(2)));
-                    c.d("PayConfigurator", "Data Length:" + Integer.parseInt((String)string3.substring(2)));
+                    Log.d("PayConfigurator", "Data Length:" + Integer.parseInt((String)string3.substring(2)));
                     break;
                 }
                 case 'T': {
@@ -119,7 +120,7 @@ public class h {
             }
             switch (n2) {
                 default: {
-                    c.w("PayConfigurator", "getTrackValue: incorrect track, defaulting to track 1 : " + string);
+                    Log.w("PayConfigurator", "getTrackValue: incorrect track, defaulting to track 1 : " + string);
                     return 1;
                 }
                 case 0: 
@@ -139,15 +140,15 @@ public class h {
 
     public static PayConfig b(String string, String string2) {
         if (string == null || string.isEmpty() || string2 == null || string2.isEmpty()) {
-            c.e("PayConfigurator", "getPayConfigByType: configType or cardBrand is null or empty!");
+            Log.e("PayConfigurator", "getPayConfigByType: configType or cardBrand is null or empty!");
             return null;
         }
         if (jv == null || jv.get((Object)string) == null) {
-            c.e("PayConfigurator", "getPayConfigByType: mTrackDataHash=null or value=null for key = " + string);
+            Log.e("PayConfigurator", "getPayConfigByType: mTrackDataHash=null or value=null for key = " + string);
             return null;
         }
         String string3 = string2 + "_" + string;
-        c.i("PayConfigurator", "getPayConfigByType: cardBrandConfigType : " + string3);
+        Log.i("PayConfigurator", "getPayConfigByType: cardBrandConfigType : " + string3);
         if (jv.containsKey((Object)string3)) {
             return ((b)h.jv.get((Object)string3)).js;
         }
@@ -156,11 +157,11 @@ public class h {
 
     public static int c(String string, String string2) {
         if (string == null || string.isEmpty() || string2 == null || string2.isEmpty()) {
-            c.e("PayConfigurator", "getMstTransmitTimeForType: configType or cardBrand is null or empty!");
+            Log.e("PayConfigurator", "getMstTransmitTimeForType: configType or cardBrand is null or empty!");
             return -1;
         }
         if (jv == null || jv.get((Object)string) == null) {
-            c.e("PayConfigurator", "getMstTransmitTimeForType: mTrackDataHash=null or value=null for key = " + string);
+            Log.e("PayConfigurator", "getMstTransmitTimeForType: mTrackDataHash=null or value=null for key = " + string);
             return -1;
         }
         String string3 = string2 + "_" + string;
@@ -186,7 +187,7 @@ public class h {
             ArrayList arrayList2 = new ArrayList();
             int n3 = n2;
             do {
-                c.d("PayConfigurator", "getPayConfig: i = " + n3 + "; mMstSequence = " + arrstring[n3]);
+                Log.d("PayConfigurator", "getPayConfig: i = " + n3 + "; mMstSequence = " + arrstring[n3]);
                 n2 = n3 + 1;
                 a a2 = h.D(arrstring[n3]);
                 MstPayConfigEntryItem mstPayConfigEntryItem = new MstPayConfigEntryItem();
@@ -217,11 +218,11 @@ public class h {
 
     public static String f(String string, String string2) {
         if (string == null || string.isEmpty() || string2 == null || string2.isEmpty()) {
-            c.e("PayConfigurator", "getMstSequenceIdForType: configType or cardBrand is null or empty!");
+            Log.e("PayConfigurator", "getMstSequenceIdForType: configType or cardBrand is null or empty!");
             return null;
         }
         if (jv == null || jv.get((Object)string) == null) {
-            c.e("PayConfigurator", "getMstSequenceIdForType: mTrackDataHash=null or value=null for key = " + string);
+            Log.e("PayConfigurator", "getMstSequenceIdForType: mTrackDataHash=null or value=null for key = " + string);
             return null;
         }
         String string3 = string2 + "_" + string;

@@ -31,6 +31,7 @@ import com.samsung.android.spayfw.appinterface.SelectCardResult;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
 import com.samsung.android.spayfw.appinterface.TransactionData;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.k;
 import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
@@ -46,7 +47,7 @@ import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.payprovider.h;
 import com.samsung.android.spayfw.payprovider.i;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
-import com.samsung.android.spaytzsvc.api.TAController;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,31 +75,31 @@ extends PaymentNetworkProvider {
         this.mTAController = this.sj;
         this.sk = this.mProviderTokenKey;
         String string2 = f2 == null ? "true" : "false";
-        com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverPayProvider", "Key is null? " + string2);
+        Log.d("DCSDK_DiscoverPayProvider", "Key is null? " + string2);
         String string3 = this.mProviderTokenKey == null ? "true" : "false";
-        com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverPayProvider", "Key is null? " + string3);
+        Log.d("DCSDK_DiscoverPayProvider", "Key is null? " + string3);
     }
 
     private boolean aE(String string) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "startReplenishAlarm: " + this.sm);
+        Log.i("DCSDK_DiscoverPayProvider", "startReplenishAlarm: " + this.sm);
         if (!this.sm) {
             f f2 = new f(string);
             f2.setTrTokenId(string);
             h.a(this.mContext, this.se + com.samsung.android.spayfw.utils.h.am(this.mContext), f2);
             this.ps.a(this.mProviderTokenKey);
             this.sm = true;
-            com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverPayProvider", "startReplenishAlarm: started alarm - " + this.se);
+            Log.d("DCSDK_DiscoverPayProvider", "startReplenishAlarm: started alarm - " + this.se);
         }
         return this.sm;
     }
 
     private byte[] aF(String string) {
-        com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverPayProvider", "getDiscoverCert with usage type : " + string);
+        Log.d("DCSDK_DiscoverPayProvider", "getDiscoverCert with usage type : " + string);
         for (CertificateInfo certificateInfo : this.sl) {
             if (certificateInfo.getContent() == null || !string.equals((Object)certificateInfo.getUsage())) continue;
             return Base64.decode((byte[])certificateInfo.getContent().replace((CharSequence)"-----BEGIN CERTIFICATE-----", (CharSequence)"").replace((CharSequence)"-----END CERTIFICATE-----", (CharSequence)"").getBytes(), (int)0);
         }
-        com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "getDiscoverCert: No Cert Found for usage type " + string);
+        Log.e("DCSDK_DiscoverPayProvider", "getDiscoverCert: No Cert Found for usage type " + string);
         return null;
     }
 
@@ -121,7 +122,7 @@ extends PaymentNetworkProvider {
     private boolean cD() {
         block6 : {
             block5 : {
-                com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "checkAndTriggerReplenishment...");
+                Log.i("DCSDK_DiscoverPayProvider", "checkAndTriggerReplenishment...");
                 try {
                     var3_1 = (DcCardMaster)new c(this.mContext).getData(this.mProviderTokenKey.cm());
                 }
@@ -133,24 +134,24 @@ lbl8: // 2 sources:
                 if (var3_1 == null) break block5;
                 var4_2 = var3_1.getRemainingOtpkCount();
                 var7_3 = var3_1.getReplenishmentThreshold();
-                com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverPayProvider", "checkAndTriggerReplenishment: otpkBal - " + var4_2 + ", Threshold - " + var7_3);
+                Log.d("DCSDK_DiscoverPayProvider", "checkAndTriggerReplenishment: otpkBal - " + var4_2 + ", Threshold - " + var7_3);
                 if (var4_2 <= var7_3) {
                     var9_4 = var3_1.getTokenId();
-                    com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverPayProvider", "Requesting Replenishment: " + var9_4);
+                    Log.d("DCSDK_DiscoverPayProvider", "Requesting Replenishment: " + var9_4);
                     this.aE(var9_4);
                 } else {
-                    com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverPayProvider", "Requesting Replenishment: No need for replenishment");
+                    Log.d("DCSDK_DiscoverPayProvider", "Requesting Replenishment: No need for replenishment");
                     this.cE();
                 }
                 break block6;
                 catch (NullPointerException var1_7) {
                     var1_7.printStackTrace();
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "Nullpointer Exception in checkAndTriggerReplenishment");
+                    Log.e("DCSDK_DiscoverPayProvider", "Nullpointer Exception in checkAndTriggerReplenishment");
                     return false;
                 }
                 ** GOTO lbl8
             }
-            com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverPayProvider", "Requesting Replenishment: cardMaster is null");
+            Log.d("DCSDK_DiscoverPayProvider", "Requesting Replenishment: cardMaster is null");
             this.cE();
             var4_2 = 0L;
         }
@@ -159,7 +160,7 @@ lbl8: // 2 sources:
     }
 
     private void cE() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "cancelReplenishmentAlarm: " + this.sm);
+        Log.i("DCSDK_DiscoverPayProvider", "cancelReplenishmentAlarm: " + this.sm);
         if (this.sm) {
             h.a(this.mContext, this.mProviderTokenKey);
             this.sm = false;
@@ -179,14 +180,14 @@ lbl8: // 2 sources:
      */
     public List<byte[]> J(int n2) {
         if (n2 != 1 && n2 != 2) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "getDiscoverCertChain: Invalid usage");
+            Log.e("DCSDK_DiscoverPayProvider", "getDiscoverCertChain: Invalid usage");
             return null;
         }
         byte[] arrby = this.aF("ENC");
         byte[] arrby2 = this.aF("CA");
         byte[] arrby3 = this.aF("SIG");
         if (arrby == null || arrby2 == null || arrby3 == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "getDiscoverCertChain: One of the Server cert is null");
+            Log.e("DCSDK_DiscoverPayProvider", "getDiscoverCertChain: One of the Server cert is null");
             return null;
         }
         ArrayList arrayList = new ArrayList();
@@ -202,60 +203,60 @@ lbl8: // 2 sources:
             arrayList.add(1, (Object)arrby3);
             return arrayList;
         }
-        com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "getDiscoverCertChain: Invalid usage");
+        Log.e("DCSDK_DiscoverPayProvider", "getDiscoverCertChain: Invalid usage");
         return null;
     }
 
     @Override
     protected boolean authenticateTransaction(SecuredObject securedObject) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "authenticateTransaction: start , timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "authenticateTransaction: start , timestamp " + System.currentTimeMillis());
         if (securedObject == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "authenticateTransaction: can't authenticate transaction, secure object is null, returned false.");
+            Log.e("DCSDK_DiscoverPayProvider", "authenticateTransaction: can't authenticate transaction, secure object is null, returned false.");
             return false;
         }
         boolean bl = this.sg.a(securedObject, DiscoverCDCVM.aG(this.getAuthType()));
         if (!bl) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "authenticateTransaction: authenticateTransaction failed.");
+            Log.e("DCSDK_DiscoverPayProvider", "authenticateTransaction: authenticateTransaction failed.");
         }
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "authenticateTransaction:  end, result " + bl + ", timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "authenticateTransaction:  end, result " + bl + ", timestamp " + System.currentTimeMillis());
         return bl;
     }
 
     @Override
     public void beginPay(boolean bl, boolean bl2) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "prepareNfcPay: start, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "prepareNfcPay: start, timestamp " + System.currentTimeMillis());
         boolean bl3 = this.sg.prepareNfcPay();
         if (!bl3) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "prepareNfcPay: init nfc transaction failed.");
+            Log.e("DCSDK_DiscoverPayProvider", "prepareNfcPay: init nfc transaction failed.");
         }
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "prepareNfcPay:  end, result " + bl3 + ", timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "prepareNfcPay:  end, result " + bl3 + ", timestamp " + System.currentTimeMillis());
     }
 
     @Override
     public void checkIfReplenishmentNeeded(TransactionData transactionData) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "checkIfReplenishmentNeeded");
+        Log.i("DCSDK_DiscoverPayProvider", "checkIfReplenishmentNeeded");
         this.sk = this.mProviderTokenKey;
         this.cD();
     }
 
     @Override
     protected void clearCard() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "clearCard: start, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "clearCard: start, timestamp " + System.currentTimeMillis());
         this.sg.clearCard();
         this.cD();
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "clearCard:  end, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "clearCard:  end, timestamp " + System.currentTimeMillis());
     }
 
     @Override
     protected e createToken(String string, com.samsung.android.spayfw.payprovider.c c2, int n2) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "createToken");
+        Log.i("DCSDK_DiscoverPayProvider", "createToken");
         return this.sf.a(string, c2.ch(), n2, this.J(2));
     }
 
     @Override
     public byte[] decryptUserSignature(String string) {
         if (string == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "decryptUserSignature : input data null");
+            Log.e("DCSDK_DiscoverPayProvider", "decryptUserSignature : input data null");
             return null;
         }
         return this.sf.aO(string);
@@ -263,14 +264,14 @@ lbl8: // 2 sources:
 
     @Override
     public void delete() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "delete");
+        Log.i("DCSDK_DiscoverPayProvider", "delete");
         this.sf.d(this.mProviderTokenKey);
     }
 
     @Override
     public String encryptUserSignature(byte[] arrby) {
         if (arrby == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "encryptUserSignature : input data null");
+            Log.e("DCSDK_DiscoverPayProvider", "encryptUserSignature : input data null");
             return null;
         }
         return this.sf.j(arrby);
@@ -278,32 +279,32 @@ lbl8: // 2 sources:
 
     @Override
     protected byte[] generateInAppPaymentPayload(PaymentNetworkProvider.InAppDetailedTransactionInfo inAppDetailedTransactionInfo) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "generateInAppPaymentPayload: start, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "generateInAppPaymentPayload: start, timestamp " + System.currentTimeMillis());
         byte[] arrby = this.sg.generateInAppPaymentPayload(inAppDetailedTransactionInfo);
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "generateInAppPaymentPayload: end, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "generateInAppPaymentPayload: end, timestamp " + System.currentTimeMillis());
         return arrby;
     }
 
     @Override
     protected CertificateInfo[] getDeviceCertificates() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "getDeviceCertificates");
+        Log.i("DCSDK_DiscoverPayProvider", "getDeviceCertificates");
         return null;
     }
 
     @Override
     protected com.samsung.android.spayfw.payprovider.c getEnrollmentRequestData(EnrollCardInfo enrollCardInfo, BillingInfo billingInfo) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "getEnrollmentRequestData");
+        Log.i("DCSDK_DiscoverPayProvider", "getEnrollmentRequestData");
         if (enrollCardInfo instanceof EnrollCardPanInfo) {
-            com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "Regular Enrollment");
+            Log.i("DCSDK_DiscoverPayProvider", "Regular Enrollment");
             return this.sf.a((EnrollCardPanInfo)enrollCardInfo, billingInfo, this.J(1));
         }
         if (enrollCardInfo instanceof EnrollCardReferenceInfo) {
-            com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "Push Enrollemnt");
+            Log.i("DCSDK_DiscoverPayProvider", "Push Enrollemnt");
             com.samsung.android.spayfw.payprovider.c c2 = this.sf.b((EnrollCardReferenceInfo)enrollCardInfo);
-            com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "Provider Req Data: " + c2.ch().toString());
+            Log.i("DCSDK_DiscoverPayProvider", "Provider Req Data: " + c2.ch().toString());
             return c2;
         }
-        com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "EnrollCardInfo is of Invalid type" + enrollCardInfo.getEnrollType());
+        Log.e("DCSDK_DiscoverPayProvider", "EnrollCardInfo is of Invalid type" + enrollCardInfo.getEnrollType());
         com.samsung.android.spayfw.payprovider.c c3 = new com.samsung.android.spayfw.payprovider.c();
         c3.a(null);
         c3.setErrorCode(-4);
@@ -314,60 +315,60 @@ lbl8: // 2 sources:
     public boolean getPayReadyState() {
         this.sk = this.mProviderTokenKey;
         boolean bl = this.sg.s(this.sk.cm());
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "getPayReadyState: " + bl);
+        Log.i("DCSDK_DiscoverPayProvider", "getPayReadyState: " + bl);
         this.cD();
         return bl;
     }
 
     @Override
     protected com.samsung.android.spayfw.payprovider.c getProvisionRequestData(ProvisionTokenInfo provisionTokenInfo) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "getProvisionRequestData");
+        Log.i("DCSDK_DiscoverPayProvider", "getProvisionRequestData");
         return this.sf.c(provisionTokenInfo);
     }
 
     @Override
     protected com.samsung.android.spayfw.payprovider.c getReplenishmentRequestData() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "getReplenishmentRequestData");
+        Log.i("DCSDK_DiscoverPayProvider", "getReplenishmentRequestData");
         return this.sf.a(this.mProviderTokenKey, this.J(1));
     }
 
     @Override
     protected int getTransactionData(Bundle bundle, i i2) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "getTransactionData");
+        Log.i("DCSDK_DiscoverPayProvider", "getTransactionData");
         return this.sh.a(this.mProviderTokenKey.cm(), bundle, i2);
     }
 
     @Override
     protected byte[] handleApdu(byte[] arrby, Bundle bundle) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "handleApdu: start, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "handleApdu: start, timestamp " + System.currentTimeMillis());
         if (arrby == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "handleApdu: can't process apdu, apdu buffer is null, return null.");
+            Log.e("DCSDK_DiscoverPayProvider", "handleApdu: can't process apdu, apdu buffer is null, return null.");
             return null;
         }
         if (arrby.length == 0) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "handleApdu: can't process apdu, apdu buffer is empty, return null.");
+            Log.e("DCSDK_DiscoverPayProvider", "handleApdu: can't process apdu, apdu buffer is empty, return null.");
             return null;
         }
         byte[] arrby2 = this.sg.h(arrby);
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "handleApdu: end, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "handleApdu: end, timestamp " + System.currentTimeMillis());
         return arrby2;
     }
 
     @Override
     protected void init() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "init");
+        Log.i("DCSDK_DiscoverPayProvider", "init");
     }
 
     @Override
     protected void interruptMstPay() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "interruptMstPay: start, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "interruptMstPay: start, timestamp " + System.currentTimeMillis());
         this.sg.interruptMstPay();
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "interruptMstPay: end, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "interruptMstPay: end, timestamp " + System.currentTimeMillis());
     }
 
     @Override
     public boolean isReplenishDataAvailable(JsonObject jsonObject) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "isReplenishDataAvailable");
+        Log.i("DCSDK_DiscoverPayProvider", "isReplenishDataAvailable");
         return this.sf.isReplenishDataAvailable(jsonObject);
     }
 
@@ -378,19 +379,19 @@ lbl8: // 2 sources:
 
     @Override
     protected void loadTA() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "loadTA: start, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "loadTA: start, timestamp " + System.currentTimeMillis());
         boolean bl = this.sj.loadTA();
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "loadTA: end, result " + bl + ", timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "loadTA: end, result " + bl + ", timestamp " + System.currentTimeMillis());
     }
 
     @Override
     protected boolean prepareMstPay() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "prepareMstPay: start, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "prepareMstPay: start, timestamp " + System.currentTimeMillis());
         boolean bl = this.sg.prepareMstPay();
         if (!bl) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "prepareMstPay: mst tracks data preparation failed ");
+            Log.e("DCSDK_DiscoverPayProvider", "prepareMstPay: mst tracks data preparation failed ");
         }
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "prepareMstPay: end, result " + bl + ", timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "prepareMstPay: end, result " + bl + ", timestamp " + System.currentTimeMillis());
         return bl;
     }
 
@@ -401,13 +402,13 @@ lbl8: // 2 sources:
 
     @Override
     protected TransactionDetails processTransactionData(Object object) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "processTransactionData");
+        Log.i("DCSDK_DiscoverPayProvider", "processTransactionData");
         return this.sh.a(this.mProviderTokenKey.cm(), object, this.J(2));
     }
 
     @Override
     protected void replenishAlarmExpired() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "replenishAlarmExpired");
+        Log.i("DCSDK_DiscoverPayProvider", "replenishAlarmExpired");
         this.sk = this.mProviderTokenKey;
         this.cE();
         this.cF();
@@ -416,7 +417,7 @@ lbl8: // 2 sources:
 
     @Override
     protected e replenishToken(JsonObject jsonObject, TokenStatus tokenStatus) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "replenishToken");
+        Log.i("DCSDK_DiscoverPayProvider", "replenishToken");
         e e2 = this.sf.a(this.mProviderTokenKey.getTrTokenId(), this.mProviderTokenKey, jsonObject, tokenStatus, this.J(2));
         if (e2.getErrorCode() == 0) {
             this.cE();
@@ -426,18 +427,18 @@ lbl8: // 2 sources:
 
     @Override
     protected SelectCardResult selectCard() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "selectCard: start, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "selectCard: start, timestamp " + System.currentTimeMillis());
         if (this.mProviderTokenKey == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "selectCard: wrong token - null.");
+            Log.e("DCSDK_DiscoverPayProvider", "selectCard: wrong token - null.");
             return null;
         }
         long l2 = this.mProviderTokenKey.cm();
-        com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverPayProvider", "selectCard:  load card by token key, key = " + l2);
+        Log.d("DCSDK_DiscoverPayProvider", "selectCard:  load card by token key, key = " + l2);
         SelectCardResult selectCardResult = this.sg.q(l2);
         if (selectCardResult == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "selectCard: cannot select card for token " + l2);
+            Log.e("DCSDK_DiscoverPayProvider", "selectCard: cannot select card for token " + l2);
         }
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "selectCard: end , timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "selectCard: end , timestamp " + System.currentTimeMillis());
         return selectCardResult;
     }
 
@@ -448,12 +449,12 @@ lbl8: // 2 sources:
 
     @Override
     public boolean setServerCertificates(CertificateInfo[] arrcertificateInfo) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "setServerCertificates");
-        com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverPayProvider", "setServerCertificates: size: " + arrcertificateInfo.length);
+        Log.i("DCSDK_DiscoverPayProvider", "setServerCertificates");
+        Log.d("DCSDK_DiscoverPayProvider", "setServerCertificates: size: " + arrcertificateInfo.length);
         int n2 = arrcertificateInfo.length;
         for (int i2 = 0; i2 < n2; ++i2) {
             CertificateInfo certificateInfo = arrcertificateInfo[i2];
-            com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverPayProvider", "Usage: " + certificateInfo.getUsage() + ", Alias: " + certificateInfo.getAlias());
+            Log.d("DCSDK_DiscoverPayProvider", "Usage: " + certificateInfo.getUsage() + ", Alias: " + certificateInfo.getAlias());
         }
         this.sl = arrcertificateInfo;
         return true;
@@ -461,34 +462,34 @@ lbl8: // 2 sources:
 
     @Override
     public void setupReplenishAlarm() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "setupReplenishAlarm");
+        Log.i("DCSDK_DiscoverPayProvider", "setupReplenishAlarm");
         this.sk = this.mProviderTokenKey;
         this.cD();
     }
 
     @Override
     public boolean startMstPay(int n2, byte[] arrby) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "startMstPay: start, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "startMstPay: start, timestamp " + System.currentTimeMillis());
         boolean bl = this.sg.startMstPay(n2, arrby);
         if (!bl) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "prepareMstPay: mst transmission failed ");
+            Log.e("DCSDK_DiscoverPayProvider", "prepareMstPay: mst transmission failed ");
         }
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "startMstPay: end, timestamp" + System.currentTimeMillis() + ", result " + bl);
+        Log.i("DCSDK_DiscoverPayProvider", "startMstPay: end, timestamp" + System.currentTimeMillis() + ", result " + bl);
         return bl;
     }
 
     @Override
     protected void stopMstPay(boolean bl) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "stopMstPay: start, timestamp " + System.currentTimeMillis() + "mstTransmissionStatus " + bl);
+        Log.i("DCSDK_DiscoverPayProvider", "stopMstPay: start, timestamp " + System.currentTimeMillis() + "mstTransmissionStatus " + bl);
         this.sg.stopMstPay(bl);
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "stopMstPay:  end, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "stopMstPay:  end, timestamp " + System.currentTimeMillis());
     }
 
     @Override
     protected Bundle stopNfcPay(int n2) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "stopNfcPay: start, reason " + n2 + ", timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "stopNfcPay: start, reason " + n2 + ", timestamp " + System.currentTimeMillis());
         short s2 = this.sg.K(n2);
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "stopNfcPay: end, result " + s2 + ", timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "stopNfcPay: end, result " + s2 + ", timestamp " + System.currentTimeMillis());
         Bundle bundle = new Bundle();
         bundle.putShort("nfcApduErrorCode", s2);
         return bundle;
@@ -496,14 +497,14 @@ lbl8: // 2 sources:
 
     @Override
     protected void unloadTA() {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "unloadTA: start, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "unloadTA: start, timestamp " + System.currentTimeMillis());
         this.sj.unloadTA();
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "unloadTA: unloadTA end, timestamp " + System.currentTimeMillis());
+        Log.i("DCSDK_DiscoverPayProvider", "unloadTA: unloadTA end, timestamp " + System.currentTimeMillis());
     }
 
     @Override
     public void updateRequestStatus(d d2) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "updateRequestStatus: Req Type - " + d2.getRequestType() + ", RequestStatus - " + d2.ci());
+        Log.i("DCSDK_DiscoverPayProvider", "updateRequestStatus: Req Type - " + d2.getRequestType() + ", RequestStatus - " + d2.ci());
         switch (d2.getRequestType()) {
             default: {
                 return;
@@ -512,19 +513,19 @@ lbl8: // 2 sources:
         }
         this.cE();
         if (d2.ci() != 0) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverPayProvider", "Replenishment Request Failed");
+            Log.e("DCSDK_DiscoverPayProvider", "Replenishment Request Failed");
             this.cF();
             this.aE(d2.ck().cn());
             return;
         }
         this.se = 120000L;
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "Replenishment successful. Set mReplenishmentRetryWait to DEFAULT_REPLENISH_RETRY_DELTA");
+        Log.i("DCSDK_DiscoverPayProvider", "Replenishment successful. Set mReplenishmentRetryWait to DEFAULT_REPLENISH_RETRY_DELTA");
         this.ps.b(d2.ck());
     }
 
     @Override
     protected e updateTokenStatus(JsonObject jsonObject, TokenStatus tokenStatus) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverPayProvider", "updateTokenStatus");
+        Log.i("DCSDK_DiscoverPayProvider", "updateTokenStatus");
         return this.sf.a(this.mProviderTokenKey, jsonObject, tokenStatus);
     }
 }

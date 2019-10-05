@@ -24,24 +24,19 @@
 package com.samsung.android.spayfw.remoteservice;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.e;
-import com.samsung.android.spayfw.remoteservice.Client;
-import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.e.c;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.DeviceInfo;
 import com.samsung.android.spayfw.utils.GLDManager;
 import com.samsung.android.spayfw.utils.h;
 import java.io.File;
 import java.lang.reflect.Type;
-import java.util.Locale;
 import java.util.UUID;
-import javax.net.ssl.SSLSocketFactory;
 
 public abstract class a
 extends Client {
@@ -59,8 +54,8 @@ extends Client {
     }
 
     public void a(Request request) {
-        com.samsung.android.spayfw.b.c.i("CommonClient", "initializeRequest : Environment - PROD");
-        com.samsung.android.spayfw.b.c.i("CommonClient", "Build CL : 3392039");
+        Log.i("CommonClient", "initializeRequest : Environment - PROD");
+        Log.i("CommonClient", "Build CL : 3392039");
         request.setUserAgent(h.ai(this.mContext));
         request.addHeader("Authorization", "Bearer " + e.h(this.mContext).getConfig("CONFIG_JWT_TOKEN"));
         request.addHeader("x-smps-dmid", e.h(this.mContext).getConfig("CONFIG_WALLET_ID"));
@@ -114,11 +109,11 @@ extends Client {
             stringBuilder.append("-").append(string2);
         }
         if (uUID != null) {
-            com.samsung.android.spayfw.b.c.i("CommonClient", "Request UUID " + uUID.toString());
+            Log.i("CommonClient", "Request UUID " + uUID.toString());
             stringBuilder.append("-").append(uUID.toString());
         }
         if (string3 != null) {
-            com.samsung.android.spayfw.b.c.i("CommonClient", "Request Timestamp " + string3);
+            Log.i("CommonClient", "Request Timestamp " + string3);
             stringBuilder.append("-").append(string3);
         }
         return stringBuilder.toString();

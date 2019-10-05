@@ -9,9 +9,9 @@
  */
 package com.samsung.android.spayfw.payprovider.visa.inapp;
 
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Client;
 import com.samsung.android.spayfw.remoteservice.c;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Data;
 
@@ -33,7 +33,7 @@ extends m<Data, Data, c<Data>, a> {
 
     @Override
     protected String cG() {
-        com.samsung.android.spayfw.b.c.d("GenCryptogramRequest", this.tokenId);
+        Log.d("GenCryptogramRequest", this.tokenId);
         return (Object)zX + "/" + this.tokenId.toString() + "/" + (Object)zY;
     }
 

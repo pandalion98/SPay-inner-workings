@@ -8,7 +8,8 @@
  */
 package com.samsung.android.spayfw.payprovider;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.HashMap;
 
 public class g {
@@ -30,13 +31,13 @@ public class g {
 
         public int co() {
             this.count = 1 + this.count;
-            c.d("TACounter", "count increase to" + this.count);
+            Log.d("TACounter", "count increase to" + this.count);
             return this.count;
         }
 
         public int cp() {
             this.count = -1 + this.count;
-            c.d("TACounter", "count decrease to" + this.count);
+            Log.d("TACounter", "count decrease to" + this.count);
             return this.count;
         }
 

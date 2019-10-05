@@ -19,7 +19,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.TAController;
 
 public class b {
@@ -52,7 +53,7 @@ public class b {
             } while (true);
         }
         catch (Exception exception) {
-            c.e("FraudEfsAdapter", "cannot get third db");
+            Log.e("FraudEfsAdapter", "cannot get third db");
             of = null;
             return of;
         }
@@ -63,13 +64,13 @@ public class b {
             return -1L;
         }
         ContentValues contentValues = a2.bC();
-        c.d("FraudEfsAdapter", contentValues.toString());
+        Log.d("FraudEfsAdapter", contentValues.toString());
         try {
             long l2 = oj.replaceOrThrow(a2.bB(), null, contentValues);
             return l2;
         }
         catch (Exception exception) {
-            c.c("FraudEfsAdapter", exception.getMessage(), exception);
+            Log.c("FraudEfsAdapter", exception.getMessage(), exception);
             return -1L;
         }
     }
@@ -83,7 +84,7 @@ public class b {
             return n2;
         }
         catch (Exception exception) {
-            c.c("FraudEfsAdapter", exception.getMessage(), exception);
+            Log.c("FraudEfsAdapter", exception.getMessage(), exception);
             return -1;
         }
     }
@@ -94,7 +95,7 @@ public class b {
             return cursor;
         }
         catch (Exception exception) {
-            c.c("FraudEfsAdapter", exception.getMessage(), exception);
+            Log.c("FraudEfsAdapter", exception.getMessage(), exception);
             return null;
         }
     }
@@ -126,13 +127,13 @@ public class b {
                 if (sQLiteDatabase.isOpen()) {
                     sQLiteDatabase.execSQL("CREATE TABLE fdevice_info (id integer NOT NULL  PRIMARY KEY AUTOINCREMENT,time integer NOT NULL,reason varchar(255) NOT NULL,external_id varchar(255),extras varchar(255),overflow integer NOT NULL DEFAULT 0)");
                     sQLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS  fcount (id integer NOT NULL  PRIMARY KEY,username_count integer NOT NULL DEFAULT 0,token_count integer NOT NULL DEFAULT 0,zip_count integer NOT NULL DEFAULT 0,brand_count integer NOT NULL DEFAULT 0,fraud_count integer NOT NULL DEFAULT 0)");
-                    c.i("FraudEfsHelper", "third database is created");
+                    Log.i("FraudEfsHelper", "third database is created");
                 }
                 return;
             }
             catch (Exception exception) {
-                c.e("FraudEfsHelper", "Database is not fully created, any schema error?");
-                c.c("FraudEfsHelper", exception.getMessage(), exception);
+                Log.e("FraudEfsHelper", "Database is not fully created, any schema error?");
+                Log.c("FraudEfsHelper", exception.getMessage(), exception);
                 return;
             }
         }
@@ -144,9 +145,9 @@ public class b {
          * Enabled aggressive block sorting
          */
         public void onUpgrade(SQLiteDatabase sQLiteDatabase, int n2, int n3) {
-            c.e("FraudEfsHelper", "upgrade database from version " + n2 + " to version " + n3);
+            Log.e("FraudEfsHelper", "upgrade database from version " + n2 + " to version " + n3);
             if (n2 > n3) {
-                c.e("FraudEfsHelper", "database cannot be downgraded, please update to the latest version");
+                Log.e("FraudEfsHelper", "database cannot be downgraded, please update to the latest version");
                 return;
             } else {
                 if (n2 == 0 || n2 == 1) {
@@ -154,7 +155,7 @@ public class b {
                 }
                 if (n2 != n3) return;
                 {
-                    c.i("FraudEfsHelper", "database is upgraded");
+                    Log.i("FraudEfsHelper", "database is upgraded");
                     return;
                 }
             }

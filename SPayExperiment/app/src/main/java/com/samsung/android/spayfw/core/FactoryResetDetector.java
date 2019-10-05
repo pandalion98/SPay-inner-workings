@@ -21,9 +21,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.Message;
 import com.samsung.android.spayfw.appinterface.ICommonCallback;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.core.PaymentFrameworkApp;
-import com.samsung.android.spayfw.core.j;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.utils.h;
 import com.samsung.android.spaytzsvc.api.TAController;
 import java.io.File;
@@ -65,11 +63,11 @@ extends BroadcastReceiver {
         File file = new File(jf);
         try {
             boolean bl = file.delete();
-            c.i("FactoryResetDetector", "removeFactoryResetNotificationFlag : " + bl);
+            Log.i("FactoryResetDetector", "removeFactoryResetNotificationFlag : " + bl);
             return;
         }
         catch (Exception exception) {
-            c.c("FactoryResetDetector", exception.getMessage(), exception);
+            Log.c("FactoryResetDetector", exception.getMessage(), exception);
             return;
         }
     }
@@ -117,23 +115,23 @@ extends BroadcastReceiver {
      */
     public void onReceive(Context context, Intent intent) {
         if (!FactoryResetDetector.ag()) {
-            c.i("FactoryResetDetector", "Factory Reset Notification  Not Required");
+            Log.i("FactoryResetDetector", "Factory Reset Notification  Not Required");
             FactoryResetDetector.disable();
             System.exit((int)0);
             return;
         }
-        c.d("FactoryResetDetector", "Intent : " + intent.getAction());
+        Log.d("FactoryResetDetector", "Intent : " + intent.getAction());
         if (intent.getAction() == null || !intent.getAction().equals((Object)"android.intent.action.ACTION_POWER_CONNECTED") || !h.ak(context)) return;
         {
-            c.i("FactoryResetDetector", "Data Connection Available");
+            Log.i("FactoryResetDetector", "Data Connection Available");
             if (PaymentFrameworkApp.ax()) {
-                c.e("FactoryResetDetector", "Data Exists Do Not Initiate Reset");
+                Log.e("FactoryResetDetector", "Data Exists Do Not Initiate Reset");
                 FactoryResetDetector.disable();
                 return;
             }
         }
-        c.d("FactoryResetDetector", "Initiate Reset");
-        c.i("FactoryResetDetector", "PF detects factory reset and triggers reset notification");
+        Log.d("FactoryResetDetector", "Initiate Reset");
+        Log.i("FactoryResetDetector", "PF detects factory reset and triggers reset notification");
         Message message = j.a(13, "FACTORY_RESET:PFE0CR05", new ICommonCallback(){
 
             public IBinder asBinder() {
@@ -142,26 +140,26 @@ extends BroadcastReceiver {
 
             @Override
             public void onFail(String string, int n2) {
-                c.e("FactoryResetDetector", "onFail : error code " + n2);
+                Log.e("FactoryResetDetector", "onFail : error code " + n2);
                 if (n2 == -4) {
-                    c.e("FactoryResetDetector", "onFail : Operation Not Permitted");
+                    Log.e("FactoryResetDetector", "onFail : Operation Not Permitted");
                     FactoryResetDetector.disable();
                     return;
                 }
                 FactoryResetDetector.aj();
-                c.e("FactoryResetDetector", "onFail : retry count " + jg);
+                Log.e("FactoryResetDetector", "onFail : retry count " + jg);
                 if (jg < 3) {
                     Message message = j.a(13, "FACTORY_RESET:PFE0CR05", this);
                     PaymentFrameworkApp.az().sendMessage(message);
                     return;
                 }
-                c.e("FactoryResetDetector", "onFail : retry count limit reached");
+                Log.e("FactoryResetDetector", "onFail : retry count limit reached");
                 FactoryResetDetector.disable();
             }
 
             @Override
             public void onSuccess(String string) {
-                c.d("FactoryResetDetector", "onSuccess");
+                Log.d("FactoryResetDetector", "onSuccess");
                 FactoryResetDetector.ah();
                 FactoryResetDetector.disable();
             }

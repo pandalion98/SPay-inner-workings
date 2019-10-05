@@ -8,10 +8,9 @@
  */
 package com.samsung.android.spayfw.payprovider.visa.transaction;
 
-import com.samsung.android.spayfw.payprovider.visa.transaction.VisaPayTransactionData;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Client;
 import com.samsung.android.spayfw.remoteservice.c;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
 
 public class a
@@ -27,9 +26,9 @@ extends m<String, VisaPayTransactionData, c<VisaPayTransactionData>, a> {
 
     @Override
     protected c<VisaPayTransactionData> b(int n2, String string) {
-        com.samsung.android.spayfw.b.c.d("TransactionRequest", "VisaPayTransactionData : statusCode" + n2 + "response: " + string);
+        Log.d("TransactionRequest", "VisaPayTransactionData : statusCode" + n2 + "response: " + string);
         VisaPayTransactionData visaPayTransactionData = this.Al.fromJson(string, VisaPayTransactionData.class);
-        com.samsung.android.spayfw.b.c.d("TransactionRequest", "VisaPayTransactionData : " + visaPayTransactionData);
+        Log.d("TransactionRequest", "VisaPayTransactionData : " + visaPayTransactionData);
         return new c<VisaPayTransactionData>(null, visaPayTransactionData, n2);
     }
 
@@ -39,7 +38,7 @@ extends m<String, VisaPayTransactionData, c<VisaPayTransactionData>, a> {
         if (this.zZ != null) {
             string = string + "?since=" + this.zZ;
         }
-        com.samsung.android.spayfw.b.c.d("TransactionRequest", "getApiPath : url: " + string);
+        Log.d("TransactionRequest", "getApiPath : url: " + string);
         return string;
     }
 

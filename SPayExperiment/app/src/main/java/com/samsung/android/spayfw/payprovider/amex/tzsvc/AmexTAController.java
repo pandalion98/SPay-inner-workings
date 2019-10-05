@@ -19,24 +19,15 @@
 package com.samsung.android.spayfw.payprovider.amex.tzsvc;
 
 import android.content.Context;
-import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
-import com.samsung.android.spayfw.payprovider.amex.tzsvc.AmexCommands;
-import com.samsung.android.spayfw.payprovider.amex.tzsvc.AmexTAException;
-import com.samsung.android.spayfw.payprovider.amex.tzsvc.AmexTAInfo;
-import com.samsung.android.spayfw.payprovider.amex.tzsvc.a;
-import com.samsung.android.spayfw.payprovider.amex.tzsvc.b;
-import com.samsung.android.spayfw.payprovider.amex.tzsvc.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.utils.h;
-import com.samsung.android.spaytzsvc.api.Blob;
-import com.samsung.android.spaytzsvc.api.TAController;
-import com.samsung.android.spaytzsvc.api.TAInfo;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javolution.io.Struct;
 
 public class AmexTAController
 extends b {
@@ -77,7 +68,7 @@ extends b {
     private boolean isSecuritySetupInitialized() {
         if (this.qs != null) {
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "Device Certs already loaded)");
+                Log.d("AmexTAController", "Device Certs already loaded)");
             }
             return true;
         }
@@ -96,13 +87,13 @@ extends b {
             GenerateInAppPaymentPayloadResponse generateInAppPaymentPayloadResponse;
             InAppTZTxnInfo inAppTZTxnInfo;
             if (!this.initializeSecuritySetup()) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                Log.e("AmexTAController", "initializeSecuritySetup failed");
                 throw new AmexTAException(983040);
             }
             try {
                 inAppTZTxnInfo = (InAppTZTxnInfo)object;
                 if (inAppTZTxnInfo == null || inAppTZTxnInfo.txnAttributes == null) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "processTokenData: Error: invalid input data");
+                    Log.e("AmexTAController", "processTokenData: Error: invalid input data");
                     throw new AmexTAException(983040);
                 }
                 hashMap = new HashMap();
@@ -117,54 +108,54 @@ extends b {
             if (inAppTZTxnInfo.merchantCertificate == null) {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.GenerateInAppPaymentPayload.Request(string.getBytes(), (Map<byte[], byte[]>)hashMap, inAppTZTxnInfo.nonce));
                 if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "processTokenData: Error: executeNoLoad failed");
+                    Log.e("AmexTAController", "processTokenData: Error: executeNoLoad failed");
                     throw new AmexTAException(983040);
                 }
                 AmexCommands.GenerateInAppPaymentPayload.Response response = new AmexCommands.GenerateInAppPaymentPayload.Response(tACommandResponse);
                 int n2 = (int)response.mRetVal.return_code.get();
                 if (n2 != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "GenerateInAppPaymentPayload Call Failed");
+                    Log.e("AmexTAController", "GenerateInAppPaymentPayload Call Failed");
                     throw new AmexTAException(n2);
                 }
                 if (DEBUG) {
-                    com.samsung.android.spayfw.b.c.d("AmexTAController", "GenerateInAppPaymentPayload called Successfully");
+                    Log.d("AmexTAController", "GenerateInAppPaymentPayload called Successfully");
                 }
                 generateInAppPaymentPayloadResponse = new GenerateInAppPaymentPayloadResponse();
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "InApp Payload from Response " + Arrays.toString((byte[])response.mRetVal.pK.getData()));
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "InApp Payload length from Response" + response.mRetVal.pK.getData().length);
+                Log.d("AmexTAController", "InApp Payload from Response " + Arrays.toString((byte[])response.mRetVal.pK.getData()));
+                Log.d("AmexTAController", "InApp Payload length from Response" + response.mRetVal.pK.getData().length);
                 generateInAppPaymentPayloadResponse.payload = c.toBase64(response.mRetVal.pK.getData());
                 generateInAppPaymentPayloadResponse.tid = new String(response.mRetVal.pL.getData());
                 if (DEBUG) {
-                    com.samsung.android.spayfw.b.c.d("AmexTAController", "InApp Payload " + generateInAppPaymentPayloadResponse.payload);
+                    Log.d("AmexTAController", "InApp Payload " + generateInAppPaymentPayloadResponse.payload);
                 }
             } else {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "GenerateInAppJwePaymentPayload Call");
+                Log.d("AmexTAController", "GenerateInAppJwePaymentPayload Call");
                 List<byte[]> list = h.bE(inAppTZTxnInfo.merchantCertificate);
                 if (list == null || list.isEmpty()) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "GenerateInAppJwePaymentPayload: cannot get certificate");
+                    Log.e("AmexTAController", "GenerateInAppJwePaymentPayload: cannot get certificate");
                     throw new AmexTAException(983042);
                 }
                 TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.GenerateInAppJwePaymentPayload.Request(string.getBytes(), (Map<byte[], byte[]>)hashMap, list));
                 if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "processTokenData: Error: executeNoLoad failed");
+                    Log.e("AmexTAController", "processTokenData: Error: executeNoLoad failed");
                     throw new AmexTAException(983040);
                 }
                 AmexCommands.GenerateInAppJwePaymentPayload.Response response = new AmexCommands.GenerateInAppJwePaymentPayload.Response(tACommandResponse);
                 int n3 = (int)response.mRetVal.return_code.get();
                 if (n3 != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "GenerateInAppPaymentPayload Call Failed");
+                    Log.e("AmexTAController", "GenerateInAppPaymentPayload Call Failed");
                     throw new AmexTAException(n3);
                 }
                 if (DEBUG) {
-                    com.samsung.android.spayfw.b.c.d("AmexTAController", "GenerateInAppPaymentPayload called Successfully");
+                    Log.d("AmexTAController", "GenerateInAppPaymentPayload called Successfully");
                 }
                 generateInAppPaymentPayloadResponse = new GenerateInAppPaymentPayloadResponse();
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "InApp Payload from Response " + Arrays.toString((byte[])response.mRetVal.pK.getData()));
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "InApp Payload length from Response" + response.mRetVal.pK.getData().length);
+                Log.d("AmexTAController", "InApp Payload from Response " + Arrays.toString((byte[])response.mRetVal.pK.getData()));
+                Log.d("AmexTAController", "InApp Payload length from Response" + response.mRetVal.pK.getData().length);
                 generateInAppPaymentPayloadResponse.payload = c.toBase64(response.mRetVal.pK.getData());
                 generateInAppPaymentPayloadResponse.tid = new String(response.mRetVal.pL.getData());
                 if (DEBUG) {
-                    com.samsung.android.spayfw.b.c.d("AmexTAController", "InApp Payload " + generateInAppPaymentPayloadResponse.payload);
+                    Log.d("AmexTAController", "InApp Payload " + generateInAppPaymentPayloadResponse.payload);
                 }
             }
             return generateInAppPaymentPayloadResponse;
@@ -181,22 +172,22 @@ extends b {
         synchronized (amexTAController) {
             AmexCommands.ProcessTokenData.Response response;
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling processTokenData");
+                Log.d("AmexTAController", "Calling processTokenData");
             }
             if (!this.initializeSecuritySetup()) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                Log.e("AmexTAController", "initializeSecuritySetup failed");
                 throw new AmexTAException(983040);
             }
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.ProcessTokenData.Request(c.getDerChain(string), c.fromBase64(string2), c.fromBase64(string3), c.fromBase64(string4), string5.getBytes(), c.decodeHex(string6), c.decodeHex(string7)));
                 if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "processTokenData: Error: executeNoLoad failed");
+                    Log.e("AmexTAController", "processTokenData: Error: executeNoLoad failed");
                     throw new AmexTAException(983040);
                 }
                 response = new AmexCommands.ProcessTokenData.Response(tACommandResponse);
                 int n2 = (int)response.mRetVal.return_code.get();
                 if (n2 != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "ProcessTokenData Call Failed");
+                    Log.e("AmexTAController", "ProcessTokenData Call Failed");
                     throw new AmexTAException(n2);
                 }
             }
@@ -205,7 +196,7 @@ extends b {
                 throw new AmexTAException(983040);
             }
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "processTokenData called Successfully");
+                Log.d("AmexTAController", "processTokenData called Successfully");
             }
             ProcessTokenDataResponse processTokenDataResponse = new ProcessTokenDataResponse();
             processTokenDataResponse.eAPDUBlob = c.toBase64(response.mRetVal.pE.getData());
@@ -228,22 +219,22 @@ extends b {
         synchronized (amexTAController) {
             AmexCommands.ProcessTransaction.Response response;
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling processTransaction");
+                Log.d("AmexTAController", "Calling processTransaction");
             }
             if (!this.initializeSecuritySetup()) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                Log.e("AmexTAController", "initializeSecuritySetup failed");
                 throw new AmexTAException(983040);
             }
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.ProcessTransaction.Request(n2, c.fromBase64(string), c.fromBase64(string2), c.fromBase64(string3), c.fromBase64(string4), string5.getBytes()));
                 if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "processTokenData: Error: executeNoLoad failed");
+                    Log.e("AmexTAController", "processTokenData: Error: executeNoLoad failed");
                     throw new AmexTAException(983040);
                 }
                 response = new AmexCommands.ProcessTransaction.Response(tACommandResponse);
                 int n3 = (int)response.mRetVal.return_code.get();
                 if (n3 != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "ProcessTransaction Call Failed");
+                    Log.e("AmexTAController", "ProcessTransaction Call Failed");
                     throw new AmexTAException(n3);
                 }
             }
@@ -252,7 +243,7 @@ extends b {
                 throw new AmexTAException(983040);
             }
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "processTransaction called Successfully");
+                Log.d("AmexTAController", "processTransaction called Successfully");
             }
             ProcessTransactionResponse processTransactionResponse = new ProcessTransactionResponse();
             processTransactionResponse.eNFCLUPCBlob = c.toBase64(response.mRetVal.qi.getData());
@@ -274,10 +265,10 @@ extends b {
         synchronized (amexTAController) {
             TACommandResponse tACommandResponse;
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling getNFCCryptogram");
+                Log.d("AmexTAController", "Calling getNFCCryptogram");
             }
             if (!this.initializeSecuritySetup()) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                Log.e("AmexTAController", "initializeSecuritySetup failed");
                 throw new AmexTAException(983040);
             }
             try {
@@ -287,7 +278,7 @@ extends b {
                 }
                 tACommandResponse = this.executeNoLoad(new AmexCommands.GetNFCCryptogram.Request(n2, n3, (Map<byte[], byte[]>)hashMap));
                 if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "getNFCCryptogram: Error: executeNoLoad failed");
+                    Log.e("AmexTAController", "getNFCCryptogram: Error: executeNoLoad failed");
                     throw new AmexTAException(983040);
                 }
             }
@@ -298,11 +289,11 @@ extends b {
             AmexCommands.GetNFCCryptogram.Response response = new AmexCommands.GetNFCCryptogram.Response(tACommandResponse);
             int n4 = (int)response.mRetVal.return_code.get();
             if (n4 != 0) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "GetNFCCryptogram Call Failed");
+                Log.e("AmexTAController", "GetNFCCryptogram Call Failed");
                 throw new AmexTAException(n4);
             }
             if (!DEBUG) return c.encodeHex(response.mRetVal.pP.getData());
-            com.samsung.android.spayfw.b.c.d("AmexTAController", "getNFCCryptogram called Successfully");
+            Log.d("AmexTAController", "getNFCCryptogram called Successfully");
             return c.encodeHex(response.mRetVal.pP.getData());
         }
     }
@@ -323,10 +314,10 @@ extends b {
                         var12_3 = this;
                         // MONITORENTER : var12_3
                         if (AmexTAController.DEBUG) {
-                            com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling processData");
+                            Log.d("AmexTAController", "Calling processData");
                         }
                         if (!this.initializeSecuritySetup()) {
-                            com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                            Log.e("AmexTAController", "initializeSecuritySetup failed");
                             throw new AmexTAException(983040);
                         }
                         if (!var2_2) ** GOTO lbl18
@@ -342,17 +333,17 @@ lbl18: // 1 sources:
                     var4_5 = new AmexCommands.ProcessData.Request(c.fromBase64(var1_1), false);
                 }
                 if ((var6_6 = this.executeNoLoad(var4_5)) != null && var6_6.mResponseCode == 0) break block11;
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "processData: Error: executeNoLoad failed");
+                Log.e("AmexTAController", "processData: Error: executeNoLoad failed");
                 throw new AmexTAException(983040);
             }
             var7_8 = new AmexCommands.ProcessData.Response(var6_6);
             var8_9 = (int)var7_8.mRetVal.return_code.get();
             if (var8_9 != 0) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "ProcessData Call Failed");
+                Log.e("AmexTAController", "ProcessData Call Failed");
                 throw new AmexTAException(var8_9);
             }
             if (AmexTAController.DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "processData called Successfully");
+                Log.d("AmexTAController", "processData called Successfully");
             }
             if (!var2_2) break block12;
             var10_11 = var9_10 = c.toBase64(var7_8.mRetVal.data.getData());
@@ -377,16 +368,16 @@ lbl18: // 1 sources:
         TACommandResponse tACommandResponse;
         boolean bl;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling transmitMstData");
+            Log.d("AmexTAController", "Calling transmitMstData");
         }
         if (!(bl = this.initializeSecuritySetup())) {
-            com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+            Log.e("AmexTAController", "initializeSecuritySetup failed");
             throw new AmexTAException(983040);
         }
         try {
             tACommandResponse = this.executeNoLoad(new AmexCommands.TransmitMstData.Request(n2, arrby));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "Error: transmitMstData executeNoLoad failed");
+                Log.e("AmexTAController", "Error: transmitMstData executeNoLoad failed");
                 throw new AmexTAException(983040);
             }
             if (tACommandResponse.mResponseCode != 0) {
@@ -402,7 +393,7 @@ lbl18: // 1 sources:
             bl = true;
         }
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("AmexTAController", "TransmitMstData: ret = " + bl);
+            Log.d("AmexTAController", "TransmitMstData: ret = " + bl);
         }
         return bl;
     }
@@ -417,22 +408,22 @@ lbl18: // 1 sources:
         synchronized (amexTAController) {
             AmexCommands.ActivateToken.Response response;
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling suspendToken");
+                Log.d("AmexTAController", "Calling suspendToken");
             }
             if (!this.initializeSecuritySetup()) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                Log.e("AmexTAController", "initializeSecuritySetup failed");
                 throw new AmexTAException(983040);
             }
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.ActivateToken.Request(c.fromBase64(string)));
                 if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "suspendToken: Error: executeNoLoad failed");
+                    Log.e("AmexTAController", "suspendToken: Error: executeNoLoad failed");
                     throw new AmexTAException(983040);
                 }
                 response = new AmexCommands.ActivateToken.Response(tACommandResponse);
                 int n2 = (int)response.mRetVal.return_code.get();
                 if (n2 != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "ActivateToken Call Failed");
+                    Log.e("AmexTAController", "ActivateToken Call Failed");
                     throw new AmexTAException(n2);
                 }
             }
@@ -441,7 +432,7 @@ lbl18: // 1 sources:
                 throw new AmexTAException(983040);
             }
             if (!DEBUG) return c.toBase64(response.mRetVal.pC.getData());
-            com.samsung.android.spayfw.b.c.d("AmexTAController", "activateToken called Successfully");
+            Log.d("AmexTAController", "activateToken called Successfully");
             return c.toBase64(response.mRetVal.pC.getData());
         }
     }
@@ -457,10 +448,10 @@ lbl18: // 1 sources:
             List<byte[]> list;
             byte[] arrby;
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling processRequestData");
+                Log.d("AmexTAController", "Calling processRequestData");
             }
             if (!this.initializeSecuritySetup()) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                Log.e("AmexTAController", "initializeSecuritySetup failed");
                 throw new AmexTAException(983040);
             }
             try {
@@ -474,17 +465,17 @@ lbl18: // 1 sources:
             byte[] arrby2 = string3 == null ? null : string3.getBytes();
             TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.ProcessRequestData.Request(list, arrby, arrby2));
             if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "processRequestData: Error: executeNoLoad failed");
+                Log.e("AmexTAController", "processRequestData: Error: executeNoLoad failed");
                 throw new AmexTAException(983040);
             }
             AmexCommands.ProcessRequestData.Response response = new AmexCommands.ProcessRequestData.Response(tACommandResponse);
             int n2 = (int)response.mRetVal.return_code.get();
             if (n2 != 0) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "ProcessRequestData Call Failed");
+                Log.e("AmexTAController", "ProcessRequestData Call Failed");
                 throw new AmexTAException(n2);
             }
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "processRequestData called Successfully");
+                Log.d("AmexTAController", "processRequestData called Successfully");
             }
             ProcessRequestDataResponse processRequestDataResponse = new ProcessRequestDataResponse();
             processRequestDataResponse.encryptedRequestData = c.toBase64(response.mRetVal.pW.getData());
@@ -503,7 +494,7 @@ lbl18: // 1 sources:
         AmexTAController amexTAController = this;
         synchronized (amexTAController) {
             if (this.initializeSecuritySetup()) return this.qs;
-            com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+            Log.e("AmexTAController", "initializeSecuritySetup failed");
             throw new AmexTAException(983040);
         }
     }
@@ -518,19 +509,19 @@ lbl18: // 1 sources:
         synchronized (amexTAController) {
             AmexCommands.GenerateECDHKeys.Response response;
             if (!this.initializeSecuritySetup()) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                Log.e("AmexTAController", "initializeSecuritySetup failed");
                 throw new AmexTAException(983040);
             }
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.GenerateECDHKeys.Request());
                 if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "generateECDHKeys: Error: executeNoLoad failed");
+                    Log.e("AmexTAController", "generateECDHKeys: Error: executeNoLoad failed");
                     throw new AmexTAException(983040);
                 }
                 response = new AmexCommands.GenerateECDHKeys.Response(tACommandResponse);
                 int n2 = (int)response.mRetVal.return_code.get();
                 if (n2 != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "GenerateECDHKeys Call Failed");
+                    Log.e("AmexTAController", "GenerateECDHKeys Call Failed");
                     throw new AmexTAException(n2);
                 }
             }
@@ -557,26 +548,26 @@ lbl18: // 1 sources:
             block11 : {
                 long l2;
                 if (DEBUG) {
-                    com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling clearLUPC");
+                    Log.d("AmexTAController", "Calling clearLUPC");
                 }
                 if (!this.initializeSecuritySetup()) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                    Log.e("AmexTAController", "initializeSecuritySetup failed");
                     throw new AmexTAException(983040);
                 }
                 try {
                     TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.ClearLUPC.Request());
                     if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                        com.samsung.android.spayfw.b.c.e("AmexTAController", "Error: clearLUPC executeNoLoad failed");
+                        Log.e("AmexTAController", "Error: clearLUPC executeNoLoad failed");
                         break block11;
                     }
                     AmexCommands.ClearLUPC.Response response = new AmexCommands.ClearLUPC.Response(tACommandResponse);
                     int n2 = (int)response.mRetVal.return_code.get();
                     if (n2 != 0) {
-                        com.samsung.android.spayfw.b.c.e("AmexTAController", "ClearLUPC Call Failed");
+                        Log.e("AmexTAController", "ClearLUPC Call Failed");
                         throw new AmexTAException(n2);
                     }
                     if (DEBUG) {
-                        com.samsung.android.spayfw.b.c.d("AmexTAController", "clearLUPC: success ");
+                        Log.d("AmexTAController", "clearLUPC: success ");
                     }
                     l2 = response.mRetVal.return_code.get();
                 }
@@ -603,22 +594,22 @@ lbl18: // 1 sources:
         synchronized (amexTAController) {
             AmexCommands.DecryptTokenData.Response response;
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling decryptTokenData");
+                Log.d("AmexTAController", "Calling decryptTokenData");
             }
             if (!this.initializeSecuritySetup()) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                Log.e("AmexTAController", "initializeSecuritySetup failed");
                 throw new AmexTAException(983040);
             }
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.DecryptTokenData.Request(c.fromBase64(string)));
                 if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "processTokenData: Error: executeNoLoad failed");
+                    Log.e("AmexTAController", "processTokenData: Error: executeNoLoad failed");
                     throw new AmexTAException(983040);
                 }
                 response = new AmexCommands.DecryptTokenData.Response(tACommandResponse);
                 int n2 = (int)response.mRetVal.return_code.get();
                 if (n2 != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "DecryptTokenData Call Failed");
+                    Log.e("AmexTAController", "DecryptTokenData Call Failed");
                     throw new AmexTAException(n2);
                 }
             }
@@ -627,7 +618,7 @@ lbl18: // 1 sources:
                 throw new AmexTAException(983040);
             }
             if (!DEBUG) return new String(response.mRetVal.blob.getData());
-            com.samsung.android.spayfw.b.c.d("AmexTAController", "decryptTokenData called Successfully");
+            Log.d("AmexTAController", "decryptTokenData called Successfully");
             return new String(response.mRetVal.blob.getData());
         }
     }
@@ -635,7 +626,7 @@ lbl18: // 1 sources:
     @Override
     protected boolean init() {
         if (!super.init()) {
-            com.samsung.android.spayfw.b.c.e("AmexTAController", "Error: init failed");
+            Log.e("AmexTAController", "Error: init failed");
             return false;
         }
         this.qr = new a(this);
@@ -652,16 +643,16 @@ lbl18: // 1 sources:
             block9 : {
                 if (!this.isSecuritySetupInitialized()) {
                     if (DEBUG) {
-                        com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling initializeSecuritySetup");
+                        Log.d("AmexTAController", "Calling initializeSecuritySetup");
                     }
                     if (!this.isTALoaded()) {
-                        com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup: Error: TA is not loaded, please call loadTA() API first!");
+                        Log.e("AmexTAController", "initializeSecuritySetup: Error: TA is not loaded, please call loadTA() API first!");
                         return false;
                     }
                     if (!this.qr.isLoaded()) {
-                        com.samsung.android.spayfw.b.c.d("AmexTAController", "mAmexDeviceCerts is not loaded");
+                        Log.d("AmexTAController", "mAmexDeviceCerts is not loaded");
                         if (!this.qr.load()) {
-                            com.samsung.android.spayfw.b.c.e("AmexTAController", "Error: Amex Device Certs Load failed");
+                            Log.e("AmexTAController", "Error: Amex Device Certs Load failed");
                             return false;
                         }
                     }
@@ -670,7 +661,7 @@ lbl18: // 1 sources:
                     try {
                         TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.LoadCerts.Request(arrby, arrby2));
                         if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                            com.samsung.android.spayfw.b.c.e("AmexTAController", "loadAllCerts: Error: executeNoLoad failed");
+                            Log.e("AmexTAController", "loadAllCerts: Error: executeNoLoad failed");
                             throw new AmexTAException(983040);
                         }
                         AmexCommands.LoadCerts.Response response = new AmexCommands.LoadCerts.Response(tACommandResponse);
@@ -689,7 +680,7 @@ lbl18: // 1 sources:
             }
             return true;
         }
-        com.samsung.android.spayfw.b.c.d("AmexTAController", "initializeSecuritySetup called Successfully");
+        Log.d("AmexTAController", "initializeSecuritySetup called Successfully");
         return true;
     }
 
@@ -712,22 +703,22 @@ lbl18: // 1 sources:
         synchronized (amexTAController) {
             AmexCommands.ProcessResponseData.Response response;
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling processRequestData");
+                Log.d("AmexTAController", "Calling processRequestData");
             }
             if (!this.initializeSecuritySetup()) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                Log.e("AmexTAController", "initializeSecuritySetup failed");
                 throw new AmexTAException(983040);
             }
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.ProcessResponseData.Request(c.fromBase64(string), c.fromBase64(string2)));
                 if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "processRequestData: Error: executeNoLoad failed");
+                    Log.e("AmexTAController", "processRequestData: Error: executeNoLoad failed");
                     throw new AmexTAException(983040);
                 }
                 response = new AmexCommands.ProcessResponseData.Response(tACommandResponse);
                 int n2 = (int)response.mRetVal.return_code.get();
                 if (n2 != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "ProcessResponseData Call Failed");
+                    Log.e("AmexTAController", "ProcessResponseData Call Failed");
                     throw new AmexTAException(n2);
                 }
             }
@@ -736,7 +727,7 @@ lbl18: // 1 sources:
                 throw new AmexTAException(983040);
             }
             if (!DEBUG) return c.toBase64(response.mRetVal.qb.getData());
-            com.samsung.android.spayfw.b.c.d("AmexTAController", "processRequestData called Successfully");
+            Log.d("AmexTAController", "processRequestData called Successfully");
             return c.toBase64(response.mRetVal.qb.getData());
         }
     }
@@ -751,22 +742,22 @@ lbl18: // 1 sources:
         synchronized (amexTAController) {
             AmexCommands.ResumeToken.Response response;
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling suspendToken");
+                Log.d("AmexTAController", "Calling suspendToken");
             }
             if (!this.initializeSecuritySetup()) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                Log.e("AmexTAController", "initializeSecuritySetup failed");
                 throw new AmexTAException(983040);
             }
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.ResumeToken.Request(c.fromBase64(string)));
                 if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "suspendToken: Error: executeNoLoad failed");
+                    Log.e("AmexTAController", "suspendToken: Error: executeNoLoad failed");
                     throw new AmexTAException(983040);
                 }
                 response = new AmexCommands.ResumeToken.Response(tACommandResponse);
                 int n2 = (int)response.mRetVal.return_code.get();
                 if (n2 != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "ResumeToken Call Failed");
+                    Log.e("AmexTAController", "ResumeToken Call Failed");
                     throw new AmexTAException(n2);
                 }
             }
@@ -775,7 +766,7 @@ lbl18: // 1 sources:
                 throw new AmexTAException(983040);
             }
             if (!DEBUG) return c.toBase64(response.mRetVal.pC.getData());
-            com.samsung.android.spayfw.b.c.d("AmexTAController", "resumeToken called Successfully");
+            Log.d("AmexTAController", "resumeToken called Successfully");
             return c.toBase64(response.mRetVal.pC.getData());
         }
     }
@@ -790,22 +781,22 @@ lbl18: // 1 sources:
         synchronized (amexTAController) {
             AmexCommands.SuspendToken.Response response;
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("AmexTAController", "Calling suspendToken");
+                Log.d("AmexTAController", "Calling suspendToken");
             }
             if (!this.initializeSecuritySetup()) {
-                com.samsung.android.spayfw.b.c.e("AmexTAController", "initializeSecuritySetup failed");
+                Log.e("AmexTAController", "initializeSecuritySetup failed");
                 throw new AmexTAException(983040);
             }
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new AmexCommands.SuspendToken.Request(c.fromBase64(string)));
                 if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "suspendToken: Error: executeNoLoad failed");
+                    Log.e("AmexTAController", "suspendToken: Error: executeNoLoad failed");
                     throw new AmexTAException(983040);
                 }
                 response = new AmexCommands.SuspendToken.Response(tACommandResponse);
                 int n2 = (int)response.mRetVal.return_code.get();
                 if (n2 != 0) {
-                    com.samsung.android.spayfw.b.c.e("AmexTAController", "SuspendToken Call Failed");
+                    Log.e("AmexTAController", "SuspendToken Call Failed");
                     throw new AmexTAException(n2);
                 }
             }
@@ -814,7 +805,7 @@ lbl18: // 1 sources:
                 throw new AmexTAException(983040);
             }
             if (!DEBUG) return c.toBase64(response.mRetVal.pC.getData());
-            com.samsung.android.spayfw.b.c.d("AmexTAController", "suspendToken called Successfully");
+            Log.d("AmexTAController", "suspendToken called Successfully");
             return c.toBase64(response.mRetVal.pC.getData());
         }
     }

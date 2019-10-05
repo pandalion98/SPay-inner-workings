@@ -12,18 +12,12 @@
 package com.samsung.android.spayfw.payprovider.discover.tzsvc;
 
 import android.content.Context;
-import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
-import com.samsung.android.spayfw.payprovider.discover.tzsvc.DcTACommands;
-import com.samsung.android.spayfw.payprovider.discover.tzsvc.DcTAException;
-import com.samsung.android.spayfw.payprovider.discover.tzsvc.DcTaCommandRequest;
-import com.samsung.android.spayfw.payprovider.discover.tzsvc.DcTaCommandResponse;
-import com.samsung.android.spayfw.payprovider.discover.tzsvc.a;
-import com.samsung.android.spayfw.payprovider.discover.tzsvc.c;
-import com.samsung.android.spayfw.payprovider.discover.tzsvc.d;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.TAController;
 import com.samsung.android.spaytzsvc.api.TAException;
-import com.samsung.android.spaytzsvc.api.TAInfo;
+
 import java.util.List;
 
 public class b
@@ -51,7 +45,7 @@ extends TAController {
     }
 
     private TACommandResponse a(DcTaCommandRequest dcTaCommandRequest) {
-        com.samsung.android.spayfw.b.c.d("DcTAController", "executeNoLoadInternal, start");
+        Log.d("DcTAController", "executeNoLoadInternal, start");
         if (!this.isTALoaded()) {
             throw new DcTAException(DcTAException.Code.xI.ey(), DcTAException.Code.xI.getCode());
         }
@@ -70,7 +64,7 @@ extends TAController {
             throw new DcTAException("Invalid response input", DcTAException.Code.xJ.getCode());
         }
         if (!dcTaCommandResponse.validate()) {
-            com.samsung.android.spayfw.b.c.d("DcTAController", "responseValidate, TA command return code :" + dcTaCommandResponse.getReturnCode());
+            Log.d("DcTAController", "responseValidate, TA command return code :" + dcTaCommandResponse.getReturnCode());
             throw DcTAException.b(dcTaCommandResponse.getReturnCode(), dcTaCommandResponse.ez());
         }
         return true;
@@ -122,14 +116,14 @@ extends TAController {
     }
 
     public long authenticateTransaction(byte[] arrby) {
-        com.samsung.android.spayfw.b.c.d("DcTAController", "authenticateTransaction, start");
+        Log.d("DcTAController", "authenticateTransaction, start");
         DcTACommands.DiscoverTAAuthenticateTransaction.DiscoverTAAuthenticateTransactionResponse discoverTAAuthenticateTransactionResponse = new DcTACommands.DiscoverTAAuthenticateTransaction.DiscoverTAAuthenticateTransactionResponse(this.a(new DcTACommands.DiscoverTAAuthenticateTransaction.DiscoverTAAuthenticateTransactionRequest(arrby)));
         this.a(discoverTAAuthenticateTransactionResponse);
         return discoverTAAuthenticateTransactionResponse.ek();
     }
 
     public long b(int n2, byte[] arrby) {
-        com.samsung.android.spayfw.b.c.d("DcTAController", "DCTAController: transmitMSTTracks");
+        Log.d("DcTAController", "DCTAController: transmitMSTTracks");
         DcTACommands.DiscoverTATransmitMst.DiscoverTATransmitMstResponse discoverTATransmitMstResponse = new DcTACommands.DiscoverTATransmitMst.DiscoverTATransmitMstResponse(this.a(new DcTACommands.DiscoverTATransmitMst.DiscoverTATransmitMstRequest(n2, arrby)));
         this.a(discoverTATransmitMstResponse);
         return discoverTATransmitMstResponse.eo();
@@ -151,39 +145,39 @@ extends TAController {
     }
 
     public DcTACommands.DiscoverTAGetInAppData.DiscoverTAGetInAppDataResponse c(byte[] arrby, byte[] arrby2, byte[] arrby3) {
-        com.samsung.android.spayfw.b.c.d("DcTAController", "getInAppData, start");
+        Log.d("DcTAController", "getInAppData, start");
         if (arrby != null) {
-            com.samsung.android.spayfw.b.c.d("DcTAController", "getInAppData, otpk bundle not null");
+            Log.d("DcTAController", "getInAppData, otpk bundle not null");
         }
         if (arrby2 != null) {
-            com.samsung.android.spayfw.b.c.d("DcTAController", "getInAppData, secureObject bundle not null");
+            Log.d("DcTAController", "getInAppData, secureObject bundle not null");
         }
         if (arrby3 != null) {
-            com.samsung.android.spayfw.b.c.d("DcTAController", "getInAppData, timestamp not null");
+            Log.d("DcTAController", "getInAppData, timestamp not null");
         }
         DcTACommands.DiscoverTAGetInAppData.DiscoverTAGetInAppDataResponse discoverTAGetInAppDataResponse = new DcTACommands.DiscoverTAGetInAppData.DiscoverTAGetInAppDataResponse(this.a(new DcTACommands.DiscoverTAGetInAppData.DiscoverTAGetInAppDataRequest(arrby, arrby2, arrby3)));
         this.a(discoverTAGetInAppDataResponse);
-        com.samsung.android.spayfw.b.c.d("DcTAController", "getInAppData, end");
+        Log.d("DcTAController", "getInAppData, end");
         return discoverTAGetInAppDataResponse;
     }
 
     public byte[] c(byte[] arrby, byte[] arrby2) {
-        com.samsung.android.spayfw.b.c.d("DcTAController", "computeAppCryptogram, start");
+        Log.d("DcTAController", "computeAppCryptogram, start");
         DcTACommands.DiscoverTAComputeAppCryptogram.DiscoverTAComputeAppCryptogramResponse discoverTAComputeAppCryptogramResponse = new DcTACommands.DiscoverTAComputeAppCryptogram.DiscoverTAComputeAppCryptogramResponse(this.a(new DcTACommands.DiscoverTAComputeAppCryptogram.DiscoverTAComputeAppCryptogramRequest(arrby, arrby2)));
         this.a(discoverTAComputeAppCryptogramResponse);
         return discoverTAComputeAppCryptogramResponse.getCryptogram();
     }
 
     public DcTACommands.DiscoverTAGetInAppCnccData.DiscoverTAGetInAppCnccDataResponse d(byte[] arrby, byte[] arrby2) {
-        com.samsung.android.spayfw.b.c.d("DcTAController", "getInAppCnccData, start");
+        Log.d("DcTAController", "getInAppCnccData, start");
         DcTACommands.DiscoverTAGetInAppCnccData.DiscoverTAGetInAppCnccDataResponse discoverTAGetInAppCnccDataResponse = new DcTACommands.DiscoverTAGetInAppCnccData.DiscoverTAGetInAppCnccDataResponse(this.a(new DcTACommands.DiscoverTAGetInAppCnccData.DiscoverTAGetInAppCnccDataRequest(arrby, arrby2)));
         this.a(discoverTAGetInAppCnccDataResponse);
-        com.samsung.android.spayfw.b.c.d("DcTAController", "getInAppCnccData, end");
+        Log.d("DcTAController", "getInAppCnccData, end");
         return discoverTAGetInAppCnccDataResponse;
     }
 
     public DcTACommands.DiscoverTAInitiateTransaction.DiscoverTAInitiateTransactionResponse.a e(byte[] arrby, byte[] arrby2) {
-        com.samsung.android.spayfw.b.c.d("DcTAController", "initiateTransaction, start");
+        Log.d("DcTAController", "initiateTransaction, start");
         DcTACommands.DiscoverTAInitiateTransaction.DiscoverTAInitiateTransactionResponse discoverTAInitiateTransactionResponse = new DcTACommands.DiscoverTAInitiateTransaction.DiscoverTAInitiateTransactionResponse(this.a(new DcTACommands.DiscoverTAInitiateTransaction.DiscoverTAInitiateTransactionRequest(arrby, arrby2)));
         this.a(discoverTAInitiateTransactionResponse);
         return (DcTACommands.DiscoverTAInitiateTransaction.DiscoverTAInitiateTransactionResponse.a)discoverTAInitiateTransactionResponse.yX;
@@ -199,14 +193,14 @@ extends TAController {
     }
 
     public long ew() {
-        com.samsung.android.spayfw.b.c.d("DcTAController", "DCTAController: composeMSTtracks");
+        Log.d("DcTAController", "DCTAController: composeMSTtracks");
         DcTACommands.DiscoverTAComposeMST.DiscoverTAComposeMSTResponse discoverTAComposeMSTResponse = new DcTACommands.DiscoverTAComposeMST.DiscoverTAComposeMSTResponse(this.a(new DcTACommands.DiscoverTAComposeMST.DiscoverTAComposeMSTRequest(0)));
         this.a(discoverTAComposeMSTResponse);
         return discoverTAComposeMSTResponse.em();
     }
 
     public long ex() {
-        com.samsung.android.spayfw.b.c.d("DcTAController", "DCTAController: clearMstData: calling clearMstData...");
+        Log.d("DcTAController", "DCTAController: clearMstData: calling clearMstData...");
         DcTACommands.DiscoverTAClearMST.DiscoverTAClearMSTResponse discoverTAClearMSTResponse = new DcTACommands.DiscoverTAClearMST.DiscoverTAClearMSTResponse(this.a(new DcTACommands.DiscoverTAClearMST.DiscoverTAClearMSTRequest(0)));
         this.a(discoverTAClearMSTResponse);
         return discoverTAClearMSTResponse.el();
@@ -222,14 +216,14 @@ extends TAController {
     }
 
     public byte[] k(byte[] arrby) {
-        com.samsung.android.spayfw.b.c.d("DcTAController", "getNonce, execute TA command");
+        Log.d("DcTAController", "getNonce, execute TA command");
         DcTACommands.DiscoverTAGetNonceCommand.DiscoverTAGetNonceResponse discoverTAGetNonceResponse = new DcTACommands.DiscoverTAGetNonceCommand.DiscoverTAGetNonceResponse(this.a(new DcTACommands.DiscoverTAGetNonceCommand.DiscoverTAGetNonceRequest(arrby)));
         this.a(discoverTAGetNonceResponse);
         return discoverTAGetNonceResponse.getNonce();
     }
 
     public DcTACommands.DiscoverTAComputeDcvv.DiscoverTAComputeDcvvResponse.a l(byte[] arrby) {
-        com.samsung.android.spayfw.b.c.d("DcTAController", "computeDcvv, start");
+        Log.d("DcTAController", "computeDcvv, start");
         DcTACommands.DiscoverTAComputeDcvv.DiscoverTAComputeDcvvResponse discoverTAComputeDcvvResponse = new DcTACommands.DiscoverTAComputeDcvv.DiscoverTAComputeDcvvResponse(this.a(new DcTACommands.DiscoverTAComputeDcvv.DiscoverTAComputeDcvvRequest(arrby)));
         this.a(discoverTAComputeDcvvResponse);
         return (DcTACommands.DiscoverTAComputeDcvv.DiscoverTAComputeDcvvResponse.a)discoverTAComputeDcvvResponse.yX;

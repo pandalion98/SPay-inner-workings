@@ -14,7 +14,8 @@
 package com.samsung.android.spayfw.core.retry;
 
 import android.os.Message;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.i;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class a {
     public void b(Message message) {
         a a2 = this;
         synchronized (a2) {
-            c.d("JwtRetryRequester", "addInQueue: adding msg in queue = " + message.toString());
+            Log.d("JwtRetryRequester", "addInQueue: adding msg in queue = " + message.toString());
             if (mM != null && !mM.contains((Object)message)) {
                 mM.add((Object)message);
                 if (this.lH == null) {
@@ -70,12 +71,12 @@ public class a {
     public void bk() {
         a a2 = this;
         synchronized (a2) {
-            c.d("JwtRetryRequester", "flushJwtQueue");
+            Log.d("JwtRetryRequester", "flushJwtQueue");
             if (mM != null) {
                 int n2 = mM.size();
                 for (int i2 = 0; i2 < n2; ++i2) {
                     Message message = (Message)mM.get(0);
-                    c.d("JwtRetryRequester", "flushJwtQueue: msg number = " + i2);
+                    Log.d("JwtRetryRequester", "flushJwtQueue: msg number = " + i2);
                     this.jB.a(message);
                     mM.remove((Object)message);
                     if (mM.size() < 1) break;
@@ -92,7 +93,7 @@ public class a {
     public class a
     extends TimerTask {
         public void run() {
-            c.d("JwtRetryRequester", "run : JwtRetryTimerTask ");
+            Log.d("JwtRetryRequester", "run : JwtRetryTimerTask ");
             a.this.bk();
         }
     }

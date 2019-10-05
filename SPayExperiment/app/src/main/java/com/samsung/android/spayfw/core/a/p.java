@@ -17,31 +17,19 @@
 package com.samsung.android.spayfw.core.a;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Message;
 import android.os.RemoteException;
 import com.google.gson.JsonObject;
 import com.samsung.android.spayfw.appinterface.IPushMessageCallback;
 import com.samsung.android.spayfw.appinterface.PushMessage;
-import com.samsung.android.spayfw.appinterface.Token;
-import com.samsung.android.spayfw.appinterface.TokenMetaData;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
-import com.samsung.android.spayfw.core.a;
-import com.samsung.android.spayfw.core.a.aa;
-import com.samsung.android.spayfw.core.a.e;
-import com.samsung.android.spayfw.core.a.o;
-import com.samsung.android.spayfw.core.a.v;
-import com.samsung.android.spayfw.core.a.z;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.j;
 import com.samsung.android.spayfw.core.m;
-import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
-import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.g;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenResponseData;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
 import java.util.List;
@@ -61,16 +49,16 @@ extends o {
     }
 
     private void Q(String string) {
-        com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "deleting token id = " + string);
+        Log.d("PushMessageProcessor", "deleting token id = " + string);
         if (this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Co, string) < 1) {
-            com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "Not able to delete Token from DB");
+            Log.e("PushMessageProcessor", "Not able to delete Token from DB");
         }
         try {
             this.iJ.t(string);
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("PushMessageProcessor", exception.getMessage());
+            Log.e("PushMessageProcessor", exception.getMessage());
             return;
         }
     }
@@ -109,7 +97,7 @@ extends o {
                                                         block26 : {
                                                             block25 : {
                                                                 var3_3 = true;
-                                                                com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "onRequestComplete: Asset change: code " + var1_1);
+                                                                Log.d("PushMessageProcessor", "onRequestComplete: Asset change: code " + var1_1);
                                                                 var4_4 = p.this.iJ.r(string);
                                                                 switch (var1_1) {
                                                                     default: {
@@ -134,7 +122,7 @@ extends o {
                                                                     }
                                                                     case 404: 
                                                                     case 410: {
-                                                                        com.samsung.android.spayfw.b.c.w("PushMessageProcessor", "unable to find the token. something wrong. deleting the token");
+                                                                        Log.w("PushMessageProcessor", "unable to find the token. something wrong. deleting the token");
                                                                         var13_16 = new TokenStatus("DISPOSED", null);
                                                                         var7_8 = "DISPOSED";
                                                                         if (var4_4 == null) break block25;
@@ -224,7 +212,7 @@ extends o {
                                                 break block17;
                                             }
                                             catch (Exception var12_18) {
-                                                com.samsung.android.spayfw.b.c.c("PushMessageProcessor", var12_18.getMessage(), var12_18);
+                                                Log.c("PushMessageProcessor", var12_18.getMessage(), var12_18);
                                                 if (var2_2 == null) break block20;
                                                 m.a(var2_2.getResult(), var8_9);
                                                 break block19;
@@ -259,7 +247,7 @@ lbl110: // 2 sources:
                     m.a(null, var8_9);
                     throw var11_19;
                 }
-                com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "processAssetChange:Send error report to TR server");
+                Log.e("PushMessageProcessor", "processAssetChange:Send error report to TR server");
                 p.this.b(p.this.kU.getNotificationId(), string, var7_8, "ASSET_CHANGE", c.y(string2), var9_7, false);
             }
         });
@@ -268,26 +256,26 @@ lbl110: // 2 sources:
     private void a(final String string, final String string2, final c c2) {
         String string3 = c2.getCardBrand();
         if (string3 == null || string3.isEmpty()) {
-            com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "unable to find card brand");
+            Log.e("PushMessageProcessor", "unable to find card brand");
             try {
                 this.lS.onFail(this.lU, -5);
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
+                Log.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
                 return;
             }
         }
         String string4 = c2.ac().getTokenStatus();
         if ("ENROLLED".equals((Object)string4) && this.lT != null) {
             if (this.lT > 13) {
-                com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "processProvision: Max attemps exceeded; something went wrong, aborting!");
+                Log.d("PushMessageProcessor", "processProvision: Max attemps exceeded; something went wrong, aborting!");
                 try {
                     this.lS.onFail(this.lU, -1);
                     return;
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
+                    Log.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
                     return;
                 }
             }
@@ -295,18 +283,18 @@ lbl110: // 2 sources:
             this.lT = 1 + this.lT;
             Message message = j.a(9, this.kU, (Object)this.lT, this.lS);
             PaymentFrameworkApp.az().sendMessageDelayed(message, l2);
-            com.samsung.android.spayfw.b.c.i("PushMessageProcessor", "received push before complete provisionToken : delay process count   " + (Object)this.lT);
+            Log.i("PushMessageProcessor", "received push before complete provisionToken : delay process count   " + (Object)this.lT);
             return;
         }
         if ("ACTIVE".equals((Object)string4)) {
-            com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "processProvision: token creation already happened on SDK. just send report ");
+            Log.d("PushMessageProcessor", "processProvision: token creation already happened on SDK. just send report ");
             this.a(this.kU.getNotificationId(), string2, string4, "PROVISION", c.y(c2.getCardBrand()), null, false);
             try {
                 this.lS.onTokenStatusUpdate(this.lU, string2, new TokenStatus(string4, c2.ac().aP()));
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
+                Log.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
                 return;
             }
         }
@@ -322,17 +310,17 @@ lbl110: // 2 sources:
             public void a(int var1_1, com.samsung.android.spayfw.remoteservice.c<TokenResponseData> var2_2) {
                 block47 : {
                     block48 : {
-                        com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "processProvision::onRequestComplete: code = " + var1_1);
+                        Log.d("PushMessageProcessor", "processProvision::onRequestComplete: code = " + var1_1);
                         var3_3 = p.this.iJ.r(string2);
                         if (var3_3 == null) {
-                            com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "processProvision : unable to get Card object :" + string2);
+                            Log.e("PushMessageProcessor", "processProvision : unable to get Card object :" + string2);
                             try {
                                 var32_4 = new TokenStatus("DISPOSED", null);
                                 p.this.lS.onTokenStatusUpdate(p.this.kU.getNotificationId(), string2, var32_4);
                                 return;
                             }
                             catch (RemoteException var35_6) {
-                                com.samsung.android.spayfw.b.c.c("PushMessageProcessor", var35_6.getMessage(), var35_6);
+                                Log.c("PushMessageProcessor", var35_6.getMessage(), var35_6);
                                 return;
                             }
                             finally {
@@ -345,14 +333,14 @@ lbl110: // 2 sources:
                         }
                         var4_10 = var3_3.getCardBrand();
                         if ("ACTIVE".equals((Object)var3_3.ac().getTokenStatus())) {
-                            com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "processProvision: token creation already happend on SDK. just send report ");
+                            Log.d("PushMessageProcessor", "processProvision: token creation already happend on SDK. just send report ");
                             p.this.a(p.this.kU.getNotificationId(), string2, var3_3.ac().getTokenStatus(), "PROVISION", c.y(c2.getCardBrand()), null, false);
                             try {
                                 p.this.lS.onTokenStatusUpdate(p.a(p.this), string2, new TokenStatus(var3_3.ac().getTokenStatus(), var3_3.ac().aP()));
                                 return;
                             }
                             catch (RemoteException var31_11) {
-                                com.samsung.android.spayfw.b.c.c("PushMessageProcessor", var31_11.getMessage(), var31_11);
+                                Log.c("PushMessageProcessor", var31_11.getMessage(), var31_11);
                                 return;
                             }
                             finally {
@@ -371,10 +359,10 @@ lbl110: // 2 sources:
                             }
                             case 200: {
                                 var20_21 = var2_2.getResult();
-                                com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "Provision Data : " + (Object)var20_21.getData());
+                                Log.d("PushMessageProcessor", "Provision Data : " + (Object)var20_21.getData());
                                 var21_22 = p.this.jJ.bq(string2);
                                 if (var21_22 != null) ** GOTO lbl54
-                                com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "processProvision : unable to get Card object from db :" + string2);
+                                Log.e("PushMessageProcessor", "processProvision : unable to get Card object from db :" + string2);
                                 p.this.iJ.s(var3_3.getEnrollmentId());
                                 var5_13 = -6;
                                 var8_14 = true;
@@ -385,7 +373,7 @@ lbl110: // 2 sources:
                                 break block48;
 lbl54: // 1 sources:
                                 if (c2.ac() != null && c2.ac().aQ() != null) {
-                                    com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "processProvision: token creation already happend on SDK. just update status");
+                                    Log.d("PushMessageProcessor", "processProvision: token creation already happend on SDK. just update status");
                                     var24_23 = c2.ac().aQ();
                                     var7_16 = true;
                                     var23_24 = c2.ad().updateTokenStatusTA(var20_21.getData(), var20_21.getStatus());
@@ -399,7 +387,7 @@ lbl54: // 1 sources:
                                 }
                                 if (var23_24 == null || var23_24.getErrorCode() != 0) ** GOTO lbl67
 lbl67: // 1 sources:
-                                com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "Provider unable to store provision info");
+                                Log.e("PushMessageProcessor", "Provider unable to store provision info");
                                 var5_13 = -1;
                                 var6_17 = "PENDING";
                                 var8_14 = true;
@@ -409,7 +397,7 @@ lbl67: // 1 sources:
                             }
                             case 404: 
                             case 410: {
-                                com.samsung.android.spayfw.b.c.w("PushMessageProcessor", "unable to find the token. something wrong. deleting the token");
+                                Log.w("PushMessageProcessor", "unable to find the token. something wrong. deleting the token");
                                 var5_13 = -6;
                                 var19_29 = new TokenStatus("DISPOSED", null);
                                 var10_18 = c2.ad().updateTokenStatusTA(null, var19_29);
@@ -451,7 +439,7 @@ lbl67: // 1 sources:
                         }
                         var25_25 = var7_16 == false ? var23_24.getProviderTokenKey() : var24_23;
                         if (var25_25 == null) {
-                            com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "Provision Token- onRequestComplete: provider not returning tokenref ");
+                            Log.e("PushMessageProcessor", "Provision Token- onRequestComplete: provider not returning tokenref ");
                             var5_13 = -1;
                             var8_14 = true;
                             var6_17 = "PENDING";
@@ -469,7 +457,7 @@ lbl67: // 1 sources:
                             if (var28_28 != null && string2 != null) {
                                 var28_28.l(string2, var6_17);
                             } else {
-                                com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "FraudCollector: storeTokenEnrollmentSuccess cannot get data");
+                                Log.d("PushMessageProcessor", "FraudCollector: storeTokenEnrollmentSuccess cannot get data");
                             }
                             var10_18 = var23_24;
                             var8_14 = true;
@@ -486,7 +474,7 @@ lbl67: // 1 sources:
                         if (var18_20 != null) {
                             var18_20.bs();
                         } else {
-                            com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "FraudCollector: TokenEnrollmentFailed cannot get data");
+                            Log.d("PushMessageProcessor", "FraudCollector: TokenEnrollmentFailed cannot get data");
                             var11_19 = null;
                         }
                         ** GOTO lbl162
@@ -510,7 +498,7 @@ lbl154: // 1 sources:
                                                 }
 lbl157: // 4 sources:
                                                 if (!var7_16) {
-                                                    com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "On Create Token");
+                                                    Log.d("PushMessageProcessor", "On Create Token");
                                                     p.this.lS.onCreateToken(p.a(p.this), string, var11_19);
                                                     break block44;
                                                 }
@@ -530,7 +518,7 @@ lbl157: // 4 sources:
                                         break block45;
                                     }
                                     try {
-                                        com.samsung.android.spayfw.b.c.c("PushMessageProcessor", var15_31.getMessage(), (Throwable)var15_31);
+                                        Log.c("PushMessageProcessor", var15_31.getMessage(), (Throwable)var15_31);
                                         if (var2_2 == null) break block45;
                                         if (var16_33 == null) break block46;
                                     }
@@ -549,7 +537,7 @@ lbl157: // 4 sources:
                                 p.this.a(p.this.kU.getNotificationId(), string2, var6_17, "PROVISION", c.y(var4_10), var10_18, false);
                                 return;
                             }
-                            com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "processProvision:Send error report to TR server");
+                            Log.e("PushMessageProcessor", "processProvision:Send error report to TR server");
                             p.this.b(p.this.kU.getNotificationId(), string2, var6_17, "PROVISION", c.y(var4_10), var10_18, false);
                             return;
                         }
@@ -581,9 +569,9 @@ lbl194: // 2 sources:
                 this.lS.onFail(this.lU, -36);
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
+                Log.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
             }
-            com.samsung.android.spayfw.b.c.e("PushMessageProcessor", " unable to get replenish data from pay provider");
+            Log.e("PushMessageProcessor", " unable to get replenish data from pay provider");
             return;
         }
         try {
@@ -593,7 +581,7 @@ lbl194: // 2 sources:
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("PushMessageProcessor", exception.getMessage(), exception);
+            Log.c("PushMessageProcessor", exception.getMessage(), exception);
             return;
         }
     }
@@ -611,17 +599,17 @@ lbl194: // 2 sources:
 
     private void be() {
         List<com.samsung.android.spayfw.storage.models.a> list = this.jJ.c(TokenRecordStorage.TokenGroup.TokenColumn.CD, this.kU.getCardNumber());
-        com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "Card Id : " + this.kU.getCardNumber());
+        Log.d("PushMessageProcessor", "Card Id : " + this.kU.getCardNumber());
         if (list != null && list.size() > 0) {
-            com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "TokenRecord Size : " + list.size());
+            Log.d("PushMessageProcessor", "TokenRecord Size : " + list.size());
             com.samsung.android.spayfw.storage.models.a a2 = (com.samsung.android.spayfw.storage.models.a)list.get(0);
-            com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "Token Id : " + a2.getTrTokenId());
+            Log.d("PushMessageProcessor", "Token Id : " + a2.getTrTokenId());
             if (a2.getTrTokenId() != null) {
                 new aa(this.mContext, a2.getTrTokenId(), this.kU, this.lS).process();
                 return;
             }
         }
-        com.samsung.android.spayfw.b.c.i("PushMessageProcessor", "No Card with Id : " + this.kU.getCardNumber() + ". Proceed with " + "enrollment");
+        Log.i("PushMessageProcessor", "No Card with Id : " + this.kU.getCardNumber() + ". Proceed with " + "enrollment");
         this.bd();
     }
 
@@ -642,12 +630,12 @@ lbl194: // 2 sources:
                         block28 : {
                             var3_3 = null;
                             var4_4 = true;
-                            com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "onRequestComplete: Status change: code " + var1_1);
+                            Log.d("PushMessageProcessor", "onRequestComplete: Status change: code " + var1_1);
                             var5_5 = p.this.iJ.r(string);
                             var6_6 = p.this.jJ.bq(string);
                             if (var6_6 == null || var5_5 == null) {
                                 if (var5_5 == null) {
-                                    com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "processStatusChange : unable to get Card object :" + string);
+                                    Log.e("PushMessageProcessor", "processStatusChange : unable to get Card object :" + string);
 lbl9: // 2 sources:
                                     do {
                                         var7_7 = new TokenStatus("DISPOSED", null);
@@ -679,7 +667,7 @@ lbl22: // 4 sources:
                                         break;
                                     } while (true);
                                 }
-                                com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "processStatusChange: munable to get Card object from db :" + string);
+                                Log.e("PushMessageProcessor", "processStatusChange: munable to get Card object from db :" + string);
                                 ** continue;
                             }
                             var8_8 = var6_6.getTokenStatus();
@@ -695,7 +683,7 @@ lbl22: // 4 sources:
                                 case 200: {
                                     var12_11 = var2_2.getResult();
                                     if (var12_11 == null || var12_11.getStatus() == null) {
-                                        com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "TokenResponseData or status is null");
+                                        Log.e("PushMessageProcessor", "TokenResponseData or status is null");
                                         var7_7 = null;
                                         var9_9 = false;
                                         var10_10 = 0;
@@ -703,7 +691,7 @@ lbl22: // 4 sources:
                                         break;
                                     }
                                     if (var5_5.ac() == null || var5_5.ac().aQ() == null) {
-                                        com.samsung.android.spayfw.b.c.i("PushMessageProcessor", "Token Ref id is null. no need to inform to provider");
+                                        Log.i("PushMessageProcessor", "Token Ref id is null. no need to inform to provider");
                                         var7_7 = null;
                                         var9_9 = false;
                                         var10_10 = 0;
@@ -712,7 +700,7 @@ lbl22: // 4 sources:
                                     }
                                     var3_3 = var5_5.ad().updateTokenStatusTA(var12_11.getData(), var12_11.getStatus());
                                     if (var3_3 == null || var3_3.getErrorCode() != 0) {
-                                        com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "updateTokenStatus failed on provider side");
+                                        Log.e("PushMessageProcessor", "updateTokenStatus failed on provider side");
                                         var9_9 = false;
 lbl57: // 2 sources:
                                         do {
@@ -741,17 +729,17 @@ lbl69: // 2 sources:
                                         var9_9 = var4_4;
                                         ** continue;
                                     }
-                                    com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "FraudCollector: updateFTokenRecordStatus cannot get data");
+                                    Log.d("PushMessageProcessor", "FraudCollector: updateFTokenRecordStatus cannot get data");
                                     ** continue;
                                 }
                                 case 404: 
                                 case 410: {
-                                    com.samsung.android.spayfw.b.c.w("PushMessageProcessor", "unable to find the token on server. something wrong. deleting the token");
+                                    Log.w("PushMessageProcessor", "unable to find the token on server. something wrong. deleting the token");
                                     var7_7 = new TokenStatus("DISPOSED", null);
                                     var8_8 = "DISPOSED";
                                     var3_3 = c2.ad().updateTokenStatusTA(null, var7_7);
                                     if (var3_3 == null || var3_3.getErrorCode() != 0) {
-                                        com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "updateTokenStatus failed on provider side");
+                                        Log.e("PushMessageProcessor", "updateTokenStatus failed on provider side");
                                         var9_9 = false;
                                         var10_10 = 0;
                                         break;
@@ -792,11 +780,11 @@ lbl69: // 2 sources:
                             p.this.lS.onTokenStatusUpdate(p.a(p.this), string, var7_7);
                         }
                         catch (RemoteException var11_14) {
-                            com.samsung.android.spayfw.b.c.c("PushMessageProcessor", var11_14.getMessage(), var11_14);
+                            Log.c("PushMessageProcessor", var11_14.getMessage(), var11_14);
                         }
                         ** while (true)
                     }
-                    com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "error happend during token status change. report to server");
+                    Log.e("PushMessageProcessor", "error happend during token status change. report to server");
                     p.this.b(p.this.kU.getNotificationId(), string, var8_8, "STATUS_CHANGE", c.y(string2), var3_3, false);
                     ** while (true)
                 }
@@ -809,11 +797,11 @@ lbl69: // 2 sources:
 
     private void d(String string, c c2) {
         if (v.S(string) != null) {
-            com.samsung.android.spayfw.b.c.w("PushMessageProcessor", "Token Change Checker Pending. Update.");
+            Log.w("PushMessageProcessor", "Token Change Checker Pending. Update.");
             v.a(this.mContext, string, this.lS, this.lU);
             return;
         }
-        com.samsung.android.spayfw.b.c.w("PushMessageProcessor", "Ignore Token Change Event");
+        Log.w("PushMessageProcessor", "Ignore Token Change Event");
     }
 
     private void e(String string, c c2) {
@@ -829,11 +817,11 @@ lbl69: // 2 sources:
         c c2;
         int n2 = -5;
         if (this.lS == null) {
-            com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "Callback is NULL");
+            Log.e("PushMessageProcessor", "Callback is NULL");
             return;
         }
         if (this.kU == null || this.kU.getMessage() == null || this.kU.getCategory() == null) {
-            com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "pushMessage is null/empty/undefined category");
+            Log.e("PushMessageProcessor", "pushMessage is null/empty/undefined category");
             PushMessage pushMessage = this.kU;
             String string = null;
             if (pushMessage != null) {
@@ -852,7 +840,7 @@ lbl69: // 2 sources:
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
+                Log.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
                 return;
             }
         }
@@ -860,7 +848,7 @@ lbl69: // 2 sources:
         String string = this.kU.getCategory();
         if ("CATEGORY_CARD".equals((Object)string)) {
             String string4 = this.kU.getCardEvent();
-            com.samsung.android.spayfw.b.c.i("PushMessageProcessor", "Push Event : " + string4);
+            Log.i("PushMessageProcessor", "Push Event : " + string4);
             if ("ENROLL_CC".equals((Object)string4)) {
                 this.bd();
                 return;
@@ -869,32 +857,32 @@ lbl69: // 2 sources:
                 this.be();
                 return;
             }
-            com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "processPushMessage::process - Invalid event type = " + string4);
+            Log.e("PushMessageProcessor", "processPushMessage::process - Invalid event type = " + string4);
             try {
                 this.lS.onFail(this.lU, -5);
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
+                Log.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
                 return;
             }
         }
         if (!"CATEGORY_TOKEN".equals((Object)string)) return;
         String string5 = this.kU.getTokenId();
         String string6 = this.kU.getEnrollmentId();
-        com.samsung.android.spayfw.b.c.d("PushMessageProcessor", "processPushMessage- process: " + this.kU.toString());
+        Log.d("PushMessageProcessor", "processPushMessage- process: " + this.kU.toString());
         if (this.iJ == null || this.jJ == null || string5 == null) {
             if (string5 == null) {
             } else {
                 n2 = -1;
-                com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "Internal error - Account/DB null");
+                Log.e("PushMessageProcessor", "Internal error - Account/DB null");
             }
             try {
                 this.lS.onFail(this.lU, n2);
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
+                Log.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
                 return;
             }
         }
@@ -902,13 +890,13 @@ lbl69: // 2 sources:
             c2 = this.iJ.r(string5);
         } else {
             if (string6 == null || string6.isEmpty()) {
-                com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "processPushMessage- unable to find card for given enrollment id and TokenId");
+                Log.e("PushMessageProcessor", "processPushMessage- unable to find card for given enrollment id and TokenId");
                 try {
                     this.lS.onFail(this.lU, -6);
                     return;
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
+                    Log.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
                     return;
                 }
             }
@@ -919,13 +907,13 @@ lbl69: // 2 sources:
                 this.lS.onFail(this.lU, -5);
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
+                Log.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
             }
-            com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "processPushMessage- unable to get card object");
+            Log.e("PushMessageProcessor", "processPushMessage- unable to get card object");
             return;
         }
         String string7 = this.kU.getTokenEvent();
-        com.samsung.android.spayfw.b.c.i("PushMessageProcessor", "Push Event : " + string7);
+        Log.i("PushMessageProcessor", "Push Event : " + string7);
         if ("PROVISION".equals((Object)string7)) {
             this.a(string6, string5, c2);
             return;
@@ -950,13 +938,13 @@ lbl69: // 2 sources:
             this.a(string5, c2);
             return;
         }
-        com.samsung.android.spayfw.b.c.e("PushMessageProcessor", "processPushMessage::process - Invalid event type = " + string7);
+        Log.e("PushMessageProcessor", "processPushMessage::process - Invalid event type = " + string7);
         try {
             this.lS.onFail(this.lU, -5);
             return;
         }
         catch (RemoteException remoteException) {
-            com.samsung.android.spayfw.b.c.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
+            Log.c("PushMessageProcessor", remoteException.getMessage(), remoteException);
             return;
         }
     }

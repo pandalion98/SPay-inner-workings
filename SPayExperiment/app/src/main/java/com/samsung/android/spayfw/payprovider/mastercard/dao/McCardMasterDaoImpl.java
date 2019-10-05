@@ -21,11 +21,11 @@ package com.samsung.android.spayfw.payprovider.mastercard.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.card.McCardMaster;
-import com.samsung.android.spayfw.payprovider.mastercard.dao.MCAbstractDaoImpl;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -116,7 +116,7 @@ extends MCAbstractDaoImpl<McCardMaster> {
             var6_3.close();
             return var7_4;
         }
-        c.e("McCardMasterDaoImpl", " getDbIdFromTokenUniqueRefence : cursor is null");
+        Log.e("McCardMasterDaoImpl", " getDbIdFromTokenUniqueRefence : cursor is null");
         if (var6_3 == null) return -1L;
         var6_3.close();
         return -1L;
@@ -136,7 +136,7 @@ extends MCAbstractDaoImpl<McCardMaster> {
             }
             try {
                 var4_6.printStackTrace();
-                c.d("McCardMasterDaoImpl", "NPE exception occured during isTokenProvisioned call");
+                Log.d("McCardMasterDaoImpl", "NPE exception occured during isTokenProvisioned call");
                 if (var5_8 == null) return -1L;
             }
             catch (Throwable var3_12) {
@@ -200,7 +200,7 @@ lbl15: // 3 sources:
 lbl24: // 2 sources:
             do {
                 var5_10.printStackTrace();
-                c.d("McCardMasterDaoImpl", "NPE exception occured during isTokenProvisioned call");
+                Log.d("McCardMasterDaoImpl", "NPE exception occured during isTokenProvisioned call");
                 var7_5 = false;
                 if (var6_4 == null) ** continue;
                 var6_4.close();

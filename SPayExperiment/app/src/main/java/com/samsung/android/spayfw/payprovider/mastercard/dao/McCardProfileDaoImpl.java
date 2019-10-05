@@ -29,8 +29,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.dao.McCommonCardDaoImpl;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.MCBaseCardProfile;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCProfilesTable;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCUnusedDGIElements;
@@ -67,12 +66,12 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
             arrby = string.getBytes("UTF8");
         }
         catch (UnsupportedEncodingException unsupportedEncodingException) {
-            c.e(TAG, "getContentValuesForProfileTable: : " + unsupportedEncodingException.getMessage());
+            Log.e(TAG, "getContentValuesForProfileTable: : " + unsupportedEncodingException.getMessage());
             unsupportedEncodingException.printStackTrace();
             return null;
         }
         catch (Exception exception) {
-            c.e(TAG, "getContentValuesForProfileTable: : " + exception.getMessage());
+            Log.e(TAG, "getContentValuesForProfileTable: : " + exception.getMessage());
             exception.printStackTrace();
             return null;
         }
@@ -110,7 +109,7 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
                 return null;
             }
             if (mCBaseCardProfile.getUnusedDGIElements() == null) {
-                c.d(TAG, "UnusedDGIElements is null");
+                Log.d(TAG, "UnusedDGIElements is null");
             }
             contentValues.clear();
             contentValues.put("cardMasterId", Long.valueOf((long)mCBaseCardProfile.getUniqueTokenReferenceId()));
@@ -123,12 +122,12 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
             arrby = string.getBytes("UTF8");
         }
         catch (UnsupportedEncodingException unsupportedEncodingException) {
-            c.e(TAG, "getContentValuesForUnusedDgiElemnet: : " + unsupportedEncodingException.getMessage());
+            Log.e(TAG, "getContentValuesForUnusedDgiElemnet: : " + unsupportedEncodingException.getMessage());
             unsupportedEncodingException.printStackTrace();
             return null;
         }
         catch (Exception exception) {
-            c.e(TAG, "getContentValuesForUnusedDgiElemnet: : " + exception.getMessage());
+            Log.e(TAG, "getContentValuesForUnusedDgiElemnet: : " + exception.getMessage());
             exception.printStackTrace();
             return null;
         }
@@ -248,12 +247,12 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
             arrby = string.getBytes("UTF8");
         }
         catch (UnsupportedEncodingException unsupportedEncodingException) {
-            c.e(TAG, "getContentValues: : " + unsupportedEncodingException.getMessage());
+            Log.e(TAG, "getContentValues: : " + unsupportedEncodingException.getMessage());
             unsupportedEncodingException.printStackTrace();
             return null;
         }
         catch (Exception exception) {
-            c.e(TAG, "getContentValues: : " + exception.getMessage());
+            Log.e(TAG, "getContentValues: : " + exception.getMessage());
             exception.printStackTrace();
             return null;
         }
@@ -300,17 +299,17 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
             object = gson.fromJson(new String(arrby, "UTF8"), this.mType);
         }
         catch (UnsupportedEncodingException unsupportedEncodingException) {
-            c.e(TAG, "getDataValues: : " + unsupportedEncodingException.getMessage());
+            Log.e(TAG, "getDataValues: : " + unsupportedEncodingException.getMessage());
             unsupportedEncodingException.printStackTrace();
             return null;
         }
         catch (JsonSyntaxException jsonSyntaxException) {
-            c.e(TAG, "getDataValues: : " + jsonSyntaxException.getMessage());
+            Log.e(TAG, "getDataValues: : " + jsonSyntaxException.getMessage());
             jsonSyntaxException.printStackTrace();
             return null;
         }
         catch (Exception exception) {
-            c.e(TAG, "getDataValues: : " + exception.getMessage());
+            Log.e(TAG, "getDataValues: : " + exception.getMessage());
             exception.printStackTrace();
             return null;
         }
@@ -329,17 +328,17 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
             return mCProfilesTable;
         }
         catch (UnsupportedEncodingException unsupportedEncodingException) {
-            c.e(TAG, "getProfileTable: : " + unsupportedEncodingException.getMessage());
+            Log.e(TAG, "getProfileTable: : " + unsupportedEncodingException.getMessage());
             unsupportedEncodingException.printStackTrace();
             return null;
         }
         catch (JsonSyntaxException jsonSyntaxException) {
-            c.e(TAG, "getProfileTable: : " + jsonSyntaxException.getMessage());
+            Log.e(TAG, "getProfileTable: : " + jsonSyntaxException.getMessage());
             jsonSyntaxException.printStackTrace();
             return null;
         }
         catch (Exception exception) {
-            c.e(TAG, "getProfileTable: : " + exception.getMessage());
+            Log.e(TAG, "getProfileTable: : " + exception.getMessage());
             exception.printStackTrace();
             return null;
         }
@@ -366,7 +365,7 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
     public MCUnusedDGIElements getUnusedDgiElements(long l2) {
         byte[] arrby = this.getProvisionData(l2, McCommonCardDaoImpl.CardInfoType.UNUSED_DGI_ELEMENTS);
         if (arrby == null) {
-            c.d(TAG, "getUnusedDgiElements : saved unused Element is null");
+            Log.d(TAG, "getUnusedDgiElements : saved unused Element is null");
             return null;
         }
         Gson gson = this.createGson(McCommonCardDaoImpl.CardInfoType.UNUSED_DGI_ELEMENTS);
@@ -375,17 +374,17 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
             return mCUnusedDGIElements;
         }
         catch (UnsupportedEncodingException unsupportedEncodingException) {
-            c.e(TAG, "getUnusedDgiElements: : " + unsupportedEncodingException.getMessage());
+            Log.e(TAG, "getUnusedDgiElements: : " + unsupportedEncodingException.getMessage());
             unsupportedEncodingException.printStackTrace();
             return null;
         }
         catch (JsonSyntaxException jsonSyntaxException) {
-            c.e(TAG, "getUnusedDgiElements: : " + jsonSyntaxException.getMessage());
+            Log.e(TAG, "getUnusedDgiElements: : " + jsonSyntaxException.getMessage());
             jsonSyntaxException.printStackTrace();
             return null;
         }
         catch (Exception exception) {
-            c.e(TAG, "getUnusedDgiElements: : " + exception.getMessage());
+            Log.e(TAG, "getUnusedDgiElements: : " + exception.getMessage());
             exception.printStackTrace();
             return null;
         }
@@ -432,7 +431,7 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
         String[] arrstring = new String[]{String.valueOf((int)McCommonCardDaoImpl.CardInfoType.MCPSE_CARD_PROFILE.getValue())};
         int n2 = sQLiteDatabase.update(string, contentValues, string2, arrstring);
         if (n2 != 1) {
-            c.e(TAG, "updateData: MultipleRows Updated: " + n2);
+            Log.e(TAG, "updateData: MultipleRows Updated: " + n2);
             return false;
         }
         return true;
@@ -450,7 +449,7 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
         String[] arrstring = new String[]{String.valueOf((int)McCommonCardDaoImpl.CardInfoType.TA_DATA.getValue())};
         int n2 = sQLiteDatabase.update(string, contentValues, string2, arrstring);
         if (n2 != 1) {
-            c.e(TAG, "updateTaData: MultipleRows Updated: " + n2);
+            Log.e(TAG, "updateTaData: MultipleRows Updated: " + n2);
             return false;
         }
         return true;
@@ -468,7 +467,7 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
         String[] arrstring = new String[]{String.valueOf((int)McCommonCardDaoImpl.CardInfoType.UNUSED_DGI_ELEMENTS.getValue())};
         int n2 = sQLiteDatabase.update(string, contentValues, string2, arrstring);
         if (n2 != 1) {
-            c.e(TAG, "updateUnusedDgiElements: MultipleRows Updated: " + n2);
+            Log.e(TAG, "updateUnusedDgiElements: MultipleRows Updated: " + n2);
             return false;
         }
         return true;
@@ -486,7 +485,7 @@ extends McCommonCardDaoImpl<MCBaseCardProfile<T>> {
         String[] arrstring = new String[]{String.valueOf((int)McCommonCardDaoImpl.CardInfoType.TA_ATC_DATA.getValue())};
         int n2 = sQLiteDatabase.update(string, contentValues, string2, arrstring);
         if (n2 != 1) {
-            c.e(TAG, "updateWrappedAtcData: MultipleRows Updated: " + n2);
+            Log.e(TAG, "updateWrappedAtcData: MultipleRows Updated: " + n2);
             return false;
         }
         return true;

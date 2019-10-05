@@ -17,10 +17,10 @@ package com.samsung.sensorframework.sda.d;
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.SDAException;
-import com.samsung.sensorframework.sda.d.b;
-import com.samsung.sensorframework.sda.d.c;
+
 import java.util.Arrays;
 
 public abstract class a
@@ -91,7 +91,7 @@ implements b {
 
     @Override
     public void gY() {
-        com.samsung.android.spayfw.b.c.d(this.he(), "destroySensor()");
+        Log.d(this.he(), "destroySensor()");
         this.Jk = null;
         if (this.Jl != null && this.Jl.isAlive()) {
             this.Jl.quit();

@@ -19,10 +19,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.e.a.a;
 import com.samsung.android.spayfw.interfacelibrary.db.DBName;
-import com.samsung.android.spayfw.payprovider.plcc.db.PlccCardDetailsDao;
 import com.samsung.android.spayfw.payprovider.plcc.domain.PlccCard;
 import com.samsung.android.spayfw.payprovider.plcc.util.LogHelper;
 import java.util.ArrayList;
@@ -142,7 +141,7 @@ implements PlccCardDetailsDao {
         }
         catch (Exception exception) {
             LogHelper.e(TAG, "addCard exception");
-            c.c(TAG, exception.getMessage(), exception);
+            Log.c(TAG, exception.getMessage(), exception);
             return false;
         }
         finally {
@@ -205,7 +204,7 @@ implements PlccCardDetailsDao {
             }
             catch (Exception exception) {}
             LogHelper.e(TAG, "listCard exception");
-            c.c(TAG, exception.getMessage(), exception);
+            Log.c(TAG, exception.getMessage(), exception);
             this.db.endTransaction();
             if (cursor == null) return arrayList;
             {
@@ -252,7 +251,7 @@ implements PlccCardDetailsDao {
             }
             catch (Exception exception) {
                 LogHelper.e(TAG, "removeCard exception");
-                c.c(TAG, exception.getMessage(), exception);
+                Log.c(TAG, exception.getMessage(), exception);
                 return false;
             }
             finally {
@@ -309,8 +308,8 @@ implements PlccCardDetailsDao {
                 this.db.setTransactionSuccessful();
             }
             catch (Exception exception) {}
-            c.d(TAG, "selectCard exception");
-            c.c(TAG, exception.getMessage(), exception);
+            Log.d(TAG, "selectCard exception");
+            Log.c(TAG, exception.getMessage(), exception);
             this.db.endTransaction();
             if (cursor == null) return plccCard;
             {
@@ -355,7 +354,7 @@ implements PlccCardDetailsDao {
         }
         catch (Exception exception) {
             LogHelper.e(TAG, "updateCard exception");
-            c.c(TAG, exception.getMessage(), exception);
+            Log.c(TAG, exception.getMessage(), exception);
             return false;
         }
         finally {
@@ -379,7 +378,7 @@ implements PlccCardDetailsDao {
         }
         catch (Exception exception) {
             LogHelper.e(TAG, "updateSequenceConfig exception");
-            c.c(TAG, exception.getMessage(), exception);
+            Log.c(TAG, exception.getMessage(), exception);
             return false;
         }
         finally {

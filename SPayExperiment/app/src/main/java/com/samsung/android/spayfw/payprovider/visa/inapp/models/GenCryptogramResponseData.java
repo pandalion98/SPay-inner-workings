@@ -11,7 +11,7 @@
  */
 package com.samsung.android.spayfw.payprovider.visa.inapp.models;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import java.util.Locale;
 
 public class GenCryptogramResponseData {
@@ -182,7 +182,7 @@ public class GenCryptogramResponseData {
                 return string;
             }
             catch (NumberFormatException numberFormatException) {
-                c.c("GenCryptogramResponseData", numberFormatException.getMessage(), numberFormatException);
+                Log.c("GenCryptogramResponseData", numberFormatException.getMessage(), numberFormatException);
                 return null;
             }
         }

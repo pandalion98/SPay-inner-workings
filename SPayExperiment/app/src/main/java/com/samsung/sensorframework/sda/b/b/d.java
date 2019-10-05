@@ -7,7 +7,7 @@
  */
 package com.samsung.sensorframework.sda.b.b;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.b.a;
 
 public class d
@@ -68,7 +68,7 @@ extends a {
         this.state = n2;
         String string = TAG;
         Object[] arrobject = new Object[]{this.state};
-        c.d(string, String.format((String)"state: %d", (Object[])arrobject));
+        Log.d(string, String.format((String)"state: %d", (Object[])arrobject));
     }
 }
 

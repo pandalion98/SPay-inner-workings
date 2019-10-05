@@ -47,11 +47,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.InputEvent;
 import android.view.KeyEvent;
-import com.samsung.android.spayauth.sdk.a;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.a.n;
 import com.samsung.android.spayfw.utils.h;
@@ -92,22 +91,22 @@ extends Service {
                 return;
             }
             catch (IllegalAccessException illegalAccessException) {
-                c.e("AuthFrameworkService", "IllegalAccessException on injectInputEvent.");
+                Log.e("AuthFrameworkService", "IllegalAccessException on injectInputEvent.");
                 illegalAccessException.printStackTrace();
                 return;
             }
             catch (IllegalArgumentException illegalArgumentException) {
-                c.e("AuthFrameworkService", "IllegalArgumentException on injectInputEvent.");
+                Log.e("AuthFrameworkService", "IllegalArgumentException on injectInputEvent.");
                 illegalArgumentException.printStackTrace();
                 return;
             }
             catch (NoSuchMethodException noSuchMethodException) {
-                c.e("AuthFrameworkService", "NoSuchMethodException on injectInputEvent.");
+                Log.e("AuthFrameworkService", "NoSuchMethodException on injectInputEvent.");
                 noSuchMethodException.printStackTrace();
                 return;
             }
             catch (InvocationTargetException invocationTargetException) {
-                c.e("AuthFrameworkService", "InvocationTargetException on injectInputEvent.");
+                Log.e("AuthFrameworkService", "InvocationTargetException on injectInputEvent.");
                 invocationTargetException.printStackTrace();
                 return;
             }
@@ -234,7 +233,7 @@ extends Service {
             }
             long l2 = Binder.clearCallingIdentity();
             try {
-                Log.d((String)"AuthFrameworkService", (String)"inside cancelTui method.");
+                android.util.Log.d((String)"AuthFrameworkService", (String)"inside cancelTui method.");
                 this.g(4);
                 return;
             }
@@ -575,22 +574,22 @@ extends Service {
      */
     private static boolean d(Context context) {
         String string = bQC ? "com.qualcomm.qti.services.secureui" : "com.trustonic.tuiservice";
-        c.d("AuthFrameworkService", "tuiProcessName : " + string);
+        Log.d("AuthFrameworkService", "tuiProcessName : " + string);
         List list = ((ActivityManager)context.getSystemService("activity")).getRunningAppProcesses();
         if (list != null) {
             Iterator iterator = list.iterator();
             while (iterator.hasNext()) {
                 if (!((ActivityManager.RunningAppProcessInfo)iterator.next()).processName.startsWith(string)) continue;
-                c.d("AuthFrameworkService", "TUI Service Running");
+                Log.d("AuthFrameworkService", "TUI Service Running");
                 return true;
             }
         }
-        c.e("AuthFrameworkService", "TUI Service Not Running");
+        Log.e("AuthFrameworkService", "TUI Service Not Running");
         return false;
     }
 
     private static void e(Context context) {
-        c.i("AuthFrameworkService", "startTuiService");
+        Log.i("AuthFrameworkService", "startTuiService");
         if (bQC) {
             // empty if block
         }
@@ -600,14 +599,14 @@ extends Service {
     private boolean o(String string) {
         SEAMS sEAMS = SEAMS.getInstance((Context)this.getApplicationContext());
         if (sEAMS == null) {
-            c.e("AuthFrameworkService", "AuthFrameworkService.checkCallerPermission(): SEAMS is null");
+            Log.e("AuthFrameworkService", "AuthFrameworkService.checkCallerPermission(): SEAMS is null");
             return false;
         }
         if (sEAMS.isAuthorized(Binder.getCallingPid(), Binder.getCallingUid(), "PaymentFramework", string) == 0) {
-            c.d("AuthFrameworkService", "AuthFrameworkService.checkCallerPermission(): Access Granted");
+            Log.d("AuthFrameworkService", "AuthFrameworkService.checkCallerPermission(): Access Granted");
             return true;
         }
-        c.e("AuthFrameworkService", "AuthFrameworkService.checkCallerPermission(): Access Denied");
+        Log.e("AuthFrameworkService", "AuthFrameworkService.checkCallerPermission(): Access Denied");
         return false;
     }
 
@@ -622,7 +621,7 @@ extends Service {
             AuthFrameworkService.e(this.mContext);
             Bundle bundle = intent.getExtras();
             if (bundle != null && (iBinder = bundle.getBinder("deathDetectorBinder")) != null) {
-                c.d("AuthFrameworkService", "onBind: registering deathBinder : " + (Object)iBinder);
+                Log.d("AuthFrameworkService", "onBind: registering deathBinder : " + (Object)iBinder);
                 try {
                     this.iD.a(iBinder);
                     iBinder.linkToDeath((IBinder.DeathRecipient)this.iD, 0);
@@ -631,7 +630,7 @@ extends Service {
                     remoteException.printStackTrace();
                 }
             }
-            c.i("AuthFrameworkService", "return auth binder");
+            Log.i("AuthFrameworkService", "return auth binder");
             return this.iE;
         }
         return null;
@@ -656,7 +655,7 @@ extends Service {
         }
 
         public void binderDied() {
-            c.e("AuthFrameworkService", "DeathRecipient: Error: Wallet App died, handle clean up");
+            Log.e("AuthFrameworkService", "DeathRecipient: Error: Wallet App died, handle clean up");
             n.q(AuthFrameworkService.this.mContext).clearCard();
             if (this.iG != null) {
                 this.iG.unlinkToDeath((IBinder.DeathRecipient)this, 0);

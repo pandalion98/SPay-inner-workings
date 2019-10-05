@@ -14,8 +14,10 @@
 package com.samsung.sensorframework.sdi.d;
 
 import android.content.Context;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.f.a;
-import com.samsung.sensorframework.sdi.d.c;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,9 +31,9 @@ public class d {
      */
     public static List<String> a(Context context, List<String> list) {
         ArrayList<String> arrayList = null;
-        com.samsung.android.spayfw.b.c.d("WifiProximityDetector", "getNearbyPoIs()");
+        Log.d("WifiProximityDetector", "getNearbyPoIs()");
         if (list == null || list.size() <= 0) {
-            com.samsung.android.spayfw.b.c.d("WifiProximityDetector", "getNearbyPoIs() location is invalid or poiCache is null or empty");
+            Log.d("WifiProximityDetector", "getNearbyPoIs() location is invalid or poiCache is null or empty");
             return null;
         }
         Iterator iterator = list.iterator();
@@ -45,7 +47,7 @@ public class d {
                 try {
                     ArrayList<String> arrayList5 = c.cq(string);
                     if (arrayList5 != null && arrayList5.size() > 0) {
-                        com.samsung.android.spayfw.b.c.d("WifiProximityDetector", "getNearbyPoIs() poiWifiSSIDs.size(): " + arrayList5.size());
+                        Log.d("WifiProximityDetector", "getNearbyPoIs() poiWifiSSIDs.size(): " + arrayList5.size());
                         if (arrayList == null) {
                             arrayList = a.bo(context);
                         }
@@ -57,13 +59,13 @@ public class d {
                             if ((string2 = c.a(string, "WIFI", 50.0)) != null && string2.length() > 0) {
                                 arrayList2.add((Object)string2);
                             }
-                            com.samsung.android.spayfw.b.c.d("WifiProximityDetector", "getNearbyPoIs() Wifi matched for POI: " + c.cr(string2));
+                            Log.d("WifiProximityDetector", "getNearbyPoIs() Wifi matched for POI: " + c.cr(string2));
                             arrayList3 = arrayList;
                             arrayList4 = arrayList2;
                             break block10;
                         }
                     } else {
-                        com.samsung.android.spayfw.b.c.d("WifiProximityDetector", "getNearbyPoIs() poiWifiSSIDs is null or of zero length");
+                        Log.d("WifiProximityDetector", "getNearbyPoIs() poiWifiSSIDs is null or of zero length");
                     }
                     arrayList3 = arrayList;
                     arrayList4 = arrayList2;
@@ -105,7 +107,7 @@ public class d {
         bl = false;
         if (n5 <= 0) return bl;
         double d2 = 100.0 * (double)n5 / (double)hashSet.size();
-        com.samsung.android.spayfw.b.c.d("WifiProximityDetector", "deviceWifiHashSet.size(): " + hashSet2.size() + " poiWifiHashSet.size(): " + hashSet.size() + " commonSSIDPercent: " + d2);
+        Log.d("WifiProximityDetector", "deviceWifiHashSet.size(): " + hashSet2.size() + " poiWifiHashSet.size(): " + hashSet.size() + " commonSSIDPercent: " + d2);
         double d3 = d2 DCMPL (double)n2;
         bl = false;
         if (d3 <= 0) return bl;
@@ -113,7 +115,7 @@ public class d {
     }
 
     private static HashSet<String> l(ArrayList<String> arrayList) {
-        com.samsung.android.spayfw.b.c.d("WifiProximityDetector", "convertListToHashSetLowerCase()");
+        Log.d("WifiProximityDetector", "convertListToHashSetLowerCase()");
         if (arrayList == null) {
             return null;
         }

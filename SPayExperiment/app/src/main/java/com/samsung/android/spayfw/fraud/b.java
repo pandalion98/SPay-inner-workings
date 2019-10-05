@@ -14,12 +14,10 @@ package com.samsung.android.spayfw.fraud;
 
 import android.content.Context;
 import android.database.Cursor;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.fraud.a.g;
-import com.samsung.android.spayfw.fraud.d;
-import com.samsung.android.spayfw.fraud.e;
 import com.samsung.android.spayfw.utils.h;
-import java.util.List;
 
 public class b {
     private Context mContext;
@@ -56,7 +54,7 @@ public class b {
         if (this.ne == null) {
             this.bu();
             if (this.ne == null) {
-                c.e("FraudDataProvider", "getProvisionedNameCount: cannot get db adapter");
+                Log.e("FraudDataProvider", "getProvisionedNameCount: cannot get db adapter");
                 return n3;
             }
         }
@@ -75,7 +73,7 @@ public class b {
             }
             cursor.close();
         }
-        c.d("FraudDataProvider", "number of names provisioned in last " + n2 + " days is " + n3);
+        Log.d("FraudDataProvider", "number of names provisioned in last " + n2 + " days is " + n3);
         return n3;
     }
 
@@ -84,7 +82,7 @@ public class b {
         if (this.ne == null) {
             this.bu();
             if (this.ne == null) {
-                c.e("FraudDataProvider", "getDistinctZipCodeCount: cannot get db adapter");
+                Log.e("FraudDataProvider", "getDistinctZipCodeCount: cannot get db adapter");
                 return n3;
             }
         }
@@ -99,7 +97,7 @@ public class b {
             }
             cursor.close();
         }
-        c.d("FraudDataProvider", "number of zipcodes used in last " + n2 + " days is " + n3);
+        Log.d("FraudDataProvider", "number of zipcodes used in last " + n2 + " days is " + n3);
         return n3;
     }
 
@@ -108,7 +106,7 @@ public class b {
         if (this.nf == null) {
             this.bv();
             if (this.nf == null) {
-                c.e("FraudDataProvider", "getAllResetCount: adapter is null");
+                Log.e("FraudDataProvider", "getAllResetCount: adapter is null");
                 return n3;
             }
         }
@@ -123,7 +121,7 @@ public class b {
             }
             cursor.close();
         }
-        c.d("FraudDataProvider", "number of app and factory reset in last " + n2 + " days is " + n3);
+        Log.d("FraudDataProvider", "number of app and factory reset in last " + n2 + " days is " + n3);
         return n3;
     }
 
@@ -136,18 +134,18 @@ public class b {
         e.initialize(this.mContext);
         d d2 = (d)e.Y("enrollment").bx().get(0);
         long l3 = System.currentTimeMillis();
-        c.d("FraudDataProvider", "the current device score is " + d2.nk + " the version is " + d2.nj + ". It takes " + (l3 - l2) + " ms");
+        Log.d("FraudDataProvider", "the current device score is " + d2.nk + " the version is " + d2.nj + ". It takes " + (l3 - l2) + " ms");
         return d2;
     }
 
     public int bw() {
         Cursor cursor;
-        c.d("FraudDataProvider", "getSuspendedCardsCount: entering .. ");
+        Log.d("FraudDataProvider", "getSuspendedCardsCount: entering .. ");
         int n2 = -1;
         if (this.ne == null) {
             this.bu();
             if (this.ne == null) {
-                c.e("FraudDataProvider", "getSuspendedCardsCount: cannot get db adapter");
+                Log.e("FraudDataProvider", "getSuspendedCardsCount: cannot get db adapter");
                 return n2;
             }
         }
@@ -158,7 +156,7 @@ public class b {
             }
             cursor.close();
         }
-        c.d("FraudDataProvider", "getSuspendedCardsCount: count = " + n2);
+        Log.d("FraudDataProvider", "getSuspendedCardsCount: count = " + n2);
         return n2;
     }
 
@@ -167,7 +165,7 @@ public class b {
         if (this.ne == null) {
             this.bu();
             if (this.ne == null) {
-                c.e("FraudDataProvider", "getProvisioningAttemptCount: cannot get db adapter");
+                Log.e("FraudDataProvider", "getProvisioningAttemptCount: cannot get db adapter");
                 return n3;
             }
         }
@@ -181,7 +179,7 @@ public class b {
             }
             cursor.close();
         }
-        c.d("FraudDataProvider", "number of provisioning attempts in last " + n2 + " days is " + n3);
+        Log.d("FraudDataProvider", "number of provisioning attempts in last " + n2 + " days is " + n3);
         return n3;
     }
 
@@ -190,7 +188,7 @@ public class b {
         if (this.ne == null) {
             this.bu();
             if (this.ne == null) {
-                c.e("FraudDataProvider", "getProvisionedCardCount: cannot get db adapter");
+                Log.e("FraudDataProvider", "getProvisionedCardCount: cannot get db adapter");
                 return n3;
             }
         }
@@ -205,7 +203,7 @@ public class b {
             }
             cursor.close();
         }
-        c.d("FraudDataProvider", "number of card provisioned in last " + n2 + " days is " + n3);
+        Log.d("FraudDataProvider", "number of card provisioned in last " + n2 + " days is " + n3);
         return n3;
     }
 
@@ -214,7 +212,7 @@ public class b {
         if (this.ne == null) {
             this.bu();
             if (this.ne == null) {
-                c.e("FraudDataProvider", "getProvisionedLastNameCount: cannot get db adapter");
+                Log.e("FraudDataProvider", "getProvisionedLastNameCount: cannot get db adapter");
                 return n3;
             }
         }
@@ -229,7 +227,7 @@ public class b {
             }
             cursor.close();
         }
-        c.d("FraudDataProvider", "number of last names provisioned in last " + n2 + " days is " + n3);
+        Log.d("FraudDataProvider", "number of last names provisioned in last " + n2 + " days is " + n3);
         return n3;
     }
 }

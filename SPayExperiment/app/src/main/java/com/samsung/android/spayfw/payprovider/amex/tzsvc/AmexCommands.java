@@ -14,9 +14,8 @@ package com.samsung.android.spayfw.payprovider.amex.tzsvc;
 
 import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
-import com.samsung.android.spayfw.payprovider.amex.tzsvc.AmexTAException;
-import com.samsung.android.spayfw.payprovider.amex.tzsvc.SPayTAAuthCommands;
-import com.samsung.android.spayfw.payprovider.amex.tzsvc.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.Blob;
 import com.samsung.android.spaytzsvc.api.KeyValPairs;
 import com.samsung.android.spaytzsvc.api.TACommands;
@@ -487,7 +486,7 @@ extends SPayTAAuthCommands {
 
                 public a(List<byte[]> list, byte[] arrby, byte[] arrby2) {
                     if (list.size() > 3) {
-                        com.samsung.android.spayfw.b.c.e("AmexCommands", "TSP Encryption Certificate Chain is longer than maximum allowed (3)");
+                        Log.e("AmexCommands", "TSP Encryption Certificate Chain is longer than maximum allowed (3)");
                         throw new AmexTAException(983040);
                     }
                     this.pT.setData(list);
@@ -596,7 +595,7 @@ extends SPayTAAuthCommands {
 
                 public a(List<byte[]> list, byte[] arrby, byte[] arrby2, byte[] arrby3, byte[] arrby4, byte[] arrby5, byte[] arrby6) {
                     if (list.size() > 2) {
-                        com.samsung.android.spayfw.b.c.e("AmexCommands", "TSP ECC Certificate Chain is longer than maximum allowed (2)");
+                        Log.e("AmexCommands", "TSP ECC Certificate Chain is longer than maximum allowed (2)");
                         throw new AmexTAException(983040);
                     }
                     this.qc.setData(list);
@@ -875,7 +874,7 @@ extends SPayTAAuthCommands {
          */
         public void setData(List<byte[]> list) {
             if (list != null && list.size() > this.pD.length) {
-                com.samsung.android.spayfw.b.c.e("AmexCommands", "Error: Can set Cert Chain more than the size of the destination Cert Chain");
+                Log.e("AmexCommands", "Error: Can set Cert Chain more than the size of the destination Cert Chain");
                 return;
             } else {
                 if (list != null && list.size() > 0) {

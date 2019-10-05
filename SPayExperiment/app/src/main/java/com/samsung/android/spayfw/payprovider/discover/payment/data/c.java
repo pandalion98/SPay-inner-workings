@@ -13,14 +13,9 @@
  */
 package com.samsung.android.spayfw.payprovider.discover.payment.data;
 
-import com.samsung.android.spayfw.payprovider.discover.payment.data.DiscoverCDCVM;
-import com.samsung.android.spayfw.payprovider.discover.payment.data.DiscoverCLTransactionContext;
-import com.samsung.android.spayfw.payprovider.discover.payment.data.e;
-import com.samsung.android.spayfw.payprovider.discover.payment.data.f;
-import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverApplicationData;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverContactlessPaymentData;
 import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverIDDTag;
-import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverIssuerOptions;
 import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverPaymentProfile;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.ByteBuffer;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.a;
@@ -230,12 +225,12 @@ public class c {
         if (byteBuffer.getSize() != 2) {
             return false;
         }
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverDataTags", "processApdu, C-APDU get data, profile tag found, tag " + byteBuffer.toHexString());
+        Log.i("DCSDK_DiscoverDataTags", "processApdu, C-APDU get data, profile tag found, tag " + byteBuffer.toHexString());
         if ((255 & byteBuffer.getByte(0)) == 191) return bl;
         if ((255 & byteBuffer.getByte(0)) != 223) return false;
         if ((255 & byteBuffer.getByte((int)bl)) < 33) return false;
         if ((255 & byteBuffer.getByte((int)bl)) > 47) return false;
-        com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "processApdu, C-APDU GET DATA, profile tag");
+        Log.d("DCSDK_DiscoverDataTags", "processApdu, C-APDU GET DATA, profile tag");
         return bl;
     }
 
@@ -243,43 +238,43 @@ public class c {
         if (byteBuffer == null || byteBuffer.getSize() != 2) {
             return false;
         }
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverDataTags", "processApdu, C-APDU GET DATA, profile tag found, tag " + byteBuffer.toHexString());
+        Log.i("DCSDK_DiscoverDataTags", "processApdu, C-APDU GET DATA, profile tag found, tag " + byteBuffer.toHexString());
         if ((255 & byteBuffer.getByte(0)) == 223 && (255 & byteBuffer.getByte(1)) >= 1 && (255 & byteBuffer.getByte(1)) <= 10) {
-            com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "processApdu, C-APDU GET DATA, IDD tag");
+            Log.d("DCSDK_DiscoverDataTags", "processApdu, C-APDU GET DATA, IDD tag");
             return true;
         }
         return false;
     }
 
     public static ByteBuffer a(ByteBuffer byteBuffer, DiscoverContactlessPaymentData discoverContactlessPaymentData) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverDataTags", "getProfile, get profile...");
+        Log.i("DCSDK_DiscoverDataTags", "getProfile, get profile...");
         if (byteBuffer == null || byteBuffer.getSize() != 2) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "getProfile, wrong profile tag requested.");
+            Log.e("DCSDK_DiscoverDataTags", "getProfile, wrong profile tag requested.");
             return null;
         }
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverDataTags", "getProfile, profile tag requested: " + byteBuffer.toHexString());
+        Log.i("DCSDK_DiscoverDataTags", "getProfile, profile tag requested: " + byteBuffer.toHexString());
         if (c.A(byteBuffer)) {
             int n2 = 255 & byteBuffer.getInt();
-            com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, profile requested: " + (255 & byteBuffer.getInt()));
+            Log.i("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, profile requested: " + (255 & byteBuffer.getInt()));
             if (n2 == 80 || n2 >= 33 && n2 <= 47) {
                 int n3 = n2 & 15;
                 HashMap<Integer, DiscoverPaymentProfile> hashMap = discoverContactlessPaymentData.getPaymentProfiles();
                 if (hashMap == null || hashMap.isEmpty()) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, payment profile map is empty");
+                    Log.e("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, payment profile map is empty");
                     return null;
                 }
                 DiscoverPaymentProfile discoverPaymentProfile = (DiscoverPaymentProfile)hashMap.get((Object)n3);
                 if (discoverPaymentProfile == null) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, profile not found, id " + n3);
+                    Log.e("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, profile not found, id " + n3);
                     return null;
                 }
-                com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, compose profile");
+                Log.i("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, compose profile");
                 return c.b(discoverPaymentProfile);
             }
             if (n2 == 81) {
-                com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, ZIP profile requested");
-                com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, ZIP afl:" + discoverContactlessPaymentData.getZipAfl());
-                com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, ZIP aip:" + discoverContactlessPaymentData.getZipAip());
+                Log.i("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, ZIP profile requested");
+                Log.d("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, ZIP afl:" + discoverContactlessPaymentData.getZipAfl());
+                Log.d("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, ZIP aip:" + discoverContactlessPaymentData.getZipAip());
                 if (discoverContactlessPaymentData.getZipAfl() != null && discoverContactlessPaymentData.getZipAip() != null) {
                     ByteBuffer byteBuffer2 = a.c(ux, discoverContactlessPaymentData.getZipAip());
                     byteBuffer2.append(a.c(uy, discoverContactlessPaymentData.getZipAfl()));
@@ -287,10 +282,10 @@ public class c {
                 }
                 return null;
             }
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "getProfile, unknown profile id " + n2);
+            Log.e("DCSDK_DiscoverDataTags", "getProfile, unknown profile id " + n2);
             return null;
         }
-        com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "getProfile, not profile tag");
+        Log.e("DCSDK_DiscoverDataTags", "getProfile, not profile tag");
         return null;
     }
 
@@ -299,7 +294,7 @@ public class c {
      * Lifted jumps to return sites
      */
     public static ByteBuffer a(Integer n2, int n3, DiscoverPaymentProfile discoverPaymentProfile, e e2, List<DiscoverIDDTag> list) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, IDD tag: " + (Object)n2 + ", length: " + n3);
+        Log.i("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, IDD tag: " + (Object)n2 + ", length: " + n3);
         if (n2.intValue() == vd.getInt()) {
             return ByteBuffer.fromHexString(c.b(discoverPaymentProfile.getCRM().getLCOA(), n3));
         }
@@ -325,7 +320,7 @@ public class c {
             return ByteBuffer.fromHexString(c.b(discoverPaymentProfile.getCVM().getCvmAccumulator(), n3));
         }
         if (n2.intValue() == uM.getInt()) {
-            com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "profile.getCVM().getCvmCounter(): " + discoverPaymentProfile.getCVM().getCvmCounter());
+            Log.d("DCSDK_DiscoverDataTags", "profile.getCVM().getCvmCounter(): " + discoverPaymentProfile.getCVM().getCvmCounter());
             return ByteBuffer.getFromLong(discoverPaymentProfile.getCVM().getCvmCounter(), n3);
         }
         if (n2.intValue() == uU.getInt()) {
@@ -357,13 +352,13 @@ public class c {
         byteBuffer = null;
         if (n8 != 223) return byteBuffer;
         if (list == null || list.isEmpty()) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, IDD tags are empty.");
+            Log.e("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, IDD tags are empty.");
             return null;
         }
         int n9 = -1 + (255 & n2);
-        com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, iddTagNum: " + n9);
+        Log.d("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, iddTagNum: " + n9);
         if (n9 >= list.size()) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, IDD tag requested " + n9 + "," + "IDD tags in the profile " + list.size());
+            Log.e("DCSDK_DiscoverDataTags", "DiscoverDataTags, composeIDD, IDD tag requested " + n9 + "," + "IDD tags in the profile " + list.size());
             return null;
         }
         Object object = list.get(n9);
@@ -395,7 +390,7 @@ public class c {
         vY.put((Object)uy.getInt(), (Object)discoverPaymentProfile.getAfl());
         vY.put((Object)uz.getInt(), (Object)discoverContactlessPaymentData.getDiscoverApplicationData().getCLApplicationConfigurationOptions());
         vY.put((Object)uB.getInt(), (Object)discoverContactlessPaymentData.getCaco());
-        com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "CPR to MAP: " + e2.ed().dI());
+        Log.d("DCSDK_DiscoverDataTags", "CPR to MAP: " + e2.ed().dI());
         vY.put((Object)uC.getInt(), (Object)e2.ed().dI());
         vY.put((Object)uE.getInt(), (Object)discoverContactlessPaymentData.getSecondaryCurrency1());
         vY.put((Object)uF.getInt(), (Object)discoverContactlessPaymentData.getSecondaryCurrency2());
@@ -439,7 +434,7 @@ public class c {
         if (list != null) {
             for (DiscoverIDDTag discoverIDDTag : list) {
                 if (discoverIDDTag == null || discoverIDDTag.getTag() == null || discoverIDDTag.getData() == null) continue;
-                com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "put data tag: " + discoverIDDTag.getTag().toHexString() + ", get data " + discoverIDDTag.getData().toHexString());
+                Log.d("DCSDK_DiscoverDataTags", "put data tag: " + discoverIDDTag.getTag().toHexString() + ", get data " + discoverIDDTag.getData().toHexString());
                 vY.put((Object)discoverIDDTag.getTag().getInt(), (Object)discoverIDDTag.getData());
             }
         }
@@ -481,23 +476,23 @@ public class c {
 
     public static DiscoverIDDTag b(ByteBuffer byteBuffer, DiscoverContactlessPaymentData discoverContactlessPaymentData) {
         if (discoverContactlessPaymentData == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "getIDDTag, paymentProfileData is null.");
+            Log.e("DCSDK_DiscoverDataTags", "getIDDTag, paymentProfileData is null.");
             return null;
         }
         if (!c.B(byteBuffer)) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "getIDDTag, wrong idd tag.");
+            Log.e("DCSDK_DiscoverDataTags", "getIDDTag, wrong idd tag.");
             return null;
         }
         List<DiscoverIDDTag> list = discoverContactlessPaymentData.getIssuerApplicationData().getIDDTags();
         if (list == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "getIDDTag, no valid IDD tag found.");
+            Log.e("DCSDK_DiscoverDataTags", "getIDDTag, no valid IDD tag found.");
             return null;
         }
         for (DiscoverIDDTag discoverIDDTag : list) {
             if (discoverIDDTag == null || discoverIDDTag.getTag().getInt() != byteBuffer.getInt()) continue;
             return discoverIDDTag;
         }
-        com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "getIDDTag, no valid IDD tag found, tag " + byteBuffer.toHexString());
+        Log.e("DCSDK_DiscoverDataTags", "getIDDTag, no valid IDD tag found, tag " + byteBuffer.toHexString());
         return null;
     }
 
@@ -544,9 +539,9 @@ public class c {
         block6 : {
             block5 : {
                 var3_2 = Long.toString((long)var0);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "getTagValue, value " + var3_2 + ", length " + var2_1);
+                Log.d("DCSDK_DiscoverDataTags", "getTagValue, value " + var3_2 + ", length " + var2_1);
                 var4_3 = var3_2.length() % 2 == 0 ? var3_2.length() / 2 : 1 + var3_2.length() / 2;
-                com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "getTagValue, tagLength " + var4_3);
+                Log.d("DCSDK_DiscoverDataTags", "getTagValue, tagLength " + var4_3);
                 var5_4 = new StringBuffer(var3_2);
                 if (var4_3 >= var2_1) break block5;
                 for (var10_5 = 0; var10_5 < var2_1 - var4_3; ++var10_5) {
@@ -571,7 +566,7 @@ lbl24: // 4 sources:
                 var6_6 = var5_4;
             }
         }
-        com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "DiscoverDataTags, getTagValue: " + var6_6.toString());
+        Log.d("DCSDK_DiscoverDataTags", "DiscoverDataTags, getTagValue: " + var6_6.toString());
         return var6_6.toString();
     }
 
@@ -587,7 +582,7 @@ lbl24: // 4 sources:
      */
     public static ByteBuffer c(ByteBuffer byteBuffer, DiscoverContactlessPaymentData discoverContactlessPaymentData) {
         if (byteBuffer == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "processApdu, C-APDU GET DATA, requested data tag is null");
+            Log.e("DCSDK_DiscoverDataTags", "processApdu, C-APDU GET DATA, requested data tag is null");
             return null;
         } else {
             int n2 = byteBuffer.getInt();
@@ -624,20 +619,20 @@ lbl24: // 4 sources:
     }
 
     public static boolean w(ByteBuffer byteBuffer) {
-        com.samsung.android.spayfw.b.c.d("DCSDK_DiscoverDataTags", "Map size: " + vY.size());
+        Log.d("DCSDK_DiscoverDataTags", "Map size: " + vY.size());
         if (byteBuffer == null || byteBuffer.getSize() == 0) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DiscoverDataTags", "checkDataTag, tag is null.");
+            Log.e("DCSDK_DiscoverDataTags", "checkDataTag, tag is null.");
             return false;
         }
         if ((255 & byteBuffer.getByte(0)) == 223) {
-            com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverDataTags", "checkDataTag, tag is IDD tag.");
+            Log.i("DCSDK_DiscoverDataTags", "checkDataTag, tag is IDD tag.");
             return true;
         }
         return vY.containsKey((Object)byteBuffer.getInt());
     }
 
     public static ByteBuffer x(ByteBuffer byteBuffer) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DiscoverDataTags", "Tag data: " + vY.get((Object)byteBuffer.getInt()));
+        Log.i("DCSDK_DiscoverDataTags", "Tag data: " + vY.get((Object)byteBuffer.getInt()));
         return (ByteBuffer)vY.get((Object)byteBuffer.getInt());
     }
 

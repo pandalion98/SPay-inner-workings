@@ -22,7 +22,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.e.a.a;
 import com.samsung.android.spayfw.interfacelibrary.db.DBName;
 import java.util.ArrayList;
@@ -223,7 +224,7 @@ lbl-1000: // 2 sources:
         }
 lbl-1000: // 1 sources:
         {
-            c.d("DbAdapter", "get count by column:" + var7_8.getCount());
+            Log.d("DbAdapter", "get count by column:" + var7_8.getCount());
             var10_9 = var7_8.getCount();
             DbAdapter.a(var7_8);
             return var10_9;

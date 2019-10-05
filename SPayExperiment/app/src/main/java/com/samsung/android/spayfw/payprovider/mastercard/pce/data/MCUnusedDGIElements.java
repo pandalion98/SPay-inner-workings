@@ -9,7 +9,7 @@
  */
 package com.samsung.android.spayfw.payprovider.mastercard.pce.data;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.card.McCardClearData;
 import com.samsung.android.spayfw.payprovider.mastercard.payload.McPayloadBuilder;
 import java.util.Map;
@@ -543,7 +543,7 @@ public class MCUnusedDGIElements {
 
     public void toCopy(MCUnusedDGIElements mCUnusedDGIElements) {
         if (mCUnusedDGIElements == null) {
-            c.e("MCUnusedDGIElements", "source is null");
+            Log.e("MCUnusedDGIElements", "source is null");
             return;
         }
         this.a002Accumulator1CurrencyCode = mCUnusedDGIElements.getA002Accumulator1CurrencyCode();

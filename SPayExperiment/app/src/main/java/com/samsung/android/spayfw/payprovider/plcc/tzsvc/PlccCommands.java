@@ -12,7 +12,8 @@ package com.samsung.android.spayfw.payprovider.plcc.tzsvc;
 
 import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.Blob;
 import com.samsung.android.spaytzsvc.api.TACommands;
 import com.samsung.android.spaytzsvc.api.TAController;
@@ -459,7 +460,7 @@ extends TACommands {
             Request(int n2, byte[] arrby, byte[] arrby2) {
                 byte[] arrby3 = new Data(n2, arrby, arrby2).serialize();
                 if (DEBUG) {
-                    c.d(PlccCommands.TAG, "Request.length = " + arrby3.length);
+                    Log.d(PlccCommands.TAG, "Request.length = " + arrby3.length);
                 }
                 this.init(1, PlccCommands.TL_MAGIC_NUM, 5, arrby3);
             }
@@ -515,7 +516,7 @@ extends TACommands {
             Request(int n2, byte[] arrby, byte[] arrby2, byte[] arrby3) {
                 byte[] arrby4 = new Data(n2, arrby, arrby2, arrby3).serialize();
                 if (DEBUG) {
-                    c.d(PlccCommands.TAG, "Request.length = " + arrby4.length);
+                    Log.d(PlccCommands.TAG, "Request.length = " + arrby4.length);
                 }
                 this.init(1, PlccCommands.TL_MAGIC_NUM, 1879048193, arrby4);
             }

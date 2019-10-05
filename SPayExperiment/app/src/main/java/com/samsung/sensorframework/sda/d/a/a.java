@@ -15,12 +15,11 @@
  */
 package com.samsung.sensorframework.sda.d.a;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.c.a.h;
-import com.samsung.sensorframework.sda.d.a.b;
 import com.samsung.sensorframework.sda.d.c;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +70,7 @@ extends b {
                                 arrstring2 = a.this.hk();
                                 string = a.a(a.this);
                                 arrobject = new Object[]{c.ap(a.this.getSensorType())};
-                                com.samsung.android.spayfw.b.c.d(string, String.format((String)"Sensing content reader: %s", (Object[])arrobject));
+                                Log.d(string, String.format((String)"Sensing content reader: %s", (Object[])arrobject));
                                 cursor = a.b(a.this).getContentResolver().query(uri, arrstring2, null, null, null);
                                 if (cursor == null) ** GOTO lbl28
                                 break block13;
@@ -80,7 +79,7 @@ extends b {
                             return;
                         }
                         cursor.moveToFirst();
-                        com.samsung.android.spayfw.b.c.d(a.c(a.this), "Total entries in the cursor: " + cursor.getCount());
+                        Log.d(a.c(a.this), "Total entries in the cursor: " + cursor.getCount());
                         do {
                             if (!cursor.isAfterLast()) {
                                 hashMap = new HashMap();

@@ -11,16 +11,11 @@
  */
 package com.samsung.android.spayfw.remoteservice.tokenrequester;
 
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Client;
 import com.samsung.android.spayfw.remoteservice.c;
 import com.samsung.android.spayfw.remoteservice.models.Art;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
 import com.samsung.android.spayfw.remoteservice.models.Eula;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.CardInfo;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.CardIssuerAppInfo;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.CardIssuerInfo;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenResponseData;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,13 +61,13 @@ extends m<String, TokenResponseData, c<TokenResponseData>, g> {
                 break;
             } while (true);
         }
-        com.samsung.android.spayfw.b.c.d("SPAYFW:QueryTokenRequest", "Not downloading resources");
+        Log.d("SPAYFW:QueryTokenRequest", "Not downloading resources");
         return new c<TokenResponseData>(null, tokenResponseData, n2);
     }
 
     @Override
     protected String cG() {
-        com.samsung.android.spayfw.b.c.d("SPAYFW:QueryTokenRequest", this.tokenId);
+        Log.d("SPAYFW:QueryTokenRequest", this.tokenId);
         return (Object)zX + "/" + this.tokenId.toString();
     }
 

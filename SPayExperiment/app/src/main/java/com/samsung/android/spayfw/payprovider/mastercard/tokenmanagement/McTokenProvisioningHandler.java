@@ -27,10 +27,7 @@
  */
 package com.samsung.android.spayfw.payprovider.mastercard.tokenmanagement;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Base64;
 import com.google.gson.Gson;
@@ -41,6 +38,7 @@ import com.samsung.android.spayfw.appinterface.BillingInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardPanInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardReferenceInfo;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.c;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
@@ -66,22 +64,18 @@ import com.samsung.android.spayfw.payprovider.mastercard.payload.subpayload.McSp
 import com.samsung.android.spayfw.payprovider.mastercard.pce.MCBaseCardProfile;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCProfilesTable;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCUnusedDGIElements;
-import com.samsung.android.spayfw.payprovider.mastercard.tokenmanagement.McAidSelector;
-import com.samsung.android.spayfw.payprovider.mastercard.tokenmanagement.McTokenManager;
 import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McTACommands;
 import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McTAController;
 import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McTAError;
 import com.samsung.android.spayfw.payprovider.mastercard.utils.CryptoUtils;
 import com.samsung.android.spayfw.payprovider.mastercard.utils.McUtils;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.DeviceInfo;
-import com.samsung.android.spaytzsvc.api.Blob;
+
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import javolution.io.Struct;
 
 public class McTokenProvisioningHandler {
     private static final String OS_NAME_ANDROID = "Android";
@@ -94,7 +88,7 @@ public class McTokenProvisioningHandler {
     private McTAController mMcTAController;
 
     public McTokenProvisioningHandler() {
-        com.samsung.android.spayfw.b.c.d(TAG, "McTokenProvisioningHandler: Creating a new instance");
+        Log.d(TAG, "McTokenProvisioningHandler: Creating a new instance");
         this.mMcTAController = McTAController.getInstance();
         this.mDbReference = -1L;
     }
@@ -109,10 +103,10 @@ public class McTokenProvisioningHandler {
     private McBillingAddress generateMcBillingAddress(BillingInfo billingInfo) {
         String string;
         if (billingInfo == null) {
-            com.samsung.android.spayfw.b.c.i(TAG, "Input BillingInfo is null -2-");
+            Log.i(TAG, "Input BillingInfo is null -2-");
             return null;
         }
-        com.samsung.android.spayfw.b.c.d(TAG, "McCardInfo : mcCardInfo Sent by app: " + billingInfo.toString());
+        Log.d(TAG, "McCardInfo : mcCardInfo Sent by app: " + billingInfo.toString());
         McBillingAddress mcBillingAddress = new McBillingAddress();
         String string2 = billingInfo.getCountry();
         if (string2 != null) {
@@ -144,19 +138,19 @@ public class McTokenProvisioningHandler {
             mcCardInfo.setSecurityCode(enrollCardPanInfo.getCVV());
             if (enrollCardPanInfo.getName() != null) {
                 mcCardInfo.setCardholderName(this.generateUserName(enrollCardPanInfo.getName()));
-                com.samsung.android.spayfw.b.c.d(TAG, "Card Holder Name: " + mcCardInfo.getCardholderName());
+                Log.d(TAG, "Card Holder Name: " + mcCardInfo.getCardholderName());
             } else {
-                com.samsung.android.spayfw.b.c.e(TAG, "CardInfo does not have card holder name value");
+                Log.e(TAG, "CardInfo does not have card holder name value");
             }
             mcCardInfo.setSource(CardSource.getMcCardSource(enrollCardPanInfo.getCardEntryMode()).toString());
         }
-        com.samsung.android.spayfw.b.c.d(TAG, "mcCardInfo Source: " + mcCardInfo.getSource());
+        Log.d(TAG, "mcCardInfo Source: " + mcCardInfo.getSource());
     }
 
     private String generatePaymentAppInstanceId(String string) {
         int n2 = 0;
         if (string == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Wallet Id is null");
+            Log.e(TAG, "Wallet Id is null");
             return null;
         }
         String string2 = DeviceInfo.getDeviceId(this.mMcTAController.getContext());
@@ -184,7 +178,7 @@ public class McTokenProvisioningHandler {
         if (string == null) return string2;
         String[] arrstring = string.split("[ ]+");
         if (arrstring.length <= 0) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Card holder name is null");
+            Log.e(TAG, "Card holder name is null");
             return null;
         }
         String string3 = arrstring[0];
@@ -224,24 +218,24 @@ public class McTokenProvisioningHandler {
      */
     private McCardInfoWrapper getIssuerInitiatedDigitizationData(String string, StringBuilder stringBuilder) {
         if (string == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "McIssuerInitiatedDigitizationData :  IssuerInitiatedDigitizationData is null");
+            Log.e(TAG, "McIssuerInitiatedDigitizationData :  IssuerInitiatedDigitizationData is null");
             return null;
         }
         if (stringBuilder == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "McIssuerInitiatedDigitizationData :  wrong tav object");
+            Log.e(TAG, "McIssuerInitiatedDigitizationData :  wrong tav object");
             return null;
         }
         McIssuerInitiatedDigitizationData mcIssuerInitiatedDigitizationData = (McIssuerInitiatedDigitizationData)new Gson().fromJson(new String(Base64.decode((byte[])string.getBytes(), (int)0)), McIssuerInitiatedDigitizationData.class);
         if (mcIssuerInitiatedDigitizationData == null || mcIssuerInitiatedDigitizationData.getCardInfo() == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "McIssuerInitiatedDigitizationData : Wrong IssuerInitiatedDigitizationData object");
+            Log.e(TAG, "McIssuerInitiatedDigitizationData : Wrong IssuerInitiatedDigitizationData object");
             return null;
         }
         if (McUtils.isStringValid(mcIssuerInitiatedDigitizationData.getTokenizationAuthenticationValue(), 0, 2048)) {
             stringBuilder.append(mcIssuerInitiatedDigitizationData.getTokenizationAuthenticationValue());
         } else {
-            com.samsung.android.spayfw.b.c.i(TAG, "getIssuerInitiatedDigitizationData : TAV isn't available");
+            Log.i(TAG, "getIssuerInitiatedDigitizationData : TAV isn't available");
         }
-        com.samsung.android.spayfw.b.c.d(TAG, "[in] TAV value : " + stringBuilder.toString());
+        Log.d(TAG, "[in] TAV value : " + stringBuilder.toString());
         return mcIssuerInitiatedDigitizationData.getCardInfo();
     }
 
@@ -257,7 +251,7 @@ public class McTokenProvisioningHandler {
 
     private byte[] getappletInstanceIdBytes(String string) {
         byte[] arrby = ApduCommand.ApduParser.convertStringToByteArray(string);
-        com.samsung.android.spayfw.b.c.d(TAG, "Applet Instance Id: " + string + ", Byte Array: " + Arrays.toString((byte[])arrby) + ", Length: " + arrby.length);
+        Log.d(TAG, "Applet Instance Id: " + string + ", Byte Array: " + Arrays.toString((byte[])arrby) + ", Length: " + arrby.length);
         return arrby;
     }
 
@@ -281,20 +275,20 @@ public class McTokenProvisioningHandler {
         c c2 = new c();
         c2.setErrorCode(0);
         if (this.mMcTAController == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "mMcTAController is null");
+            Log.e(TAG, "mMcTAController is null");
             return this.getEnrollmentMcDataError(c2, -6);
         }
         McCardInfoWrapper mcCardInfoWrapper = new McCardInfoWrapper();
         String string = this.generatePaymentAppInstanceId(enrollCardInfo.getWalletId());
         McTAController.CasdParams casdParams = this.mMcTAController.getCasdParameters();
         if (this.mAp1CertBuffer == null || this.mAp2CertBuffer == null || casdParams != null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Need Certs Update");
+            Log.e(TAG, "Need Certs Update");
             c2.a(McPayloadBuilder.buildMcEnrollmentRequestPayload(new McSeInfo(DeviceInfo.getDeviceId(this.mMcTAController.getContext()), null), mcCardInfoWrapper, null, null, null, string, null));
             return c2;
         }
         McCardInfo mcCardInfo = new McCardInfo();
         StringBuilder stringBuilder = new StringBuilder();
-        com.samsung.android.spayfw.b.c.d(TAG, "cardInfo Type : " + enrollCardInfo.getClass().getSimpleName());
+        Log.d(TAG, "cardInfo Type : " + enrollCardInfo.getClass().getSimpleName());
         mcCardInfo.setBillingAddress(this.generateMcBillingAddress(billingInfo));
         mcCardInfo.setDataValidUntilTimestamp(null);
         if (enrollCardInfo instanceof EnrollCardPanInfo) {
@@ -303,23 +297,23 @@ public class McTokenProvisioningHandler {
         } else if (enrollCardInfo instanceof EnrollCardReferenceInfo) {
             EnrollCardReferenceInfo enrollCardReferenceInfo = (EnrollCardReferenceInfo)enrollCardInfo;
             if (enrollCardReferenceInfo.getReferenceType() == null || enrollCardReferenceInfo.getExtraEnrollData() == null) {
-                com.samsung.android.spayfw.b.c.e(TAG, "enrollCardReferenceInfo reference type or extra data is null");
+                Log.e(TAG, "enrollCardReferenceInfo reference type or extra data is null");
                 return this.getEnrollmentMcDataError(c2, -9);
             }
-            com.samsung.android.spayfw.b.c.d(TAG, "Card Type : " + enrollCardReferenceInfo.getReferenceType());
+            Log.d(TAG, "Card Type : " + enrollCardReferenceInfo.getReferenceType());
             if (enrollCardReferenceInfo.getReferenceType().equals((Object)"app2app")) {
                 mcCardInfo.setSource(CardSource.CARD_ADDED_VIA_APPLICATION.toString());
                 byte[] arrby = enrollCardReferenceInfo.getExtraEnrollData().getByteArray("enrollPayload");
                 if (arrby == null) {
-                    com.samsung.android.spayfw.b.c.e(TAG, "mc app2app issuer payload is null");
+                    Log.e(TAG, "mc app2app issuer payload is null");
                     return this.getEnrollmentMcDataError(c2, -9);
                 }
                 mcCardInfoWrapper = this.getIssuerInitiatedDigitizationData(new String(arrby), stringBuilder);
                 if (mcCardInfoWrapper == null) {
-                    com.samsung.android.spayfw.b.c.e(TAG, "mc app2app mcCardWrapper is null");
+                    Log.e(TAG, "mc app2app mcCardWrapper is null");
                     return this.getEnrollmentMcDataError(c2, -9);
                 }
-                com.samsung.android.spayfw.b.c.d(TAG, "mcCardWrapper: " + mcCardInfoWrapper.toString());
+                Log.d(TAG, "mcCardWrapper: " + mcCardInfoWrapper.toString());
             } else {
                 mcCardInfo.setSource(CardSource.CARD_ON_FILE.toString());
                 mcCardInfoWrapper.setPanUniqueReference(enrollCardReferenceInfo.getExtraEnrollData().getString("cardReferenceId"));
@@ -332,36 +326,36 @@ public class McTokenProvisioningHandler {
         McCardMasterDaoImpl mcCardMasterDaoImpl = new McCardMasterDaoImpl(McTokenManager.getContext());
         long l2 = mcCardMasterDaoImpl.saveData(mcCardMaster);
         if (l2 == -1L) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Err...Failed to create empty db record");
+            Log.e(TAG, "Err...Failed to create empty db record");
             return this.getEnrollmentMcDataError(c2, -2);
         }
-        com.samsung.android.spayfw.b.c.d(TAG, "Created a new Db record with value=" + l2);
+        Log.d(TAG, "Created a new Db record with value=" + l2);
         McAidSelector mcAidSelector = new McAidSelector(mcCardInfo.getAccountNumber(), mcCardInfo.getSource().equals((Object)CardSource.CARD_ADDED_MANUALLY.toString()));
         if (mcAidSelector.getAid() == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Err...Failed to create empty db record");
+            Log.e(TAG, "Err...Failed to create empty db record");
             return this.getEnrollmentMcDataError(c2, -2);
         }
         String string3 = mcAidSelector.generateAppletInstanceAids(l2);
         if (TextUtils.isEmpty((CharSequence)string3)) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Applet instance id is null or empty");
+            Log.e(TAG, "Applet instance id is null or empty");
             return this.getEnrollmentMcDataError(c2, -2);
         }
         String string4 = mcAidSelector.getAid();
         if (TextUtils.isEmpty((CharSequence)string4)) {
-            com.samsung.android.spayfw.b.c.e(TAG, "AID selection failed!!");
+            Log.e(TAG, "AID selection failed!!");
             return this.getEnrollmentMcDataError(c2, -2);
         }
         McTACommands.GetSpsd.Response.SpsdResponse spsdResponse = this.mMcTAController.getSpsdInfo(this.mAp1CertBuffer, McUtils.convertStirngToByteArray(string4));
         if (spsdResponse == null || spsdResponse.getRgk().length == 0 || spsdResponse.getSkuKeys().length == 0 || spsdResponse.getSpsdSequenceCounter().length == 0 || spsdResponse.getCertEncrypt().length == 0) {
             McTAError.MC_PAY_OK.getValue();
             long l3 = spsdResponse != null ? spsdResponse.getReturnCode().get() : McTAError.MC_PAY_INTERNAL_ERROR.getValue();
-            com.samsung.android.spayfw.b.c.e(TAG, "Spsd Response from TA failed.. Check for Null values..Abort Enrollment Err : " + l3);
+            Log.e(TAG, "Spsd Response from TA failed.. Check for Null values..Abort Enrollment Err : " + l3);
             return this.getEnrollmentMcDataError(c2, -6);
         }
         McTAError mcTAError = McTAError.getMcTAError(spsdResponse.getReturnCode().get());
-        com.samsung.android.spayfw.b.c.d(TAG, "getSpsdInfo : TA Result : " + mcTAError.name());
+        Log.d(TAG, "getSpsdInfo : TA Result : " + mcTAError.name());
         if (mcTAError != McTAError.MC_PAY_OK) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Spsd Response from TA failed.. Abort Enrollment");
+            Log.e(TAG, "Spsd Response from TA failed.. Abort Enrollment");
             return this.getEnrollmentMcDataError(c2, -6);
         }
         mcSpsdInfo.setSpsdSequenceCounter(McUtils.byteArrayToHex(spsdResponse.getSpsdSequenceCounter()));
@@ -371,18 +365,18 @@ public class McTokenProvisioningHandler {
         this.setDbReference(l2);
         int n3 = spsdResponse.getCasdCertType();
         if (n3 != 1 && (n2 = spsdResponse.getCasdCertType()) != 2 || spsdResponse.getCertEncrypt() == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "getEnrollmentMcData: Unknown type / null CASD cert detected");
+            Log.e(TAG, "getEnrollmentMcData: Unknown type / null CASD cert detected");
             return this.getEnrollmentMcDataError(c2, -6);
         }
         int n4 = spsdResponse.getCasdCertType();
         if (n4 == 1) {
-            com.samsung.android.spayfw.b.c.e(TAG, "getEnrollmentMcData: CASD cert type x509 detected");
+            Log.e(TAG, "getEnrollmentMcData: CASD cert type x509 detected");
             mcSpsdInfo.setCasdPkJwk(this.convertByteArrayToString(spsdResponse.getCertEncrypt()));
             mcSpsdInfo.setCasdPkCertificate(null);
         } else {
             int n5 = spsdResponse.getCasdCertType();
             if (n5 == 2) {
-                com.samsung.android.spayfw.b.c.e(TAG, "getEnrollmentMcData: CASD cert type GP detected");
+                Log.e(TAG, "getEnrollmentMcData: CASD cert type GP detected");
                 mcSpsdInfo.setCasdPkCertificate(McUtils.byteArrayToHex(spsdResponse.getCertEncrypt()));
                 mcSpsdInfo.setCasdPkJwk(null);
             }
@@ -391,17 +385,17 @@ public class McTokenProvisioningHandler {
         mcSpsdInfo.setAppletInstanceAid(string3);
         if (!mcCardInfo.getSource().equals((Object)CardSource.CARD_ADDED_VIA_APPLICATION.toString())) {
             String string5 = CryptoUtils.convertbyteToHexString(CryptoUtils.getShaDigest(this.mAp2CertBuffer, CryptoUtils.ShaConstants.SHA1));
-            com.samsung.android.spayfw.b.c.d(TAG, "Certificate Alias: " + string5);
+            Log.d(TAG, "Certificate Alias: " + string5);
             mcCardInfoWrapper.setCertificateFingerprint(string5);
             McTACommands.CardInfoEncryption.Response.CardData cardData = this.mMcTAController.encryptCardInfo(McPayloadBuilder.toByteArray(mcCardInfoWrapper.getUnenryptedData()), this.mAp2CertBuffer);
             if (cardData == null) {
-                com.samsung.android.spayfw.b.c.e(TAG, "getEnrollmentMcData: ecryptCardInfo is null");
+                Log.e(TAG, "getEnrollmentMcData: ecryptCardInfo is null");
                 return this.getEnrollmentMcDataError(c2, -6);
             }
             McTAError mcTAError2 = McTAError.getMcTAError(cardData.getReturnCode());
-            com.samsung.android.spayfw.b.c.d(TAG, "encryptCardInfo : TA Result : " + mcTAError2.name());
+            Log.d(TAG, "encryptCardInfo : TA Result : " + mcTAError2.name());
             if (mcTAError2 != McTAError.MC_PAY_OK) {
-                com.samsung.android.spayfw.b.c.e(TAG, "Failed to encrypt Card Information Error : " + (Object)((Object)mcTAError2));
+                Log.e(TAG, "Failed to encrypt Card Information Error : " + (Object)((Object)mcTAError2));
                 return this.getEnrollmentMcDataError(c2, -6);
             }
             if (cardData.getEncryptedData() != null) {
@@ -435,57 +429,57 @@ public class McTokenProvisioningHandler {
 
     public e provisionToken(JsonObject jsonObject, int n2) {
         if (n2 != 2) {
-            com.samsung.android.spayfw.b.c.d(TAG, "provisionToken Called invalid src type: " + n2);
+            Log.d(TAG, "provisionToken Called invalid src type: " + n2);
             return this.getProviderResponseData(null, -4);
         }
         GetTokenResponse getTokenResponse = GetTokenResponse.parseJson(jsonObject);
         if (getTokenResponse == null || McTokenManager.getContext() == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "provisionToken Called with no data");
+            Log.e(TAG, "provisionToken Called with no data");
             return this.getProviderResponseData(null, -4);
         }
         if (getTokenResponse.getAppletInstanceAid() == null || getTokenResponse.getAppletInstanceAid().isEmpty()) {
-            com.samsung.android.spayfw.b.c.e(TAG, "provisionToken : Incorrect AppletInstanceAid");
+            Log.e(TAG, "provisionToken : Incorrect AppletInstanceAid");
             return this.getProviderResponseData(null, -4);
         }
         McCardMasterDaoImpl mcCardMasterDaoImpl = new McCardMasterDaoImpl(McTokenManager.getContext());
         this.setDbReference(mcCardMasterDaoImpl.getDbIdFromTokenUniqueRefence(getTokenResponse.getMdesTokenUniqueReference()));
         if (this.getDbReference() == -1L) {
-            com.samsung.android.spayfw.b.c.d(TAG, "Db reference lost before token provisioning call. Cannot associate data");
+            Log.d(TAG, "Db reference lost before token provisioning call. Cannot associate data");
             return this.getProviderResponseData(null, -2);
         }
         Type type = new TypeToken<DC_CP>(){}.getType();
         McCardProfileDaoImpl mcCardProfileDaoImpl = new McCardProfileDaoImpl(McTokenManager.getContext(), type);
         getTokenResponse.setPanUniqueReference("panUniqueReference");
         if (!GetTokenResponse.isCreateTokenRequestValid(getTokenResponse)) {
-            com.samsung.android.spayfw.b.c.d(TAG, "provisionToken Called with no data");
+            Log.d(TAG, "provisionToken Called with no data");
             return this.getProviderResponseData(null, -4);
         }
         String string = getTokenResponse.getMdesTokenUniqueReference();
         byte[] arrby = ApduCommand.ApduParser.generateApduForTa(getTokenResponse.getApduCommands());
         if (arrby == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Internal error. Failed to extract apdu");
+            Log.e(TAG, "Internal error. Failed to extract apdu");
             return this.getProviderResponseData(null, -2);
         }
         McCardMaster mcCardMaster = (McCardMaster)mcCardMasterDaoImpl.getData(this.getDbReference());
         if (mcCardMaster == null || mcCardMaster.getRgkDerivedkeys() == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "SKU keys missing in db");
+            Log.e(TAG, "SKU keys missing in db");
             return this.getProviderResponseData(null, -2);
         }
         ApduResponse[] arrapduResponse = ApduResponse.initApduResponseFromCommand(getTokenResponse.getApduCommands());
         if (arrapduResponse == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Internal Err while process apduResponses init");
+            Log.e(TAG, "Internal Err while process apduResponses init");
             return this.getProviderResponseData(null, -2);
         }
         McTACommands.ProvisionToken.Response response = this.mMcTAController.provisionToken(arrby, mcCardMaster.getRgkDerivedkeys(), this.getappletInstanceIdBytes(getTokenResponse.getAppletInstanceAid()));
         if (response == null || response.mRetVal == null || response.mRetVal.result == null || response.mRetVal.rApdus == null || response.mRetVal.cardSecureData == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "TA returnes empty data for a provisionToken in the response.");
+            Log.e(TAG, "TA returnes empty data for a provisionToken in the response.");
             return this.getProviderResponseData(null, -6);
         }
         McTAError mcTAError = McTAError.getMcTAError(response.mRetVal.result.get());
-        com.samsung.android.spayfw.b.c.d(TAG, "provisionToken : TA Result : " + mcTAError.name());
+        Log.d(TAG, "provisionToken : TA Result : " + mcTAError.name());
         ApduResponse[] arrapduResponse2 = ApduResponse.generateApduFromTa(arrapduResponse, response.mRetVal.rApdus.getData());
         if (arrapduResponse2 == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Internal Err while process apduResponses from TEE");
+            Log.e(TAG, "Internal Err while process apduResponses from TEE");
             return this.getProviderResponseData(arrapduResponse2, -9);
         }
         McCardClearData mcCardClearData = ApduResponse.getMcCardClearDataObject();
@@ -493,7 +487,7 @@ public class McTokenProvisioningHandler {
         DC_CP dC_CP = mcCardClearData.getPaymentProfile();
         MCProfilesTable mCProfilesTable = mcCardClearData.getProfilesTable();
         if (mCProfilesTable == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Cannot get profiles table data. Deserializer returns null.");
+            Log.e(TAG, "Cannot get profiles table data. Deserializer returns null.");
             return this.getProviderResponseData(arrapduResponse2, -9);
         }
         MCBaseCardProfile mCBaseCardProfile = new MCBaseCardProfile();
@@ -504,13 +498,13 @@ public class McTokenProvisioningHandler {
         mCBaseCardProfile.setTAProfilesTable(mCProfilesTable);
         mCBaseCardProfile.setUnusedDGIElements(mCUnusedDGIElements);
         if (mcCardProfileDaoImpl.saveData(mCBaseCardProfile) == -1L) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Unable to store Profile in Db");
+            Log.e(TAG, "Unable to store Profile in Db");
             return this.getProviderResponseData(arrapduResponse2, -9);
         }
         mcCardMaster.setTokenUniqueReference(string);
         mcCardMaster.setProvisionedState(1L);
         if (!mcCardMasterDaoImpl.updateData(mcCardMaster, this.getDbReference())) {
-            com.samsung.android.spayfw.b.c.e(TAG, "provisionToken: Update operation failed.. Discarding provisioned data");
+            Log.e(TAG, "provisionToken: Update operation failed.. Discarding provisioned data");
             mcCardMasterDaoImpl.deleteData(this.getDbReference());
             return this.getProviderResponseData(arrapduResponse2, -2);
         }
@@ -538,7 +532,7 @@ public class McTokenProvisioningHandler {
             mcCardMasterDaoImpl.updateData(mcCardMaster, this.getDbReference());
             return;
         }
-        com.samsung.android.spayfw.b.c.e(TAG, " No valid McCardMaster object : " + this.getDbReference());
+        Log.e(TAG, " No valid McCardMaster object : " + this.getDbReference());
     }
 
     private static final class CardSource

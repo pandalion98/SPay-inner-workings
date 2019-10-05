@@ -11,12 +11,12 @@
  */
 package com.samsung.android.spayfw.payprovider.discover.util;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import org.bouncycastle.crypto.CipherParameters;
-import org.bouncycastle.crypto.Digest;
+
 import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.params.KeyParameter;
@@ -35,14 +35,14 @@ public class a {
                 return ((KeyParameter)pKCS5S2ParametersGenerator.generateDerivedParameters(256)).getKey();
             }
             catch (UnsupportedEncodingException unsupportedEncodingException) {
-                c.c("DCSDK_CryptoUtils", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
+                Log.c("DCSDK_CryptoUtils", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
                 do {
                     return null;
                     break;
                 } while (true);
             }
         }
-        c.e("DCSDK_CryptoUtils", "Only SHA256 MAC Algorithm is supported at the moment");
+        Log.e("DCSDK_CryptoUtils", "Only SHA256 MAC Algorithm is supported at the moment");
         return null;
     }
 
@@ -57,7 +57,7 @@ public class a {
             return string2;
         }
         catch (NoSuchAlgorithmException noSuchAlgorithmException) {
-            c.c("DCSDK_CryptoUtils", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
+            Log.c("DCSDK_CryptoUtils", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
             return null;
         }
     }

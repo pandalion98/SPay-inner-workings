@@ -11,10 +11,11 @@ package com.samsung.android.spayfw.payprovider.visa.transaction;
 
 import android.content.Context;
 import android.os.Bundle;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.payprovider.i;
 import com.samsung.android.spayfw.payprovider.visa.e;
-import com.samsung.android.spayfw.payprovider.visa.transaction.VisaPayTransactionData;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.c;
 
@@ -28,7 +29,7 @@ public class b {
         this.mProviderTokenKey = f2;
         String string2 = bundle.getString("trTokenId");
         e.G(context).r(string2, string).a(new a());
-        com.samsung.android.spayfw.b.c.d(TAG, "Transaction Request successfully sent");
+        Log.d(TAG, "Transaction Request successfully sent");
     }
 
     private class a
@@ -39,9 +40,9 @@ public class b {
         @Override
         public void a(int n2, c<VisaPayTransactionData> c2) {
             int n3 = -7;
-            com.samsung.android.spayfw.b.c.d(TAG, "TransactionRequestCallback: onRequestComplete: status " + n2);
+            Log.d(TAG, "TransactionRequestCallback: onRequestComplete: status " + n2);
             if (b.this.Aa == null) {
-                com.samsung.android.spayfw.b.c.e(TAG, "TransactionRequestCallback: onRequestComplete: callback object is null ");
+                Log.e(TAG, "TransactionRequestCallback: onRequestComplete: callback object is null ");
                 return;
             }
             com.samsung.android.spayfw.payprovider.e e2 = new com.samsung.android.spayfw.payprovider.e();
@@ -73,11 +74,11 @@ public class b {
             }
             if (c2 != null && c2.getResult() != null) {
                 VisaPayTransactionData visaPayTransactionData = c2.getResult();
-                com.samsung.android.spayfw.b.c.d(TAG, "TransactionRequestCallback: onRequestComplete:  " + visaPayTransactionData.toString());
+                Log.d(TAG, "TransactionRequestCallback: onRequestComplete:  " + visaPayTransactionData.toString());
                 b.this.Aa.a(b.this.mProviderTokenKey, 0, visaPayTransactionData, null);
                 return;
             }
-            com.samsung.android.spayfw.b.c.e(TAG, "TransactionRequestCallback: onRequestComplete: VisaPayTransactionData is null ");
+            Log.e(TAG, "TransactionRequestCallback: onRequestComplete: VisaPayTransactionData is null ");
             e2.setErrorCode(n3);
             b.this.Aa.a(b.this.mProviderTokenKey, n3, null, e2);
         }

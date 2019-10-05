@@ -19,8 +19,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.dao.MCAbstractDaoImpl;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.tds.network.models.McTdsMetaData;
 
 public class McTdsMetaDataDaoImpl
@@ -48,7 +48,7 @@ extends MCAbstractDaoImpl<McTdsMetaData> {
                 return bl;
             }
             int n2 = this.db.update(this.getTableName(), contentValues, string, null);
-            c.i(TDS_TAG_INFO, "updateTds: rows affected:" + n2);
+            Log.i(TDS_TAG_INFO, "updateTds: rows affected:" + n2);
             long l2 = (long)n2 LCMP -1L;
             bl = false;
             if (l2 == false) return bl;
@@ -62,7 +62,7 @@ extends MCAbstractDaoImpl<McTdsMetaData> {
             return null;
         }
         if (!mcTdsMetaData.validate()) {
-            c.e(TDS_TAG_ERROR, "getContentValues: tds Data validation failed");
+            Log.e(TDS_TAG_ERROR, "getContentValues: tds Data validation failed");
             return null;
         }
         ContentValues contentValues = new ContentValues();
@@ -84,7 +84,7 @@ extends MCAbstractDaoImpl<McTdsMetaData> {
     @Override
     protected McTdsMetaData getDataValues(Cursor cursor) {
         if (cursor == null) {
-            c.e(TDS_TAG_ERROR, "empty cursor");
+            Log.e(TDS_TAG_ERROR, "empty cursor");
             return null;
         }
         McTdsMetaData mcTdsMetaData = new McTdsMetaData();
@@ -117,7 +117,7 @@ extends MCAbstractDaoImpl<McTdsMetaData> {
         synchronized (mcTdsMetaDataDaoImpl) {
             block4 : {
                 if (!TextUtils.isEmpty((CharSequence)string)) break block4;
-                c.e(TDS_TAG_ERROR, "storeAuthCode: Invalid params to store authCode.");
+                Log.e(TDS_TAG_ERROR, "storeAuthCode: Invalid params to store authCode.");
                 return false;
             }
             ContentValues contentValues = new ContentValues();
@@ -138,7 +138,7 @@ extends MCAbstractDaoImpl<McTdsMetaData> {
         synchronized (mcTdsMetaDataDaoImpl) {
             if (!TextUtils.isEmpty((CharSequence)string2)) {
                 if (!this.storeAuthCode(string, l2)) {
-                    c.e(TDS_TAG_ERROR, "storeAuthCode: failed");
+                    Log.e(TDS_TAG_ERROR, "storeAuthCode: failed");
                     return false;
                 }
                 ContentValues contentValues = new ContentValues();
@@ -146,7 +146,7 @@ extends MCAbstractDaoImpl<McTdsMetaData> {
                 boolean bl2 = this.updateTds(contentValues, this.getQuerySearch(l2));
                 return bl2;
             }
-            c.e(TDS_TAG_ERROR, "storeAuthCode: tdsUrl is empty discarding request");
+            Log.e(TDS_TAG_ERROR, "storeAuthCode: tdsUrl is empty discarding request");
             return bl;
         }
     }
@@ -160,7 +160,7 @@ extends MCAbstractDaoImpl<McTdsMetaData> {
         McTdsMetaDataDaoImpl mcTdsMetaDataDaoImpl = this;
         synchronized (mcTdsMetaDataDaoImpl) {
             if (TextUtils.isEmpty((CharSequence)string) || l2 < 0L) {
-                c.e(TDS_TAG_ERROR, "storeUrl: Invalid params to store url.");
+                Log.e(TDS_TAG_ERROR, "storeUrl: Invalid params to store url.");
                 return false;
             }
             ContentValues contentValues = new ContentValues();

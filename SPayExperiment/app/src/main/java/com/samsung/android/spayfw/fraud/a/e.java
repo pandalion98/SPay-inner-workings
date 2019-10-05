@@ -13,7 +13,7 @@ package com.samsung.android.spayfw.fraud.a;
 
 import android.os.Build;
 import android.util.Base64;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -38,7 +38,7 @@ public class e {
             messageDigest = MessageDigest.getInstance((String)"SHA-256");
         }
         catch (NoSuchAlgorithmException noSuchAlgorithmException) {
-            c.c("FraudConstant", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
+            Log.c("FraudConstant", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
             return "null";
         }
         messageDigest.reset();

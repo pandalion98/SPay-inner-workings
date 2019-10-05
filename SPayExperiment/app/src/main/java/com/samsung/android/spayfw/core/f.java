@@ -34,10 +34,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.samsung.android.spayfw.appinterface.PayConfig;
-import com.samsung.android.spayfw.core.c;
-import com.samsung.android.spayfw.core.h;
-import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.d;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
@@ -50,11 +47,9 @@ import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Location;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.MstConfigurationRequestData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.MstConfigurationResponseData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Network;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Recommendation;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Sequence;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Token;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Wifi;
-import com.samsung.android.spayfw.storage.c;
 import com.squareup.okhttp.Response;
 import java.io.File;
 import java.io.IOException;
@@ -63,11 +58,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class f
 implements Runnable {
@@ -99,7 +92,7 @@ implements Runnable {
     }
 
     private void a(b b2, Sequence sequence) {
-        com.samsung.android.spayfw.b.c.i("MstConfigurationManager", "Sequence Key : " + sequence.getKey());
+        Log.i("MstConfigurationManager", "Sequence Key : " + sequence.getKey());
         if (sequence.getKey().equals((Object)"default") || sequence.getKey().equals((Object)"retry1")) {
             String string = sequence.getKey();
             b2.jt = h.c(string, this.mCardBrand);
@@ -181,27 +174,27 @@ implements Runnable {
         // MONITORENTER : f2
         com.samsung.android.spayfw.storage.c c2 = com.samsung.android.spayfw.storage.c.ac(this.mContext);
         Map<String, c.a> map = c2.ft();
-        com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "allSscMap : " + map);
+        Log.d("MstConfigurationManager", "allSscMap : " + map);
         if (map == null) {
             string = null;
             // MONITOREXIT : f2
             return string;
         }
         Map<String, c.a> map2 = c2.a((List<Wifi>)DeviceInfo.getWifiDetails(this.mContext), 4.0);
-        com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "matchingSscMap : " + map2);
+        Log.d("MstConfigurationManager", "matchingSscMap : " + map2);
         if (map2 == null) {
             return null;
         }
         HashMap hashMap = new HashMap();
         for (Map.Entry entry : map2.entrySet()) {
             String string2 = (String)entry.getKey();
-            com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "Scan Id : " + string2);
+            Log.d("MstConfigurationManager", "Scan Id : " + string2);
             double d2 = ((c.a)entry.getValue()).getCount();
             double d3 = ((c.a)map.get((Object)string2)).getCount();
-            com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "matchingCount : " + d2);
-            com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "fullCount : " + d3);
+            Log.d("MstConfigurationManager", "matchingCount : " + d2);
+            Log.d("MstConfigurationManager", "fullCount : " + d3);
             double d4 = d2 / d3;
-            com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "percent : " + d4);
+            Log.d("MstConfigurationManager", "percent : " + d4);
             if (!(d4 >= 0.7)) continue;
             Integer n2 = (Integer)hashMap.get((Object)((c.a)entry.getValue()).getMstSequenceId());
             String string3 = ((c.a)entry.getValue()).getMstSequenceId();
@@ -219,7 +212,7 @@ implements Runnable {
                 return this.a((Map.Entry<String, Integer>)((Map.Entry)object), (Map.Entry<String, Integer>)((Map.Entry)object2));
             }
         })).getKey();
-        com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "MST Sequence Id : " + string);
+        Log.d("MstConfigurationManager", "MST Sequence Id : " + string);
         return string;
     }
 
@@ -263,10 +256,10 @@ implements Runnable {
         if (this.jo == null) {
             this.jo = new Thread((Runnable)new a());
             this.jo.start();
-            com.samsung.android.spayfw.b.c.i("MstConfigurationManager", "Started CacheMetaData Download Thread");
+            Log.i("MstConfigurationManager", "Started CacheMetaData Download Thread");
             return;
         }
-        com.samsung.android.spayfw.b.c.i("MstConfigurationManager", "CacheMetaData Download Thread Already Running");
+        Log.i("MstConfigurationManager", "CacheMetaData Download Thread Already Running");
     }
 
     static /* synthetic */ Thread b(f f2, Thread thread) {
@@ -333,7 +326,7 @@ implements Runnable {
             this.mTokenId = string;
             com.samsung.android.spayfw.core.a a2 = com.samsung.android.spayfw.core.a.a(this.mContext, null);
             if (a2 == null) {
-                com.samsung.android.spayfw.b.c.e("MstConfigurationManager", "sendContextData- account is null");
+                Log.e("MstConfigurationManager", "sendContextData- account is null");
                 throw new RuntimeException("Account is NULL");
             }
             c c2 = a2.r(string);
@@ -343,17 +336,17 @@ implements Runnable {
             if (c2 != null && c2.ad() != null && c2.ac() != null) {
                 this.jm = c2.ad().getMerchantId();
             }
-            com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "merchant id = " + this.jm);
+            Log.d("MstConfigurationManager", "merchant id = " + this.jm);
             if (this.mThread == null) {
                 this.jj = new b();
                 this.jk = new b();
                 this.jl = null;
                 this.mThread = new Thread((Runnable)this);
                 this.mThread.start();
-                com.samsung.android.spayfw.b.c.i("MstConfigurationManager", "Started Recommendation thread");
+                Log.i("MstConfigurationManager", "Started Recommendation thread");
                 return true;
             }
-            com.samsung.android.spayfw.b.c.i("MstConfigurationManager", "Recommendation thread already running");
+            Log.i("MstConfigurationManager", "Recommendation thread already running");
             return false;
         }
     }
@@ -366,7 +359,7 @@ implements Runnable {
     public PayConfig ak() {
         f f2 = this;
         synchronized (f2) {
-            com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "getDefaultRecommendedPayConfig");
+            Log.d("MstConfigurationManager", "getDefaultRecommendedPayConfig");
             try {
                 if (this.jj.js != null) return this.jj.js;
                 String string = this.ar();
@@ -385,7 +378,7 @@ implements Runnable {
                 return this.jj.js;
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.c("MstConfigurationManager", exception.getMessage(), exception);
+                Log.c("MstConfigurationManager", exception.getMessage(), exception);
                 return null;
             }
         }
@@ -445,13 +438,13 @@ implements Runnable {
             location2.setAccuracy(String.valueOf((float)location.getAccuracy()));
             location2.setTime(String.valueOf((long)location.getTime()));
             environment.setLocation(location2);
-            com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "location = " + location2);
+            Log.d("MstConfigurationManager", "location = " + location2);
         }
         environment.setMstSequenceId(h.f("default", this.mCardBrand));
         contextData.setEnvironment(environment);
         Network network = new Network();
         ArrayList<Wifi> arrayList = DeviceInfo.getWifiDetails(this.mContext);
-        com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "wifi= " + arrayList);
+        Log.d("MstConfigurationManager", "wifi= " + arrayList);
         network.setWifi(arrayList);
         contextData.setNetwork(network);
         f f2 = this;
@@ -473,12 +466,12 @@ implements Runnable {
             @Override
             public void a(int var1_1, com.samsung.android.spayfw.remoteservice.c<MstConfigurationResponseData> var2_2) {
                 block16 : {
-                    com.samsung.android.spayfw.b.c.i("MstConfigurationManager", "Status Code : " + var1_1);
+                    Log.i("MstConfigurationManager", "Status Code : " + var1_1);
                     var15_4 = var3_3 = f.this;
                     // MONITORENTER : var15_4
                     switch (var1_1) {
                         default: {
-                            com.samsung.android.spayfw.b.c.e("MstConfigurationManager", "Error processing Recommendation Response");
+                            Log.e("MstConfigurationManager", "Error processing Recommendation Response");
                             break;
                         }
                         case 201: {
@@ -492,20 +485,20 @@ implements Runnable {
                                         var14_8 = var12_6.getSequences()[1];
                                         f.a(f.this, f.e(f.this), var14_8);
                                     } else {
-                                        com.samsung.android.spayfw.b.c.e("MstConfigurationManager", "No Retry Sequence Info");
+                                        Log.e("MstConfigurationManager", "No Retry Sequence Info");
                                     }
                                 } else {
-                                    com.samsung.android.spayfw.b.c.e("MstConfigurationManager", "No Sequence Info");
+                                    Log.e("MstConfigurationManager", "No Sequence Info");
                                 }
                             } else {
-                                com.samsung.android.spayfw.b.c.e("MstConfigurationManager", "No Recommendation Info");
+                                Log.e("MstConfigurationManager", "No Recommendation Info");
                             }
                             if ((var6_9 = var5_5.getCaches()) == null || var6_9.length <= 0) ** GOTO lbl28
                             var9_10 = var6_9.length;
                             var10_11 = 0;
                             break block16;
 lbl28: // 1 sources:
-                            com.samsung.android.spayfw.b.c.e("MstConfigurationManager", "No CacheMetaData Info");
+                            Log.e("MstConfigurationManager", "No CacheMetaData Info");
                         }
                     }
                     do {
@@ -545,14 +538,14 @@ lbl28: // 1 sources:
             com.samsung.android.spayfw.storage.c c2 = com.samsung.android.spayfw.storage.c.ac(f.this.mContext);
             do {
                 if (f.this.at()) {
-                    com.samsung.android.spayfw.b.c.i("MstConfigurationManager", "CacheMetaData List is Empty");
+                    Log.i("MstConfigurationManager", "CacheMetaData List is Empty");
                     f.this.jo = null;
                     return;
                 }
                 CacheMetaData cacheMetaData = f.this.aq();
                 CacheMetaData cacheMetaData2 = c2.z(cacheMetaData.getId(), cacheMetaData.getType());
-                com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "cacheMetaData : " + cacheMetaData);
-                com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "storedCacheMetaData : " + cacheMetaData2);
+                Log.d("MstConfigurationManager", "cacheMetaData : " + cacheMetaData);
+                Log.d("MstConfigurationManager", "storedCacheMetaData : " + cacheMetaData2);
                 if (cacheMetaData2 == null || cacheMetaData.getUpdatedAt().compareTo(cacheMetaData2.getUpdatedAt()) > 0) {
                     Response response;
                     com.samsung.android.spayfw.utils.f f2 = new com.samsung.android.spayfw.utils.f();
@@ -566,17 +559,17 @@ lbl28: // 1 sources:
                         response = null;
                     }
                     if (response != null && response.isSuccessful()) {
-                        com.samsung.android.spayfw.b.c.d("MstConfigurationManager", "CacheMetaData Successfully retrieved and stored in " + file.getAbsolutePath() + " Size: " + file.length());
+                        Log.d("MstConfigurationManager", "CacheMetaData Successfully retrieved and stored in " + file.getAbsolutePath() + " Size: " + file.length());
                         f.this.a(cacheMetaData, file, c2);
                     } else if (response != null) {
-                        com.samsung.android.spayfw.b.c.e("MstConfigurationManager", "Failed retrieving cacheMetaData : " + response.code());
+                        Log.e("MstConfigurationManager", "Failed retrieving cacheMetaData : " + response.code());
                         file.delete();
                     } else {
-                        com.samsung.android.spayfw.b.c.e("MstConfigurationManager", "Reponse is null");
+                        Log.e("MstConfigurationManager", "Reponse is null");
                         file.delete();
                     }
                 } else {
-                    com.samsung.android.spayfw.b.c.i("MstConfigurationManager", "Already Have the Updated CacheMetaData");
+                    Log.i("MstConfigurationManager", "Already Have the Updated CacheMetaData");
                 }
                 f.this.a(cacheMetaData);
             } while (true);

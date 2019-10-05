@@ -11,7 +11,7 @@
 package com.samsung.android.spayfw.payprovider.mastercard.tds.network.callback;
 
 import android.content.Context;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.McProvider;
 import com.samsung.android.spayfw.payprovider.mastercard.dao.McTdsMetaDataDaoImpl;
 import com.samsung.android.spayfw.utils.a;
@@ -36,11 +36,11 @@ implements a.a {
     public void onComplete(int n2, Map<String, List<String>> map, byte[] arrby) {
         Context context = McProvider.getContext();
         if (context == null) {
-            c.e(TDS_TAG_ERROR, "tokenId: " + this.mCardMasterId + " McTdsUnRegisterCallbck: Err. Cannot delete TDS entries without context");
+            Log.e(TDS_TAG_ERROR, "tokenId: " + this.mCardMasterId + " McTdsUnRegisterCallbck: Err. Cannot delete TDS entries without context");
             return;
         }
         McTdsMetaDataDaoImpl mcTdsMetaDataDaoImpl = new McTdsMetaDataDaoImpl(context);
-        c.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsUnRegisterCallbck: statusCode : " + n2);
+        Log.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsUnRegisterCallbck: statusCode : " + n2);
         int n3 = -36;
         switch (n2) {
             case 200: {
@@ -48,17 +48,17 @@ implements a.a {
             }
         }
         if (n3 != 0) {
-            c.e(TAG, "tokenId: " + this.mCardMasterId + " McTdsUnRegisterCallbck: failed : " + n2);
+            Log.e(TAG, "tokenId: " + this.mCardMasterId + " McTdsUnRegisterCallbck: failed : " + n2);
             return;
         }
         if (mcTdsMetaDataDaoImpl.getData(this.mCardMasterId) == null) return;
         {
             if (mcTdsMetaDataDaoImpl.deleteData(this.mCardMasterId)) {
-                c.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsUnRegisterCallbck Delete operation Success");
+                Log.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsUnRegisterCallbck Delete operation Success");
                 return;
             }
         }
-        c.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsUnRegisterCallbck Delete operation Falied");
+        Log.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsUnRegisterCallbck Delete operation Falied");
     }
 }
 

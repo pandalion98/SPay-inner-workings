@@ -25,7 +25,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 
 public class d {
     private static d CX;
@@ -62,7 +62,7 @@ public class d {
 
     public GoogleApiClient fI() {
         if (this.Da) {
-            c.i("GoogleApiHelper", " Google Api Client Suspended. so return null");
+            Log.i("GoogleApiHelper", " Google Api Client Suspended. so return null");
             return null;
         }
         return this.mGoogleApiClient;
@@ -79,31 +79,31 @@ public class d {
                 this.CY = new GoogleApiClient.ConnectionCallbacks(){
 
                     public void onConnected(Bundle bundle) {
-                        c.d("GoogleApiHelper", "google api client connected");
+                        Log.d("GoogleApiHelper", "google api client connected");
                         d.this.Da = false;
                     }
 
                     public void onConnectionSuspended(int n2) {
-                        c.i("GoogleApiHelper", "google api client connection suspended: " + n2);
+                        Log.i("GoogleApiHelper", "google api client connection suspended: " + n2);
                         d.this.Da = true;
                     }
                 };
                 this.CZ = new GoogleApiClient.OnConnectionFailedListener(){
 
                     public void onConnectionFailed(ConnectionResult connectionResult) {
-                        c.w("GoogleApiHelper", "google api client connection failed");
+                        Log.w("GoogleApiHelper", "google api client connection failed");
                     }
                 };
                 try {
                     int n2 = GooglePlayServicesUtil.isGooglePlayServicesAvailable((Context)this.mContext);
-                    c.d("GoogleApiHelper", "google play services available = " + n2);
+                    Log.d("GoogleApiHelper", "google play services available = " + n2);
                     if (n2 != 0) break block10;
                 }
                 catch (Exception exception) {
-                    c.e("GoogleApiHelper", "Exception in build Google API Client");
+                    Log.e("GoogleApiHelper", "Exception in build Google API Client");
                     return;
                 }
-                c.d("GoogleApiHelper", "google play services available = ");
+                Log.d("GoogleApiHelper", "google play services available = ");
                 this.mGoogleApiClient = new GoogleApiClient.Builder(this.mContext).addConnectionCallbacks(this.CY).addOnConnectionFailedListener(this.CZ).addApi(LocationServices.API).build();
                 if (this.mGoogleApiClient != null) {
                     this.mGoogleApiClient.connect();
@@ -113,7 +113,7 @@ public class d {
                     break;
                 } while (true);
             }
-            c.d("GoogleApiHelper", "google play services not available");
+            Log.d("GoogleApiHelper", "google play services not available");
             return;
         }
     }

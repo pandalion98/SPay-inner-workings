@@ -7,10 +7,10 @@
  */
 package com.samsung.android.spayfw.remoteservice.tokenrequester;
 
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Client;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.c;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
 
 public class a
 extends Request<String, String, c<String>, a> {
@@ -46,7 +46,7 @@ extends Request<String, String, c<String>, a> {
     @Override
     protected String j(Object object) {
         if (object == null) {
-            com.samsung.android.spayfw.b.c.e("AnalyticsRequest", "given AnalyticData is null");
+            Log.e("AnalyticsRequest", "given AnalyticData is null");
             return null;
         }
         return (String)object;

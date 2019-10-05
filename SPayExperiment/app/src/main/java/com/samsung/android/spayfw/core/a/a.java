@@ -26,12 +26,11 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import com.google.android.gms.maps.model.RuntimeRemoteException;
 import com.samsung.android.analytics.sdk.AnalyticContext;
 import com.samsung.android.analytics.sdk.AnalyticEvent;
-import com.samsung.android.spayfw.core.a.o;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.e.d;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.DeviceInfo;
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ extends o {
         }
         catch (RuntimeRemoteException runtimeRemoteException) {
             runtimeRemoteException.printStackTrace();
-            com.samsung.android.spayfw.b.c.e("AnalyticsFrameworkProcessor", "AnalyticsReportCache threw exception and failed to store or upload events");
+            Log.e("AnalyticsFrameworkProcessor", "AnalyticsReportCache threw exception and failed to store or upload events");
         }
         km = new HandlerThread("AnalyticsReportThread");
         km.start();
@@ -78,36 +77,36 @@ extends o {
                         return;
                     }
                     case 1: {
-                        com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "ACTION_UPLOAD_EVENT");
+                        Log.d("AnalyticsFrameworkProcessor", "ACTION_UPLOAD_EVENT");
                         a a2 = null;
                         if (message != null) {
                             a2 = (a)message.obj;
                         }
-                        com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "Entered AnalyticsReporter: lEvent " + a2);
+                        Log.d("AnalyticsFrameworkProcessor", "Entered AnalyticsReporter: lEvent " + a2);
                         a.this.a(a2);
                         return;
                     }
                     case 2: 
                 }
-                com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "ACTION_FLUSH_EVENTS_FROM_STORAGE");
+                Log.d("AnalyticsFrameworkProcessor", "ACTION_FLUSH_EVENTS_FROM_STORAGE");
                 a.this.aU();
             }
         };
     }
 
     private void aU() {
-        com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "flushEventsFromStorage");
+        Log.d("AnalyticsFrameworkProcessor", "flushEventsFromStorage");
     }
 
     private void b(AnalyticEvent analyticEvent) {
-        com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "updateLocationInfo");
+        Log.d("AnalyticsFrameworkProcessor", "updateLocationInfo");
         Location location = DeviceInfo.getGoogleLocation();
         if (location != null) {
             c c2 = new c(String.valueOf((double)location.getLatitude()), String.valueOf((double)location.getLongitude()), null, location.getProvider(), String.valueOf((double)location.getAltitude()));
             c2.setAccuracy(String.valueOf((float)location.getAccuracy()));
             c2.setTime(String.valueOf((long)location.getTime()));
             analyticEvent.a(AnalyticEvent.Field.fy, c2.toJsonString());
-            com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "location = " + c2.toJsonString());
+            Log.d("AnalyticsFrameworkProcessor", "location = " + c2.toJsonString());
         }
     }
 
@@ -180,20 +179,20 @@ lbl21: // 4 sources:
     }
 
     public void a(AnalyticEvent analyticEvent, AnalyticContext analyticContext) {
-        com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "process");
+        Log.d("AnalyticsFrameworkProcessor", "process");
         String string = d.get("ro.build.PDA");
-        com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "BuildNumber :" + string);
+        Log.d("AnalyticsFrameworkProcessor", "BuildNumber :" + string);
         analyticContext.n(string);
         Context context = this.mContext;
         String string2 = null;
         if (context != null) {
             string2 = DeviceInfo.getDeviceId(this.mContext);
         }
-        com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "fetched DID:" + string2);
+        Log.d("AnalyticsFrameworkProcessor", "fetched DID:" + string2);
         analyticContext.m(string2);
         if (this.c(analyticEvent) || this.d(analyticEvent)) {
             this.b(analyticEvent);
-            com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "locationUpdatedEvent" + analyticEvent);
+            Log.d("AnalyticsFrameworkProcessor", "locationUpdatedEvent" + analyticEvent);
         }
         this.kp.b(analyticEvent, analyticContext);
     }
@@ -206,17 +205,17 @@ lbl21: // 4 sources:
     protected void a(a a2) {
         a a3 = this;
         synchronized (a3) {
-            com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "Sending analytic event Report");
+            Log.d("AnalyticsFrameworkProcessor", "Sending analytic event Report");
             if (a2 == null) {
-                com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "Json Report Data Empty");
+                Log.d("AnalyticsFrameworkProcessor", "Json Report Data Empty");
             } else {
                 if (a2 instanceof b) {
-                    com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "Report GSIMData := " + a2);
+                    Log.d("AnalyticsFrameworkProcessor", "Report GSIMData := " + a2);
                 } else {
-                    com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "Report Data := " + a2);
+                    Log.d("AnalyticsFrameworkProcessor", "Report Data := " + a2);
                 }
                 if (com.samsung.android.spayfw.remoteservice.tokenrequester.a.fc()) {
-                    com.samsung.android.spayfw.b.c.e("AnalyticsFrameworkProcessor", " server is UnAvailable Now, reports should remain in the cache");
+                    Log.e("AnalyticsFrameworkProcessor", " server is UnAvailable Now, reports should remain in the cache");
                 }
             }
             return;
@@ -224,16 +223,16 @@ lbl21: // 4 sources:
     }
 
     public void a(List<AnalyticEvent> list, AnalyticContext analyticContext) {
-        com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "process-event list");
+        Log.d("AnalyticsFrameworkProcessor", "process-event list");
         String string = d.get("ro.build.PDA");
-        com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "BuildNumber :" + string);
+        Log.d("AnalyticsFrameworkProcessor", "BuildNumber :" + string);
         analyticContext.n(string);
         Context context = this.mContext;
         String string2 = null;
         if (context != null) {
             string2 = DeviceInfo.getDeviceId(this.mContext);
         }
-        com.samsung.android.spayfw.b.c.d("AnalyticsFrameworkProcessor", "fetched DID:" + string2);
+        Log.d("AnalyticsFrameworkProcessor", "fetched DID:" + string2);
         analyticContext.m(string2);
         Message message = new Message();
         message.obj = new a(list, analyticContext);
@@ -269,13 +268,13 @@ lbl21: // 4 sources:
                             }
                             continue;
                         }
-                        com.samsung.android.spayfw.b.c.e("AnalyticsFrameworkProcessor", "content values are empty (lSet is null)");
+                        Log.e("AnalyticsFrameworkProcessor", "content values are empty (lSet is null)");
                         continue;
                     }
-                    com.samsung.android.spayfw.b.c.e("AnalyticsFrameworkProcessor", "content values are empty");
+                    Log.e("AnalyticsFrameworkProcessor", "content values are empty");
                 }
             } else {
-                com.samsung.android.spayfw.b.c.e("AnalyticsFrameworkProcessor", "given list of events are null");
+                Log.e("AnalyticsFrameworkProcessor", "given list of events are null");
             }
             this.ku.kv.ky.add((Object)b2);
         }

@@ -20,6 +20,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sdi.c.c;
 import java.util.Calendar;
 
@@ -39,11 +41,11 @@ extends BroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager)context.getSystemService("alarm");
         Calendar calendar = a.a(com.samsung.sensorframework.sdi.g.a.aA(9), com.samsung.sensorframework.sdi.g.a.aA(60), com.samsung.sensorframework.sdi.g.a.aA(60));
         alarmManager.set(1, calendar.getTimeInMillis(), pendingIntent);
-        com.samsung.android.spayfw.b.c.d("DailySensingAlarm", "Alarm set to: " + com.samsung.sensorframework.sda.f.a.G(calendar.getTimeInMillis()));
+        Log.d("DailySensingAlarm", "Alarm set to: " + com.samsung.sensorframework.sda.f.a.G(calendar.getTimeInMillis()));
     }
 
     public static void b(Context context, PendingIntent pendingIntent) {
-        com.samsung.android.spayfw.b.c.d("DailySensingAlarm", "cancelDailyAlarm()");
+        Log.d("DailySensingAlarm", "cancelDailyAlarm()");
         if (pendingIntent != null) {
             ((AlarmManager)context.getSystemService("alarm")).cancel(pendingIntent);
         }
@@ -53,12 +55,12 @@ extends BroadcastReceiver {
         new Thread(){
 
             public void run() {
-                com.samsung.android.spayfw.b.c.d("DailySensingAlarm", "onReceive() intent action: " + intent.getAction());
+                Log.d("DailySensingAlarm", "onReceive() intent action: " + intent.getAction());
                 if (c.br(context) != null) {
                     c.br(context).b(intent);
                     return;
                 }
-                com.samsung.android.spayfw.b.c.e("DailySensingAlarm", "SensingController.getInstance() returned null");
+                Log.e("DailySensingAlarm", "SensingController.getInstance() returned null");
             }
         }.start();
     }

@@ -16,20 +16,13 @@
  */
 package com.samsung.android.spayfw.remoteservice.b;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Client;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Connection;
-import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
+
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -108,12 +101,12 @@ implements Client.HttpRequest {
             Request request = chain.request();
             long l2 = System.nanoTime();
             Object[] arrobject = new Object[]{request.url(), chain.connection(), request.headers()};
-            c.d("HttpRequestAdapter", String.format((String)"Sending request %s on %s%n%s", (Object[])arrobject));
-            c.d("HttpRequestAdapter", "Connection : " + chain.connection().hashCode());
+            Log.d("HttpRequestAdapter", String.format((String)"Sending request %s on %s%n%s", (Object[])arrobject));
+            Log.d("HttpRequestAdapter", "Connection : " + chain.connection().hashCode());
             Response response = chain.proceed(request);
             long l3 = System.nanoTime();
             Object[] arrobject2 = new Object[]{response.request().url(), (double)(l3 - l2) / 1000000.0, response.headers()};
-            c.d("HttpRequestAdapter", String.format((String)"Received response for %s in %.1fms%n%s", (Object[])arrobject2));
+            Log.d("HttpRequestAdapter", String.format((String)"Received response for %s in %.1fms%n%s", (Object[])arrobject2));
             if (response.code() == 407) {
                 response = response.newBuilder().code(1000 + response.code()).build();
             }

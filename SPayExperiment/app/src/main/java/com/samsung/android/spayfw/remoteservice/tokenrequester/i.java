@@ -9,11 +9,9 @@
  */
 package com.samsung.android.spayfw.remoteservice.tokenrequester;
 
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Client;
 import com.samsung.android.spayfw.remoteservice.c;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.ReplenishTokenRequestData;
 
 public class i
@@ -34,7 +32,7 @@ extends m<ReplenishTokenRequestData, ReplenishTokenRequestData, c<ReplenishToken
 
     @Override
     protected String cG() {
-        com.samsung.android.spayfw.b.c.i(this.TAG, this.tokenId);
+        Log.i(this.TAG, this.tokenId);
         return (Object)zX + "/" + this.tokenId.toString();
     }
 

@@ -14,10 +14,12 @@
 package com.samsung.sensorframework.sdi.e;
 
 import android.content.Context;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sdi.d.c;
 import com.samsung.sensorframework.sdi.exception.SDIException;
 import com.samsung.sensorframework.sdi.f.a;
-import java.util.Collection;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +43,7 @@ public class b {
             throw new SDIException(9001, "persistentStorage can not be null.");
         }
         this.cu(null);
-        com.samsung.android.spayfw.b.c.d("TriggerQuota", "instance created");
+        Log.d("TriggerQuota", "instance created");
     }
 
     /*
@@ -76,7 +78,7 @@ public class b {
             }
             n2 += 1 - n3;
         }
-        com.samsung.android.spayfw.b.c.d("TriggerQuota", "getTotalUsedQuota() totalUsedQuota: " + n2);
+        Log.d("TriggerQuota", "getTotalUsedQuota() totalUsedQuota: " + n2);
         return n2;
     }
 
@@ -87,15 +89,15 @@ public class b {
     public void cu(String string) {
         b b2 = this;
         synchronized (b2) {
-            com.samsung.android.spayfw.b.c.d("TriggerQuota", "resetQuota()");
+            Log.d("TriggerQuota", "resetQuota()");
             this.LH = com.samsung.sensorframework.sdi.b.a.d(string, 4);
-            com.samsung.android.spayfw.b.c.d("TriggerQuota", "resetQuota() serverTriggerGlobalQuota: " + this.LH);
+            Log.d("TriggerQuota", "resetQuota() serverTriggerGlobalQuota: " + this.LH);
             String string2 = this.if();
             this.LG = this.Lw.cy(string2);
             if (this.LG == null) {
                 this.LG = new HashMap();
             }
-            com.samsung.android.spayfw.b.c.d("TriggerQuota", "resetQuota() totalUsedQuota: " + this.ie());
+            Log.d("TriggerQuota", "resetQuota() totalUsedQuota: " + this.ie());
             return;
         }
     }
@@ -109,7 +111,7 @@ public class b {
         b b2 = this;
         synchronized (b2) {
             if (c.cs(string)) {
-                com.samsung.android.spayfw.b.c.d("TriggerQuota", "Ignoring PoI trigger as it is a data sync PoI: " + string);
+                Log.d("TriggerQuota", "Ignoring PoI trigger as it is a data sync PoI: " + string);
             } else {
                 int n2;
                 String string2 = c.cr(string);
@@ -120,7 +122,7 @@ public class b {
                 int n3 = (n2 = ((Integer)this.LG.get((Object)string3)).intValue()) > 0 ? n2 - 1 : 0;
                 this.LG.put((Object)string3, (Object)n3);
                 this.Lw.set(string3, n3);
-                com.samsung.android.spayfw.b.c.d("TriggerQuota", "PoIId: " + string2 + " Remaining quota: " + n3);
+                Log.d("TriggerQuota", "PoIId: " + string2 + " Remaining quota: " + n3);
             }
             return;
         }
@@ -151,9 +153,9 @@ public class b {
     public boolean id() {
         b b2 = this;
         synchronized (b2) {
-            com.samsung.android.spayfw.b.c.d("TriggerQuota", "isGlobalQuotaEmpty()");
+            Log.d("TriggerQuota", "isGlobalQuotaEmpty()");
             int n2 = this.ie();
-            com.samsung.android.spayfw.b.c.d("TriggerQuota", "isGlobalQuotaEmpty() totalUsedQuota: " + n2);
+            Log.d("TriggerQuota", "isGlobalQuotaEmpty() totalUsedQuota: " + n2);
             int n3 = this.LH;
             if (n2 < n3) return false;
             return true;

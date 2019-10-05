@@ -20,8 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.payload.datamodels.ApduCommand;
+import com.samsung.android.spayfw.b.Log;
 
 public class GetTokenResponse {
     private static final String TAG = "GetTokenResponse";
@@ -50,7 +49,7 @@ public class GetTokenResponse {
             nullPointerException.printStackTrace();
             bl = false;
             if (getTokenResponse == null) return bl;
-            c.d(TAG, "TR Server returned invalid jsonObject :" + getTokenResponse);
+            Log.d(TAG, "TR Server returned invalid jsonObject :" + getTokenResponse);
             return false;
         }
         int n2 = getTokenResponse.getApduCommands().length;
@@ -70,7 +69,7 @@ public class GetTokenResponse {
 
     public static GetTokenResponse parseJson(JsonObject jsonObject) {
         if (jsonObject == null) {
-            c.d(TAG, "getTokenResponse is null");
+            Log.d(TAG, "getTokenResponse is null");
             return null;
         }
         try {

@@ -13,7 +13,8 @@ package com.samsung.android.spayfw.payprovider.mastercard.tzsvc;
 
 import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.Blob;
 import com.samsung.android.spaytzsvc.api.TACommands;
 import com.samsung.android.spaytzsvc.api.TAController;
@@ -841,7 +842,7 @@ extends TACommands {
         extends TACommandRequest {
             public TAEncryptDsrpCnccPaymentInfoRequest(byte[] arrby, byte[] arrby2) {
                 if (TAController.DEBUG) {
-                    c.d(McTACommands.TAG, "dsrpPlainData.length:" + arrby.length);
+                    Log.d(McTACommands.TAG, "dsrpPlainData.length:" + arrby.length);
                 }
                 EncryptDsrpPaymentInfoIn encryptDsrpPaymentInfoIn = new EncryptDsrpPaymentInfoIn();
                 encryptDsrpPaymentInfoIn.setData(arrby, arrby2);
@@ -895,7 +896,7 @@ extends TACommands {
         extends TACommandRequest {
             public TAEncryptDsrpPaymentInfoRequest(byte[] arrby, byte[] arrby2, byte[] arrby3) {
                 if (TAController.DEBUG) {
-                    c.d("com.samsung", "dsrpPlainData.length:" + arrby.length);
+                    Log.d("com.samsung", "dsrpPlainData.length:" + arrby.length);
                 }
                 EncryptDsrpPaymentInfoIn encryptDsrpPaymentInfoIn = new EncryptDsrpPaymentInfoIn();
                 encryptDsrpPaymentInfoIn.setData(arrby, arrby2, arrby3);

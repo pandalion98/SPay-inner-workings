@@ -20,9 +20,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
-import com.samsung.android.spayfw.storage.DbAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ extends DbAdapter {
     private ServerCertsStorage(Context context) {
         super(context);
         this.execSQL("CREATE TABLE IF NOT EXISTS server_certs_group(_id INTEGER, card_type TEXT NOT NULL, content TEXT NOT NULL, usage TEXT NOT NULL, alias TEXT NOT NULL, PRIMARY KEY (card_type, usage, alias) )");
-        c.i("ServerCertsStorage", "Create ServerCerts Table If Not Exists");
+        Log.i("ServerCertsStorage", "Create ServerCerts Table If Not Exists");
     }
 
     public static final ServerCertsStorage ad(Context context) {
@@ -58,7 +59,7 @@ extends DbAdapter {
 
     public int a(String string, CertificateInfo certificateInfo) {
         if (string == null || certificateInfo == null || certificateInfo.getContent() == null || certificateInfo.getUsage() == null) {
-            c.e("ServerCertsStorage", "addServerCertsRecord: cardType/cert/cert.content/cert.usage is null");
+            Log.e("ServerCertsStorage", "addServerCertsRecord: cardType/cert/cert.content/cert.usage is null");
             return -1;
         }
         ContentValues contentValues = new ContentValues();
@@ -68,12 +69,12 @@ extends DbAdapter {
         contentValues.put(ServerCertsDb.ServerCertsColumn.Cj.getColumn(), certificateInfo.getAlias());
         try {
             int n2 = this.a("server_certs_group", contentValues);
-            c.d("ServerCertsStorage", "RowId : " + n2);
+            Log.d("ServerCertsStorage", "RowId : " + n2);
             return n2;
         }
         catch (SQLiteException sQLiteException) {
-            c.e("ServerCertsStorage", "addTokenRecord: cannot add server certs record");
-            c.c("ServerCertsStorage", sQLiteException.getMessage(), sQLiteException);
+            Log.e("ServerCertsStorage", "addTokenRecord: cannot add server certs record");
+            Log.c("ServerCertsStorage", sQLiteException.getMessage(), sQLiteException);
             return -1;
         }
     }
@@ -88,7 +89,7 @@ extends DbAdapter {
     public List<CertificateInfo> a(ServerCertsDb.ServerCertsColumn var1_1, String var2_2) {
         block6 : {
             if (var1_1 == null) {
-                c.e("ServerCertsStorage", "getCertificates: column is null");
+                Log.e("ServerCertsStorage", "getCertificates: column is null");
                 return null;
             }
             var5_4 = var6_3 = this.f("server_certs_group", var1_1.getColumn(), var2_2);

@@ -10,7 +10,7 @@
  */
 package com.samsung.android.spayfw.payprovider;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,18 +24,18 @@ public class j {
     }
 
     public void cancel() {
-        c.d("UnloadTimer", "cancel : cardType = " + this.cardType + "; timerObj = " + pf.get((Object)this.cardType));
+        Log.d("UnloadTimer", "cancel : cardType = " + this.cardType + "; timerObj = " + pf.get((Object)this.cardType));
         if (pf.containsKey((Object)this.cardType)) {
             ((Timer)pf.get((Object)this.cardType)).cancel();
         }
     }
 
     public void schedule(TimerTask timerTask, long l2) {
-        c.d("UnloadTimer", "schedule : delay = " + l2 + "; cardType = " + this.cardType);
+        Log.d("UnloadTimer", "schedule : delay = " + l2 + "; cardType = " + this.cardType);
         this.cancel();
         pf.put((Object)this.cardType, (Object)new Timer());
         ((Timer)pf.get((Object)this.cardType)).schedule(timerTask, l2);
-        c.d("UnloadTimer", "schedule : timerObj = " + pf.get((Object)this.cardType));
+        Log.d("UnloadTimer", "schedule : timerObj = " + pf.get((Object)this.cardType));
     }
 }
 

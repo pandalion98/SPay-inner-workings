@@ -30,16 +30,14 @@ import com.google.gson.Gson;
 import com.mastercard.mobile_api.utils.tlv.ParsingException;
 import com.mastercard.mobile_api.utils.tlv.TLVHandler;
 import com.mastercard.mobile_api.utils.tlv.TLVParser;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.utils.McUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class TlvParserUtil {
     private static final String TAG = "mcpce_TlvParserUtil";
@@ -79,7 +77,7 @@ public class TlvParserUtil {
         }
         Map<String, List<String>> map = TlvParserUtil.getAllTags(McUtils.byteArrayToHex(arrby));
         if (map == null) return map;
-        c.d(TAG, "mapJson : " + new Gson().toJson(map));
+        Log.d(TAG, "mapJson : " + new Gson().toJson(map));
         return map;
     }
 
@@ -100,14 +98,14 @@ public class TlvParserUtil {
                 boolean bl = map.isEmpty();
                 list = null;
                 if (bl) break block2;
-                c.d(TAG, "mapJson : " + new Gson().toJson(map));
+                Log.d(TAG, "mapJson : " + new Gson().toJson(map));
                 boolean bl2 = map.containsKey((Object)mctags.getTag());
                 list = null;
                 if (bl2 && (list = (List)map.get((Object)mctags.getTag())) != null && !list.isEmpty()) break block3;
             }
             return list;
         }
-        c.d(TAG, "key Found : " + mctags.getTag() + " value: " + list.toString());
+        Log.d(TAG, "key Found : " + mctags.getTag() + " value: " + list.toString());
         return list;
     }
 
@@ -145,7 +143,7 @@ public class TlvParserUtil {
                     TLVParser.parseTLV(var9_8, 0, var9_8.length, var5_6);
                 }
                 catch (ParsingException var10_9) {
-                    c.b("mcpce_TlvParserUtil", "ParsingException !!!" + var8_7, (Throwable)var10_9);
+                    Log.b("mcpce_TlvParserUtil", "ParsingException !!!" + var8_7, (Throwable)var10_9);
                 }
                 var11_10 = var5_6.getParsedTlvNodes();
                 if (var11_10.isEmpty()) continue;
@@ -159,13 +157,13 @@ public class TlvParserUtil {
                 var14_13 = (String)var13_12.getKey();
                 var15_14 = (List)var13_12.getValue();
                 if (TextUtils.isEmpty((CharSequence)var14_13) || var15_14 == null || var15_14.isEmpty()) continue;
-                c.d("mcpce_TlvParserUtil", "Key : " + (String)var13_12.getKey() + " Values : " + var15_14.toString());
+                Log.d("mcpce_TlvParserUtil", "Key : " + (String)var13_12.getKey() + " Values : " + var15_14.toString());
                 if (TlvParserUtil.isPrimitiveTag(var14_13)) {
-                    c.d("mcpce_TlvParserUtil", "Key : Primitive " + var14_13);
+                    Log.d("mcpce_TlvParserUtil", "Key : Primitive " + var14_13);
                     TlvParserUtil.appendIfNotPresent((Map<String, List<String>>)var4_5, var14_13, (List<String>)var15_14);
                     continue;
                 }
-                c.d("mcpce_TlvParserUtil", "Key : Non Primitive " + var14_13);
+                Log.d("mcpce_TlvParserUtil", "Key : Non Primitive " + var14_13);
                 var3_4.addAll((Collection)var15_14);
             } while (true);
             break;
@@ -317,9 +315,9 @@ public class TlvParserUtil {
          */
         private void parseTagInternal(String var1_1, int var2_2, byte[] var3_3, int var4_4) {
             if (TextUtils.isEmpty((CharSequence)var1_1) || var3_3 == null || var3_3.length == 0 || var2_2 <= 0 || var4_4 < 0 || var4_4 > var3_3.length || var2_2 > var3_3.length || var4_4 + var2_2 > var3_3.length) {
-                c.e("mcpce_TlvParserUtil", "Parsing Error!!! mTag :" + var1_1 + " length : " + var2_2 + " offset : " + var4_4);
+                Log.e("mcpce_TlvParserUtil", "Parsing Error!!! mTag :" + var1_1 + " length : " + var2_2 + " offset : " + var4_4);
                 if (var3_3 == null) return;
-                c.e("mcpce_TlvParserUtil", "data :" + McUtils.byteArrayToHex(var3_3));
+                Log.e("mcpce_TlvParserUtil", "data :" + McUtils.byteArrayToHex(var3_3));
                 return;
             }
             var5_5 = var4_4 + var2_2;
@@ -336,7 +334,7 @@ public class TlvParserUtil {
             catch (ArrayIndexOutOfBoundsException var6_10) {}
 lbl-1000: // 3 sources:
             {
-                c.a("mcpce_TlvParserUtil", "Parsing Exception!!! ", (Throwable)var6_8);
+                Log.a("mcpce_TlvParserUtil", "Parsing Exception!!! ", (Throwable)var6_8);
                 return;
             }
         }

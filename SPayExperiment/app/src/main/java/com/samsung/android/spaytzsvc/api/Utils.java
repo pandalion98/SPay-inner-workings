@@ -12,7 +12,8 @@
  */
 package com.samsung.android.spaytzsvc.api;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class Utils {
      * Enabled aggressive exception aggregation
      */
     public static boolean writeFile(byte[] var0, String var1_1) {
-        c.d("spaytzsvc.api.Utils", "Out writeFile - Path " + var1_1);
+        Log.d("spaytzsvc.api.Utils", "Out writeFile - Path " + var1_1);
         File var2_2 = new File(var1_1);
         File var3_3 = var2_2.getParentFile();
         boolean var4_4 = false;
@@ -63,7 +64,7 @@ public class Utils {
             if (!var11_5) {
                 boolean var12_6 = var3_3.mkdirs();
                 if (!var12_6) {
-                    c.e("spaytzsvc.api.Utils", "Error: mkdirs fail for " + var3_3.getAbsolutePath());
+                    Log.e("spaytzsvc.api.Utils", "Error: mkdirs fail for " + var3_3.getAbsolutePath());
 lbl12: // 3 sources:
                     do {
                         return var4_4;
@@ -74,7 +75,7 @@ lbl12: // 3 sources:
             }
         }
         FileOutputStream var5_7 = new FileOutputStream(var2_2);
-        c.d("spaytzsvc.api.Utils", "File Write - Length = " + var0.length);
+        Log.d("spaytzsvc.api.Utils", "File Write - Length = " + var0.length);
         var5_7.write(var0);
         var4_4 = true;
         if (var5_7 == null) ** GOTO lbl12
@@ -83,7 +84,7 @@ lbl12: // 3 sources:
             return var4_4;
         }
         catch (IOException var10_8) {
-            c.d("spaytzsvc.api.Utils", "Error closing OutputStream");
+            Log.d("spaytzsvc.api.Utils", "Error closing OutputStream");
             return var4_4;
         }
         catch (Exception var6_9) {
@@ -97,7 +98,7 @@ lbl30: // 2 sources:
                     return var4_4;
                 }
                 catch (IOException var9_12) {
-                    c.d("spaytzsvc.api.Utils", "Error closing OutputStream");
+                    Log.d("spaytzsvc.api.Utils", "Error closing OutputStream");
                     return var4_4;
                 }
                 break;
@@ -116,7 +117,7 @@ lbl46: // 4 sources:
                     break;
                 } while (true);
                 catch (IOException var8_16) {
-                    c.d("spaytzsvc.api.Utils", "Error closing OutputStream");
+                    Log.d("spaytzsvc.api.Utils", "Error closing OutputStream");
                     ** continue;
                 }
                 break;

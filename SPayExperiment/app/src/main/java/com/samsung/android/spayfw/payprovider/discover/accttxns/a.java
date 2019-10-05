@@ -8,10 +8,10 @@
  */
 package com.samsung.android.spayfw.payprovider.discover.accttxns;
 
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.accttxns.models.AcctTransactionsResponseData;
 import com.samsung.android.spayfw.remoteservice.Client;
 import com.samsung.android.spayfw.remoteservice.c;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
 
@@ -28,7 +28,7 @@ extends m<String, AcctTransactionsResponseData, c<AcctTransactionsResponseData>,
 
     @Override
     protected c<AcctTransactionsResponseData> b(int n2, String string) {
-        com.samsung.android.spayfw.b.c.i("AcctTransactionsRequester", "AcctTransactionsResponseData : statusCode" + n2 + "response: " + string);
+        Log.i("AcctTransactionsRequester", "AcctTransactionsResponseData : statusCode" + n2 + "response: " + string);
         return new c<AcctTransactionsResponseData>(null, this.Al.fromJson(string, AcctTransactionsResponseData.class), n2);
     }
 
@@ -38,7 +38,7 @@ extends m<String, AcctTransactionsResponseData, c<AcctTransactionsResponseData>,
         if (this.mPaginationTS != null) {
             string = string + "?since=" + this.mPaginationTS;
         }
-        com.samsung.android.spayfw.b.c.i("AcctTransactionsRequester", "getRequestUrl : url: " + string);
+        Log.i("AcctTransactionsRequester", "getRequestUrl : url: " + string);
         return string;
     }
 

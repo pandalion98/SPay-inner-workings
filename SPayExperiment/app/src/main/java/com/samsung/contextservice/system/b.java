@@ -15,13 +15,13 @@ package com.samsung.contextservice.system;
 
 import android.content.Context;
 import android.location.Location;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.contextclient.data.Poi;
 import com.samsung.contextservice.server.models.PolicyResponseData;
-import com.samsung.contextservice.system.c;
 import com.samsung.sensorframework.a;
 import com.samsung.sensorframework.sda.b.a.p;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class b
@@ -38,7 +38,7 @@ implements a {
 
     private b(Context context) {
         this.context = context;
-        com.samsung.android.spayfw.b.c.d("ContextSFManager", "instance created");
+        Log.d("ContextSFManager", "instance created");
     }
 
     /*
@@ -76,22 +76,22 @@ implements a {
     private ArrayList<Poi> h(List<String> list) {
         ArrayList arrayList = new ArrayList();
         if (list != null && list.size() > 0) {
-            com.samsung.android.spayfw.b.c.d("ContextSFManager", "convertPoIJsonToPoIObjectList() size: " + list.size());
+            Log.d("ContextSFManager", "convertPoIJsonToPoIObjectList() size: " + list.size());
             for (String string : list) {
                 if (string != null && string.length() > 0) {
                     Poi poi = Poi.toPoiFromJson(string);
                     if (poi != null) {
                         arrayList.add((Object)poi);
-                        com.samsung.android.spayfw.b.c.d("ContextSFManager", "convertPoIJsonToPoIObjectList() Poi: " + poi.getId());
+                        Log.d("ContextSFManager", "convertPoIJsonToPoIObjectList() Poi: " + poi.getId());
                         continue;
                     }
-                    com.samsung.android.spayfw.b.c.d("ContextSFManager", "convertPoIJsonToPoIObjectList() poi is null");
+                    Log.d("ContextSFManager", "convertPoIJsonToPoIObjectList() poi is null");
                     continue;
                 }
-                com.samsung.android.spayfw.b.c.d("ContextSFManager", "convertPoIJsonToPoIObjectList() jsonStr is null");
+                Log.d("ContextSFManager", "convertPoIJsonToPoIObjectList() jsonStr is null");
             }
         } else {
-            com.samsung.android.spayfw.b.c.d("ContextSFManager", "convertPoIJsonToPoIObjectList() poiJsonList size is zero or null");
+            Log.d("ContextSFManager", "convertPoIJsonToPoIObjectList() poiJsonList size is zero or null");
         }
         return arrayList;
     }
@@ -103,7 +103,7 @@ implements a {
             block4 : {
                 block3 : {
                     ArrayList<Poi> arrayList2;
-                    com.samsung.android.spayfw.b.c.d("ContextSFManager", "queryPoICache()");
+                    Log.d("ContextSFManager", "queryPoICache()");
                     if (this.Hq == null) break block3;
                     ArrayList arrayList3 = new ArrayList();
                     ArrayList<Poi> arrayList4 = this.Hq.a(d2, d3, n2, 500.0);
@@ -122,7 +122,7 @@ implements a {
                     }
                     break block5;
                 }
-                com.samsung.android.spayfw.b.c.d("ContextSFManager", "queryPoICache() verdictManager is null");
+                Log.d("ContextSFManager", "queryPoICache() verdictManager is null");
             }
             return null;
         }
@@ -135,7 +135,7 @@ implements a {
      * Enabled aggressive exception aggregation
      */
     public void gE() {
-        com.samsung.android.spayfw.b.c.d("ContextSFManager", "startContextSFManager()");
+        Log.d("ContextSFManager", "startContextSFManager()");
         try {
             if (this.context != null) {
                 this.Hp = com.samsung.sensorframework.b.aM(this.context);
@@ -143,33 +143,33 @@ implements a {
                     this.Hp.gM();
                     this.Hp.a(this);
                 } else {
-                    com.samsung.android.spayfw.b.c.d("ContextSFManager", "startContextSFManager() sfManager is null");
+                    Log.d("ContextSFManager", "startContextSFManager() sfManager is null");
                 }
                 this.Hq = c.aG(this.context);
                 return;
             }
-            com.samsung.android.spayfw.b.c.d("ContextSFManager", "startContextSFManager() context is null");
+            Log.d("ContextSFManager", "startContextSFManager() context is null");
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("ContextSFManager", "error in startContextSFManager()");
+            Log.e("ContextSFManager", "error in startContextSFManager()");
             exception.printStackTrace();
             return;
         }
     }
 
     public void gF() {
-        com.samsung.android.spayfw.b.c.d("ContextSFManager", "stopContextSFManager()");
+        Log.d("ContextSFManager", "stopContextSFManager()");
         try {
             if (this.Hp != null) {
                 this.Hp.gN();
                 return;
             }
-            com.samsung.android.spayfw.b.c.d("ContextSFManager", "stopContextSFManager() sfManager is null");
+            Log.d("ContextSFManager", "stopContextSFManager() sfManager is null");
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("ContextSFManager", "error in disabling sensor services");
+            Log.e("ContextSFManager", "error in disabling sensor services");
             exception.printStackTrace();
             return;
         }
@@ -181,14 +181,14 @@ implements a {
      */
     @Override
     public String gG() {
-        com.samsung.android.spayfw.b.c.d("ContextSFManager", "queryContextSensingPolicy()");
+        Log.d("ContextSFManager", "queryContextSensingPolicy()");
         if (this.Hq != null) {
             PolicyResponseData policyResponseData = this.Hq.bI("ALL_POLICIES");
             String string = null;
             if (policyResponseData == null) return string;
             return policyResponseData.toJson();
         }
-        com.samsung.android.spayfw.b.c.d("ContextSFManager", "queryContextSensingPolicy() verdictManager is null");
+        Log.d("ContextSFManager", "queryContextSensingPolicy() verdictManager is null");
         return null;
     }
 
@@ -202,14 +202,14 @@ implements a {
             block3 : {
                 block2 : {
                     p p3;
-                    com.samsung.android.spayfw.b.c.d("ContextSFManager", "getLastLocation()");
+                    Log.d("ContextSFManager", "getLastLocation()");
                     if (this.Hp == null) break block2;
                     com.samsung.sensorframework.sda.b.a a2 = this.Hp.aa(5004);
                     if (a2 == null || !(a2 instanceof p) || (p3 = (p)a2) == null) break block3;
                     location = p3.getLocation();
                     break block4;
                 }
-                com.samsung.android.spayfw.b.c.d("ContextSFManager", "getLastLocation() sfManager is null");
+                Log.d("ContextSFManager", "getLastLocation() sfManager is null");
             }
             location = null;
         }
@@ -217,10 +217,10 @@ implements a {
             location = p2.getLocation();
         }
         if (location == null) {
-            com.samsung.android.spayfw.b.c.d("ContextSFManager", "getLastLocation() returning null location");
+            Log.d("ContextSFManager", "getLastLocation() returning null location");
             return location;
         }
-        com.samsung.android.spayfw.b.c.d("ContextSFManager", "getLastLocation() returning a not null location");
+        Log.d("ContextSFManager", "getLastLocation() returning a not null location");
         return location;
     }
 
@@ -229,14 +229,14 @@ implements a {
         ArrayList<Poi> arrayList = this.h(list);
         if (arrayList != null && arrayList.size() > 0) {
             if (this.Hq != null) {
-                com.samsung.android.spayfw.b.c.d("ContextSFManager", "onNearbyPoIs() calling verdictManager.notifyCallerWithPoi()");
+                Log.d("ContextSFManager", "onNearbyPoIs() calling verdictManager.notifyCallerWithPoi()");
                 this.Hq.d(arrayList);
                 return;
             }
-            com.samsung.android.spayfw.b.c.d("ContextSFManager", "onNearbyPoIs() verdictManager is null");
+            Log.d("ContextSFManager", "onNearbyPoIs() verdictManager is null");
             return;
         }
-        com.samsung.android.spayfw.b.c.d("ContextSFManager", "onNearbyPoIs() poisToNotify size is zero or null");
+        Log.d("ContextSFManager", "onNearbyPoIs() poisToNotify size is zero or null");
     }
 
     @Override
@@ -244,14 +244,14 @@ implements a {
         ArrayList<Poi> arrayList = this.h(list);
         if (arrayList != null && arrayList.size() > 0) {
             if (this.Hq != null) {
-                com.samsung.android.spayfw.b.c.d("ContextSFManager", "onNearbyPoIs() calling verdictManager.onPoiLostBroadcast()");
+                Log.d("ContextSFManager", "onNearbyPoIs() calling verdictManager.onPoiLostBroadcast()");
                 this.Hq.e(arrayList);
                 return;
             }
-            com.samsung.android.spayfw.b.c.d("ContextSFManager", "onExitPoIs() verdictManager is null");
+            Log.d("ContextSFManager", "onExitPoIs() verdictManager is null");
             return;
         }
-        com.samsung.android.spayfw.b.c.d("ContextSFManager", "onExitPoIs() poisToNotify size is zero or null");
+        Log.d("ContextSFManager", "onExitPoIs() poisToNotify size is zero or null");
     }
 }
 

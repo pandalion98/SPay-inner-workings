@@ -25,8 +25,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.sensorframework.sda.d.b.a;
+
+import com.samsung.android.spayfw.b.Log;
+
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
@@ -78,7 +79,7 @@ extends a {
                 return;
             }
         }
-        c.d(this.he(), "logOnDataSensed() called while not sensing.");
+        Log.d(this.he(), "logOnDataSensed() called while not sensing.");
     }
 
     @Override

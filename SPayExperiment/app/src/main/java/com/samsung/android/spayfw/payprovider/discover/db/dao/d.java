@@ -25,9 +25,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.discover.db.dao.DcCommonDao;
-import com.samsung.android.spayfw.payprovider.discover.db.dao.b;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.db.models.DcCardProfile;
 import java.io.UnsupportedEncodingException;
 
@@ -49,11 +47,11 @@ extends b<DcCardProfile> {
     protected ContentValues a(DcCardProfile dcCardProfile) {
         byte[] arrby;
         if (dcCardProfile == null) {
-            c.e("DCSDK_DcCardProfileDaoImpl", "getContentValues: Data null");
+            Log.e("DCSDK_DcCardProfileDaoImpl", "getContentValues: Data null");
             return null;
         }
         if (dcCardProfile.getCardMasterId() == -1L) {
-            c.e("DCSDK_DcCardProfileDaoImpl", "getContentValues: INVALID_ROW_ID");
+            Log.e("DCSDK_DcCardProfileDaoImpl", "getContentValues: INVALID_ROW_ID");
         }
         ContentValues contentValues = new ContentValues();
         contentValues.put("cardMasterId", Long.valueOf((long)dcCardProfile.getCardMasterId()));
@@ -61,7 +59,7 @@ extends b<DcCardProfile> {
         try {
             String string = this.mGson.toJson((Object)dcCardProfile);
             if (TextUtils.isEmpty((CharSequence)string)) {
-                c.e("DCSDK_DcCardProfileDaoImpl", "getContentValues: jsonData failed");
+                Log.e("DCSDK_DcCardProfileDaoImpl", "getContentValues: jsonData failed");
                 return null;
             }
             arrby = string.getBytes("UTF8");
@@ -80,12 +78,12 @@ extends b<DcCardProfile> {
 
     protected DcCardProfile f(Cursor cursor) {
         if (cursor == null) {
-            c.e("DCSDK_DcCardProfileDaoImpl", "getContentValues: cursor null");
+            Log.e("DCSDK_DcCardProfileDaoImpl", "getContentValues: cursor null");
             return null;
         }
         byte[] arrby = cursor.getBlob(cursor.getColumnIndex("data"));
         if (arrby == null) {
-            c.e("DCSDK_DcCardProfileDaoImpl", "getContentValues: byteData null");
+            Log.e("DCSDK_DcCardProfileDaoImpl", "getContentValues: byteData null");
             return null;
         }
         try {

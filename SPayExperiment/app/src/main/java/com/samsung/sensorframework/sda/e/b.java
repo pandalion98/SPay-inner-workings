@@ -15,10 +15,10 @@
 package com.samsung.sensorframework.sda.e;
 
 import android.os.SystemClock;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.SDAException;
 import com.samsung.sensorframework.sda.d.a.m;
-import com.samsung.sensorframework.sda.e.a;
 
 public class b
 extends a {
@@ -33,7 +33,7 @@ extends a {
      */
     protected void a(Object var1_1, long var2_2) {
         block8 : {
-            c.d(this.he(), "waitElapsedRealtime() original sleep duration: " + var2_2);
+            Log.d(this.he(), "waitElapsedRealtime() original sleep duration: " + var2_2);
             var4_3 = var2_2;
             block5 : while (var2_2 > 0L && this.state == 6123) {
                 var6_5 = Math.min((long)15000L, (long)var2_2);
@@ -44,8 +44,8 @@ extends a {
                 ** if (var13_9 == var4_3) goto lbl-1000
 lbl-1000: // 1 sources:
                 {
-                    c.d(this.he(), "waitElapsedRealtime() Sleep duration config has changed, Current config: " + var4_3 + " Time remaining in current config: " + var10_7 + " Updated config: " + var13_9);
-                    c.d(this.he(), "waitElapsedRealtime() sleeping for: " + var13_9);
+                    Log.d(this.he(), "waitElapsedRealtime() Sleep duration config has changed, Current config: " + var4_3 + " Time remaining in current config: " + var10_7 + " Updated config: " + var13_9);
+                    Log.d(this.he(), "waitElapsedRealtime() sleeping for: " + var13_9);
                     var15_10 = var13_9;
 lbl16: // 3 sources:
                     do {
@@ -89,11 +89,11 @@ lbl-1000: // 1 sources:
             block12 : {
                 if (this.state != 6123) {
                     this.KM.gY();
-                    c.d(this.he(), "Stopped PullSensorTask.");
+                    Log.d(this.he(), "Stopped PullSensorTask.");
                     return;
                 }
                 try {
-                    c.d(this.he(), "Pulling from: " + com.samsung.sensorframework.sda.d.c.ap(this.KM.getSensorType()));
+                    Log.d(this.he(), "Pulling from: " + com.samsung.sensorframework.sda.d.c.ap(this.KM.getSensorType()));
                     this.c(((m)this.KM).hn());
                     var7_8 = (Long)this.KM.cj("POST_SENSE_SLEEP_LENGTH_MILLIS");
                     var11_10 = var9_9 = this.KN;

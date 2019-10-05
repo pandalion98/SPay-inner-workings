@@ -23,8 +23,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import com.samsung.android.analytics.sdk.AnalyticContext;
 import com.samsung.android.analytics.sdk.AnalyticEvent;
-import com.samsung.android.analytics.sdk.a;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.BinAttribute;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.a.n;
@@ -43,7 +42,7 @@ extends Service {
          */
         @Override
         public int a(AnalyticEvent analyticEvent, AnalyticContext analyticContext, boolean bl) {
-            c.d("AnalyticFrameworkService", "reportAnalyticEvent: AnalyticEvent:" + analyticEvent + " , AnalyticContext: " + analyticContext);
+            Log.d("AnalyticFrameworkService", "reportAnalyticEvent: AnalyticEvent:" + analyticEvent + " , AnalyticContext: " + analyticContext);
             AnalyticFrameworkService.this.a(analyticContext);
             AnalyticFrameworkService.this.a(analyticEvent);
             try {
@@ -55,7 +54,7 @@ extends Service {
             }
             catch (RemoteException remoteException) {
                 remoteException.printStackTrace();
-                c.e("AnalyticFrameworkService", "Exception while sending the analytic event to processor");
+                Log.e("AnalyticFrameworkService", "Exception while sending the analytic event to processor");
                 return 0;
             }
         }
@@ -66,7 +65,7 @@ extends Service {
          */
         @Override
         public int a(List<AnalyticEvent> list, AnalyticContext analyticContext, boolean bl) {
-            c.d("AnalyticFrameworkService", "reportAnalyticEvents");
+            Log.d("AnalyticFrameworkService", "reportAnalyticEvents");
             try {
                 com.samsung.android.spayfw.core.a.a.l(AnalyticFrameworkService.this.mContext).a(list, analyticContext);
                 do {
@@ -76,7 +75,7 @@ extends Service {
             }
             catch (RemoteException remoteException) {
                 remoteException.printStackTrace();
-                c.e("AnalyticFrameworkService", "Exception while sending the analytic event to processor");
+                Log.e("AnalyticFrameworkService", "Exception while sending the analytic event to processor");
                 return 0;
             }
         }
@@ -85,29 +84,29 @@ extends Service {
     private Handler mHandler;
 
     private void a(AnalyticContext analyticContext) {
-        c.d("AnalyticFrameworkService", "updatePFVersion");
+        Log.d("AnalyticFrameworkService", "updatePFVersion");
         if (bE == null) {
             bE = h.getPackageVersion(this.mContext, this.mContext.getPackageName());
         }
-        c.d("AnalyticFrameworkService", "PF version :" + bE);
+        Log.d("AnalyticFrameworkService", "PF version :" + bE);
         analyticContext.l(bE);
     }
 
     private void a(AnalyticEvent analyticEvent) {
-        c.d("AnalyticFrameworkService", "updateBin -");
+        Log.d("AnalyticFrameworkService", "updateBin -");
         boolean bl = analyticEvent.L().equals((Object)AnalyticEvent.Type.he);
         String string = null;
         if (bl) {
             String string2 = analyticEvent.getValue(AnalyticEvent.Field.fq.getString());
-            c.d("AnalyticFrameworkService", "updateBin-- :" + string2);
+            Log.d("AnalyticFrameworkService", "updateBin-- :" + string2);
             string = null;
             if (string2 != null) {
                 boolean bl2 = string2.equals((Object)AnalyticEvent.Data.bZ.getString());
                 string = null;
                 if (bl2) {
-                    c.d("AnalyticFrameworkService", "filling Brand info");
+                    Log.d("AnalyticFrameworkService", "filling Brand info");
                     String string3 = analyticEvent.getValue(AnalyticEvent.Field.fr.getString());
-                    c.d("AnalyticFrameworkService", "given bin:" + string3);
+                    Log.d("AnalyticFrameworkService", "given bin:" + string3);
                     BinAttribute binAttribute = BinAttribute.getBinAttribute(string3);
                     string = null;
                     if (binAttribute != null) {
@@ -117,22 +116,22 @@ extends Service {
                 }
             }
         }
-        c.d("AnalyticFrameworkService", "cardBrand:" + string);
+        Log.d("AnalyticFrameworkService", "cardBrand:" + string);
     }
 
     public static final void enable() {
         PaymentFrameworkApp.b(AnalyticFrameworkService.class);
-        c.d("AnalyticFrameworkService", "AnalyticFrameworkService is enabled");
+        Log.d("AnalyticFrameworkService", "AnalyticFrameworkService is enabled");
     }
 
     public IBinder onBind(Intent intent) {
-        c.d("AnalyticFrameworkService", "onBind...");
-        c.i("AnalyticFrameworkService", "return auth binder");
+        Log.d("AnalyticFrameworkService", "onBind...");
+        Log.i("AnalyticFrameworkService", "return auth binder");
         return this.bF;
     }
 
     public void onCreate() {
-        c.d("AnalyticFrameworkService", "onCreate...");
+        Log.d("AnalyticFrameworkService", "onCreate...");
         super.onCreate();
         this.bD = new a();
         this.mHandler = PaymentFrameworkApp.az();
@@ -145,7 +144,7 @@ extends Service {
         }
 
         public void binderDied() {
-            c.e("AnalyticFrameworkService", "DeathRecipient: Error: Wallet App died, handle clean up");
+            Log.e("AnalyticFrameworkService", "DeathRecipient: Error: Wallet App died, handle clean up");
             n.q(AnalyticFrameworkService.this.mContext).clearCard();
         }
     }

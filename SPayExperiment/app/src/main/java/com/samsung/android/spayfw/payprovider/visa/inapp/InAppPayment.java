@@ -17,9 +17,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.visa.e;
-import com.samsung.android.spayfw.payprovider.visa.inapp.a;
 import com.samsung.android.spayfw.payprovider.visa.inapp.models.GenCryptogramResponseData;
 import com.samsung.android.spayfw.payprovider.visa.inapp.models.InAppData;
 import com.samsung.android.spayfw.remoteservice.c;
@@ -33,10 +33,10 @@ public class InAppPayment {
 
     private static c<Data> a(Context context, String string, PaymentDataRequest paymentDataRequest) {
         if (context == null || string == null || paymentDataRequest == null) {
-            com.samsung.android.spayfw.b.c.e("InAppPayment", "tokenId or requestData null");
+            Log.e("InAppPayment", "tokenId or requestData null");
             return null;
         }
-        com.samsung.android.spayfw.b.c.d("InAppPayment", "tokenId :" + string);
+        Log.d("InAppPayment", "tokenId :" + string);
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         Data data = new Data();
         data.setData(gson.toJsonTree((Object)paymentDataRequest).getAsJsonObject());
@@ -45,7 +45,7 @@ public class InAppPayment {
 
     public static InAppData buildInAppPaymentData(Context context, PaymentNetworkProvider.InAppDetailedTransactionInfo inAppDetailedTransactionInfo, GenCryptogramResponseData genCryptogramResponseData) {
         if (context == null || genCryptogramResponseData == null || inAppDetailedTransactionInfo == null) {
-            com.samsung.android.spayfw.b.c.e("InAppPayment", " buildInAppPaymentData: input are null");
+            Log.e("InAppPayment", " buildInAppPaymentData: input are null");
             return null;
         }
         InAppData inAppData = new InAppData();
@@ -54,14 +54,14 @@ public class InAppPayment {
         inAppData.setUtc(String.valueOf((long)h.am(context)));
         GenCryptogramResponseData.CryptogramInfo cryptogramInfo = genCryptogramResponseData.getCryptogramInfo();
         if (cryptogramInfo == null || cryptogramInfo.getCryptogram() == null) {
-            com.samsung.android.spayfw.b.c.e("InAppPayment", " cryptogram: empty");
+            Log.e("InAppPayment", " cryptogram: empty");
             return null;
         }
         inAppData.setCryptogram(cryptogramInfo.getCryptogram());
         inAppData.setEci_indicator(cryptogramInfo.getEci());
         GenCryptogramResponseData.TokenInfo tokenInfo = genCryptogramResponseData.getTokenInfo();
         if (tokenInfo == null || tokenInfo.getEncTokenInfo() == null || tokenInfo.getTokenExpirationDate() == null) {
-            com.samsung.android.spayfw.b.c.e("InAppPayment", " tokenInfo: empty");
+            Log.e("InAppPayment", " tokenInfo: empty");
             return null;
         }
         inAppData.setTokenPANExpiration(tokenInfo.getTokenExpirationDate());

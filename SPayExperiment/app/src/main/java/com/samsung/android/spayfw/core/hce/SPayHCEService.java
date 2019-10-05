@@ -11,12 +11,11 @@
  */
 package com.samsung.android.spayfw.core.hce;
 
-import android.content.Context;
 import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
 import android.os.RemoteException;
-import com.samsung.android.spayfw.appinterface.ApduReasonCode;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.a.n;
 import com.samsung.android.spayfw.core.b;
@@ -41,13 +40,13 @@ extends HostApduService {
 
     public void onCreate() {
         try {
-            c.d("SPayHCEService", "Before On create");
+            Log.d("SPayHCEService", "Before On create");
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("SPayHCEService", "HCE service: On create :TAException");
+                Log.e("SPayHCEService", "HCE service: On create :TAException");
                 return;
             }
             super.onCreate();
-            c.d("SPayHCEService", "HCE service is on");
+            Log.d("SPayHCEService", "HCE service is on");
             kl = this;
             return;
         }
@@ -64,13 +63,13 @@ extends HostApduService {
      */
     public void onDeactivated(int n2) {
         if (DEBUG) {
-            c.d("SPayHCEService", "onDeactivated(): time= " + System.currentTimeMillis());
+            Log.d("SPayHCEService", "onDeactivated(): time= " + System.currentTimeMillis());
         } else {
-            c.i("SPayHCEService", "onDeactivated()");
+            Log.i("SPayHCEService", "onDeactivated()");
         }
         try {
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("SPayHCEService", "HCE service:onDeactivated :TAException");
+                Log.e("SPayHCEService", "HCE service:onDeactivated :TAException");
                 return;
             }
             this.aT().u(n2);
@@ -90,17 +89,17 @@ extends HostApduService {
     public byte[] processCommandApdu(byte[] arrby, Bundle bundle) {
         long l2 = System.currentTimeMillis();
         if (DEBUG) {
-            c.i("SPayHCEService", "processCommandApdu(): time= " + l2);
+            Log.i("SPayHCEService", "processCommandApdu(): time= " + l2);
         } else {
-            c.i("SPayHCEService", "HCE: processCommandApdu()");
+            Log.i("SPayHCEService", "HCE: processCommandApdu()");
         }
         if (DEBUG) {
-            c.d("APDU_LOG", b.a(0, arrby, 0L));
+            Log.d("APDU_LOG", b.a(0, arrby, 0L));
         }
         byte[] arrby2 = b.iR;
         try {
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("SPayHCEService", "HCE service: processCommandApdu :TAException");
+                Log.e("SPayHCEService", "HCE service: processCommandApdu :TAException");
                 return b.iR;
             }
             byte[] arrby3 = this.aT().processApdu(arrby, bundle);
@@ -112,7 +111,7 @@ extends HostApduService {
         if (!DEBUG) {
             return arrby2;
         }
-        c.d("APDU_LOG", b.a(1, arrby2, System.currentTimeMillis() - l2));
+        Log.d("APDU_LOG", b.a(1, arrby2, System.currentTimeMillis() - l2));
         return arrby2;
     }
 }

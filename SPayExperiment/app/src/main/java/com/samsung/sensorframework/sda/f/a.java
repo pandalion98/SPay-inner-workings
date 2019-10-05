@@ -36,8 +36,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.a.b;
 import com.samsung.sensorframework.sda.b.a.p;
 import java.text.SimpleDateFormat;
@@ -56,11 +56,11 @@ public class a {
             double d2 = location.getLatitude();
             double d3 = location.getLongitude();
             if (d2 != 0.0 || d3 != 0.0) {
-                c.d("DataAcquisitionUtils", "isValidLocation() true");
+                Log.d("DataAcquisitionUtils", "isValidLocation() true");
                 return true;
             }
         }
-        c.d("DataAcquisitionUtils", "isValidLocation() false");
+        Log.d("DataAcquisitionUtils", "isValidLocation() false");
         return false;
     }
 
@@ -78,10 +78,10 @@ public class a {
     public static boolean bl(Context context) {
         NetworkInfo networkInfo = ((ConnectivityManager)context.getSystemService("connectivity")).getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            c.d("DataAcquisitionUtils", "isConnectToNetwork() true");
+            Log.d("DataAcquisitionUtils", "isConnectToNetwork() true");
             return true;
         }
-        c.d("DataAcquisitionUtils", "isConnectToNetwork() false");
+        Log.d("DataAcquisitionUtils", "isConnectToNetwork() false");
         return false;
     }
 
@@ -94,7 +94,7 @@ public class a {
             n2 = intent.getIntExtra("scale", n2);
         }
         int n4 = (int)(100.0f * ((float)n3 / (float)n2));
-        c.d("DataAcquisitionUtils", "getCurrentBatteryLevel() batteryPercent: " + n4);
+        Log.d("DataAcquisitionUtils", "getCurrentBatteryLevel() batteryPercent: " + n4);
         return n4;
     }
 
@@ -111,7 +111,7 @@ public class a {
             var4_3 = var5_2 = var2_1.getLastKnownLocation("passive");
         }
         catch (SecurityException var3_5) {
-            c.d("DataAcquisitionUtils", "getLastKnownLocation() SecurityException");
+            Log.d("DataAcquisitionUtils", "getLastKnownLocation() SecurityException");
             var4_3 = null;
         }
         if (var4_3 != null) {
@@ -122,10 +122,10 @@ public class a {
             var1_4 = null;
         }
         if (var1_4 == null) {
-            c.d("DataAcquisitionUtils", "getLastKnownLocation() returning a null location");
+            Log.d("DataAcquisitionUtils", "getLastKnownLocation() returning a null location");
             return var1_4;
         }
-        c.d("DataAcquisitionUtils", "getLastKnownLocation() returning a not null location");
+        Log.d("DataAcquisitionUtils", "getLastKnownLocation() returning a not null location");
         return var1_4;
     }
 
@@ -140,7 +140,7 @@ public class a {
             ArrayList arrayList = new ArrayList();
             a a2 = new a(wifiManager, arrayList);
             String string = b.gO() != null ? b.gO().gR() : null;
-            c.d("DataAcquisitionUtils", " intentBroadcasterPermission: " + string);
+            Log.d("DataAcquisitionUtils", " intentBroadcasterPermission: " + string);
             context.registerReceiver((BroadcastReceiver)a2, new IntentFilter("android.net.wifi.SCAN_RESULTS"), string, null);
             wifiManager.startScan();
             for (int i2 = 0; i2 < 15; ++i2) {
@@ -161,12 +161,12 @@ public class a {
 
     public static boolean c(Context context, int n2) {
         int n3 = a.bm(context);
-        c.d("DataAcquisitionUtils", "isBatteryLow() batteryPercent: " + n3);
+        Log.d("DataAcquisitionUtils", "isBatteryLow() batteryPercent: " + n3);
         if (n3 <= n2) {
-            c.d("DataAcquisitionUtils", "isBatteryLow() returning true as battery <= " + n2);
+            Log.d("DataAcquisitionUtils", "isBatteryLow() returning true as battery <= " + n2);
             return true;
         }
-        c.d("DataAcquisitionUtils", "isBatteryLow() returning false as battery > " + n2);
+        Log.d("DataAcquisitionUtils", "isBatteryLow() returning false as battery > " + n2);
         return false;
     }
 

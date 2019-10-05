@@ -28,7 +28,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Message;
 import android.os.RemoteException;
 import android.text.TextUtils;
 import com.samsung.android.spayfw.appinterface.ApduReasonCode;
@@ -37,22 +36,19 @@ import com.samsung.android.spayfw.appinterface.IInAppPayCallback;
 import com.samsung.android.spayfw.appinterface.IPayCallback;
 import com.samsung.android.spayfw.appinterface.ISelectCardCallback;
 import com.samsung.android.spayfw.appinterface.InAppTransactionInfo;
-import com.samsung.android.spayfw.appinterface.MstPayConfig;
 import com.samsung.android.spayfw.appinterface.PayConfig;
 import com.samsung.android.spayfw.appinterface.SecuredObject;
 import com.samsung.android.spayfw.appinterface.SelectCardResult;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.BinAttribute;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
-import com.samsung.android.spayfw.core.a.t;
 import com.samsung.android.spayfw.core.e;
 import com.samsung.android.spayfw.core.f;
 import com.samsung.android.spayfw.core.h;
 import com.samsung.android.spayfw.core.i;
 import com.samsung.android.spayfw.core.j;
 import com.samsung.android.spayfw.core.o;
-import com.samsung.android.spayfw.core.q;
 import com.samsung.android.spayfw.payprovider.MerchantServerRequester;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.storage.models.PaymentDetailsRecord;
 import com.samsung.android.spaytzsvc.api.TAException;
 import java.util.Arrays;
@@ -96,7 +92,7 @@ implements com.samsung.android.spayfw.core.a.h {
         } else {
             n2 = payConfig.getPayType() == 1 && payConfig.getMstTransmitTime() == 0 ? 30000 : payConfig.getMstTransmitTime();
         }
-        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "mstTransmitTime : " + n2);
+        Log.d("PaymentProcessor", "mstTransmitTime : " + n2);
         return n2;
     }
 
@@ -149,9 +145,9 @@ implements com.samsung.android.spayfw.core.a.h {
      */
     private void a(int n2, long l2) {
         if (this.lE == null) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "mNFCTimer is null. Scheduling NFCTimerTask. Timestamp =  " + System.currentTimeMillis() + " reason: " + n2);
+            Log.d("PaymentProcessor", "mNFCTimer is null. Scheduling NFCTimerTask. Timestamp =  " + System.currentTimeMillis() + " reason: " + n2);
         } else {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "mNFCTimer is not null. Cancel and reschedule. Timestamp = " + System.currentTimeMillis() + " reason: " + n2);
+            Log.d("PaymentProcessor", "mNFCTimer is not null. Cancel and reschedule. Timestamp = " + System.currentTimeMillis() + " reason: " + n2);
             this.lE.cancel();
         }
         a a2 = new a(n2);
@@ -173,18 +169,18 @@ implements com.samsung.android.spayfw.core.a.h {
      */
     private void b(com.samsung.android.spayfw.core.c c2, final int n2) {
         if (c2 == null || c2.ad() == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "start Nfc timer, card is null ");
+            Log.e("PaymentProcessor", "start Nfc timer, card is null ");
             return;
         }
         if (this.lD != null) {
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "NFC session timer already started ");
+            Log.e("PaymentProcessor", "NFC session timer already started ");
             return;
         }
         int n3 = this.a(c2, this.lK);
-        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "startNFCSessionTimer mstTransmitTime " + n3);
-        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "startTime " + this.startTime);
+        Log.d("PaymentProcessor", "startNFCSessionTimer mstTransmitTime " + n3);
+        Log.d("PaymentProcessor", "startTime " + this.startTime);
         long l2 = (long)n3 - (System.currentTimeMillis() - this.startTime);
-        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "period " + l2);
+        Log.d("PaymentProcessor", "period " + l2);
         if (l2 <= 0L) return;
         TimerTask timerTask = new TimerTask(){
 
@@ -194,20 +190,20 @@ implements com.samsung.android.spayfw.core.a.h {
              * Enabled aggressive exception aggregation
              */
             public void run() {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "nfc usage timer expired");
+                Log.d("PaymentProcessor", "nfc usage timer expired");
                 try {
                     n.this.u(n2);
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("PaymentProcessor", remoteException.getMessage(), remoteException);
+                    Log.c("PaymentProcessor", remoteException.getMessage(), remoteException);
                 }
                 n.this.lD = null;
             }
         };
         if (this.lD == null) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "NFC session timer starts");
+            Log.d("PaymentProcessor", "NFC session timer starts");
         } else {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "NFC session timer restarts");
+            Log.d("PaymentProcessor", "NFC session timer restarts");
             this.lD.cancel();
         }
         this.lD = new Timer();
@@ -233,7 +229,7 @@ implements com.samsung.android.spayfw.core.a.h {
                 bundle2 = null;
                 if (bl) {
                     int n2 = bundle.getInt("tapNGotransactionErrorCode");
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "bundle transactionErrorCode = " + n2);
+                    Log.d("PaymentProcessor", "bundle transactionErrorCode = " + n2);
                     bundle2 = null;
                     if (!false) {
                         bundle2 = new Bundle();
@@ -243,7 +239,7 @@ implements com.samsung.android.spayfw.core.a.h {
                 }
                 if (bundle.containsKey("pdolValues")) {
                     Bundle bundle3 = bundle.getBundle("pdolValues");
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "bundle pdolValues = " + bundle3.toString());
+                    Log.d("PaymentProcessor", "bundle pdolValues = " + bundle3.toString());
                     if (bundle2 == null) {
                         bundle2 = new Bundle();
                     }
@@ -253,7 +249,7 @@ implements com.samsung.android.spayfw.core.a.h {
             }
             return bundle2;
         }
-        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "extraData = " + bundle2.toString());
+        Log.d("PaymentProcessor", "extraData = " + bundle2.toString());
         return bundle2;
     }
 
@@ -266,7 +262,7 @@ implements com.samsung.android.spayfw.core.a.h {
      */
     private void d(PaymentDetailsRecord paymentDetailsRecord) {
         if (paymentDetailsRecord == null) {
-            com.samsung.android.spayfw.b.c.w("PaymentProcessor", "mPaymentDetails is null, returning!");
+            Log.w("PaymentProcessor", "mPaymentDetails is null, returning!");
             return;
         }
         i i2 = PaymentFrameworkApp.az();
@@ -274,10 +270,10 @@ implements com.samsung.android.spayfw.core.a.h {
             paymentDetailsRecord.setElapsedTime(System.currentTimeMillis() - this.startTime);
         }
         if (i2 != null) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Post PAYFW_OPT_ANALYTICS_REPORT request");
+            Log.d("PaymentProcessor", "Post PAYFW_OPT_ANALYTICS_REPORT request");
             i2.sendMessage(j.a(21, paymentDetailsRecord, null));
         } else {
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "HANDLER IS NOT INITIAILIZED");
+            Log.e("PaymentProcessor", "HANDLER IS NOT INITIAILIZED");
         }
         com.samsung.android.spayfw.core.retry.e.w(this.mContext).add(paymentDetailsRecord.getTrTokenId());
     }
@@ -325,18 +321,18 @@ implements com.samsung.android.spayfw.core.a.h {
     public void a(ICommonCallback iCommonCallback) {
         n n2 = this;
         synchronized (n2) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "stopPay()");
+            Log.d("PaymentProcessor", "stopPay()");
             this.bb();
             if (iCommonCallback == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "stopPay- invalid inputs: callback is null");
+                Log.e("PaymentProcessor", "stopPay- invalid inputs: callback is null");
             } else {
                 if (this.lH != null) {
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Cancel Retry Timer");
+                    Log.d("PaymentProcessor", "Cancel Retry Timer");
                     this.lH.cancel();
                     this.lH = null;
                 }
                 if (this.lD != null) {
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Cancel mNFCSessionTimer Timer");
+                    Log.d("PaymentProcessor", "Cancel mNFCSessionTimer Timer");
                     this.lD.cancel();
                     this.lD = null;
                 }
@@ -345,31 +341,31 @@ implements com.samsung.android.spayfw.core.a.h {
                     this.lE = null;
                 }
                 if (lC != null) {
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Cancel CountDown Timer");
+                    Log.d("PaymentProcessor", "Cancel CountDown Timer");
                     lC.cancel();
                     lC = null;
                 }
                 if (o.p(1)) {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "Nothing to Stop");
+                    Log.e("PaymentProcessor", "Nothing to Stop");
                     if (this.lI != null) {
                         this.lI.onFail(this.lF, -7);
                         this.lI = null;
                     }
                     iCommonCallback.onSuccess(this.lF);
                 } else if (!o.r(24320) || !o.r(4096)) {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "state cannot be changed");
+                    Log.e("PaymentProcessor", "state cannot be changed");
                     iCommonCallback.onFail(this.lF, -4);
                 } else if (this.lF == null) {
                     iCommonCallback.onFail(this.lF, -4);
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "stopPay- mSelectCardTokenId is null");
+                    Log.e("PaymentProcessor", "stopPay- mSelectCardTokenId is null");
                 } else if (this.iJ == null) {
                     iCommonCallback.onFail(this.lF, -4);
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "stopPay- mAccount is null");
+                    Log.e("PaymentProcessor", "stopPay- mAccount is null");
                 } else {
                     com.samsung.android.spayfw.core.c c2 = this.iJ.r(this.lF);
                     if (c2 == null) {
                         iCommonCallback.onFail(this.lF, -6);
-                        com.samsung.android.spayfw.b.c.e("PaymentProcessor", "stopPay- unable to get card Object");
+                        Log.e("PaymentProcessor", "stopPay- unable to get card Object");
                         this.lF = null;
                     } else {
                         String string = this.lF;
@@ -385,7 +381,7 @@ implements com.samsung.android.spayfw.core.a.h {
                             }
                             c2.ad().stopPay();
                             if (o.p(512)) {
-                                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "NFC_USER_CANCELLED");
+                                Log.d("PaymentProcessor", "NFC_USER_CANCELLED");
                                 this.u(-98);
                             }
                             iCommonCallback.onSuccess(string);
@@ -410,11 +406,11 @@ implements com.samsung.android.spayfw.core.a.h {
         block36 : {
             var17_5 = this;
             // MONITORENTER : var17_5
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "startPay()");
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "startPay(): authAlive = " + var4_4);
+            Log.d("PaymentProcessor", "startPay()");
+            Log.d("PaymentProcessor", "startPay(): authAlive = " + var4_4);
             this.bb();
             this.startTime = System.currentTimeMillis();
-            com.samsung.android.spayfw.b.c.i("PaymentProcessor", "Start time = " + this.startTime);
+            Log.i("PaymentProcessor", "Start time = " + this.startTime);
             if (this.lF != null && (var4_4 || var1_1 != null) && var3_3 != null && (var6_6 = this.iJ) != null) break block36;
             if (var3_3 == null) ** GOTO lbl13
             try {
@@ -422,21 +418,21 @@ implements com.samsung.android.spayfw.core.a.h {
                     var3_3.onFail(this.lF, -5);
                     break block37;
 lbl13: // 1 sources:
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "pay callback is null");
+                    Log.e("PaymentProcessor", "pay callback is null");
                 }
                 if (this.lF == null) {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startPay- invalid inputs: mSelectCardTokenId is null");
+                    Log.e("PaymentProcessor", "startPay- invalid inputs: mSelectCardTokenId is null");
                     return;
                 }
                 if (var1_1 == null) {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startPay- invalid inputs: secObj is null");
+                    Log.e("PaymentProcessor", "startPay- invalid inputs: secObj is null");
                     return;
                 }
                 if (this.iJ == null) {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startPay- invalid inputs: Account is null");
+                    Log.e("PaymentProcessor", "startPay- invalid inputs: Account is null");
                     return;
                 }
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startPay- invalid inputs");
+                Log.e("PaymentProcessor", "startPay- invalid inputs");
                 return;
             }
             finally {
@@ -447,7 +443,7 @@ lbl13: // 1 sources:
         if (var7_8 == null) {
             try {
                 var3_3.onFail(this.lF, -6);
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startPay- unable to get card Object");
+                Log.e("PaymentProcessor", "startPay- unable to get card Object");
                 return;
             }
             finally {
@@ -456,12 +452,12 @@ lbl13: // 1 sources:
             }
         }
         if (var7_8.ac() != null) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Token Status = " + var7_8.ac().getTokenStatus());
+            Log.d("PaymentProcessor", "Token Status = " + var7_8.ac().getTokenStatus());
             var13_10 = Objects.equals((Object)var7_8.ac().getTokenStatus(), (Object)"ACTIVE");
             if (!var13_10) {
                 try {
                     var3_3.onFail(this.lF, -4);
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startPay- Token Status is not Active");
+                    Log.e("PaymentProcessor", "startPay- Token Status is not Active");
                     return;
                 }
                 finally {
@@ -472,23 +468,23 @@ lbl13: // 1 sources:
         }
         PaymentFrameworkApp.az().c(true);
         if (!Objects.equals((Object)this.lF, (Object)"GIFT")) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Not Gift Card");
+            Log.d("PaymentProcessor", "Not Gift Card");
             try {
                 f.j(this.mContext).B(this.lF);
             }
             catch (Exception var11_13) {
-                com.samsung.android.spayfw.b.c.c("PaymentProcessor", var11_13.getMessage(), var11_13);
+                Log.c("PaymentProcessor", var11_13.getMessage(), var11_13);
             }
         }
         this.lK = var2_2;
         if (var2_2 == null) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "startPay: using default payConfig from PF");
+            Log.d("PaymentProcessor", "startPay: using default payConfig from PF");
             var8_12 = h.b("default", var7_8.getCardBrand());
         } else if (var2_2.getPayType() == 2 && var2_2.getMstPayConfig() == null) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "startPay: type MST but mstPayConfig is NULL, using default payConfig from PF");
+            Log.d("PaymentProcessor", "startPay: type MST but mstPayConfig is NULL, using default payConfig from PF");
             var8_12 = h.b("default", var7_8.getCardBrand());
         } else {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "startPay: using payConfig from APP");
+            Log.d("PaymentProcessor", "startPay: using payConfig from APP");
             var8_12 = var2_2;
         }
         this.lf = new PaymentDetailsRecord();
@@ -496,20 +492,20 @@ lbl13: // 1 sources:
             this.lf.setBarcodeAttempted("ATTEMPTED");
         }
         this.lI = var3_3;
-        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Card presentation mode " + var7_8.ab());
+        Log.d("PaymentProcessor", "Card presentation mode " + var7_8.ab());
         if (!com.samsung.android.spayfw.utils.h.ao(this.mContext) || !var7_8.k(2)) {
             var8_12 = new PayConfig();
             var8_12.setPayType(1);
-            com.samsung.android.spayfw.b.c.v("PaymentProcessor", "MST is not supported");
+            Log.v("PaymentProcessor", "MST is not supported");
         }
         var7_8.ad().startPay(var8_12, var1_1, new b(var3_3), var4_4);
         com.samsung.android.spayfw.core.b.Z();
         if (var8_12.getPayType() == 1) {
-            com.samsung.android.spayfw.b.c.v("PaymentProcessor", "NFC only Payment");
+            Log.v("PaymentProcessor", "NFC only Payment");
             return;
         }
         if (n.lC != null) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Cancel CountDown Timer");
+            Log.d("PaymentProcessor", "Cancel CountDown Timer");
             n.lC.cancel();
             n.lC = null;
         }
@@ -518,7 +514,7 @@ lbl13: // 1 sources:
             return;
         }
         var9_14 = this.a(var7_8, this.lK);
-        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "StartPayCountDownTimer : " + var9_14);
+        Log.d("PaymentProcessor", "StartPayCountDownTimer : " + var9_14);
         n.lC = new d(var9_14, 5000L);
         n.lC.start();
     }
@@ -533,37 +529,37 @@ lbl13: // 1 sources:
         int n2 = -1;
         n n3 = this;
         synchronized (n3) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "selectCard() - tokenId = " + string);
+            Log.d("PaymentProcessor", "selectCard() - tokenId = " + string);
             if (!o.r(2)) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "selectCard  - cannot change state");
+                Log.e("PaymentProcessor", "selectCard  - cannot change state");
                 if (iSelectCardCallback != null) {
                     iSelectCardCallback.onFail(string, -4);
                 } else {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "selectCard callback is null");
+                    Log.e("PaymentProcessor", "selectCard callback is null");
                 }
             } else {
                 this.bb();
                 if (string == null || iSelectCardCallback == null || this.iJ == null) {
                     if (this.iJ == null) {
-                        com.samsung.android.spayfw.b.c.e("PaymentProcessor", "selectCard  - Failed to initialize account");
+                        Log.e("PaymentProcessor", "selectCard  - Failed to initialize account");
                     } else if (string == null) {
-                        com.samsung.android.spayfw.b.c.e("PaymentProcessor", "selectCard- invalid inputs: tokenId is null");
+                        Log.e("PaymentProcessor", "selectCard- invalid inputs: tokenId is null");
                         n2 = -5;
                     } else {
-                        com.samsung.android.spayfw.b.c.e("PaymentProcessor", "selectCard- invalid inputs: callback object is null");
+                        Log.e("PaymentProcessor", "selectCard- invalid inputs: callback object is null");
                         n2 = -5;
                     }
                     if (iSelectCardCallback != null) {
                         iSelectCardCallback.onFail(string, n2);
                     } else {
-                        com.samsung.android.spayfw.b.c.e("PaymentProcessor", "selectCard callback is null");
+                        Log.e("PaymentProcessor", "selectCard callback is null");
                     }
                     this.clearCard();
                 } else {
                     com.samsung.android.spayfw.core.c c2;
                     com.samsung.android.spayfw.core.c c3 = this.iJ.r(string);
                     if ((c3 == null || c3.ac() == null || c3.ac().aQ() == null) && Objects.equals((Object)string, (Object)"GIFT")) {
-                        com.samsung.android.spayfw.b.c.e("PaymentProcessor", "Gift Card record in DB was null. Recreate");
+                        Log.e("PaymentProcessor", "Gift Card record in DB was null. Recreate");
                         c2 = com.samsung.android.spayfw.core.a.f.n(this.mContext).M(null);
                     } else {
                         c2 = c3;
@@ -571,14 +567,14 @@ lbl13: // 1 sources:
                     if (c2 == null || c2.ac() == null || c2.ac().aQ() == null) {
                         int n4 = -6;
                         if (c2 == null) {
-                            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "selectCard- unable to get card Object : " + string);
+                            Log.e("PaymentProcessor", "selectCard- unable to get card Object : " + string);
                         } else if (c2.ac() == null) {
-                            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "selectCard- unable to get token: " + string);
+                            Log.e("PaymentProcessor", "selectCard- unable to get token: " + string);
                         } else if (c2.ac().aQ() == null) {
-                            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "selectCard- unable to get token providerKey: " + string);
+                            Log.e("PaymentProcessor", "selectCard- unable to get token providerKey: " + string);
                             n4 = -4;
                         } else if (!"ACTIVE".equals((Object)c2.ac().getTokenStatus())) {
-                            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "selectCard- token is not active : " + c2.ac().getTokenStatus());
+                            Log.e("PaymentProcessor", "selectCard- token is not active : " + c2.ac().getTokenStatus());
                             n4 = -4;
                         }
                         iSelectCardCallback.onFail(string, n4);
@@ -586,13 +582,13 @@ lbl13: // 1 sources:
                     } else {
                         SelectCardResult selectCardResult;
                         int n5;
-                        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "selectCard- selectCard() - call Base PayProvider :" + string);
+                        Log.d("PaymentProcessor", "selectCard- selectCard() - call Base PayProvider :" + string);
                         try {
                             SelectCardResult selectCardResult2;
                             selectCardResult = selectCardResult2 = c2.ad().getSecureObjectInputForPayment(bl);
                         }
                         catch (TAException tAException) {
-                            com.samsung.android.spayfw.b.c.c("PaymentProcessor", tAException.getMessage(), (Throwable)((Object)tAException));
+                            Log.c("PaymentProcessor", tAException.getMessage(), (Throwable)((Object)tAException));
                             if (tAException.getErrorCode() == 2) {
                                 iSelectCardCallback.onFail(string, -42);
                                 selectCardResult = null;
@@ -604,14 +600,14 @@ lbl13: // 1 sources:
                         if (selectCardResult == null || selectCardResult.getStatus() != 0 && (n5 = selectCardResult.getStatus()) != 1) {
                             try {
                                 iSelectCardCallback.onFail(string, -1);
-                                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "getSecureObjectInputForPayment-unable to get proper response");
+                                Log.e("PaymentProcessor", "getSecureObjectInputForPayment-unable to get proper response");
                             }
                             finally {
                                 this.clearCard();
                             }
                         } else {
                             int n6 = c2.ad().getPayConfigTransmitTime(false);
-                            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "mstTransmitTime : " + n6);
+                            Log.d("PaymentProcessor", "mstTransmitTime : " + n6);
                             selectCardResult.setMstTransmitTime(n6);
                             if (!com.samsung.android.spayfw.utils.h.ao(this.mContext) || !c2.k(2)) {
                                 selectCardResult.setMstTransmitTime(30);
@@ -628,7 +624,7 @@ lbl13: // 1 sources:
 
     @Override
     public void a(String string, String string2, ICommonCallback iCommonCallback) {
-        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "updateBinAttribute version [" + string + "], url [" + string2 + "]");
+        Log.d("PaymentProcessor", "updateBinAttribute version [" + string + "], url [" + string2 + "]");
         if (TextUtils.isEmpty((CharSequence)string) || TextUtils.isEmpty((CharSequence)string2) || iCommonCallback == null) {
             if (iCommonCallback != null) {
                 iCommonCallback.onFail("", -5);
@@ -642,12 +638,12 @@ lbl13: // 1 sources:
     @Override
     public void clearCard() {
         this.bb();
-        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "clearCard(): mSelectCardTokenId = " + this.lF);
+        Log.d("PaymentProcessor", "clearCard(): mSelectCardTokenId = " + this.lF);
         o.q(1);
         if (this.lF != null && this.iJ != null) {
             com.samsung.android.spayfw.core.c c2 = this.iJ.r(this.lF);
             if (c2 == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "clearCard: card object does not exist");
+                Log.e("PaymentProcessor", "clearCard: card object does not exist");
                 this.lF = null;
                 return;
             }
@@ -688,11 +684,11 @@ lbl13: // 1 sources:
         if (this.lF != null && this.iJ != null) {
             com.samsung.android.spayfw.core.c c2 = this.iJ.r(this.lF);
             if (c2 == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "clearPay: unable to get card Object");
+                Log.e("PaymentProcessor", "clearPay: unable to get card Object");
                 // MONITOREXIT : n2
                 return;
             }
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "clearPay(): mSelectCardTokenId = " + this.lF);
+            Log.d("PaymentProcessor", "clearPay(): mSelectCardTokenId = " + this.lF);
             c2.ad().clearPay();
             if (this.lf != null) {
                 this.lf.setPaymentType(com.samsung.android.spayfw.core.c.y(c2.getCardBrand()));
@@ -742,11 +738,11 @@ lbl13: // 1 sources:
         if (this.lF != null && this.iJ != null) {
             com.samsung.android.spayfw.core.c c2 = this.iJ.r(this.lF);
             if (c2 == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "clearRetryPay: unable to get card Object");
+                Log.e("PaymentProcessor", "clearRetryPay: unable to get card Object");
                 // MONITOREXIT : n2
                 return;
             }
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "clearRetryPay(): mSelectCardTokenId = " + this.lF);
+            Log.d("PaymentProcessor", "clearRetryPay(): mSelectCardTokenId = " + this.lF);
             c2.ad().clearRetryPay();
             if (this.lf != null) {
                 this.lf.setPaymentType(com.samsung.android.spayfw.core.c.y(c2.getCardBrand()));
@@ -772,24 +768,24 @@ lbl13: // 1 sources:
     public void getInAppToken(String var1_1, MerchantServerRequester.MerchantInfo var2_2, String var3_3, IInAppPayCallback var4_4) {
         block12 : {
             block11 : {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "getInAppToken()");
+                Log.d("PaymentProcessor", "getInAppToken()");
                 if (this.lF != null && var2_2 != null && var4_4 != null && var3_3 != null) break block12;
                 if (var4_4 == null) ** GOTO lbl6
                 var4_4.onFail(var1_1, -5);
 lbl6: // 2 sources:
                 if (this.lF == null) {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "getInAppToken- invalid inputs: mSelectCardTokenId is null");
+                    Log.e("PaymentProcessor", "getInAppToken- invalid inputs: mSelectCardTokenId is null");
                     return;
                 }
                 if (var2_2 != null) break block11;
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "getInAppToken- invalid inputs: merchantInfo is null");
+                Log.e("PaymentProcessor", "getInAppToken- invalid inputs: merchantInfo is null");
                 return;
             }
             if (var3_3 == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "getInAppToken- invalid inputs: paymentPayloadJson is null");
+                Log.e("PaymentProcessor", "getInAppToken- invalid inputs: paymentPayloadJson is null");
                 return;
             }
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "getInAppToken- invalid inputs: callback is null");
+            Log.e("PaymentProcessor", "getInAppToken- invalid inputs: callback is null");
             return;
         }
         var6_6 = this.iJ.r(this.lF);
@@ -800,7 +796,7 @@ lbl6: // 2 sources:
         }
         try {
             var4_4.onFail(var1_1, -6);
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "getInAppToken- unable to get card Object");
+            Log.e("PaymentProcessor", "getInAppToken- unable to get card Object");
             return;
         }
         finally {
@@ -822,35 +818,35 @@ lbl6: // 2 sources:
         // MONITORENTER : var12_3
         this.bb();
         if ("GIFT".equals((Object)this.lF)) {
-            com.samsung.android.spayfw.b.c.w("PaymentProcessor", "Current selected card is a Gift card, hence ignore processApdu!");
+            Log.w("PaymentProcessor", "Current selected card is a Gift card, hence ignore processApdu!");
             var4_4 = com.samsung.android.spayfw.core.b.iR;
             return var4_4;
         }
         if (!this.lJ) {
             if (this.lf != null) {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "processApdu - set nfc attempted");
+                Log.d("PaymentProcessor", "processApdu - set nfc attempted");
                 this.lf.setNfcAttempted("ATTEMPTED");
             }
         } else if (this.lf != null) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "processApdu - set nfc retry attempted");
+            Log.d("PaymentProcessor", "processApdu - set nfc retry attempted");
             this.lf.setNfcRetryAttempted("ATTEMPTED");
         }
         if (var1_1 == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "command apdu is null");
+            Log.e("PaymentProcessor", "command apdu is null");
             return com.samsung.android.spayfw.core.b.iR;
         }
         if (this.lE != null) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "processApdu called, cancel mNfcTimer");
+            Log.d("PaymentProcessor", "processApdu called, cancel mNfcTimer");
             this.lE.cancel();
             this.lE = null;
         }
         if (!o.r(32)) {
             if (o.p(24320) || com.samsung.android.spayfw.core.b.g(var1_1)) {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "should stop nfc payment");
+                Log.d("PaymentProcessor", "should stop nfc payment");
                 return com.samsung.android.spayfw.core.b.iS;
             }
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "cannot make nfc payment, status not satisfied");
-            com.samsung.android.spayfw.b.c.w("PaymentProcessor", "Abort NFC payment, not authenticated yet, notify app");
+            Log.d("PaymentProcessor", "cannot make nfc payment, status not satisfied");
+            Log.w("PaymentProcessor", "Abort NFC payment, not authenticated yet, notify app");
             var8_5 = new Intent("com.samsung.android.spayfw.action.notification");
             var8_5.putExtra("notiType", "tapNGoState");
             if (this.lF != null) {
@@ -864,7 +860,7 @@ lbl6: // 2 sources:
         if (var5_6 != 164) ** GOTO lbl47
         if (Arrays.equals((byte[])com.samsung.android.spayfw.core.b.iO, (byte[])var1_1)) {
             if (com.samsung.android.spayfw.core.b.aa() >= 5) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "processApdu - reach max PPSE count");
+                Log.e("PaymentProcessor", "processApdu - reach max PPSE count");
                 this.a(-99, 1000L);
                 return com.samsung.android.spayfw.core.b.iS;
             }
@@ -878,24 +874,24 @@ lbl47: // 3 sources:
         }
         com.samsung.android.spayfw.core.b.b(var6_7);
         if (this.lF == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "processApdu- mSelectCardTokenId is null");
+            Log.e("PaymentProcessor", "processApdu- mSelectCardTokenId is null");
             if (n.lz != null) {
                 n.lz.onFail(this.lF, -5);
                 return com.samsung.android.spayfw.core.b.iR;
             } else {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "pay callback is null");
+                Log.d("PaymentProcessor", "pay callback is null");
             }
             return com.samsung.android.spayfw.core.b.iR;
         }
         var7_8 = this.iJ.r(this.lF);
         if (var7_8 == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "processApdu- unable to get card object");
+            Log.e("PaymentProcessor", "processApdu- unable to get card object");
             if (n.lz == null) return com.samsung.android.spayfw.core.b.iR;
             n.lz.onFail(this.lF, -1);
             return com.samsung.android.spayfw.core.b.iR;
         }
         if (!var7_8.k(1)) {
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "this card cannot be used for nfc payment");
+            Log.e("PaymentProcessor", "this card cannot be used for nfc payment");
             return com.samsung.android.spayfw.core.b.iR;
         }
         var4_4 = var7_8.ad().processApdu(var1_1, var2_2);
@@ -903,14 +899,14 @@ lbl47: // 3 sources:
             return com.samsung.android.spayfw.core.b.iR;
         }
         this.b(var7_8, -98);
-        com.samsung.android.spayfw.b.c.d("APDU_LOG", com.samsung.android.spayfw.core.b.a(var6_7, var4_4));
+        Log.d("APDU_LOG", com.samsung.android.spayfw.core.b.a(var6_7, var4_4));
         if (com.samsung.android.spayfw.core.b.hasError()) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "apdu processing failed run timer");
+            Log.d("PaymentProcessor", "apdu processing failed run timer");
             this.a(-99, 1000L);
             return var4_4;
         }
         if (com.samsung.android.spayfw.core.b.a(var7_8, com.samsung.android.spayfw.core.b.Y().getCode())) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Transaction sequence completed, run timer also");
+            Log.d("PaymentProcessor", "Transaction sequence completed, run timer also");
             this.a(-97, 100L);
             return var4_4;
         }
@@ -928,33 +924,33 @@ lbl47: // 3 sources:
         n n2 = this;
         synchronized (n2) {
             int n3;
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "retryPay()");
+            Log.d("PaymentProcessor", "retryPay()");
             this.lJ = true;
             if (this.lH != null) {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Cancel Retry Timer");
+                Log.d("PaymentProcessor", "Cancel Retry Timer");
                 this.lH.cancel();
                 this.lH = null;
             }
             if (lC != null) {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Cancel CountDown Timer");
+                Log.d("PaymentProcessor", "Cancel CountDown Timer");
                 lC.cancel();
                 lC = null;
             }
             this.bb();
             if (this.iJ == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "retryPay- Account is null");
+                Log.e("PaymentProcessor", "retryPay- Account is null");
                 return -4;
             }
             this.startTime = System.currentTimeMillis();
-            com.samsung.android.spayfw.b.c.i("PaymentProcessor", "Start time = " + this.startTime);
+            Log.i("PaymentProcessor", "Start time = " + this.startTime);
             if (this.lF == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "retryPay- invalid inputs");
+                Log.e("PaymentProcessor", "retryPay- invalid inputs");
                 return -44;
             }
             com.samsung.android.spayfw.core.c c2 = this.iJ.r(this.lF);
             if (c2 == null) {
                 try {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "retryPay- unable to get card Object");
+                    Log.e("PaymentProcessor", "retryPay- unable to get card Object");
                     n3 = -6;
                 }
                 finally {
@@ -965,28 +961,28 @@ lbl47: // 3 sources:
                 PaymentFrameworkApp.az().c(true);
                 this.lK = payConfig;
                 if (payConfig == null) {
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "retryPay: using default retry seq from PF");
+                    Log.d("PaymentProcessor", "retryPay: using default retry seq from PF");
                     payConfig2 = h.b("retry1", c2.getCardBrand());
                 } else if (payConfig.getPayType() == 2 && payConfig.getMstPayConfig() == null) {
                     PayConfig payConfig3;
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "retryPay: type MST but mstPayConfig is NULL, using default payConfig from PF");
+                    Log.d("PaymentProcessor", "retryPay: type MST but mstPayConfig is NULL, using default payConfig from PF");
                     payConfig2 = payConfig3 = h.b("retry1", c2.getCardBrand());
                 } else {
                     payConfig2 = payConfig;
                 }
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Card presentation mode " + c2.ab());
+                Log.d("PaymentProcessor", "Card presentation mode " + c2.ab());
                 if (!c2.k(2)) {
                     payConfig2 = new PayConfig();
                     payConfig2.setPayType(1);
-                    com.samsung.android.spayfw.b.c.v("PaymentProcessor", "MST is not supported");
+                    Log.v("PaymentProcessor", "MST is not supported");
                 }
                 if (h.aw() == 2 && o.aN()) {
                     c2.ad().forceQuitMst();
                     if (!o.q(1)) {
-                        com.samsung.android.spayfw.b.c.e("PaymentProcessor", "Cannot goto Npay ready");
+                        Log.e("PaymentProcessor", "Cannot goto Npay ready");
                     }
                     if (!o.q(2)) {
-                        com.samsung.android.spayfw.b.c.e("PaymentProcessor", "Cannot goto Selected State");
+                        Log.e("PaymentProcessor", "Cannot goto Selected State");
                     }
                 }
                 n3 = c2.ad().retryPay(payConfig2);
@@ -1008,31 +1004,31 @@ lbl47: // 3 sources:
     public void startInAppPay(SecuredObject var1_1, InAppTransactionInfo var2_2, IInAppPayCallback var3_3) {
         block18 : {
             block17 : {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "startInAppPay()");
+                Log.d("PaymentProcessor", "startInAppPay()");
                 if (this.lF != null && var1_1 != null && var3_3 != null && var2_2 != null) break block18;
                 if (var3_3 == null || var2_2 == null) ** GOTO lbl6
                 var3_3.onFail(var2_2.getContextId(), -5);
 lbl6: // 2 sources:
                 if (this.lF == null) {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startInAppPay- invalid inputs: mSelectCardTokenId is null");
+                    Log.e("PaymentProcessor", "startInAppPay- invalid inputs: mSelectCardTokenId is null");
                     return;
                 }
                 if (var1_1 != null) break block17;
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startInAppPay- invalid inputs: secObj is null");
+                Log.e("PaymentProcessor", "startInAppPay- invalid inputs: secObj is null");
                 return;
             }
             if (var2_2 == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startInAppPay- invalid inputs: txnInfo is null");
+                Log.e("PaymentProcessor", "startInAppPay- invalid inputs: txnInfo is null");
                 return;
             }
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startInAppPay- invalid inputs: callback is null");
+            Log.e("PaymentProcessor", "startInAppPay- invalid inputs: callback is null");
             return;
         }
         var5_5 = this.iJ.r(this.lF);
         if (var5_5 == null) {
             try {
                 var3_3.onFail(var2_2.getContextId(), -6);
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startInAppPay- unable to get card Object");
+                Log.e("PaymentProcessor", "startInAppPay- unable to get card Object");
                 return;
             }
             finally {
@@ -1047,11 +1043,11 @@ lbl6: // 2 sources:
                 this.lf.setInAppTransactionInfo(var7_7);
                 this.d(this.lf);
             }
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Token Status = " + var5_5.ac().getTokenStatus());
+            Log.d("PaymentProcessor", "Token Status = " + var5_5.ac().getTokenStatus());
             if (!Objects.equals((Object)var5_5.ac().getTokenStatus(), (Object)"ACTIVE")) {
                 try {
                     var3_3.onFail(var2_2.getContextId(), -4);
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "startInAppPay- Token Status is not Active");
+                    Log.e("PaymentProcessor", "startInAppPay- Token Status is not Active");
                     return;
                 }
                 finally {
@@ -1073,41 +1069,41 @@ lbl6: // 2 sources:
         n n3 = this;
         synchronized (n3) {
             if (this.lE != null) {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "onDeactivated called. mNFCTimer is not null. Cancel mNFCTimer. Timestamp =  " + System.currentTimeMillis());
+                Log.d("PaymentProcessor", "onDeactivated called. mNFCTimer is not null. Cancel mNFCTimer. Timestamp =  " + System.currentTimeMillis());
                 this.lE.cancel();
                 this.lE = null;
             }
             this.bb();
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "onDeactivated(): " + n2);
+            Log.d("PaymentProcessor", "onDeactivated(): " + n2);
             if (o.aO()) {
                 if (this.lF == null) {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "onDeactivated- mSelectCardTokenId is null");
+                    Log.e("PaymentProcessor", "onDeactivated- mSelectCardTokenId is null");
                     return null;
                 }
                 if (this.iJ == null) {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "onDeactivated- Account is null");
+                    Log.e("PaymentProcessor", "onDeactivated- Account is null");
                     return null;
                 }
                 com.samsung.android.spayfw.core.c c2 = this.iJ.r(this.lF);
                 if (c2 == null) {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "onDeactivated- unable to get card object");
+                    Log.e("PaymentProcessor", "onDeactivated- unable to get card object");
                     return null;
                 }
                 if (!c2.k(1)) {
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "NFC is not supported");
+                    Log.e("PaymentProcessor", "NFC is not supported");
                     return null;
                 }
                 if (com.samsung.android.spayfw.core.b.a(c2, n2) || n2 == -99 || com.samsung.android.spayfw.core.b.hasError() || n2 == -98 || n2 == -96) {
                     if (this.lD == null) return this.a(n2, c2);
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Cancel timer");
+                    Log.d("PaymentProcessor", "Cancel timer");
                     this.lD.cancel();
                     this.lD = null;
                     return this.a(n2, c2);
                 }
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "no need to cancel, continue NFC session ");
+                Log.d("PaymentProcessor", "no need to cancel, continue NFC session ");
                 return null;
             }
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "onDeactivated -no need to deactivate");
+            Log.d("PaymentProcessor", "onDeactivated -no need to deactivate");
             return apduReasonCode;
         }
     }
@@ -1121,13 +1117,13 @@ lbl6: // 2 sources:
         }
 
         public void run() {
-            com.samsung.android.spayfw.b.c.i("PaymentProcessor", "NFC apdu TimerExpired::invoke onDeactivated. Timestamp = " + System.currentTimeMillis() + ", reason: " + this.reason);
+            Log.i("PaymentProcessor", "NFC apdu TimerExpired::invoke onDeactivated. Timestamp = " + System.currentTimeMillis() + ", reason: " + this.reason);
             try {
                 n.this.u(this.reason);
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("PaymentProcessor", remoteException.getMessage(), remoteException);
+                Log.c("PaymentProcessor", remoteException.getMessage(), remoteException);
                 return;
             }
         }
@@ -1148,24 +1144,24 @@ lbl6: // 2 sources:
         public void a(Object object, int n2, int n3, String string) {
             com.samsung.android.spayfw.core.c c2;
             if (n.lz == null) {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "invoking app callback onPaySwitch, callback is null");
+                Log.d("PaymentProcessor", "invoking app callback onPaySwitch, callback is null");
                 return;
             }
             try {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "invoking app callback onPaySwitch");
+                Log.d("PaymentProcessor", "invoking app callback onPaySwitch");
                 n.lz.onPaySwitch(n.this.lF, n2, n3);
                 if (n.this.lf != null) {
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "onPaySwitch");
+                    Log.d("PaymentProcessor", "onPaySwitch");
                     n.this.lf.setAuthenticationMode(string);
                 }
                 if (n2 != 1 || n3 != 2) return;
                 {
                     if (lC != null) {
-                        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Cancel CountDown Timer");
+                        Log.d("PaymentProcessor", "Cancel CountDown Timer");
                         lC.cancel();
                     }
                     if ((c2 = n.this.iJ.r(n.this.lF)) == null) {
-                        com.samsung.android.spayfw.b.c.e("PaymentProcessor", "onPaySwitch card is null");
+                        Log.e("PaymentProcessor", "onPaySwitch card is null");
                         return;
                     }
                 }
@@ -1175,7 +1171,7 @@ lbl6: // 2 sources:
                 }
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("PaymentProcessor", remoteException.getMessage(), remoteException);
+                Log.c("PaymentProcessor", remoteException.getMessage(), remoteException);
                 return;
             }
             PaymentFrameworkApp.az().postAtFrontOfQueue(new Runnable(){
@@ -1212,7 +1208,7 @@ lbl6: // 2 sources:
                         n.this.lf.setMstRetryAttempted("ATTEMPTED");
                         n.this.lf.setMstRetryLoopcount(var2_2);
 lbl16: // 2 sources:
-                        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "NFC Timeout Expired");
+                        Log.d("PaymentProcessor", "NFC Timeout Expired");
                         n.this.lf.setNfcRetryAttempted("ATTEMPTED");
                     }
                 }
@@ -1220,30 +1216,30 @@ lbl16: // 2 sources:
                     n.this.clearRetryPay();
                 }
                 if (n.lz != null) break block15;
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "invoking app callback onPay, callback is null");
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "onPay: CurrentLoop = " + var2_2);
+                Log.d("PaymentProcessor", "invoking app callback onPay, callback is null");
+                Log.d("PaymentProcessor", "onPay: CurrentLoop = " + var2_2);
                 return;
             }
             if (var2_2 != var3_3) {
-                com.samsung.android.spayfw.b.c.i("PaymentProcessor", "invoking app callback onPay");
+                Log.i("PaymentProcessor", "invoking app callback onPay");
                 n.lz.onPay(n.b(n.this), var2_2, var3_3);
                 return;
             }
             if (var2_2 != -46) return;
             try {
-                com.samsung.android.spayfw.b.c.i("PaymentProcessor", "invoking app callback onFinish after NFC timeout");
+                Log.i("PaymentProcessor", "invoking app callback onFinish after NFC timeout");
                 n.lz.onFinish(n.b(n.this), 1, null);
                 return;
             }
             catch (RemoteException var7_6) {
-                com.samsung.android.spayfw.b.c.c("PaymentProcessor", var7_6.getMessage(), var7_6);
+                Log.c("PaymentProcessor", var7_6.getMessage(), var7_6);
                 return;
             }
             catch (Throwable var6_7) {
                 throw var6_7;
             }
             finally {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "onPay: CurrentLoop = " + var2_2);
+                Log.d("PaymentProcessor", "onPay: CurrentLoop = " + var2_2);
             }
         }
 
@@ -1257,7 +1253,7 @@ lbl16: // 2 sources:
         @Override
         public void a(Object var1_1, int var2_2, String var3_3) {
             if (n.this.lf != null) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "onFail");
+                Log.e("PaymentProcessor", "onFail");
                 if (!n.a(n.this)) {
                     if (!(n.this.lf.getMstAttempted() != null && n.this.lf.getMstAttempted().equals((Object)"ATTEMPTED") || var2_2 == -11)) {
                         n.this.lf.setMstAttempted("FAILED");
@@ -1269,14 +1265,14 @@ lbl16: // 2 sources:
             }
             n.this.clearRetryPay();
             if (n.lz != null) ** GOTO lbl19
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "invoking app callback onFail, callback is null");
+            Log.e("PaymentProcessor", "invoking app callback onFail, callback is null");
             return;
             {
                 catch (RemoteException var5_4) {}
-                com.samsung.android.spayfw.b.c.c("PaymentProcessor", var5_4.getMessage(), var5_4);
+                Log.c("PaymentProcessor", var5_4.getMessage(), var5_4);
                 return;
 lbl19: // 1 sources:
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "invoking app callback onFail: errorCode: " + var2_2);
+                Log.d("PaymentProcessor", "invoking app callback onFail: errorCode: " + var2_2);
                 var6_6 = var2_2 == -11 ? -2 : var2_2;
             }
             switch (var6_6) {
@@ -1301,9 +1297,9 @@ lbl19: // 1 sources:
 
         @Override
         public void g(Object object) {
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "onRetry()");
+            Log.d("PaymentProcessor", "onRetry()");
             if (n.lz == null) {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Callback is null");
+                Log.d("PaymentProcessor", "Callback is null");
                 n.this.clearRetryPay();
             }
         }
@@ -1325,7 +1321,7 @@ lbl19: // 1 sources:
          */
         public void run() {
             int n2 = this.js == null || this.js.getMstTransmitTime() == 0 ? 1000 * this.lN.ad().getPayConfigTransmitTime(true) : this.js.getMstTransmitTime();
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Retry mstTransmitTime in ms: " + n2);
+            Log.d("PaymentProcessor", "Retry mstTransmitTime in ms: " + n2);
             lC = new CountDownTimer(n2, 5000L){
 
                 /*
@@ -1335,13 +1331,13 @@ lbl19: // 1 sources:
                  */
                 public void onFinish() {
                     n n2;
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "CDT Retry : onFinish - sMstRetryType : " + h.aw());
+                    Log.d("PaymentProcessor", "CDT Retry : onFinish - sMstRetryType : " + h.aw());
                     n n3 = n2 = n.this;
                     synchronized (n3) {
                         IPayCallback iPayCallback = n.lz;
                         if (iPayCallback != null) {
                             try {
-                                com.samsung.android.spayfw.b.c.i("PaymentProcessor", "invoking app callback onFinish");
+                                Log.i("PaymentProcessor", "invoking app callback onFinish");
                                 n.lz.onFinish(n.this.lF, 2, null);
                                 n.lz = null;
                             }
@@ -1349,7 +1345,7 @@ lbl19: // 1 sources:
                                 remoteException.printStackTrace();
                             }
                         } else {
-                            com.samsung.android.spayfw.b.c.i("PaymentProcessor", "Callback is null");
+                            Log.i("PaymentProcessor", "Callback is null");
                         }
                     }
                     n.this.clearRetryPay();
@@ -1357,7 +1353,7 @@ lbl19: // 1 sources:
 
                 public void onTick(long l2) {
                     int n2 = (int)l2 / 1000;
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "CDT Retry : remaining time : " + n2);
+                    Log.d("PaymentProcessor", "CDT Retry : remaining time : " + n2);
                 }
             };
             lC.start();
@@ -1380,25 +1376,25 @@ lbl19: // 1 sources:
          */
         public void onFinish() {
             block10 : {
-                com.samsung.android.spayfw.b.c.d("PaymentProcessor", "CDT : onFinish - sMstRetryType : " + h.aw());
+                Log.d("PaymentProcessor", "CDT : onFinish - sMstRetryType : " + h.aw());
                 if (h.aw() != 1) {
                     if (h.aw() != 2) return;
                     n.this.clearRetryPay();
                     return;
                 }
                 if (n.lz == null) {
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Callback is null");
+                    Log.d("PaymentProcessor", "Callback is null");
                     n.this.clearRetryPay();
                     return;
                 }
                 var1_1 = h.av();
                 try {
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "CDT : invoking app callback onRetry");
+                    Log.d("PaymentProcessor", "CDT : invoking app callback onRetry");
                     if (!o.q(1)) {
-                        com.samsung.android.spayfw.b.c.e("PaymentProcessor", "CDT : Cannot goto Npay ready");
+                        Log.e("PaymentProcessor", "CDT : Cannot goto Npay ready");
                     }
                     if (!o.q(2)) {
-                        com.samsung.android.spayfw.b.c.e("PaymentProcessor", "CDT : Cannot goto Selected State");
+                        Log.e("PaymentProcessor", "CDT : Cannot goto Selected State");
                     }
                     if ((var8_2 = n.this.iJ.r(n.b(n.this))) == null || var8_2.ad() == null) {
                         n.lz.onFail(n.b(n.this), -10);
@@ -1414,24 +1410,24 @@ lbl19: // 1 sources:
                 }
                 catch (RemoteException var2_3) {
                     block11 : {
-                        com.samsung.android.spayfw.b.c.c("PaymentProcessor", var2_3.getMessage(), var2_3);
+                        Log.c("PaymentProcessor", var2_3.getMessage(), var2_3);
                         break block11;
 lbl29: // 1 sources:
                         var9_7 = 30;
 lbl30: // 2 sources:
-                        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "CDT : Mst Transmit Time = " + var9_7);
-                        com.samsung.android.spayfw.b.c.d("PaymentProcessor", "CDT : Retry Timeout = " + var1_1);
+                        Log.d("PaymentProcessor", "CDT : Mst Transmit Time = " + var9_7);
+                        Log.d("PaymentProcessor", "CDT : Retry Timeout = " + var1_1);
                         if (n.this.lf != null && !n.a(n.this)) {
                             n.this.lf.setMstLoopcount(1 + n.this.lf.getMstLoopcount());
                         }
-                        com.samsung.android.spayfw.b.c.i("PaymentProcessor", "invoking app callback onRetry");
+                        Log.i("PaymentProcessor", "invoking app callback onRetry");
                         var8_2.ad().forceQuitMst();
                         n.lz.onRetry(n.b(n.this), var1_1, var9_7);
                     }
                     var3_4 = new TimerTask(){
 
                         public void run() {
-                            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "CDT : Retry Timeout Expired");
+                            Log.d("PaymentProcessor", "CDT : Retry Timeout Expired");
                             n.this.clearRetryPay();
                         }
                     };
@@ -1443,7 +1439,7 @@ lbl30: // 2 sources:
                     return;
                 }
             }
-            com.samsung.android.spayfw.b.c.e("PaymentProcessor", "CDT : Retry Timer Running. Restart.");
+            Log.e("PaymentProcessor", "CDT : Retry Timer Running. Restart.");
             n.d(n.this).cancel();
             n.b(n.this, var4_5);
             n.d(n.this).schedule(var3_4, (long)(var5_6 * 1000));
@@ -1461,24 +1457,24 @@ lbl30: // 2 sources:
             block14 : {
                 block13 : {
                     n3 = (int)l2 / 1000;
-                    com.samsung.android.spayfw.b.c.d("PaymentProcessor", "CDT : remaining time : " + n3);
+                    Log.d("PaymentProcessor", "CDT : remaining time : " + n3);
                     if (n3 > 10 || h.aw() != 2) break block13;
                     if (n.this.iJ != null && n.this.lF != null) break block14;
-                    com.samsung.android.spayfw.b.c.e("PaymentProcessor", "No account or selected token id");
+                    Log.e("PaymentProcessor", "No account or selected token id");
                 }
                 return;
             }
             com.samsung.android.spayfw.core.c c2 = n.this.iJ.r(n.this.lF);
             if (c2 == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentProcessor", "card is null during timer tick");
+                Log.e("PaymentProcessor", "card is null during timer tick");
                 return;
             }
             int n5 = c2.ad().getPayConfigTransmitTime(true);
             if (n.this.lK != null && (n2 = n.this.lK.getMstTransmitTime()) != 0) {
                 n5 = n2 / 1000;
             }
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Mst Transmit Time = " + n5);
-            com.samsung.android.spayfw.b.c.d("PaymentProcessor", "Retry Timeout = " + n3);
+            Log.d("PaymentProcessor", "Mst Transmit Time = " + n5);
+            Log.d("PaymentProcessor", "Retry Timeout = " + n3);
             if (n.this.lf != null && !n.this.lJ) {
                 n.this.lf.setMstLoopcount(1 + n.this.lf.getMstLoopcount());
             }
@@ -1487,14 +1483,14 @@ lbl30: // 2 sources:
                 IPayCallback iPayCallback = n.lz;
                 if (iPayCallback != null) {
                     try {
-                        com.samsung.android.spayfw.b.c.i("PaymentProcessor", "invoking app callback onRetry");
+                        Log.i("PaymentProcessor", "invoking app callback onRetry");
                         n.lz.onRetry(n.this.lF, n3, n5);
                     }
                     catch (RemoteException remoteException) {
                         remoteException.printStackTrace();
                     }
                 } else {
-                    com.samsung.android.spayfw.b.c.i("PaymentProcessor", "Callback is null");
+                    Log.i("PaymentProcessor", "Callback is null");
                 }
                 return;
             }

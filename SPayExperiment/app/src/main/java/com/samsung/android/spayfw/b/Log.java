@@ -15,7 +15,6 @@
  */
 package com.samsung.android.spayfw.b;
 
-import com.samsung.android.spayfw.b.d;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 // Looks like some sort of logger.
-public final class c {
+public final class Log {
     private static ArrayList<d> oJ = new ArrayList();
 
     public static String I(int n2) {
@@ -55,7 +54,7 @@ public final class c {
     public static void a(String string, String string2, Throwable throwable) {
         Iterator iterator = oJ.iterator();
         while (iterator.hasNext()) {
-            ((d)iterator.next()).a(6, string, string2 + '\n' + c.getStackTraceString(throwable));
+            ((d)iterator.next()).a(6, string, string2 + '\n' + Log.getStackTraceString(throwable));
         }
     }
 
@@ -64,8 +63,8 @@ public final class c {
      * Lifted jumps to return sites
      */
     public static boolean a(d d2) {
-        Class<c> class_ = c.class;
-        synchronized (c.class) {
+        Class<Log> class_ = Log.class;
+        synchronized (Log.class) {
             boolean bl = false;
             if (d2 == null) {
                 // ** MonitorExit[var5_1] (shouldn't be in output)
@@ -85,8 +84,8 @@ public final class c {
      * Enabled aggressive exception aggregation
      */
     public static d an(String string) {
-        Class<c> class_ = c.class;
-        synchronized (c.class) {
+        Class<Log> class_ = Log.class;
+        synchronized (Log.class) {
             boolean bl;
             d d2;
             if (string == null) {
@@ -105,14 +104,14 @@ public final class c {
     public static void b(String string, String string2, Throwable throwable) {
         Iterator iterator = oJ.iterator();
         while (iterator.hasNext()) {
-            ((d)iterator.next()).a(6, string, string2 + '\n' + c.getStackTraceString(throwable));
+            ((d)iterator.next()).a(6, string, string2 + '\n' + Log.getStackTraceString(throwable));
         }
     }
 
     public static void c(String string, String string2, Throwable throwable) {
         Iterator iterator = oJ.iterator();
         while (iterator.hasNext()) {
-            ((d)iterator.next()).a(6, string, string2 + '\n' + c.getStackTraceString(throwable));
+            ((d)iterator.next()).a(6, string, string2 + '\n' + Log.getStackTraceString(throwable));
         }
     }
 

@@ -9,8 +9,8 @@
 package com.samsung.android.spayfw.core;
 
 import android.content.Context;
-import com.samsung.android.spayfw.core.d;
-import com.samsung.android.spayfw.core.q;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.amex.a;
 import com.samsung.android.spayfw.payprovider.f;
@@ -69,9 +69,9 @@ public class c {
                 f2 = this.iY.aQ();
             }
         }
-        com.samsung.android.spayfw.b.c.d("Card", "Card Brand : " + this.mCardBrand);
+        Log.d("Card", "Card Brand : " + this.mCardBrand);
         if ("VI".equals((Object)this.mCardBrand)) {
-            com.samsung.android.spayfw.b.c.d("Card", "Card Type : " + this.iU);
+            Log.d("Card", "Card Type : " + this.iU);
             if (!"SAMSUNG_REWARD".equals((Object)this.iU)) {
                 this.iZ = new b(context, this.mCardBrand, f2);
                 return;

@@ -25,8 +25,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.text.TextUtils;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.storage.DbAdapter;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.storage.models.a;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ extends DbAdapter {
     private TokenRecordStorage(Context context) {
         super(context);
         this.execSQL("CREATE TABLE IF NOT EXISTS token_group ( _id INTEGER PRIMARY KEY AUTOINCREMENT, enrollment_id TEXT NOT NULL UNIQUE, tr_token_id TEXT UNIQUE, user_id TEXT, app_id TEXT, provider_token_key TEXT, token_status TEXT, token_status_reason TEXT, card_brand TEXT, card_type TEXT, card_product TEXT, card_present_mode INTEGER, tnc_acceptance_time INTEGER, transaction_count INTEGER, transaction_url TEXT, data_1 TEXT, data_2 INTEGER, data_3 TEXT,  data_4 TEXT, data_5 TEXT, data_6 TEXT, data_7 BLOB, data_8 BLOB )");
-        c.i("TokenRecordStorage", "Create TokenGroup Table If Not Exists");
+        Log.i("TokenRecordStorage", "Create TokenGroup Table If Not Exists");
     }
 
     public static final TokenRecordStorage ae(Context context) {
@@ -160,7 +159,7 @@ extends DbAdapter {
         if (list != null) {
             return (String)list.get(0);
         }
-        c.e("TokenRecordStorage", "getColomn: list is null");
+        Log.e("TokenRecordStorage", "getColomn: list is null");
         return null;
     }
 
@@ -180,7 +179,7 @@ extends DbAdapter {
         if (list != null) {
             return (a)list.get(0);
         }
-        c.e("TokenRecordStorage", "getTokenRecordByTrTokenId: cannot find token by tr token id");
+        Log.e("TokenRecordStorage", "getTokenRecordByTrTokenId: cannot find token by tr token id");
         return null;
     }
 
@@ -211,8 +210,8 @@ extends DbAdapter {
             return -1;
         }
         catch (SQLiteException sQLiteException) {
-            c.e("TokenRecordStorage", "addTokenRecord: cannot add a token");
-            c.c("TokenRecordStorage", sQLiteException.getMessage(), sQLiteException);
+            Log.e("TokenRecordStorage", "addTokenRecord: cannot add a token");
+            Log.c("TokenRecordStorage", sQLiteException.getMessage(), sQLiteException);
             return -1;
         }
     }
@@ -263,7 +262,7 @@ lbl-1000: // 2 sources:
             return -1;
         }
         int n2 = this.e("token_group", tokenColumn.getColumn(), string);
-        c.i("TokenRecordStorage", "deleteTokenRecord" + n2);
+        Log.i("TokenRecordStorage", "deleteTokenRecord" + n2);
         return n2;
     }
 

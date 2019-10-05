@@ -20,17 +20,12 @@ import android.text.TextUtils;
 import com.google.gson.JsonObject;
 import com.samsung.android.spayfw.appinterface.IDeleteCardCallback;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
-import com.samsung.android.spayfw.core.a.o;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.c;
-import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.d;
-import com.samsung.android.spayfw.payprovider.e;
-import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.models.ServerCertificates;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.b;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Data;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
 
@@ -66,21 +61,21 @@ extends o {
                 }
                 c c2 = this.iJ.q(this.mEnrollmentId);
                 if (c2 == null) {
-                    com.samsung.android.spayfw.b.c.e("TokenDeleter", "Token delete Failed - Invalid Enrollment Id");
+                    Log.e("TokenDeleter", "Token delete Failed - Invalid Enrollment Id");
                     try {
                         this.mt.onFail(this.mEnrollmentId, -6, null);
                         return;
                     }
                     catch (RemoteException remoteException) {
-                        com.samsung.android.spayfw.b.c.c("TokenDeleter", remoteException.getMessage(), remoteException);
+                        Log.c("TokenDeleter", remoteException.getMessage(), remoteException);
                         return;
                     }
                 }
-                com.samsung.android.spayfw.b.c.i("TokenDeleter", "TokenDeleter: Tokenstatus" + c2.ac().getTokenStatus());
+                Log.i("TokenDeleter", "TokenDeleter: Tokenstatus" + c2.ac().getTokenStatus());
                 if ("ENROLLED".equals((Object)c2.ac().getTokenStatus()) || c2.ac().getTokenId() == null || TextUtils.equals((CharSequence)c2.getCardBrand(), (CharSequence)"GM")) {
                     this.iJ.s(this.mEnrollmentId);
                     if (this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Cn, this.mEnrollmentId) < 1) {
-                        com.samsung.android.spayfw.b.c.e("TokenDeleter", "Not able to delete enrollementId from DB");
+                        Log.e("TokenDeleter", "Not able to delete enrollementId from DB");
                     }
                     try {
                         TokenStatus tokenStatus = new TokenStatus("DISPOSED", null);
@@ -88,7 +83,7 @@ extends o {
                         return;
                     }
                     catch (RemoteException remoteException) {
-                        com.samsung.android.spayfw.b.c.c("TokenDeleter", remoteException.getMessage(), remoteException);
+                        Log.c("TokenDeleter", remoteException.getMessage(), remoteException);
                         return;
                     }
                 }
@@ -99,29 +94,29 @@ extends o {
                     b b2 = this.lQ.a(c.y(c2.getCardBrand()), c2.ac().getTokenId(), data);
                     b2.bf(this.P(c2.getCardBrand()));
                     b2.a(new a(this.mEnrollmentId, c2, this.mt));
-                    com.samsung.android.spayfw.b.c.d("TokenDeleter", "TokenDeleter: deleteToken request made for: " + c2.ac().getTokenId());
-                    com.samsung.android.spayfw.b.c.i("TokenDeleter", "TokenDeleter: deleteToken request made");
+                    Log.d("TokenDeleter", "TokenDeleter: deleteToken request made for: " + c2.ac().getTokenId());
+                    Log.i("TokenDeleter", "TokenDeleter: deleteToken request made");
                     return;
                 }
-                com.samsung.android.spayfw.b.c.e("TokenDeleter", "Not able to delete: pay provider error");
+                Log.e("TokenDeleter", "Not able to delete: pay provider error");
                 try {
                     this.mt.onFail(this.mEnrollmentId, -1, null);
                     return;
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("TokenDeleter", remoteException.getMessage(), remoteException);
+                    Log.c("TokenDeleter", remoteException.getMessage(), remoteException);
                     return;
                 }
             }
             n2 = -5;
         }
         try {
-            com.samsung.android.spayfw.b.c.e("TokenDeleter", "Token delete Failed - Invalid inputs");
+            Log.e("TokenDeleter", "Token delete Failed - Invalid inputs");
             this.mt.onFail(this.mEnrollmentId, n2, null);
             return;
         }
         catch (RemoteException remoteException) {
-            com.samsung.android.spayfw.b.c.c("TokenDeleter", remoteException.getMessage(), remoteException);
+            Log.c("TokenDeleter", remoteException.getMessage(), remoteException);
             return;
         }
     }
@@ -149,7 +144,7 @@ extends o {
         public void a(int var1_1, com.samsung.android.spayfw.remoteservice.c<String> var2_2) {
             block20 : {
                 var3_3 = -1;
-                com.samsung.android.spayfw.b.c.i("TokenDeleter", "TokenDeleter: onRequestComplete:  " + var1_1);
+                Log.i("TokenDeleter", "TokenDeleter: onRequestComplete:  " + var1_1);
                 var4_4 = w.this.iJ.q(this.mEnrollmentId);
                 var5_5 = new TokenStatus("DISPOSED", null);
                 switch (var1_1) {
@@ -184,7 +179,7 @@ lbl17: // 5 sources:
             try {
                 if (var4_4.ac() != null) {
                     if (var3_3 != 0) {
-                        com.samsung.android.spayfw.b.c.e("TokenDeleter", "Delete Token Failed - Error Code = " + var3_3);
+                        Log.e("TokenDeleter", "Delete Token Failed - Error Code = " + var3_3);
                         var16_6 = new d(22, -1, var4_4.ac().aQ());
                         var4_4.ad().updateRequestStatus(var16_6);
                     } else {
@@ -202,7 +197,7 @@ lbl32: // 5 sources:
                         var11_11 = var4_4.ac().getTokenId();
                         if (var9_9 != null) {
                             w.this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Cn, this.mEnrollmentId);
-                            com.samsung.android.spayfw.b.c.d("TokenDeleter", "TokenDeleter: db recored deleted for : " + this.mEnrollmentId);
+                            Log.d("TokenDeleter", "TokenDeleter: db recored deleted for : " + this.mEnrollmentId);
                             var13_12 = com.samsung.android.spayfw.fraud.a.x(w.this.mContext);
                             if (var13_12 != null) {
                                 var13_12.k(var9_9.getTrTokenId(), "DISPOSED");
@@ -222,7 +217,7 @@ lbl32: // 5 sources:
                 }
             }
             catch (RemoteException var7_14) {
-                com.samsung.android.spayfw.b.c.c("TokenDeleter", var7_14.getMessage(), var7_14);
+                Log.c("TokenDeleter", var7_14.getMessage(), var7_14);
                 return;
             }
             var15_15 = var4_4 != null && var4_4.ac() != null ? new TokenStatus(var4_4.ac().getTokenStatus(), var4_4.ac().aP()) : var5_5;
@@ -236,18 +231,18 @@ lbl32: // 5 sources:
          */
         @Override
         public void a(int n2, ServerCertificates serverCertificates, b b2) {
-            com.samsung.android.spayfw.b.c.d("TokenDeleter", "onCertsReceived: called for Delete");
+            Log.d("TokenDeleter", "onCertsReceived: called for Delete");
             boolean bl = false;
             c c2 = w.this.iJ.q(this.mEnrollmentId);
             if (c2 == null) {
-                com.samsung.android.spayfw.b.c.e("TokenDeleter", "TokenDeleter : unable to get Card object :" + this.mEnrollmentId);
+                Log.e("TokenDeleter", "TokenDeleter : unable to get Card object :" + this.mEnrollmentId);
                 try {
                     TokenStatus tokenStatus = new TokenStatus("DISPOSED", null);
                     this.mt.onSuccess(this.mEnrollmentId, tokenStatus);
                     return;
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("TokenDeleter", remoteException.getMessage(), remoteException);
+                    Log.c("TokenDeleter", remoteException.getMessage(), remoteException);
                     return;
                 }
             }
@@ -260,13 +255,13 @@ lbl32: // 5 sources:
                     b2.k(data);
                     b2.bf(w.this.P(this.mw.getCardBrand()));
                     b2.a(this);
-                    com.samsung.android.spayfw.b.c.i("TokenDeleter", "TokenDeleter: deleteToken request made for: " + this.mw.ac().getTokenId());
+                    Log.i("TokenDeleter", "TokenDeleter: deleteToken request made for: " + this.mw.ac().getTokenId());
                 } else {
-                    com.samsung.android.spayfw.b.c.e("TokenDeleter", " unable to get delete data from pay provider");
+                    Log.e("TokenDeleter", " unable to get delete data from pay provider");
                     bl = true;
                 }
             } else {
-                com.samsung.android.spayfw.b.c.e("TokenDeleter", "Server certificate update failed.Delete aborted");
+                Log.e("TokenDeleter", "Server certificate update failed.Delete aborted");
                 bl = true;
             }
             if (!bl || this.mt == null) return;
@@ -276,7 +271,7 @@ lbl32: // 5 sources:
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("TokenDeleter", remoteException.getMessage(), remoteException);
+                Log.c("TokenDeleter", remoteException.getMessage(), remoteException);
                 return;
             }
         }

@@ -23,12 +23,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.b.a;
 import com.samsung.sensorframework.sda.b.a.p;
-import com.samsung.sensorframework.sda.d.a.b;
+
 import java.util.List;
 
 public class k
@@ -57,9 +57,9 @@ extends b {
             public void onLocationChanged(Location location) {
                 if (k.this.Ji) {
                     if (location != null) {
-                        c.d("LocationSensor", "onLocationChanged(), newLocation: " + location.toString());
+                        Log.d("LocationSensor", "onLocationChanged(), newLocation: " + location.toString());
                     } else {
-                        c.d("LocationSensor", "onLocationChanged(), newLocation is null");
+                        Log.d("LocationSensor", "onLocationChanged(), newLocation is null");
                     }
                     k.this.JM = location;
                     k.this.ho();
@@ -105,16 +105,16 @@ extends b {
                         this.JL.requestSingleUpdate(string, this.JN, looper);
                         return;
                     }
-                    c.d("LocationSensor", "requestLocationUpdates(), not requesting location updates as looper is null or looper thread is not alive");
+                    Log.d("LocationSensor", "requestLocationUpdates(), not requesting location updates as looper is null or looper thread is not alive");
                     return;
                 }
-                c.d("LocationSensor", "requestLocationUpdates(), not requesting location updates as getSensorHandler() is null");
+                Log.d("LocationSensor", "requestLocationUpdates(), not requesting location updates as getSensorHandler() is null");
                 return;
             }
-            c.d("LocationSensor", "requestLocationUpdates(), Not registering with " + string + " as it is unavailable");
+            Log.d("LocationSensor", "requestLocationUpdates(), Not registering with " + string + " as it is unavailable");
             return;
         }
-        c.d("LocationSensor", "requestLocationUpdates(), locationManager is null");
+        Log.d("LocationSensor", "requestLocationUpdates(), locationManager is null");
     }
 
     @Override
@@ -160,7 +160,7 @@ extends b {
                 this.JL.removeUpdates(this.JN);
                 return;
             }
-            c.d("LocationSensor", "stopSensing(), locationManager is null");
+            Log.d("LocationSensor", "stopSensing(), locationManager is null");
             return;
         }
         catch (SecurityException securityException) {

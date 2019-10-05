@@ -13,7 +13,7 @@ package com.samsung.android.spayfw.core.a;
 import android.content.Context;
 import android.os.RemoteException;
 import com.samsung.android.spayfw.appinterface.ICommonCallback;
-import com.samsung.android.spayfw.core.a.o;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.l;
 import com.samsung.android.spayfw.remoteservice.Request;
@@ -45,12 +45,12 @@ extends o {
         if (this.mEnrollmentId == null || this.ml == null || this.iJ == null) {
             if (this.ml == null) return;
             try {
-                com.samsung.android.spayfw.b.c.e("TncProcessor", "acceptTnc Failed - Invalid inputs");
+                Log.e("TncProcessor", "acceptTnc Failed - Invalid inputs");
                 this.ml.onFail(this.mEnrollmentId, -5);
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("TncProcessor", remoteException.getMessage(), remoteException);
+                Log.c("TncProcessor", remoteException.getMessage(), remoteException);
                 return;
             }
         }
@@ -58,16 +58,16 @@ extends o {
         com.samsung.android.spayfw.storage.models.a a2 = this.jJ.bp(this.mEnrollmentId);
         if (c2 == null || a2 == null) {
             if (c2 == null) {
-                com.samsung.android.spayfw.b.c.e("TncProcessor", "acceptTnc Failed - Invalid Enrollment Id");
+                Log.e("TncProcessor", "acceptTnc Failed - Invalid Enrollment Id");
             } else {
-                com.samsung.android.spayfw.b.c.e("TncProcessor", "acceptTnc Failed - unable to find Enrollment Id from db");
+                Log.e("TncProcessor", "acceptTnc Failed - unable to find Enrollment Id from db");
             }
             try {
                 this.ml.onFail(this.mEnrollmentId, -6);
                 return;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("TncProcessor", remoteException.getMessage(), remoteException);
+                Log.c("TncProcessor", remoteException.getMessage(), remoteException);
                 return;
             }
         }
@@ -83,7 +83,7 @@ extends o {
             return;
         }
         catch (RemoteException remoteException) {
-            com.samsung.android.spayfw.b.c.c("TncProcessor", remoteException.getMessage(), remoteException);
+            Log.c("TncProcessor", remoteException.getMessage(), remoteException);
             return;
         }
     }
@@ -107,7 +107,7 @@ extends o {
          */
         @Override
         public void a(int var1_1, f var2_2) {
-            com.samsung.android.spayfw.b.c.i("TncProcessor", "Tnc reject to TR server: onRequestComplete:  " + var1_1);
+            Log.i("TncProcessor", "Tnc reject to TR server: onRequestComplete:  " + var1_1);
             var3_3 = 0;
             switch (var1_1) {
                 default: {
@@ -134,7 +134,7 @@ extends o {
             try {
                 if (u.this.jJ.bp(this.mEnrollmentId) != null) {
                     u.this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Cn, this.mEnrollmentId);
-                    com.samsung.android.spayfw.b.c.d("TncProcessor", "TncCallback: db recored deleted for : " + this.mEnrollmentId);
+                    Log.d("TncProcessor", "TncCallback: db recored deleted for : " + this.mEnrollmentId);
                 }
                 u.this.iJ.s(this.mEnrollmentId);
                 this.ml.onSuccess(this.mEnrollmentId);
@@ -144,7 +144,7 @@ lbl24: // 1 sources:
                 return;
             }
             catch (RemoteException var4_4) {
-                com.samsung.android.spayfw.b.c.c("TncProcessor", var4_4.getMessage(), var4_4);
+                Log.c("TncProcessor", var4_4.getMessage(), var4_4);
                 return;
             }
         }

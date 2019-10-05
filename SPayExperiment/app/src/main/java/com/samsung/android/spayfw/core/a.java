@@ -18,11 +18,8 @@ import com.samsung.android.spayfw.appinterface.EnrollCardInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardLoyaltyInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardPanInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardReferenceInfo;
-import com.samsung.android.spayfw.core.BinAttribute;
-import com.samsung.android.spayfw.core.c;
-import com.samsung.android.spayfw.core.e;
-import com.samsung.android.spayfw.core.m;
-import com.samsung.android.spayfw.core.q;
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,21 +43,21 @@ public class a {
         Class<a> class_ = a.class;
         synchronized (a.class) {
             block7 : {
-                com.samsung.android.spayfw.b.c.d("Account", "Account getInstance accId = " + string);
+                Log.d("Account", "Account getInstance accId = " + string);
                 if (string != null) break block7;
-                com.samsung.android.spayfw.b.c.d("Account", "Account getInstance accId is null");
+                Log.d("Account", "Account getInstance accId is null");
                 return iJ;
             }
             if (iJ == null) {
-                com.samsung.android.spayfw.b.c.d("Account", "Account getInstance mAccount is null");
+                Log.d("Account", "Account getInstance mAccount is null");
                 iJ = new a(context, string);
                 return iJ;
             }
             if (iJ.getAccountId().equals((Object)string)) {
-                com.samsung.android.spayfw.b.c.d("Account", "Account getInstance mAccId equals accId");
+                Log.d("Account", "Account getInstance mAccId equals accId");
                 return iJ;
             }
-            com.samsung.android.spayfw.b.c.d("Account", "Account getInstance accId = " + string + "mAccId = " + iJ.getAccountId());
+            Log.d("Account", "Account getInstance accId = " + string + "mAccId = " + iJ.getAccountId());
             return null;
         }
     }
@@ -129,15 +126,15 @@ public class a {
                 String string3;
                 if (enrollCardInfo instanceof EnrollCardPanInfo) {
                     BinAttribute binAttribute = BinAttribute.getBinAttribute(((EnrollCardPanInfo)enrollCardInfo).getPAN());
-                    com.samsung.android.spayfw.b.c.d("Account", "BinAttribute : EnrollCardPanInfo : " + ((EnrollCardPanInfo)enrollCardInfo).getPAN());
+                    Log.d("Account", "BinAttribute : EnrollCardPanInfo : " + ((EnrollCardPanInfo)enrollCardInfo).getPAN());
                     string3 = binAttribute != null ? binAttribute.getCardBrand() : null;
                 }
                 if (enrollCardInfo instanceof EnrollCardReferenceInfo) {
-                    com.samsung.android.spayfw.b.c.d("Account", "getCardBrand");
+                    Log.d("Account", "getCardBrand");
                     string = ((EnrollCardReferenceInfo)enrollCardInfo).getCardBrand();
                     string2 = ((EnrollCardReferenceInfo)enrollCardInfo).getCardType();
                 } else if (enrollCardInfo instanceof EnrollCardLoyaltyInfo) {
-                    com.samsung.android.spayfw.b.c.d("Account", "PaymentFramework.CARD_BRAND_LOYALTY");
+                    Log.d("Account", "PaymentFramework.CARD_BRAND_LOYALTY");
                     string = "LO";
                     string2 = null;
                 } else {
@@ -158,7 +155,7 @@ public class a {
                     this.iI = new ArrayList();
                 }
             } else {
-                com.samsung.android.spayfw.b.c.e("Account", "No valid cardType is found");
+                Log.e("Account", "No valid cardType is found");
                 return null;
             }
             this.iI.add((Object)c2);
@@ -259,7 +256,7 @@ public class a {
                 c c2 = (c)this.iI.get(n2);
                 if (c2.getEnrollmentId() != null && c2.getEnrollmentId().equals((Object)string)) {
                     c2.delete();
-                    com.samsung.android.spayfw.b.c.d("Account", "deleteCardByEnrollmentId: done for " + string);
+                    Log.d("Account", "deleteCardByEnrollmentId: done for " + string);
                     this.iI.remove(n2);
                     return true;
                 }
@@ -285,7 +282,7 @@ public class a {
                 c c2 = (c)this.iI.get(n2);
                 if (c2.ac().getTokenId() != null && c2.ac().getTokenId().equals((Object)string)) {
                     c2.delete();
-                    com.samsung.android.spayfw.b.c.d("Account", "deleteCardByTokenId: done for " + string);
+                    Log.d("Account", "deleteCardByTokenId: done for " + string);
                     this.iI.remove(n2);
                     return true;
                 }

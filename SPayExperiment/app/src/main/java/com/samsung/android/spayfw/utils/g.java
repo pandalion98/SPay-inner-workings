@@ -12,13 +12,11 @@
  */
 package com.samsung.android.spayfw.utils;
 
-import com.samsung.android.spayfw.b.c;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Headers;
+import com.samsung.android.spayfw.b.Log;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +48,7 @@ public class g {
                 if (response == null) break block3;
             }
             catch (IOException iOException) {
-                c.c("SyncNetworkHttpClient", iOException.getMessage(), iOException);
+                Log.c("SyncNetworkHttpClient", iOException.getMessage(), iOException);
                 return a2;
             }
             a2.statusCode = response.code();

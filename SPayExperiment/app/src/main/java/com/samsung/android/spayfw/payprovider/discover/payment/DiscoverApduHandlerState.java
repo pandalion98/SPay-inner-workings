@@ -10,8 +10,7 @@
  */
 package com.samsung.android.spayfw.payprovider.discover.payment;
 
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.discover.payment.a;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.payment.data.e;
 import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverPaymentCard;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.ByteBuffer;
@@ -156,7 +155,7 @@ extends Enum<DiscoverApduHandlerState> {
             a3.a(discoverApduHandlerState);
             return;
         }
-        c.e("DCSDK_DiscoverApduHandlerState", "processApduResultWithHandler, wrong state requested: " + discoverApduHandlerState.name() + ", current state: " + this.name());
+        Log.e("DCSDK_DiscoverApduHandlerState", "processApduResultWithHandler, wrong state requested: " + discoverApduHandlerState.name() + ", current state: " + this.name());
         this.cO();
     }
 
@@ -167,40 +166,40 @@ extends Enum<DiscoverApduHandlerState> {
     public abstract List<DiscoverApduHandlerState> cP();
 
     public com.samsung.android.spayfw.payprovider.discover.payment.data.a e(ByteBuffer byteBuffer, e e2, DiscoverPaymentCard discoverPaymentCard) {
-        c.i("DCSDK_DiscoverApduHandlerState", "state: " + this.name());
+        Log.i("DCSDK_DiscoverApduHandlerState", "state: " + this.name());
         if (byteBuffer == null) {
-            c.e("DCSDK_DiscoverApduHandlerState", "process: apdu is null");
+            Log.e("DCSDK_DiscoverApduHandlerState", "process: apdu is null");
             return new com.samsung.android.spayfw.payprovider.discover.payment.data.a(27264);
         }
         if (e2 == null) {
-            c.e("DCSDK_DiscoverApduHandlerState", "process: context is null, not  ready for payment.");
+            Log.e("DCSDK_DiscoverApduHandlerState", "process: context is null, not  ready for payment.");
             return new com.samsung.android.spayfw.payprovider.discover.payment.data.a(27264);
         }
         if (discoverPaymentCard == null) {
-            c.e("DCSDK_DiscoverApduHandlerState", "process: profile is null, not  ready for payment.");
+            Log.e("DCSDK_DiscoverApduHandlerState", "process: profile is null, not  ready for payment.");
             return new com.samsung.android.spayfw.payprovider.discover.payment.data.a(27264);
         }
         byte by = byteBuffer.getByte(1);
-        c.i("DCSDK_DiscoverApduHandlerState", "handleApdu, APDU INS: " + (by & 255));
+        Log.i("DCSDK_DiscoverApduHandlerState", "handleApdu, APDU INS: " + (by & 255));
         switch (by) {
             default: {
                 return new com.samsung.android.spayfw.payprovider.discover.payment.data.a(27904);
             }
             case -92: {
-                c.i("DCSDK_DiscoverApduHandlerState", "handleApdu, APDU INS: SELECT APDU received");
+                Log.i("DCSDK_DiscoverApduHandlerState", "handleApdu, APDU INS: SELECT APDU received");
                 return this.f(byteBuffer, e2, discoverPaymentCard);
             }
             case -88: {
-                c.i("DCSDK_DiscoverApduHandlerState", "handleApdu, APDU INS: GPO APDU received");
+                Log.i("DCSDK_DiscoverApduHandlerState", "handleApdu, APDU INS: GPO APDU received");
                 return this.g(byteBuffer, e2, discoverPaymentCard);
             }
             case -78: {
-                c.i("DCSDK_DiscoverApduHandlerState", "handleApdu, APDU INS: READ RECORD APDU received");
+                Log.i("DCSDK_DiscoverApduHandlerState", "handleApdu, APDU INS: READ RECORD APDU received");
                 return this.h(byteBuffer, e2, discoverPaymentCard);
             }
             case -54: 
         }
-        c.i("DCSDK_DiscoverApduHandlerState", "handleApdu, APDU INS: GET DATA APDU received");
+        Log.i("DCSDK_DiscoverApduHandlerState", "handleApdu, APDU INS: GET DATA APDU received");
         return this.i(byteBuffer, e2, discoverPaymentCard);
     }
 

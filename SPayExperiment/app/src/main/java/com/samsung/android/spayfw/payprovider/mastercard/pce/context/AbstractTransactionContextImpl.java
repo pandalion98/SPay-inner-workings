@@ -18,10 +18,9 @@ import android.text.TextUtils;
 import com.mastercard.mobile_api.bytes.ByteArray;
 import com.mastercard.mobile_api.bytes.ByteArrayFactory;
 import com.mastercard.mobile_api.utils.Utils;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.MCTransactionException;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.MTBPTransactionListener;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.context.MTBPTransactionContext;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.context.filtercriteria.MCFilterCriteria;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCCryptoOutput;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionCompleteResult;
@@ -88,7 +87,7 @@ implements MTBPTransactionContext {
                         mCTransactionResult2 = mCTransactionResult3;
                         continue;
                     }
-                    c.d(TAG, "Filter Check passed");
+                    Log.d(TAG, "Filter Check passed");
                     return mCTransactionResult3;
                 }
             } else {
@@ -192,7 +191,7 @@ implements MTBPTransactionContext {
 
     protected void setMerchantNameLocation(Bundle bundle) {
         if (this.mTransactionInformation == null || this.mTransactionInformation.getMerchantNameAndLoc() == null || TextUtils.isEmpty((CharSequence)this.mTransactionInformation.getMerchantNameAndLoc().getString())) {
-            c.d("mcpce_AbstractTransactionContextImpl", "No MerchantNameLoc provided");
+            Log.d("mcpce_AbstractTransactionContextImpl", "No MerchantNameLoc provided");
             return;
         }
         StringBuilder stringBuilder = new StringBuilder();
@@ -203,7 +202,7 @@ implements MTBPTransactionContext {
             byte by;
             if (n3 >= n2 || (by = arrby[n3]) == 0) {
                 if (!TextUtils.isEmpty((CharSequence)stringBuilder.toString())) break;
-                c.d("mcpce_AbstractTransactionContextImpl", "No MerchantNameLoc provided");
+                Log.d("mcpce_AbstractTransactionContextImpl", "No MerchantNameLoc provided");
                 return;
             }
             stringBuilder.append((char)by);
@@ -221,15 +220,15 @@ implements MTBPTransactionContext {
     public void setNfcError(Bundle bundle) {
         MCTransactionCompleteResult mCTransactionCompleteResult = this.getTransactionResult();
         if (mCTransactionCompleteResult == null) {
-            c.e("mcpce_AbstractTransactionContextImpl", "stopNfcPay: txnResult is null");
+            Log.e("mcpce_AbstractTransactionContextImpl", "stopNfcPay: txnResult is null");
             bundle.putShort("nfcApduErrorCode", (short)1);
             return;
         }
         if (mCTransactionCompleteResult.getTransactionResult() != null) {
-            c.d("mcpce_AbstractTransactionContextImpl", "stopNfc: result: " + mCTransactionCompleteResult.getTransactionResult().name());
+            Log.d("mcpce_AbstractTransactionContextImpl", "stopNfc: result: " + mCTransactionCompleteResult.getTransactionResult().name());
         }
         if (mCTransactionCompleteResult.getTransactionError() != null) {
-            c.d("mcpce_AbstractTransactionContextImpl", "stopNfc: error: " + mCTransactionCompleteResult.getTransactionError().name());
+            Log.d("mcpce_AbstractTransactionContextImpl", "stopNfc: error: " + mCTransactionCompleteResult.getTransactionError().name());
         }
         short s2 = mCTransactionCompleteResult.isTransactionComplete() && mCTransactionCompleteResult.getTransactionError() == null ? (short)2 : 3;
         bundle.putShort("nfcApduErrorCode", s2);

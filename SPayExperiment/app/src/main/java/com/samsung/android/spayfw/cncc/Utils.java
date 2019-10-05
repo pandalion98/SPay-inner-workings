@@ -13,7 +13,9 @@
 package com.samsung.android.spayfw.cncc;
 
 import android.util.Base64;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import javolution.io.Struct;
@@ -106,7 +108,7 @@ public class Utils {
         if (arrby == null || arrby.length <= 0) return;
         {
             if (arrby.length > arrunsigned8.length) {
-                c.e(TAG, "Error: Can't set a buffer more than the size of the destination Byte Array");
+                Log.e(TAG, "Error: Can't set a buffer more than the size of the destination Byte Array");
                 return;
             } else {
                 for (int i2 = 0; i2 < arrby.length; ++i2) {

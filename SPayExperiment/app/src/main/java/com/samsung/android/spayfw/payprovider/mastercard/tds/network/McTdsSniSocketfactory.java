@@ -24,22 +24,20 @@
  */
 package com.samsung.android.spayfw.payprovider.mastercard.tds.network;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import javax.net.ssl.HandshakeCompletedEvent;
 import javax.net.ssl.HandshakeCompletedListener;
-import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
 
 public class McTdsSniSocketfactory
 extends SSLSocketFactory {
@@ -86,12 +84,12 @@ extends SSLSocketFactory {
             }
             catch (NoSuchAlgorithmException noSuchAlgorithmException) {
                 noSuchAlgorithmException.printStackTrace();
-                c.e(TAG, "SSL Init Error: " + noSuchAlgorithmException.getMessage());
+                Log.e(TAG, "SSL Init Error: " + noSuchAlgorithmException.getMessage());
                 return sInstance;
             }
             catch (KeyManagementException keyManagementException) {
                 keyManagementException.printStackTrace();
-                c.e(TAG, "SSL Init Error: " + keyManagementException.getMessage());
+                Log.e(TAG, "SSL Init Error: " + keyManagementException.getMessage());
             }
             return sInstance;
         }
@@ -130,12 +128,12 @@ extends SSLSocketFactory {
                 public void handshakeCompleted(HandshakeCompletedEvent handshakeCompletedEvent) {
                     try {
                         SSLSession sSLSession = handshakeCompletedEvent.getSession();
-                        c.d(McTdsSniSocketfactory.TAG, "Established " + sSLSession.getProtocol() + " connection with " + sSLSession.getPeerHost() + " using " + sSLSession.getCipherSuite());
+                        Log.d(McTdsSniSocketfactory.TAG, "Established " + sSLSession.getProtocol() + " connection with " + sSLSession.getPeerHost() + " using " + sSLSession.getCipherSuite());
                         return;
                     }
                     catch (NullPointerException nullPointerException) {
                         nullPointerException.printStackTrace();
-                        c.e(McTdsSniSocketfactory.TAG, "handshakeCompleted : " + nullPointerException.getMessage());
+                        Log.e(McTdsSniSocketfactory.TAG, "handshakeCompleted : " + nullPointerException.getMessage());
                         return;
                     }
                 }
@@ -144,7 +142,7 @@ extends SSLSocketFactory {
         }
         catch (NullPointerException nullPointerException) {
             nullPointerException.printStackTrace();
-            c.e(TAG, "Unable to create socket : " + nullPointerException.getMessage());
+            Log.e(TAG, "Unable to create socket : " + nullPointerException.getMessage());
             throw new IOException(nullPointerException.getMessage());
         }
     }

@@ -9,14 +9,10 @@
  */
 package com.samsung.android.spayfw.remoteservice.tokenrequester;
 
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Client;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
-import com.samsung.android.spayfw.remoteservice.models.Eula;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.EnrollmentRequestData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.EnrollmentResponseData;
-import java.util.List;
 
 public class c
 extends m<EnrollmentRequestData, EnrollmentResponseData, com.samsung.android.spayfw.remoteservice.c<EnrollmentResponseData>, c> {
@@ -31,7 +27,7 @@ extends m<EnrollmentRequestData, EnrollmentResponseData, com.samsung.android.spa
     @Override
     protected com.samsung.android.spayfw.remoteservice.c<EnrollmentResponseData> b(int n2, String string) {
         EnrollmentResponseData enrollmentResponseData = this.Al.fromJson(string, EnrollmentResponseData.class);
-        com.samsung.android.spayfw.b.c.d("EnrollRequest", "EnrollmentResponseData : " + enrollmentResponseData);
+        Log.d("EnrollRequest", "EnrollmentResponseData : " + enrollmentResponseData);
         if (enrollmentResponseData != null) {
             this.b(enrollmentResponseData.getEulas());
             do {
@@ -39,7 +35,7 @@ extends m<EnrollmentRequestData, EnrollmentResponseData, com.samsung.android.spa
                 break;
             } while (true);
         }
-        com.samsung.android.spayfw.b.c.e("EnrollRequest", "Enrollment Response Data is Empty");
+        Log.e("EnrollRequest", "Enrollment Response Data is Empty");
         return new com.samsung.android.spayfw.remoteservice.c<EnrollmentResponseData>(null, enrollmentResponseData, n2);
     }
 

@@ -14,7 +14,8 @@
  */
 package com.samsung.sensorframework.sdi.g;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -46,13 +47,13 @@ public class a {
     }
 
     public static boolean f(int n2, int n3) {
-        c.d("SFUtils", "isCurrentTimeInTimeRange(), startHourInclusive: " + n2 + " endHourExclusive: " + n3);
+        Log.d("SFUtils", "isCurrentTimeInTimeRange(), startHourInclusive: " + n2 + " endHourExclusive: " + n3);
         int n4 = Calendar.getInstance().get(11);
         if (n4 >= n2 && n4 < n3) {
-            c.d("SFUtils", "isCurrentTimeInTimeRange() returning true");
+            Log.d("SFUtils", "isCurrentTimeInTimeRange() returning true");
             return true;
         }
-        c.d("SFUtils", "isCurrentTimeInTimeRange() returning false");
+        Log.d("SFUtils", "isCurrentTimeInTimeRange() returning false");
         return false;
     }
 

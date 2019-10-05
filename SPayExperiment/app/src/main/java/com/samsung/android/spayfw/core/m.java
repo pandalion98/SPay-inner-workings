@@ -21,7 +21,7 @@ package com.samsung.android.spayfw.core;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.os.Parcelable;
+
 import com.google.gson.JsonObject;
 import com.samsung.android.spayfw.appinterface.CardArts;
 import com.samsung.android.spayfw.appinterface.CardColors;
@@ -35,10 +35,7 @@ import com.samsung.android.spayfw.appinterface.TnC;
 import com.samsung.android.spayfw.appinterface.Token;
 import com.samsung.android.spayfw.appinterface.TokenMetaData;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
-import com.samsung.android.spayfw.core.c;
-import com.samsung.android.spayfw.core.d;
-import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.remoteservice.models.Art;
@@ -49,14 +46,10 @@ import com.samsung.android.spayfw.remoteservice.tokenrequester.models.CardIssuer
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.CardIssuerInfo;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.ContactInfo;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.EnrollmentResponseData;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Expiry;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.IdvOptionData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.IdvOptionsData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.IdvSelectionResponseData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenResponseData;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Transaction;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.UserInfo;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.UserName;
 import com.samsung.android.spayfw.storage.models.a;
 import com.samsung.android.spayfw.utils.h;
 import com.samsung.android.spaytzsvc.api.TAException;
@@ -112,7 +105,7 @@ public class m {
             }
             enrollCardResult.setTnC((List<TnC>)arrayList);
         }
-        com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", enrollCardResult.toString());
+        Log.d("ResponseDataBuilder", enrollCardResult.toString());
         return enrollCardResult;
     }
 
@@ -122,7 +115,7 @@ public class m {
     public static ProvisionTokenResult a(Context context, com.samsung.android.spayfw.remoteservice.tokenrequester.f f2, c c2, e e2) {
         IdvOptionsData idvOptionsData;
         if (f2 == null || f2.fd() == null && f2.getResult() == null) {
-            com.samsung.android.spayfw.b.c.e("ResponseDataBuilder", "Provision Response is null.");
+            Log.e("ResponseDataBuilder", "Provision Response is null.");
             return null;
         }
         ProvisionTokenResult provisionTokenResult = new ProvisionTokenResult();
@@ -137,14 +130,14 @@ public class m {
                 idvMethod.setScheme(arridvOptionData[i2].getScheme());
                 if (arridvOptionData[i2].getData() != null) {
                     idvMethod.setData(arridvOptionData[i2].getData().toString());
-                    com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", "IDV data: " + arridvOptionData[i2].getData().toString());
+                    Log.d("ResponseDataBuilder", "IDV data: " + arridvOptionData[i2].getData().toString());
                 }
                 if (("APP".equals((Object)idvMethod.getType()) || "CODE_ONLINEBANKING".equals((Object)idvMethod.getType())) && c2 != null) {
                     e e3 = c2.ad().processIdvOptionsDataTA(idvMethod);
                     if (e3 != null && e3.getErrorCode() == 0 && e3.cg() != null) {
                         idvMethod.setExtra(e3.cg());
                     } else {
-                        com.samsung.android.spayfw.b.c.i("ResponseDataBuilder", " PayProvider error occurred while processing App2App idv data");
+                        Log.i("ResponseDataBuilder", " PayProvider error occurred while processing App2App idv data");
                     }
                 }
                 arrayList.add((Object)idvMethod);
@@ -159,7 +152,7 @@ public class m {
         if (e2 != null && e2.cg() != null) {
             provisionTokenResult.setBundle(e2.cg());
         }
-        com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", provisionTokenResult.toString());
+        Log.d("ResponseDataBuilder", provisionTokenResult.toString());
         return provisionTokenResult;
     }
 
@@ -173,7 +166,7 @@ public class m {
         selectIdvResponse.setMaxRetry((int)idvSelectionResponseData.getExpiryMax());
         selectIdvResponse.setExpirationTime(idvSelectionResponseData.getExpiryOn());
         selectIdvResponse.setMaxRequest(idvSelectionResponseData.getMaxAttempts());
-        com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", selectIdvResponse.toString());
+        Log.d("ResponseDataBuilder", selectIdvResponse.toString());
         return selectIdvResponse;
     }
 
@@ -186,7 +179,7 @@ public class m {
         TokenStatus tokenStatus;
         int n2 = 0;
         if (tokenResponseData == null) {
-            com.samsung.android.spayfw.b.c.e("ResponseDataBuilder", "TokenResponseData is null.");
+            Log.e("ResponseDataBuilder", "TokenResponseData is null.");
             return null;
         }
         Token token = new Token();
@@ -213,10 +206,10 @@ public class m {
                     tokenMetaData.setExtraMetaData(bundle);
                 }
             } else {
-                com.samsung.android.spayfw.b.c.e("ResponseDataBuilder", "ProviderTokenKey is Null");
+                Log.e("ResponseDataBuilder", "ProviderTokenKey is Null");
             }
         } else {
-            com.samsung.android.spayfw.b.c.e("ResponseDataBuilder", "Card or PayNetProv is Null");
+            Log.e("ResponseDataBuilder", "Card or PayNetProv is Null");
         }
         if (tokenResponseData.getUser() != null && tokenResponseData.getUser().getName() != null && tokenResponseData.getUser().getName().getFull() != null) {
             tokenMetaData.setCardHolderName(tokenResponseData.getUser().getName().getFull());
@@ -362,7 +355,7 @@ public class m {
     public static c a(Context context, a a2) {
         c c2;
         if (a2 == null || a2.getCardBrand() == null) {
-            com.samsung.android.spayfw.b.c.e("ResponseDataBuilder", "record or card brand is null");
+            Log.e("ResponseDataBuilder", "record or card brand is null");
             return null;
         }
         q q2 = new q();
@@ -378,10 +371,10 @@ public class m {
                 f f2 = new f(a2.getTokenRefId());
                 f2.setTrTokenId(a2.getTrTokenId());
                 q2.c(f2);
-                com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", "providerKeys is set: " + f2);
+                Log.d("ResponseDataBuilder", "providerKeys is set: " + f2);
             }
         } else {
-            com.samsung.android.spayfw.b.c.e("ResponseDataBuilder", "No Token Id for this Card");
+            Log.e("ResponseDataBuilder", "No Token Id for this Card");
         }
         try {
             c2 = new c(context, a2.getCardBrand(), a2.getCardType(), null, a2.ab(), q2);
@@ -465,14 +458,14 @@ public class m {
             idvMethod.setScheme(arridvOptionData[n2].getScheme());
             if (arridvOptionData[n2].getData() != null) {
                 idvMethod.setData(arridvOptionData[n2].getData().toString());
-                com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", "IDV data: " + arridvOptionData[n2].getData().toString());
+                Log.d("ResponseDataBuilder", "IDV data: " + arridvOptionData[n2].getData().toString());
             }
             if (("APP".equals((Object)idvMethod.getType()) || "CODE_ONLINEBANKING".equals((Object)idvMethod.getType())) && c2 != null) {
                 e e2 = c2.ad().processIdvOptionsDataTA(idvMethod);
                 if (e2 != null && e2.getErrorCode() == 0 && e2.cg() != null) {
                     idvMethod.setExtra(e2.cg());
                 } else {
-                    com.samsung.android.spayfw.b.c.i("ResponseDataBuilder", " PayProvider error occurred while processing App2App idv data");
+                    Log.i("ResponseDataBuilder", " PayProvider error occurred while processing App2App idv data");
                 }
             }
             arrayList.add((Object)idvMethod);
@@ -492,14 +485,14 @@ public class m {
                     n2 = 2;
                     if (c2 == null || tokenMetaData == null || tokenMetaData.getCardPresentationMode() != 0) break block4;
                     if (c2.ac() == null || c2.ac().aQ() == null) {
-                        com.samsung.android.spayfw.b.c.e("ResponseDataBuilder", "Card Token OR Token Reference Id is NULL");
+                        Log.e("ResponseDataBuilder", "Card Token OR Token Reference Id is NULL");
                         tokenMetaData.setCardPresentationMode(0);
                         return;
                     }
                     if (!h.ao(context) || !c2.ad().isPayAllowedForPresentationMode(n2)) break block5;
                     break block6;
                 }
-                com.samsung.android.spayfw.b.c.e("ResponseDataBuilder", "Card OR TokenMetaData is NULL");
+                Log.e("ResponseDataBuilder", "Card OR TokenMetaData is NULL");
                 return;
             }
             n2 = 0;
@@ -645,7 +638,7 @@ public class m {
      */
     public static Bundle b(TokenResponseData tokenResponseData) {
         if (tokenResponseData == null) {
-            com.samsung.android.spayfw.b.c.i("ResponseDataBuilder", "Provision Response is null.");
+            Log.i("ResponseDataBuilder", "Provision Response is null.");
             return null;
         } else {
             if (tokenResponseData.getCard() == null || tokenResponseData.getCard().getReference() == null) return null;
@@ -665,11 +658,11 @@ public class m {
     private static void b(Bundle bundle) {
         if (bundle != null) {
             String string;
-            com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", "Clean providerProvision Data");
+            Log.d("ResponseDataBuilder", "Clean providerProvision Data");
             ParcelFileDescriptor parcelFileDescriptor = (ParcelFileDescriptor)bundle.getParcelable("loyaltyResponseDataFd");
             if (parcelFileDescriptor != null) {
                 try {
-                    com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", "Close provider Pfd");
+                    Log.d("ResponseDataBuilder", "Close provider Pfd");
                     parcelFileDescriptor.close();
                 }
                 catch (IOException iOException) {
@@ -677,7 +670,7 @@ public class m {
                 }
             }
             if ((string = bundle.getString("loyaltyResponseDataFilePath")) != null) {
-                com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", "Delete  temp File");
+                Log.d("ResponseDataBuilder", "Delete  temp File");
                 new File(string).delete();
             }
         }
@@ -699,7 +692,7 @@ public class m {
             if (n4 <= 0) return n3;
             n2 = arrstring.length;
         } else {
-            com.samsung.android.spayfw.b.c.e("ResponseDataBuilder", "TokenResponseData is NULL");
+            Log.e("ResponseDataBuilder", "TokenResponseData is NULL");
             return n3;
         }
         for (int i2 = 0; i2 < n2; ++i2) {
@@ -730,11 +723,11 @@ public class m {
     public static void c(Bundle bundle) {
         if (bundle != null) {
             String string;
-            com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", "cleanAppTokenMetaExtra");
+            Log.d("ResponseDataBuilder", "cleanAppTokenMetaExtra");
             ParcelFileDescriptor parcelFileDescriptor = (ParcelFileDescriptor)bundle.getParcelable("extraMetaDataFd");
             if (parcelFileDescriptor != null) {
                 try {
-                    com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", "Close provider Pfd");
+                    Log.d("ResponseDataBuilder", "Close provider Pfd");
                     parcelFileDescriptor.close();
                 }
                 catch (IOException iOException) {
@@ -742,7 +735,7 @@ public class m {
                 }
             }
             if ((string = bundle.getString("extraMetaDataFilePath")) != null) {
-                com.samsung.android.spayfw.b.c.d("ResponseDataBuilder", "Delete  temp File");
+                Log.d("ResponseDataBuilder", "Delete  temp File");
                 new File(string).delete();
             }
         }

@@ -25,13 +25,12 @@ import android.content.SharedPreferences;
 import android.os.Message;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.j;
-import com.samsung.android.spayfw.core.retry.RetryRequestData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.ReportData;
-import java.lang.reflect.Type;
+
 import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -49,7 +48,7 @@ public class d {
     }
 
     public static void a(RetryRequestData retryRequestData) {
-        c.d("RetryRequester", "executeRequest: rObj = " + retryRequestData);
+        Log.d("RetryRequester", "executeRequest: rObj = " + retryRequestData);
         if (retryRequestData == null) {
             return;
         }
@@ -63,7 +62,7 @@ public class d {
     }
 
     public static void a(RetryRequestData retryRequestData, long l2) {
-        c.d("RetryRequester", "scheduleRetryTimer: scheduling timer at " + l2);
+        Log.d("RetryRequester", "scheduleRetryTimer: scheduling timer at " + l2);
         Timer timer = new Timer();
         d d2 = d.bn();
         d2.getClass();
@@ -129,11 +128,11 @@ public class d {
     public static void bo() {
         Class<d> class_ = d.class;
         synchronized (d.class) {
-            c.d("RetryRequester", "In executeAllReqInQueue");
+            Log.d("RetryRequester", "In executeAllReqInQueue");
             boolean bl = mT.isEmpty();
             if (!bl) {
                 for (RetryRequestData retryRequestData : mT.values()) {
-                    c.d("RetryRequester", "rObj = " + retryRequestData.getReportData() + "; rObj.retryNum = " + retryRequestData.getNumRetryAttempts());
+                    Log.d("RetryRequester", "rObj = " + retryRequestData.getReportData() + "; rObj.retryNum = " + retryRequestData.getNumRetryAttempts());
                     d.a(retryRequestData);
                 }
             }
@@ -145,7 +144,7 @@ public class d {
     private static void bp() {
         Class<d> class_ = d.class;
         synchronized (d.class) {
-            c.d("RetryRequester", "persistData - mRetryReqQueue = " + mT);
+            Log.d("RetryRequester", "persistData - mRetryReqQueue = " + mT);
             SharedPreferences.Editor editor = PaymentFrameworkApp.aB().getSharedPreferences("RetryRequestQueue", 0).edit();
             editor.putString("RequestList", new Gson().toJson((Object)mT.values()));
             editor.commit();
@@ -168,12 +167,12 @@ public class d {
                 boolean bl = "".equals((Object)string);
                 if (!bl) {
                     Collection collection = (Collection)new Gson().fromJson(string, new TypeToken<Collection<RetryRequestData>>(){}.getType());
-                    c.d("RetryRequester", "readPersistedData - reqList = " + (Object)collection);
+                    Log.d("RetryRequester", "readPersistedData - reqList = " + (Object)collection);
                     if (collection != null) {
                         ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap();
                         for (RetryRequestData retryRequestData : collection) {
                             if (retryRequestData == null) continue;
-                            c.d("RetryRequester", "rObj.reportData = " + retryRequestData.getReportData() + "; rObj.numRetry = " + retryRequestData.getNumRetryAttempts());
+                            Log.d("RetryRequester", "rObj.reportData = " + retryRequestData.getReportData() + "; rObj.numRetry = " + retryRequestData.getNumRetryAttempts());
                             concurrentHashMap.put((Object)retryRequestData.getReportData(), (Object)retryRequestData);
                         }
                         mT = concurrentHashMap;
@@ -181,8 +180,8 @@ public class d {
                 }
             }
             catch (Exception exception) {
-                c.c("RetryRequester", exception.getMessage(), exception);
-                c.e("RetryRequester", "readPersistedData: Data corrupted, clear the shared prefs values!");
+                Log.c("RetryRequester", exception.getMessage(), exception);
+                Log.e("RetryRequester", "readPersistedData: Data corrupted, clear the shared prefs values!");
                 sharedPreferences.edit().clear();
             }
             return;
@@ -197,12 +196,12 @@ public class d {
     public static void e(boolean bl) {
         Class<d> class_ = d.class;
         synchronized (d.class) {
-            c.d("RetryRequester", "flushRetryRequestQueue: fromPersistedStorage = " + bl);
+            Log.d("RetryRequester", "flushRetryRequestQueue: fromPersistedStorage = " + bl);
             if (bl) {
                 d.bq();
             }
             if (mT.isEmpty()) {
-                c.d("RetryRequester", "flushRetryRequestQueue: Request Queue empty!");
+                Log.d("RetryRequester", "flushRetryRequestQueue: Request Queue empty!");
             } else {
                 Message message = j.a(15, null, null);
                 PaymentFrameworkApp.az().sendMessage(message);
@@ -221,7 +220,7 @@ public class d {
         }
 
         public void run() {
-            c.d("RetryRequester", "run : RetryTimerExpired - rObj.numRetry = " + this.mU.getNumRetryAttempts());
+            Log.d("RetryRequester", "run : RetryTimerExpired - rObj.numRetry = " + this.mU.getNumRetryAttempts());
             Message message = j.a(15, this.mU, null);
             PaymentFrameworkApp.az().sendMessage(message);
         }

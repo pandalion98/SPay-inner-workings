@@ -12,7 +12,8 @@ package com.samsung.sensorframework.sda;
 
 import android.content.Context;
 import android.util.SparseArray;
-import com.samsung.sensorframework.sda.SDAException;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.a.b;
 import com.samsung.sensorframework.sda.d.c;
 import com.samsung.sensorframework.sda.e.d;
@@ -80,7 +81,7 @@ public class a {
                     a3 = this.ab(n2);
                     this.HS.put(n2, (Object)a3);
                 }
-                com.samsung.android.spayfw.b.c.d("SFSensorManager", "subscribeToSensorData() subscribing listener to sensor: " + c.ap(n2));
+                Log.d("SFSensorManager", "subscribeToSensorData() subscribing listener to sensor: " + c.ap(n2));
                 d d2 = new d(a3, b2);
                 return this.HT.b(d2);
             }
@@ -92,7 +93,7 @@ public class a {
 
     public void a(int n2, String string, Object object) {
         c.a(n2, this.HR).c(string, object);
-        com.samsung.android.spayfw.b.c.d("SFSensorManager", "sensor config updated, sensor: " + c.ap(n2) + " config: " + string + " value: " + object.toString());
+        Log.d("SFSensorManager", "sensor config updated, sensor: " + c.ap(n2) + " config: " + string + " value: " + object.toString());
     }
 
     /*
@@ -109,7 +110,7 @@ public class a {
             if (a3.isStopped()) {
                 this.HS.remove(a3.getSensorType());
             }
-            com.samsung.android.spayfw.b.c.d("SFSensorManager", "unsubscribeFromSensorData() unsubscribing from sensor: " + c.ap(a3.getSensorType()));
+            Log.d("SFSensorManager", "unsubscribeFromSensorData() unsubscribing from sensor: " + c.ap(a3.getSensorType()));
             return;
         }
     }

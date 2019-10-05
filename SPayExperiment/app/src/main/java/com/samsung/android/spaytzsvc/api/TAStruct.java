@@ -11,8 +11,8 @@
  */
 package com.samsung.android.spaytzsvc.api;
 
-import com.samsung.android.spayfw.b.c;
-import java.nio.Buffer;
+import com.samsung.android.spayfw.b.Log;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import javolution.io.Struct;
@@ -35,7 +35,7 @@ extends Struct {
         ByteBuffer byteBuffer = this.getByteBuffer();
         byte[] arrby = new byte[byteBuffer.limit()];
         byteBuffer.get(arrby);
-        c.d(TAG, "Length = " + arrby.length);
+        Log.d(TAG, "Length = " + arrby.length);
         StringBuilder stringBuilder = new StringBuilder(100 + 3 * arrby.length);
         for (int i2 = 0; i2 < arrby.length; ++i2) {
             if (i2 > 0 && arrby[i2] != 0 && arrby[i2 - 1] == 0) {
@@ -44,7 +44,7 @@ extends Struct {
             Object[] arrobject = new Object[]{arrby[i2]};
             stringBuilder.append(String.format((String)"%02X ", (Object[])arrobject));
         }
-        c.d(TAG, stringBuilder.toString());
+        Log.d(TAG, stringBuilder.toString());
     }
 
     @Override

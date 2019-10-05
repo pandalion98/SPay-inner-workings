@@ -7,7 +7,7 @@
  */
 package com.samsung.android.spayfw.payprovider.discover.payment.data;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.payment.DiscoverApduHandlerState;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.ByteBuffer;
 
@@ -29,7 +29,7 @@ public class a {
     public a(short s2) {
         byte[] arrby = new byte[]{(byte)(255 & s2 >> 8), (byte)(s2 & 255)};
         this.tE = new ByteBuffer(arrby);
-        c.d("DCSDK_", "DiscoverApduProcessingResult: " + this.tE.toHexString());
+        Log.d("DCSDK_", "DiscoverApduProcessingResult: " + this.tE.toHexString());
     }
 
     public void a(DiscoverApduHandlerState discoverApduHandlerState) {

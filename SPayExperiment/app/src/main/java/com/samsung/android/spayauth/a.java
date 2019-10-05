@@ -11,7 +11,8 @@
 package com.samsung.android.spayauth;
 
 import android.content.Context;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.utils.h;
 import com.samsung.android.spaytui.SpayTuiTAController;
 import com.samsung.android.spaytzsvc.api.TAException;
@@ -37,13 +38,13 @@ public class a {
         }
         catch (TAException tAException) {
             if (tAException.getErrorCode() == 2) {
-                c.d("SPAY:AuthFramework", "ERR_GENERIC_INTEGRITY_FAIL");
+                Log.d("SPAY:AuthFramework", "ERR_GENERIC_INTEGRITY_FAIL");
                 this.iB = 256;
             } else {
-                c.d("SPAY:AuthFramework", "ERR_GENERIC_INTEGRITY_VERIFYERROR");
+                Log.d("SPAY:AuthFramework", "ERR_GENERIC_INTEGRITY_VERIFYERROR");
                 this.iB = 257;
             }
-            c.c("SPAY:AuthFramework", tAException.getMessage(), (Throwable)tAException);
+            Log.c("SPAY:AuthFramework", tAException.getMessage(), (Throwable)tAException);
             return;
         }
     }
@@ -60,7 +61,7 @@ public class a {
      * Lifted jumps to return sites
      */
     public int N() {
-        c.d("SPAY:AuthFramework", "tppLoad(): ");
+        Log.d("SPAY:AuthFramework", "tppLoad(): ");
         int n2 = 401408;
         if (this.iB != 0) {
             return this.iB;
@@ -73,12 +74,12 @@ public class a {
         if (iC.isResetPeding()) {
             n2 = 1;
         }
-        c.e("SPAY:AuthFramework", "Failure Load TPP: " + n2);
+        Log.e("SPAY:AuthFramework", "Failure Load TPP: " + n2);
         return n2;
     }
 
     public int O() {
-        c.d("SPAY:AuthFramework", "tppUnLoad(): ");
+        Log.d("SPAY:AuthFramework", "tppUnLoad(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -97,7 +98,7 @@ public class a {
     }
 
     public int Q() {
-        c.d("SPAY:AuthFramework", "tppCheckTuiSession(): ");
+        Log.d("SPAY:AuthFramework", "tppCheckTuiSession(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -111,7 +112,7 @@ public class a {
      * Enabled aggressive block sorting
      */
     public byte[] R() {
-        c.d("SPAY:AuthFramework", "tppGetNonce(): ");
+        Log.d("SPAY:AuthFramework", "tppGetNonce(): ");
         if (this.iB != 0 || iC == null) {
             return null;
         }
@@ -119,7 +120,7 @@ public class a {
     }
 
     public int S() {
-        c.d("SPAY:AuthFramework", "tppClearState");
+        Log.d("SPAY:AuthFramework", "tppClearState");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -130,7 +131,7 @@ public class a {
     }
 
     public int[] T() {
-        c.d("SPAY:AuthFramework", "tppMerchantSecureTouch");
+        Log.d("SPAY:AuthFramework", "tppMerchantSecureTouch");
         int[] arrn = new int[]{0, 0};
         if (this.iB != 0) {
             arrn[0] = this.iB;
@@ -141,12 +142,12 @@ public class a {
             return arrn;
         }
         int[] arrn2 = iC.merchantSecureTouch();
-        c.d("SPAY:AuthFramework", "tppMerchantSecureTouch ret[1]=" + arrn2[1]);
+        Log.d("SPAY:AuthFramework", "tppMerchantSecureTouch ret[1]=" + arrn2[1]);
         return arrn2;
     }
 
     public int a(int n2, int[] arrn) {
-        c.d("SPAY:AuthFramework", "tppMerchantSecureInit");
+        Log.d("SPAY:AuthFramework", "tppMerchantSecureInit");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -154,12 +155,12 @@ public class a {
             return 401408;
         }
         int n3 = iC.merchantSecureInit(n2, arrn);
-        c.d("SPAY:AuthFramework", "tppMerchantSecureDisplay ret=" + n3);
+        Log.d("SPAY:AuthFramework", "tppMerchantSecureDisplay ret=" + n3);
         return n3;
     }
 
     public int a(String string, String string2, String string3, String string4, String string5, String string6, byte[] arrby) {
-        c.d("SPAY:AuthFramework", "tppInAppConfirm");
+        Log.d("SPAY:AuthFramework", "tppInAppConfirm");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -170,7 +171,7 @@ public class a {
     }
 
     public int a(boolean bl) {
-        c.d("SPAY:AuthFramework", "tppResume(): ");
+        Log.d("SPAY:AuthFramework", "tppResume(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -181,7 +182,7 @@ public class a {
     }
 
     public int a(boolean bl, boolean bl2) {
-        c.d("SPAY:AuthFramework", "tppVerifyPIN(): ");
+        Log.d("SPAY:AuthFramework", "tppVerifyPIN(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -192,7 +193,7 @@ public class a {
     }
 
     public int a(byte[] arrby, int n2, int n3) {
-        c.d("SPAY:AuthFramework", "tppSetPrompt(): ");
+        Log.d("SPAY:AuthFramework", "tppSetPrompt(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -203,7 +204,7 @@ public class a {
     }
 
     public int a(byte[] arrby, int n2, int n3, int n4, int n5) {
-        c.d("SPAY:AuthFramework", "tppMerchantSendSecureImg");
+        Log.d("SPAY:AuthFramework", "tppMerchantSendSecureImg");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -211,12 +212,12 @@ public class a {
             return 401408;
         }
         int n6 = iC.merchantSendSecureImg(arrby, n2, n3, n4, n5);
-        c.d("SPAY:AuthFramework", "tppMerchantSendSecureImg ret=" + n6);
+        Log.d("SPAY:AuthFramework", "tppMerchantSendSecureImg ret=" + n6);
         return n6;
     }
 
     public int a(byte[] arrby, int n2, int n3, int[] arrn) {
-        c.d("SPAY:AuthFramework", "tppMerchantSecureDisplay");
+        Log.d("SPAY:AuthFramework", "tppMerchantSecureDisplay");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -224,12 +225,12 @@ public class a {
             return 401408;
         }
         int n4 = iC.merchantSecureDisplay(arrby, n2, n3, arrn);
-        c.d("SPAY:AuthFramework", "tppMerchantSecureDisplay ret[1]=" + n4);
+        Log.d("SPAY:AuthFramework", "tppMerchantSecureDisplay ret[1]=" + n4);
         return n4;
     }
 
     public int a(byte[] arrby, byte[] arrby2, int n2, int n3) {
-        c.d("SPAY:AuthFramework", "tppSetCancelBtnImg(): ");
+        Log.d("SPAY:AuthFramework", "tppSetCancelBtnImg(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -240,7 +241,7 @@ public class a {
     }
 
     public int a(byte[] arrby, byte[] arrby2, int n2, int n3, int n4, int n5, int n6) {
-        c.d("SPAY:AuthFramework", "tppSetPinBox(): ");
+        Log.d("SPAY:AuthFramework", "tppSetPinBox(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -251,7 +252,7 @@ public class a {
     }
 
     public int a(String[] arrstring) {
-        c.d("SPAY:AuthFramework", "tppSetSecureModeText(): ");
+        Log.d("SPAY:AuthFramework", "tppSetSecureModeText(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -259,7 +260,7 @@ public class a {
             return 401408;
         }
         if (arrstring == null) {
-            c.e("SPAY:AuthFramework", "SecureModeText: Null input");
+            Log.e("SPAY:AuthFramework", "SecureModeText: Null input");
             return 4;
         }
         return iC.setSecureModeText(arrstring);
@@ -269,8 +270,8 @@ public class a {
      * Enabled aggressive block sorting
      */
     public byte[] a(String string, byte[] arrby) {
-        c.d("SPAY:AuthFramework", "tppGetSecureResult(): ");
-        c.d("SPAY:AuthFramework", "taName = " + string + " nonce = " + Arrays.toString((byte[])arrby));
+        Log.d("SPAY:AuthFramework", "tppGetSecureResult(): ");
+        Log.d("SPAY:AuthFramework", "taName = " + string + " nonce = " + Arrays.toString((byte[])arrby));
         if (this.iB != 0 || iC == null) {
             return null;
         }
@@ -278,7 +279,7 @@ public class a {
     }
 
     public int b(boolean bl) {
-        c.d("SPAY:AuthFramework", "tppSetRtl");
+        Log.d("SPAY:AuthFramework", "tppSetRtl");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -286,12 +287,12 @@ public class a {
             return 401408;
         }
         int n2 = iC.setRtl(bl);
-        c.d("SPAY:AuthFramework", "tppSetRtl ret=" + n2);
+        Log.d("SPAY:AuthFramework", "tppSetRtl ret=" + n2);
         return n2;
     }
 
     public int b(byte[] arrby, int n2, int n3) {
-        c.d("SPAY:AuthFramework", "tppSetBkImg(): ");
+        Log.d("SPAY:AuthFramework", "tppSetBkImg(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -302,7 +303,7 @@ public class a {
     }
 
     public int b(byte[] arrby, byte[] arrby2) {
-        c.d("SPAY:AuthFramework", "tppSetupBIO(): ");
+        Log.d("SPAY:AuthFramework", "tppSetupBIO(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -316,7 +317,7 @@ public class a {
      * Enabled aggressive block sorting
      */
     public int b(String[] arrstring) {
-        c.d("SPAY:AuthFramework", "tppSetActionBarText(): ");
+        Log.d("SPAY:AuthFramework", "tppSetActionBarText(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -324,21 +325,21 @@ public class a {
             return 401408;
         }
         if (arrstring == null) {
-            c.e("SPAY:AuthFramework", "ActionBarText: Null input");
+            Log.e("SPAY:AuthFramework", "ActionBarText: Null input");
             return 4;
         }
         boolean bl = h.isRTL();
         boolean bl2 = h.aq(this.mContext);
-        c.d("SPAY:AuthFramework", "isRTL()=" + bl + " isForceRTL()=" + bl2);
+        Log.d("SPAY:AuthFramework", "isRTL()=" + bl + " isForceRTL()=" + bl2);
         boolean bl3 = bl || bl2;
         int n2 = this.b(bl3);
-        c.d("SPAY:AuthFramework", "tppSetRtl=" + n2);
+        Log.d("SPAY:AuthFramework", "tppSetRtl=" + n2);
         if (n2 != 0) return n2;
         return iC.setActionBarText(arrstring);
     }
 
     public int c(byte[] arrby) {
-        c.d("SPAY:AuthFramework", "tppSetupPIN(so): ");
+        Log.d("SPAY:AuthFramework", "tppSetupPIN(so): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -349,7 +350,7 @@ public class a {
     }
 
     public int d(byte[] arrby) {
-        c.d("SPAY:AuthFramework", "tppPreLoadFpSecureResult(): ");
+        Log.d("SPAY:AuthFramework", "tppPreLoadFpSecureResult(): ");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -360,7 +361,7 @@ public class a {
     }
 
     public int e(byte[] arrby) {
-        c.d("SPAY:AuthFramework", "tppUpdateFP");
+        Log.d("SPAY:AuthFramework", "tppUpdateFP");
         if (this.iB != 0) {
             return this.iB;
         }
@@ -371,7 +372,7 @@ public class a {
     }
 
     public int f(byte[] arrby) {
-        c.d("SPAY:AuthFramework", "tppUpdateFP");
+        Log.d("SPAY:AuthFramework", "tppUpdateFP");
         if (this.iB != 0) {
             return this.iB;
         }

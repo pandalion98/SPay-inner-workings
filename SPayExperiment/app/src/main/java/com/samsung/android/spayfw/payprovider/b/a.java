@@ -25,6 +25,7 @@ import com.samsung.android.spayfw.appinterface.SecuredObject;
 import com.samsung.android.spayfw.appinterface.SelectCardResult;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.c;
 import com.samsung.android.spayfw.payprovider.e;
@@ -35,8 +36,6 @@ import com.samsung.android.spayfw.payprovider.plcc.tzsvc.PlccTAController;
 import com.samsung.android.spayfw.payprovider.plcc.tzsvc.PlccTAException;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
 import com.samsung.android.spayfw.utils.h;
-import com.samsung.android.spaytzsvc.api.TAController;
-import com.samsung.android.spaytzsvc.api.TAInfo;
 
 public class a
 extends PaymentNetworkProvider {
@@ -54,16 +53,16 @@ extends PaymentNetworkProvider {
     @Override
     protected boolean authenticateTransaction(SecuredObject securedObject) {
         if (zg == null) {
-            com.samsung.android.spayfw.b.c.e("GiftCardPayProvider", "TAController is null");
+            Log.e("GiftCardPayProvider", "TAController is null");
             return false;
         }
         try {
-            com.samsung.android.spayfw.b.c.d("GiftCardPayProvider", "Calling Plcc TA Controller Authenticate Transaction");
+            Log.d("GiftCardPayProvider", "Calling Plcc TA Controller Authenticate Transaction");
             boolean bl = zg.authenticateTransaction(securedObject.getSecureObjectData());
             return bl;
         }
         catch (PlccTAException plccTAException) {
-            com.samsung.android.spayfw.b.c.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return false;
         }
     }
@@ -92,7 +91,7 @@ extends PaymentNetworkProvider {
         GiftCardDetail giftCardDetail = new GiftCardDetail();
         giftCardDetail.setErrorCode(-1);
         if (zg == null) {
-            com.samsung.android.spayfw.b.c.e("GiftCardPayProvider", "TAController is null");
+            Log.e("GiftCardPayProvider", "TAController is null");
             return giftCardDetail;
         }
         try {
@@ -105,11 +104,11 @@ extends PaymentNetworkProvider {
             return giftCardDetail;
         }
         catch (InterruptedException interruptedException) {
-            com.samsung.android.spayfw.b.c.c("GiftCardPayProvider", interruptedException.getMessage(), interruptedException);
+            Log.c("GiftCardPayProvider", interruptedException.getMessage(), interruptedException);
             return giftCardDetail;
         }
         catch (PlccTAException plccTAException) {
-            com.samsung.android.spayfw.b.c.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return giftCardDetail;
         }
     }
@@ -142,7 +141,7 @@ extends PaymentNetworkProvider {
             block5 : {
                 giftCardRegisterResponseData = new GiftCardRegisterResponseData();
                 if (zg == null) {
-                    com.samsung.android.spayfw.b.c.e("GiftCardPayProvider", "TAController is null");
+                    Log.e("GiftCardPayProvider", "TAController is null");
                     giftCardRegisterResponseData.setErrorCode(-1);
                     return giftCardRegisterResponseData;
                 }
@@ -156,7 +155,7 @@ extends PaymentNetworkProvider {
                         giftCardRegisterResponseData.setDeviceEncryptCert(tACerts.encryptcert);
                         giftCardRegisterResponseData.setDeviceDrk(tACerts.drk);
                         long l2 = h.am(this.mContext);
-                        com.samsung.android.spayfw.b.c.d("GiftCardPayProvider", "Network Time = " + l2);
+                        Log.d("GiftCardPayProvider", "Network Time = " + l2);
                         PlccTAController plccTAController3 = zg;
                         arrby = plccTAController3.utility_enc4Server_Transport("GIFT", giftCardRegisterRequestData.getGiftCardData(), l2);
                         if (arrby == null) break block5;
@@ -167,7 +166,7 @@ extends PaymentNetworkProvider {
                     return giftCardRegisterResponseData;
                 }
                 catch (PlccTAException plccTAException) {
-                    com.samsung.android.spayfw.b.c.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+                    Log.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
                     giftCardRegisterResponseData.setErrorCode(-1);
                     return giftCardRegisterResponseData;
                 }
@@ -187,7 +186,7 @@ extends PaymentNetworkProvider {
     public GiftCardRegisterResponseData getGiftCardTzEncData(GiftCardRegisterRequestData giftCardRegisterRequestData) {
         GiftCardRegisterResponseData giftCardRegisterResponseData = new GiftCardRegisterResponseData();
         if (zg == null) {
-            com.samsung.android.spayfw.b.c.e("GiftCardPayProvider", "TAController is null");
+            Log.e("GiftCardPayProvider", "TAController is null");
             giftCardRegisterResponseData.setErrorCode(-1);
             return giftCardRegisterResponseData;
         }
@@ -205,7 +204,7 @@ extends PaymentNetworkProvider {
             return giftCardRegisterResponseData;
         }
         catch (PlccTAException plccTAException) {
-            com.samsung.android.spayfw.b.c.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             giftCardRegisterResponseData.setErrorCode(-1);
             return giftCardRegisterResponseData;
         }
@@ -251,7 +250,7 @@ extends PaymentNetworkProvider {
     @Override
     protected void loadTA() {
         zg.loadTA();
-        com.samsung.android.spayfw.b.c.i("GiftCardPayProvider", "load real TA");
+        Log.i("GiftCardPayProvider", "load real TA");
     }
 
     @Override
@@ -281,14 +280,14 @@ extends PaymentNetworkProvider {
     @Override
     public SelectCardResult selectCard() {
         if (zg == null) {
-            com.samsung.android.spayfw.b.c.e("GiftCardPayProvider", "TAController is null");
+            Log.e("GiftCardPayProvider", "TAController is null");
             return null;
         }
         try {
             return new SelectCardResult(this.getTaid(), zg.getNonce(32));
         }
         catch (PlccTAException plccTAException) {
-            com.samsung.android.spayfw.b.c.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return null;
         }
     }
@@ -306,7 +305,7 @@ extends PaymentNetworkProvider {
     @Override
     public boolean startMstPay(int n2, byte[] arrby) {
         if (zg == null) {
-            com.samsung.android.spayfw.b.c.e("GiftCardPayProvider", "TAController is null");
+            Log.e("GiftCardPayProvider", "TAController is null");
             return false;
         }
         try {
@@ -314,11 +313,11 @@ extends PaymentNetworkProvider {
             return bl;
         }
         catch (InterruptedException interruptedException) {
-            com.samsung.android.spayfw.b.c.c("GiftCardPayProvider", interruptedException.getMessage(), interruptedException);
+            Log.c("GiftCardPayProvider", interruptedException.getMessage(), interruptedException);
             return false;
         }
         catch (PlccTAException plccTAException) {
-            com.samsung.android.spayfw.b.c.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return false;
         }
     }
@@ -330,18 +329,18 @@ extends PaymentNetworkProvider {
      */
     @Override
     protected void stopMstPay(boolean bl) {
-        com.samsung.android.spayfw.b.c.i("GiftCardPayProvider", "stopMstPay: start ");
+        Log.i("GiftCardPayProvider", "stopMstPay: start ");
         if (zg == null) {
-            com.samsung.android.spayfw.b.c.e("GiftCardPayProvider", "TAController is null");
+            Log.e("GiftCardPayProvider", "TAController is null");
             return;
         }
         try {
             zg.clearMstData();
         }
         catch (PlccTAException plccTAException) {
-            com.samsung.android.spayfw.b.c.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c("GiftCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
         }
-        com.samsung.android.spayfw.b.c.i("GiftCardPayProvider", "stopMstPay: end ");
+        Log.i("GiftCardPayProvider", "stopMstPay: end ");
     }
 
     @Override
@@ -354,7 +353,7 @@ extends PaymentNetworkProvider {
     @Override
     protected void unloadTA() {
         zg.unloadTA();
-        com.samsung.android.spayfw.b.c.i("GiftCardPayProvider", "unload real TA");
+        Log.i("GiftCardPayProvider", "unload real TA");
     }
 
     @Override

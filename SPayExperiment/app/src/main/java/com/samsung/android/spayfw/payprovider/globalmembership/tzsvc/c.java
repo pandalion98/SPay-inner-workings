@@ -23,13 +23,9 @@ package com.samsung.android.spayfw.payprovider.globalmembership.tzsvc;
 
 import android.content.Context;
 import android.spay.CertInfo;
-import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
 import android.util.Log;
-import com.samsung.android.spayfw.payprovider.globalmembership.tzsvc.GlobalMembershipCommands;
-import com.samsung.android.spayfw.payprovider.globalmembership.tzsvc.GlobalMembershipTAException;
-import com.samsung.android.spayfw.payprovider.globalmembership.tzsvc.d;
-import com.samsung.android.spaytzsvc.api.Blob;
+
 import com.samsung.android.spaytzsvc.api.TAController;
 import com.samsung.android.spaytzsvc.api.TAInfo;
 import java.text.SimpleDateFormat;
@@ -38,7 +34,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
-import javolution.io.Struct;
 
 public class c
 extends TAController {
@@ -359,7 +354,7 @@ extends TAController {
         c c2 = this;
         synchronized (c2) {
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.d("SpayFw_GMTAController", "Calling mstTransmit");
+                com.samsung.android.spayfw.b.Log.d("SpayFw_GMTAController", "Calling mstTransmit");
             }
             return false;
         }

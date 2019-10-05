@@ -25,16 +25,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.b.a;
 import com.samsung.sensorframework.sda.b.a.y;
 import com.samsung.sensorframework.sda.b.a.z;
 import com.samsung.sensorframework.sda.c.a.o;
-import com.samsung.sensorframework.sda.d.a.b;
+
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public class q
 extends b {
@@ -126,7 +125,7 @@ extends b {
             this.Kh = new ArrayList();
             this.Jw = (Integer)this.Id.getParameter("NUMBER_OF_SENSE_CYCLES");
             String string = com.samsung.sensorframework.sda.a.b.gO() != null ? com.samsung.sensorframework.sda.a.b.gO().gR() : null;
-            c.d(this.he(), " intentBroadcasterPermission: " + string);
+            Log.d(this.he(), " intentBroadcasterPermission: " + string);
             this.HR.registerReceiver(this.Kg, new IntentFilter("android.net.wifi.SCAN_RESULTS"), string, this.gZ());
             this.Kf.startScan();
             return true;

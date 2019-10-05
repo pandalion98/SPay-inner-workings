@@ -14,9 +14,8 @@
 package com.samsung.android.spayfw.cncc;
 
 import android.content.Context;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.cncc.SpayDRKManager;
-import com.samsung.android.spayfw.cncc.SpaySSLAdapter;
+import com.samsung.android.spayfw.b.Log;
+
 import java.net.Socket;
 import java.security.Principal;
 import java.security.PrivateKey;
@@ -38,38 +37,38 @@ implements X509KeyManager {
     }
 
     public String chooseClientAlias(String[] arrstring, Principal[] arrprincipal, Socket socket) {
-        c.d(TAG, "chooseClientAlias");
+        Log.d(TAG, "chooseClientAlias");
         return this.defaultClientAlias;
     }
 
     public String chooseServerAlias(String string, Principal[] arrprincipal, Socket socket) {
-        c.d(TAG, "chooseServerAlias");
+        Log.d(TAG, "chooseServerAlias");
         return null;
     }
 
     public X509Certificate[] getCertificateChain(String string) {
-        c.d(TAG, "getCertificateChain");
+        Log.d(TAG, "getCertificateChain");
         X509Certificate[] arrx509Certificate = this.spayDCMAdapter.getX509CertificateChain();
-        c.d(TAG, "obtained certificate chain from SpaySSLAdapter");
+        Log.d(TAG, "obtained certificate chain from SpaySSLAdapter");
         if (arrx509Certificate == null) {
-            c.e(TAG, "Error: Returned Certificate Chain is NULL");
+            Log.e(TAG, "Error: Returned Certificate Chain is NULL");
         }
         return arrx509Certificate;
     }
 
     public String[] getClientAliases(String string, Principal[] arrprincipal) {
-        c.d(TAG, "getClientAliases");
+        Log.d(TAG, "getClientAliases");
         String[] arrstring = new String[]{this.defaultClientAlias};
         return arrstring;
     }
 
     public PrivateKey getPrivateKey(String string) {
-        c.d(TAG, "getPrivateKey: alias = " + string);
+        Log.d(TAG, "getPrivateKey: alias = " + string);
         return this.spayDCMAdapter.getPrivateKey();
     }
 
     public String[] getServerAliases(String string, Principal[] arrprincipal) {
-        c.d(TAG, "getServerAliases");
+        Log.d(TAG, "getServerAliases");
         return null;
     }
 }

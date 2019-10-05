@@ -16,11 +16,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.SDAException;
 import com.samsung.sensorframework.sda.b;
-import com.samsung.sensorframework.sda.d.b.j;
 
 public abstract class a
 extends com.samsung.sensorframework.sda.d.a
@@ -33,7 +32,7 @@ implements j {
                 a.this.a(context, intent);
                 return;
             }
-            c.d(a.this.he(), "BroadcastReceiver.onReceive() called while not sensing.");
+            Log.d(a.this.he(), "BroadcastReceiver.onReceive() called while not sensing.");
         }
     };
 
@@ -56,34 +55,34 @@ implements j {
     public void a(b b2) {
         this.ha();
         if (this.Ji) {
-            c.d(this.he(), "sensing already sensing");
+            Log.d(this.he(), "sensing already sensing");
             throw new SDAException(8003, "sensor already sensing");
         }
         this.Kl = b2;
         this.hc();
         IntentFilter[] arrintentFilter = this.hC();
         if (arrintentFilter == null || arrintentFilter.length <= 0) {
-            c.d(this.he(), "getIntentFilters() returned null");
+            Log.d(this.he(), "getIntentFilters() returned null");
         } else {
             com.samsung.sensorframework.sda.a.b b3 = com.samsung.sensorframework.sda.a.b.gO();
             String string = null;
             if (b3 != null) {
                 string = com.samsung.sensorframework.sda.a.b.gO().gR();
             }
-            c.d(this.he(), " intentBroadcasterPermission: " + string);
+            Log.d(this.he(), " intentBroadcasterPermission: " + string);
             for (IntentFilter intentFilter : arrintentFilter) {
                 if (intentFilter != null && intentFilter.countActions() > 0) {
                     for (int i2 = 0; i2 < intentFilter.countActions(); ++i2) {
-                        c.d(this.he(), "Registering receiver for: " + intentFilter.getAction(i2));
+                        Log.d(this.he(), "Registering receiver for: " + intentFilter.getAction(i2));
                     }
                     this.HR.registerReceiver(this.Km, intentFilter, string, this.gZ());
                     continue;
                 }
-                c.d(this.he(), "Intent filter is null or countActions() is zero");
+                Log.d(this.he(), "Intent filter is null or countActions() is zero");
             }
         }
         this.Ji = true;
-        c.d(this.he(), "Sensing started.");
+        Log.d(this.he(), "Sensing started.");
     }
 
     /*
@@ -95,7 +94,7 @@ implements j {
     public void b(b b2) {
         this.ha();
         if (!this.Ji) {
-            c.d(this.he(), "sensor not sensing");
+            Log.d(this.he(), "sensor not sensing");
             throw new SDAException(8004, "sensor not sensing");
         }
         this.hd();
@@ -107,7 +106,7 @@ implements j {
         }
         catch (IllegalArgumentException illegalArgumentException) {}
         this.Ji = false;
-        c.d(this.he(), "Sensing stopped.");
+        Log.d(this.he(), "Sensing stopped.");
     }
 
     protected abstract IntentFilter[] hC();

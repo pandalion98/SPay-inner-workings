@@ -25,10 +25,8 @@ package com.samsung.android.spayfw.cncc;
 import android.content.Context;
 import android.util.Base64;
 import com.android.org.conscrypt.OpenSSLKey;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.cncc.CNCCTAController;
-import com.samsung.android.spayfw.cncc.SSLSetupInfo;
-import com.samsung.android.spayfw.cncc.Utils;
+import com.samsung.android.spayfw.b.Log;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
@@ -37,7 +35,6 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 public class SpaySSLAdapter {
     private static final String BEGIN_CERT = "-----BEGIN CERTIFICATE-----";
@@ -108,8 +105,8 @@ public class SpaySSLAdapter {
     private byte[] signJavaCallback(byte[] arrby) {
         byte[] arrby2;
         block4 : {
-            c.i("SpaySSLAdapter", "signJavaCallback()");
-            c.i("SpaySSLAdapter", "Data to be Signed " + Utils.encodeHex(arrby));
+            Log.i("SpaySSLAdapter", "signJavaCallback()");
+            Log.i("SpaySSLAdapter", "Data to be Signed " + Utils.encodeHex(arrby));
             try {
                 arrby2 = this.mCNCCTAController.processData(null, arrby, CNCCTAController.DataType.DATATYPE_RAW_DATA, CNCCTAController.ProcessingOption.OPTION_RAW_SIGN, null, null);
                 if (arrby2 == null) break block4;
@@ -118,11 +115,11 @@ public class SpaySSLAdapter {
                 exception.printStackTrace();
                 return null;
             }
-            c.d("SpaySSLAdapter", "signJavaCallback() result len " + arrby2.length);
-            c.i("SpaySSLAdapter", "Signature" + Utils.encodeHex(arrby2));
+            Log.d("SpaySSLAdapter", "signJavaCallback() result len " + arrby2.length);
+            Log.i("SpaySSLAdapter", "Signature" + Utils.encodeHex(arrby2));
             return arrby2;
         }
-        c.e("SpaySSLAdapter", "signJavaCallback() result nulll ");
+        Log.e("SpaySSLAdapter", "signJavaCallback() result nulll ");
         return arrby2;
     }
 
@@ -147,7 +144,7 @@ public class SpaySSLAdapter {
             }
             long l2 = this.setupSSLConnector(this.getRSAPublicKeyInfo());
             if (l2 == 0L) {
-                c.e("SpaySSLAdapter", "Error: setupSSLConnector failed - returned EVP_KEY is 0");
+                Log.e("SpaySSLAdapter", "Error: setupSSLConnector failed - returned EVP_KEY is 0");
                 return null;
             }
             OpenSSLKey openSSLKey = new OpenSSLKey(l2);
@@ -188,11 +185,11 @@ public class SpaySSLAdapter {
             do {
                 if (!iterator.hasNext()) break;
                 this.mCertChain[n2] = (X509Certificate)iterator.next();
-                c.d("SpaySSLAdapter", "certificate count = " + (n2 + 1));
+                Log.d("SpaySSLAdapter", "certificate count = " + (n2 + 1));
                 ++n2;
             } while (true);
             try {
-                c.d("SpaySSLAdapter", "X509 Chain length: " + collection.size());
+                Log.d("SpaySSLAdapter", "X509 Chain length: " + collection.size());
                 return this.mCertChain;
             }
             catch (Exception exception) {

@@ -17,7 +17,8 @@ import com.mastercard.mobile_api.utils.TLV;
 import com.mastercard.mobile_api.utils.tlv.ParsingException;
 import com.mastercard.mobile_api.utils.tlv.TLVHandler;
 import com.mastercard.mobile_api.utils.tlv.TLVParser;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,12 +73,12 @@ public class MCFCITemplate {
         MCFCITemplate mCFCITemplate = new MCFCITemplate(byteArray);
         mCFCITemplate.parseFCI_AID();
         if (mCFCITemplate.getEntries() == null || mCFCITemplate.getEntries().isEmpty()) {
-            c.e(TAG, "restoreAlternateFCI, cannot parse main fci.");
+            Log.e(TAG, "restoreAlternateFCI, cannot parse main fci.");
             return null;
         }
         DirectoryEntry directoryEntry = (DirectoryEntry)mCFCITemplate.getEntries().get(0);
         if (directoryEntry == null) {
-            c.e(TAG, "restoreAlternateFCI, main DF is null.");
+            Log.e(TAG, "restoreAlternateFCI, main DF is null.");
             return null;
         }
         ByteArray byteArray5 = TLV.create((byte)-124, byteArray2);
@@ -86,23 +87,23 @@ public class MCFCITemplate {
         if (directoryEntry.getICC() != null) {
             byteArray6.append(TLV.create(MCFCITemplate.getByteArrayFromTag(24405), directoryEntry.getICC()));
         } else {
-            c.e(TAG, "restoreAlternateFCI, main FCI error: ICC is null");
+            Log.e(TAG, "restoreAlternateFCI, main FCI error: ICC is null");
         }
         if (directoryEntry.getIIN() != null) {
             byteArray6.append(TLV.create((byte)66, directoryEntry.getIIN()));
         } else {
-            c.e(TAG, "restoreAlternateFCI, main FCI error: IIN is null");
+            Log.e(TAG, "restoreAlternateFCI, main FCI error: IIN is null");
         }
         if (directoryEntry.getLangPref() != null) {
             byteArray6.append(TLV.create(MCFCITemplate.getByteArrayFromTag(24365), directoryEntry.getLangPref()));
         } else {
-            c.e(TAG, "restoreAlternateFCI, main FCI error: language preferences is null");
+            Log.e(TAG, "restoreAlternateFCI, main FCI error: language preferences is null");
         }
         byteArray6.append(TLV.create(MCFCITemplate.getByteArrayFromTag(40760), byteArray4));
         if (directoryEntry.getIDD() != null) {
             byteArray6.append(TLV.create(MCFCITemplate.getByteArrayFromTag(48908), directoryEntry.getIDD()));
         } else {
-            c.e(TAG, "restoreAlternateFCI, main FCI error: idd is null");
+            Log.e(TAG, "restoreAlternateFCI, main FCI error: idd is null");
         }
         byteArray5.append(TLV.create((byte)-91, byteArray6));
         return TLV.create((byte)111, byteArray5);
@@ -114,7 +115,7 @@ public class MCFCITemplate {
     public ByteArray getAID() {
         StringBuilder stringBuilder = new StringBuilder().append("getAID: ");
         String string = !this.getEntries().isEmpty() ? "not empty" : "empty";
-        c.d(TAG, stringBuilder.append(string).toString());
+        Log.d(TAG, stringBuilder.append(string).toString());
         if (!this.getEntries().isEmpty()) {
             return ((DirectoryEntry)this.getEntries().get(0)).getAid();
         }
@@ -141,18 +142,18 @@ public class MCFCITemplate {
 
     public void parseFCI_AID() {
         if (this.mFci == null) {
-            c.e(TAG, "parseFCI_AID, passed AID is null...");
+            Log.e(TAG, "parseFCI_AID, passed AID is null...");
             return;
         }
         this.mEntries.clear();
         try {
             byte[] arrby = this.mFci.getBytes();
             TLVParser.parseTLV(arrby, 0, arrby.length, new FCITLVHandlerOnlyForTemplate());
-            c.d(TAG, "parseFCI_AID, No parsing exception");
+            Log.d(TAG, "parseFCI_AID, No parsing exception");
             return;
         }
         catch (ParsingException parsingException) {
-            c.e(TAG, "ParsingException: " + parsingException.getMessage());
+            Log.e(TAG, "ParsingException: " + parsingException.getMessage());
             parsingException.printStackTrace();
             return;
         }
@@ -270,19 +271,19 @@ public class MCFCITemplate {
 
         private boolean checkTagLength(int n2, byte[] arrby, int n3) {
             if (n2 == 0) {
-                c.e(MCFCITemplate.TAG, "checkTagLength Parse tag: tag length is 0");
+                Log.e(MCFCITemplate.TAG, "checkTagLength Parse tag: tag length is 0");
                 return false;
             }
             if (arrby == null) {
-                c.e(MCFCITemplate.TAG, "checkTagLength Parse tag: data is null");
+                Log.e(MCFCITemplate.TAG, "checkTagLength Parse tag: data is null");
                 return false;
             }
             if (arrby.length <= n3) {
-                c.e(MCFCITemplate.TAG, "checkTagLength: Wrong offset value: offset = " + n3 + ", data length = " + arrby.length);
+                Log.e(MCFCITemplate.TAG, "checkTagLength: Wrong offset value: offset = " + n3 + ", data length = " + arrby.length);
                 return false;
             }
             if (arrby.length < n3 + n2) {
-                c.e(MCFCITemplate.TAG, "checkTagLength: Tag offset and length < data length value: offset = " + n3 + ", length = " + n2 + ", data length = " + arrby.length);
+                Log.e(MCFCITemplate.TAG, "checkTagLength: Tag offset and length < data length value: offset = " + n3 + ", length = " + n2 + ", data length = " + arrby.length);
                 return false;
             }
             return true;
@@ -294,55 +295,55 @@ public class MCFCITemplate {
 
         @Override
         public void parseTag(byte by, int n2, byte[] arrby, int n3) {
-            c.d(MCFCITemplate.TAG, "EntryTLVHandler Parse tag: " + by + ", length: " + n2);
-            c.d(MCFCITemplate.TAG, "EntryTLVHandler Parse tag: " + by + ", length: " + n2 + ", offset: " + n3);
-            c.d(MCFCITemplate.TAG, "EntryTLVHandler Parse tag: " + (by & 255) + ", length: " + n2 + ", offset: " + n3);
-            c.d(MCFCITemplate.TAG, "EntryTLVHandler: checkLength start.");
+            Log.d(MCFCITemplate.TAG, "EntryTLVHandler Parse tag: " + by + ", length: " + n2);
+            Log.d(MCFCITemplate.TAG, "EntryTLVHandler Parse tag: " + by + ", length: " + n2 + ", offset: " + n3);
+            Log.d(MCFCITemplate.TAG, "EntryTLVHandler Parse tag: " + (by & 255) + ", length: " + n2 + ", offset: " + n3);
+            Log.d(MCFCITemplate.TAG, "EntryTLVHandler: checkLength start.");
             if (!this.checkTagLength(n2, arrby, n3)) {
-                c.e(MCFCITemplate.TAG, "EntryTLVHandler: checkLength failed.");
+                Log.e(MCFCITemplate.TAG, "EntryTLVHandler: checkLength failed.");
                 return;
             }
-            c.d(MCFCITemplate.TAG, "EntryTLVHandler: array.");
+            Log.d(MCFCITemplate.TAG, "EntryTLVHandler: array.");
             byte[] arrby2 = new byte[n2];
             System.arraycopy((Object)arrby, (int)n3, (Object)arrby2, (int)0, (int)n2);
-            c.d(MCFCITemplate.TAG, "EntryTLVHandler: data: " + baf.getByteArray(arrby, arrby.length).getHexString());
-            c.d(MCFCITemplate.TAG, "EntryTLVHandler: array: " + baf.getByteArray(arrby2, arrby2.length).getHexString());
+            Log.d(MCFCITemplate.TAG, "EntryTLVHandler: data: " + baf.getByteArray(arrby, arrby.length).getHexString());
+            Log.d(MCFCITemplate.TAG, "EntryTLVHandler: array: " + baf.getByteArray(arrby2, arrby2.length).getHexString());
             switch (by & 255) {
                 default: {
                     return;
                 }
                 case 66: {
-                    c.d(MCFCITemplate.TAG, "EntryTLVHandler: IIN");
+                    Log.d(MCFCITemplate.TAG, "EntryTLVHandler: IIN");
                     this.entry.setIIN(baf.getByteArray(arrby2, arrby2.length));
-                    c.d(MCFCITemplate.TAG, "EntryTLVHandler: issuer iin: " + this.entry.getIIN().getHexString());
+                    Log.d(MCFCITemplate.TAG, "EntryTLVHandler: issuer iin: " + this.entry.getIIN().getHexString());
                     return;
                 }
                 case 79: {
-                    c.d(MCFCITemplate.TAG, "EntryTLVHandler: Aid");
+                    Log.d(MCFCITemplate.TAG, "EntryTLVHandler: Aid");
                     this.entry.setAid(baf.getByteArray(arrby2, arrby2.length));
-                    c.d(MCFCITemplate.TAG, "EntryTLVHandler: Aid: " + this.entry.getAid().getHexString());
+                    Log.d(MCFCITemplate.TAG, "EntryTLVHandler: Aid: " + this.entry.getAid().getHexString());
                     return;
                 }
                 case 80: {
-                    c.d(MCFCITemplate.TAG, "EntryTLVHandler: Label");
+                    Log.d(MCFCITemplate.TAG, "EntryTLVHandler: Label");
                     this.entry.setApplicationLabel(baf.getByteArray(arrby2, arrby2.length));
-                    c.d(MCFCITemplate.TAG, "EntryTLVHandler: label: " + this.entry.getApplicationLabel().getHexString());
+                    Log.d(MCFCITemplate.TAG, "EntryTLVHandler: label: " + this.entry.getApplicationLabel().getHexString());
                     return;
                 }
                 case 135: 
             }
-            c.d(MCFCITemplate.TAG, "EntryTLVHandler: Priority");
+            Log.d(MCFCITemplate.TAG, "EntryTLVHandler: Priority");
             if (n2 == 1) {
                 this.entry.setPriorityIndicator(arrby[n3]);
             }
-            c.d(MCFCITemplate.TAG, "EntryTLVHandler: priority: " + this.entry.getPriorityIndicator());
+            Log.d(MCFCITemplate.TAG, "EntryTLVHandler: priority: " + this.entry.getPriorityIndicator());
         }
 
         @Override
         public void parseTag(short s2, int n2, byte[] arrby, int n3) {
-            c.d(MCFCITemplate.TAG, "EntryTLVHandler Parse long tag: " + s2 + ", length: " + n2);
+            Log.d(MCFCITemplate.TAG, "EntryTLVHandler Parse long tag: " + s2 + ", length: " + n2);
             if (!this.checkTagLength(n2, arrby, n3)) {
-                c.e(MCFCITemplate.TAG, "EntryTLVHandler: checkLength failed.");
+                Log.e(MCFCITemplate.TAG, "EntryTLVHandler: checkLength failed.");
                 return;
             }
             byte[] arrby2 = new byte[n2];
@@ -353,23 +354,23 @@ public class MCFCITemplate {
                 }
                 case -24776: {
                     this.entry.setPDOL(baf.getByteArray(arrby2, arrby2.length));
-                    c.d(MCFCITemplate.TAG, "EntryTLVHandler:  PDOL:" + this.entry.getPDOL().getHexString());
+                    Log.d(MCFCITemplate.TAG, "EntryTLVHandler:  PDOL:" + this.entry.getPDOL().getHexString());
                     return;
                 }
                 case -16628: {
                     this.entry.setIDD(baf.getByteArray(arrby2, arrby2.length));
-                    c.d(MCFCITemplate.TAG, "EntryTLVHandler: issuer IDD: " + this.entry.getIDD().getHexString());
+                    Log.d(MCFCITemplate.TAG, "EntryTLVHandler: issuer IDD: " + this.entry.getIDD().getHexString());
                     return;
                 }
                 case 24405: {
                     this.entry.setICC(baf.getByteArray(arrby2, arrby2.length));
-                    c.d(MCFCITemplate.TAG, "EntryTLVHandler: issuer ICC: " + this.entry.getICC().getHexString());
+                    Log.d(MCFCITemplate.TAG, "EntryTLVHandler: issuer ICC: " + this.entry.getICC().getHexString());
                     return;
                 }
                 case 24365: 
             }
             this.entry.setLangPref(baf.getByteArray(arrby2, arrby2.length));
-            c.d(MCFCITemplate.TAG, "EntryTLVHandler: lang pref: " + this.entry.getLangPref().getHexString());
+            Log.d(MCFCITemplate.TAG, "EntryTLVHandler: lang pref: " + this.entry.getLangPref().getHexString());
         }
 
         public void setEntry(DirectoryEntry directoryEntry) {
@@ -391,33 +392,33 @@ public class MCFCITemplate {
          */
         @Override
         public void parseTag(byte by, int n2, byte[] arrby, int n3) {
-            c.d(MCFCITemplate.TAG, "FCIAIDTLVHandler Parse tag: " + (by & 255) + ", length: " + n2 + ", offset: " + n3);
+            Log.d(MCFCITemplate.TAG, "FCIAIDTLVHandler Parse tag: " + (by & 255) + ", length: " + n2 + ", offset: " + n3);
             switch (by & 255) {
                 default: {
                     return;
                 }
                 case 132: {
-                    c.d(MCFCITemplate.TAG, "FCIAIDTLVHandler Parse tag: " + (by & 255) + ", length: " + n2);
+                    Log.d(MCFCITemplate.TAG, "FCIAIDTLVHandler Parse tag: " + (by & 255) + ", length: " + n2);
                     byte[] arrby2 = new byte[n2];
                     System.arraycopy((Object)arrby, (int)n3, (Object)arrby2, (int)0, (int)n2);
                     this.aid = baf.getByteArray(arrby2, arrby2.length);
-                    c.d(MCFCITemplate.TAG, "FCIAIDTLVHandler AID: " + this.aid.getHexString());
+                    Log.d(MCFCITemplate.TAG, "FCIAIDTLVHandler AID: " + this.aid.getHexString());
                     return;
                 }
                 case 165: 
             }
             try {
-                c.d(MCFCITemplate.TAG, "FCIAIDTLVHandler Parse: Template tag");
+                Log.d(MCFCITemplate.TAG, "FCIAIDTLVHandler Parse: Template tag");
                 EntryTLVHandler entryTLVHandler = new EntryTLVHandler();
                 TLVParser.parseTLV(arrby, n3, n2, entryTLVHandler);
-                c.d(MCFCITemplate.TAG, "FCIAIDTLVHandler Entry parsed...");
+                Log.d(MCFCITemplate.TAG, "FCIAIDTLVHandler Entry parsed...");
                 DirectoryEntry directoryEntry = entryTLVHandler.getDirectoryEntry();
                 if (directoryEntry != null) {
-                    c.d(MCFCITemplate.TAG, "FCIAIDTLVHandler entry is not null.");
+                    Log.d(MCFCITemplate.TAG, "FCIAIDTLVHandler entry is not null.");
                     if (this.aid == null) {
-                        c.d(MCFCITemplate.TAG, "FCIAIDTLVHandler aid is null");
+                        Log.d(MCFCITemplate.TAG, "FCIAIDTLVHandler aid is null");
                     } else {
-                        c.d(MCFCITemplate.TAG, "FCIAIDTLVHandler aid is not null: " + this.aid.getHexString());
+                        Log.d(MCFCITemplate.TAG, "FCIAIDTLVHandler aid is not null: " + this.aid.getHexString());
                     }
                     directoryEntry.setAid(this.aid);
                     MCFCITemplate.this.mEntries.add((Object)directoryEntry);
@@ -425,16 +426,16 @@ public class MCFCITemplate {
                 }
             }
             catch (ParsingException parsingException) {
-                c.e(MCFCITemplate.TAG, "ParsingException parsing directory entry: " + parsingException.getMessage());
+                Log.e(MCFCITemplate.TAG, "ParsingException parsing directory entry: " + parsingException.getMessage());
                 parsingException.printStackTrace();
                 return;
             }
-            c.d(MCFCITemplate.TAG, "FCIAIDTLVHandler entry is null.");
+            Log.d(MCFCITemplate.TAG, "FCIAIDTLVHandler entry is null.");
         }
 
         @Override
         public void parseTag(short s2, int n2, byte[] arrby, int n3) {
-            c.d(MCFCITemplate.TAG, "Parse long tag: " + s2 + ", length: " + n2);
+            Log.d(MCFCITemplate.TAG, "Parse long tag: " + s2 + ", length: " + n2);
         }
     }
 
@@ -476,7 +477,7 @@ public class MCFCITemplate {
 
         @Override
         public void parseTag(short s2, int n2, byte[] arrby, int n3) {
-            c.d(MCFCITemplate.TAG, "Parse long tag: " + s2 + ", length: " + n2);
+            Log.d(MCFCITemplate.TAG, "Parse long tag: " + s2 + ", length: " + n2);
         }
     }
 
@@ -487,21 +488,21 @@ public class MCFCITemplate {
 
         @Override
         public void parseTag(byte by, int n2, byte[] arrby, int n3) {
-            c.d(MCFCITemplate.TAG, "Parse tag: " + by + ", length: " + n2 + ", offset: " + n3);
+            Log.d(MCFCITemplate.TAG, "Parse tag: " + by + ", length: " + n2 + ", offset: " + n3);
             switch (by & 255) {
                 default: {
-                    c.d(MCFCITemplate.TAG, "FCITLVHandlerOnlyForTemplate Parse invalid tag: " + by + ", length: " + n2);
+                    Log.d(MCFCITemplate.TAG, "FCITLVHandlerOnlyForTemplate Parse invalid tag: " + by + ", length: " + n2);
                     return;
                 }
                 case 111: 
             }
             try {
-                c.d(MCFCITemplate.TAG, "Parse: Template tag : Invoke FCIAIDTLVHandler now");
+                Log.d(MCFCITemplate.TAG, "Parse: Template tag : Invoke FCIAIDTLVHandler now");
                 TLVParser.parseTLV(arrby, n3, n2, new FCIAIDTLVHandler());
                 return;
             }
             catch (ParsingException parsingException) {
-                c.e(MCFCITemplate.TAG, "ParsingException parsing directory entry: " + parsingException.getMessage());
+                Log.e(MCFCITemplate.TAG, "ParsingException parsing directory entry: " + parsingException.getMessage());
                 parsingException.printStackTrace();
                 return;
             }
@@ -509,7 +510,7 @@ public class MCFCITemplate {
 
         @Override
         public void parseTag(short s2, int n2, byte[] arrby, int n3) {
-            c.d(MCFCITemplate.TAG, "Parse long tag: " + s2 + ", length: " + n2);
+            Log.d(MCFCITemplate.TAG, "Parse long tag: " + s2 + ", length: " + n2);
         }
     }
 

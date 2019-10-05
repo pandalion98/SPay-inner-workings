@@ -19,7 +19,8 @@ package com.samsung.sensorframework.sdi.f;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sdi.exception.SDIException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public class a {
         if (this.LJ == null) {
             throw new SDIException(9001, "sharedPreferences can not be null.");
         }
-        c.d("PersistentStorage", "instance created.");
+        Log.d("PersistentStorage", "instance created.");
     }
 
     /*
@@ -66,13 +67,13 @@ public class a {
         if (map != null) {
             for (String string : map.keySet()) {
                 if (map.get((Object)string) != null) {
-                    c.d("PersistentStorage", "printAll() key: " + string + " value: " + map.get((Object)string).toString());
+                    Log.d("PersistentStorage", "printAll() key: " + string + " value: " + map.get((Object)string).toString());
                     continue;
                 }
-                c.d("PersistentStorage", "printAll() key: " + string + " value: null");
+                Log.d("PersistentStorage", "printAll() key: " + string + " value: null");
             }
         } else {
-            c.d("PersistentStorage", "printAll() no keys stored in persistent storage");
+            Log.d("PersistentStorage", "printAll() no keys stored in persistent storage");
         }
     }
 
@@ -82,12 +83,12 @@ public class a {
         if (set2 != null && set2.size() > 0) {
             hashSet.addAll((Collection)set2);
         }
-        c.d("PersistentStorage", "getHashSet() key: " + string + " defaultValue: " + com.samsung.sensorframework.sdi.g.a.a(set) + " returning: " + com.samsung.sensorframework.sdi.g.a.a((Collection<String>)hashSet));
+        Log.d("PersistentStorage", "getHashSet() key: " + string + " defaultValue: " + com.samsung.sensorframework.sdi.g.a.a(set) + " returning: " + com.samsung.sensorframework.sdi.g.a.a((Collection<String>)hashSet));
         return hashSet;
     }
 
     public void a(String string, HashSet<String> hashSet) {
-        c.d("PersistentStorage", "setHashSet() key: " + string + " values: " + com.samsung.sensorframework.sdi.g.a.a(hashSet));
+        Log.d("PersistentStorage", "setHashSet() key: " + string + " values: " + com.samsung.sensorframework.sdi.g.a.a(hashSet));
         SharedPreferences.Editor editor = this.LJ.edit();
         editor.putStringSet(string, hashSet);
         editor.commit();
@@ -98,14 +99,14 @@ public class a {
     }
 
     public HashMap<String, Integer> cy(String string) {
-        c.d("PersistentStorage", "getAllMatchingKeySubstring()");
+        Log.d("PersistentStorage", "getAllMatchingKeySubstring()");
         HashMap hashMap = new HashMap();
         Map map = this.LJ.getAll();
         if (map != null) {
             for (String string2 : map.keySet()) {
                 if (!string2.contains((CharSequence)string)) continue;
                 int n2 = (Integer)map.get((Object)string2);
-                c.d("PersistentStorage", "getAllMatchingKeySubstring() keySubstring: " + string + " key: " + string2 + " value: " + n2);
+                Log.d("PersistentStorage", "getAllMatchingKeySubstring() keySubstring: " + string + " key: " + string2 + " value: " + n2);
                 hashMap.put((Object)string2, (Object)n2);
             }
         }
@@ -114,24 +115,24 @@ public class a {
 
     public int get(String string, int n2) {
         int n3 = this.LJ.getInt(string, n2);
-        c.d("PersistentStorage", "get() key: " + string + " defaultValue: " + n2 + " returning: " + n3);
+        Log.d("PersistentStorage", "get() key: " + string + " defaultValue: " + n2 + " returning: " + n3);
         return n3;
     }
 
     public void removeAll() {
-        c.d("PersistentStorage", "removeAll()");
+        Log.d("PersistentStorage", "removeAll()");
         this.ig();
         Set set = this.LJ.getStringSet("poiEnterGeofenceSet", (Set)new HashSet());
         SharedPreferences.Editor editor = this.LJ.edit();
         editor.clear();
         editor.putStringSet("poiEnterGeofenceSet", set);
         editor.commit();
-        c.d("PersistentStorage", "removeAll() - cleared");
+        Log.d("PersistentStorage", "removeAll() - cleared");
         this.ig();
     }
 
     public void set(String string, int n2) {
-        c.d("PersistentStorage", "set() key: " + string + " value: " + n2);
+        Log.d("PersistentStorage", "set() key: " + string + " value: " + n2);
         SharedPreferences.Editor editor = this.LJ.edit();
         editor.putInt(string, n2);
         editor.commit();

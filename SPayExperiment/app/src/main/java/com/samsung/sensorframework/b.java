@@ -11,7 +11,8 @@
 package com.samsung.sensorframework;
 
 import android.content.Context;
-import com.samsung.sensorframework.a;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sdi.c.c;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class b {
     }
 
     private b(Context context) {
-        com.samsung.android.spayfw.b.c.d("SFManager", "SFManager created");
+        Log.d("SFManager", "SFManager created");
         this.context = context;
     }
 
@@ -53,7 +54,7 @@ public class b {
     }
 
     public com.samsung.sensorframework.sda.b.a aa(int n2) {
-        com.samsung.android.spayfw.b.c.d("SFManager", "getLastSensorData() sensorId: " + n2);
+        Log.d("SFManager", "getLastSensorData() sensorId: " + n2);
         c c2 = c.br(this.context);
         com.samsung.sensorframework.sda.b.a a2 = null;
         if (c2 != null) {
@@ -63,20 +64,20 @@ public class b {
     }
 
     public List<String> b(double d2, double d3, int n2) {
-        com.samsung.android.spayfw.b.c.d("SFManager", "queryPoICache()");
+        Log.d("SFManager", "queryPoICache()");
         if (this.HO != null) {
             return this.HO.b(d2, d3, n2);
         }
-        com.samsung.android.spayfw.b.c.d("SFManager", "queryPoICache() sfContextInterface is null");
+        Log.d("SFManager", "queryPoICache() sfContextInterface is null");
         return null;
     }
 
     public String gG() {
-        com.samsung.android.spayfw.b.c.d("SFManager", "queryContextSensingPolicy()");
+        Log.d("SFManager", "queryContextSensingPolicy()");
         if (this.HO != null) {
             return this.HO.gG();
         }
-        com.samsung.android.spayfw.b.c.d("SFManager", "queryContextSensingPolicy() sfContextInterface is null");
+        Log.d("SFManager", "queryContextSensingPolicy() sfContextInterface is null");
         return null;
     }
 
@@ -84,45 +85,45 @@ public class b {
         new Thread(){
 
             public void run() {
-                com.samsung.android.spayfw.b.c.d("SFManager", "startSFManager()");
+                Log.d("SFManager", "startSFManager()");
                 if (b.this.context != null) {
                     if (c.br(b.this.context) != null) {
                         c.br(b.this.context).hQ();
                         return;
                     }
-                    com.samsung.android.spayfw.b.c.e("SFManager", "SensingController.getInstance() returned null");
+                    Log.e("SFManager", "SensingController.getInstance() returned null");
                     return;
                 }
-                com.samsung.android.spayfw.b.c.d("SFManager", "startSFManager() context is null");
+                Log.d("SFManager", "startSFManager() context is null");
             }
         }.start();
     }
 
     public void gN() {
-        com.samsung.android.spayfw.b.c.d("SFManager", "stopSFManager()");
+        Log.d("SFManager", "stopSFManager()");
         if (c.br(this.context) != null) {
             c.br(this.context).hR();
             return;
         }
-        com.samsung.android.spayfw.b.c.e("SFManager", "stopSFManager() SensingController.getInstance() returned null");
+        Log.e("SFManager", "stopSFManager() SensingController.getInstance() returned null");
     }
 
     public void i(List<String> list) {
-        com.samsung.android.spayfw.b.c.d("SFManager", "onNearbyPoIs()");
+        Log.d("SFManager", "onNearbyPoIs()");
         if (this.HO != null) {
             this.HO.i(list);
             return;
         }
-        com.samsung.android.spayfw.b.c.d("SFManager", "onNearbyPoIs() sfContextInterface is null");
+        Log.d("SFManager", "onNearbyPoIs() sfContextInterface is null");
     }
 
     public void j(List<String> list) {
-        com.samsung.android.spayfw.b.c.d("SFManager", "onExitPoIs()");
+        Log.d("SFManager", "onExitPoIs()");
         if (this.HO != null) {
             this.HO.j(list);
             return;
         }
-        com.samsung.android.spayfw.b.c.d("SFManager", "onExitPoIs() sfContextInterface is null");
+        Log.d("SFManager", "onExitPoIs() sfContextInterface is null");
     }
 
 }

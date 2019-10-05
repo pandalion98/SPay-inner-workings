@@ -37,16 +37,12 @@ import android.spay.IPaymentManager;
 import android.spay.ITAController;
 import android.spay.PaymentTZServiceCommnInfo;
 import android.spay.PaymentTZServiceConfig;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spaytzsvc.api.IPaymentServiceIFCallback;
-import com.samsung.android.spaytzsvc.api.IPaymentSvcDeathReceiver;
-import com.samsung.android.spaytzsvc.api.TAController;
-import com.samsung.android.spaytzsvc.api.TAInfo;
-import java.lang.reflect.Method;
+
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class PaymentTZServiceIF {
     private static final String TAG = "PaymentTZServiceIF";
@@ -62,7 +58,7 @@ public class PaymentTZServiceIF {
             PaymentTZServiceIF.this.mPaymentTZService = IPaymentManager.Stub.asInterface((IBinder)iBinder);
             try {
                 if (PaymentTZServiceIF.this.mPaymentTZService == null) {
-                    c.e(PaymentTZServiceIF.TAG, "onServiceConnected: Unable to find payment TZ Service service!");
+                    Log.e(PaymentTZServiceIF.TAG, "onServiceConnected: Unable to find payment TZ Service service!");
                     return;
                 }
                 PaymentTZServiceIF.this.mTZServiceCommnInfo = PaymentTZServiceIF.this.mPaymentTZService.registerSPayFW(PaymentTZServiceIF.this.mConfig);
@@ -124,12 +120,12 @@ public class PaymentTZServiceIF {
             Class class_ = Class.forName((String)"android.os.ServiceManager");
             this.mPaymentTZService = IPaymentManager.Stub.asInterface((IBinder)((IBinder)class_.getMethod("getService", new Class[]{String.class}).invoke((Object)class_, new Object[]{"mobile_payment"})));
             if (this.mPaymentTZService == null) {
-                c.e(TAG, "startSPaySvc: Unable to find payment TZ Service service!");
+                Log.e(TAG, "startSPaySvc: Unable to find payment TZ Service service!");
                 return;
             }
             this.mTZServiceCommnInfo = this.mPaymentTZService.registerSPayFW(this.mConfig);
             if (this.mTZServiceCommnInfo != null) {
-                c.d(TAG, "startSPaySvc: binder list = " + (Object)this.mTZServiceCommnInfo.mTAs);
+                Log.d(TAG, "startSPaySvc: binder list = " + (Object)this.mTZServiceCommnInfo.mTAs);
                 return;
             }
         }
@@ -142,7 +138,7 @@ public class PaymentTZServiceIF {
         Intent intent = new Intent();
         intent.setClassName("com.android.server.spay", "com.android.server.spay.PaymentTZTestService");
         if (!this.mContext.bindService(intent, this.mConnection, 1)) {
-            c.e(TAG, "Error Binding to com.android.server.spay");
+            Log.e(TAG, "Error Binding to com.android.server.spay");
         }
     }
 
@@ -163,7 +159,7 @@ public class PaymentTZServiceIF {
 
     public ITAController getTAController(int n2) {
         if (this.mTZServiceCommnInfo == null) {
-            c.d(TAG, "getTAController: mTZServiceCommnInfo=null .. Something went wrong in registerSPayFW API");
+            Log.d(TAG, "getTAController: mTZServiceCommnInfo=null .. Something went wrong in registerSPayFW API");
             this.startSPaySvc();
             return null;
         }
@@ -179,16 +175,16 @@ public class PaymentTZServiceIF {
 
     public boolean init(List<TAController> list) {
         if (this.bInitialized) {
-            c.d(TAG, "PaymentTZServiceIF already Initialized");
+            Log.d(TAG, "PaymentTZServiceIF already Initialized");
             return true;
         }
-        c.d(TAG, "init: called");
+        Log.d(TAG, "init: called");
         this.mConfig = new PaymentTZServiceConfig();
         Iterator iterator = list.iterator();
         while (iterator.hasNext()) {
             TAInfo tAInfo = ((TAController)iterator.next()).getTAInfo();
             if (tAInfo == null) {
-                c.e(TAG, "Error: Not able to create TA - taInfo null");
+                Log.e(TAG, "Error: Not able to create TA - taInfo null");
                 continue;
             }
             this.mConfig.addTAConfig(tAInfo.getTAType(), tAInfo.getTAConfig());
@@ -196,7 +192,7 @@ public class PaymentTZServiceIF {
         this.startSPaySvc();
         for (TAController tAController : list) {
             if (tAController.init()) continue;
-            c.e(TAG, "TA Initialization failed for TA " + tAController.getTAInfo().toString());
+            Log.e(TAG, "TA Initialization failed for TA " + tAController.getTAInfo().toString());
         }
         this.bInitialized = true;
         return true;

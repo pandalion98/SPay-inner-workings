@@ -16,7 +16,7 @@ package com.samsung.android.spayfw.payprovider.discover.db.models;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.db.DcDbException;
 import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverPaymentProfile;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.ByteBuffer;
@@ -54,7 +54,7 @@ public class DcPaymentProfile {
         byte[] arrby4;
         byte[] arrby5;
         if (dcPaymentProfile == null) {
-            c.e(TAG, "toDiscoverPaymentProfile: input null");
+            Log.e(TAG, "toDiscoverPaymentProfile: input null");
             return null;
         }
         DiscoverPaymentProfile discoverPaymentProfile = new DiscoverPaymentProfile();
@@ -173,7 +173,7 @@ public class DcPaymentProfile {
         ByteBuffer byteBuffer4;
         ByteBuffer byteBuffer5;
         if (discoverPaymentProfile == null) {
-            c.e(TAG, "init: data Null");
+            Log.e(TAG, "init: data Null");
             throw new DcDbException("Invalid Input", 3);
         }
         this.mCardMasterId = l2;
@@ -200,24 +200,24 @@ public class DcPaymentProfile {
         try {
             String string2 = mGson.toJson((Object)discoverPaymentProfile.getCRM());
             if (TextUtils.isEmpty((CharSequence)string2)) {
-                c.e(TAG, "init: jsonData failed");
+                Log.e(TAG, "init: jsonData failed");
                 throw new DcDbException("Invalid Input", 3);
             }
             this.mCrm = string2.getBytes(TEXT_ENCODING);
             string = mGson.toJson((Object)discoverPaymentProfile.getCVM());
             if (TextUtils.isEmpty((CharSequence)string)) {
-                c.e(TAG, "init: jsonData failed");
+                Log.e(TAG, "init: jsonData failed");
                 throw new DcDbException("Invalid Input", 3);
             }
         }
         catch (UnsupportedEncodingException unsupportedEncodingException) {
-            c.e(TAG, "init: UnsupportedEncodingException: " + unsupportedEncodingException.getMessage());
+            Log.e(TAG, "init: UnsupportedEncodingException: " + unsupportedEncodingException.getMessage());
             throw new DcDbException("Invalid Input", 3);
         }
         this.mCvm = string.getBytes(TEXT_ENCODING);
         String string3 = mGson.toJson((Object)discoverPaymentProfile.getCl());
         if (TextUtils.isEmpty((CharSequence)string3)) {
-            c.e(TAG, "init: jsonData failed");
+            Log.e(TAG, "init: jsonData failed");
             throw new DcDbException("Invalid Input", 3);
         }
         this.mCl = string3.getBytes(TEXT_ENCODING);

@@ -18,9 +18,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.fraud.a.a;
-import com.samsung.android.spayfw.fraud.a.d;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.interfacelibrary.db.DBName;
 import com.samsung.android.spayfw.utils.h;
 
@@ -55,7 +54,7 @@ public class g {
             } while (true);
         }
         catch (Exception exception) {
-            c.e("FraudDbAdapter", "FraudDbAdapter: cannot get db adapter");
+            Log.e("FraudDbAdapter", "FraudDbAdapter: cannot get db adapter");
             oa = null;
             return oa;
         }
@@ -70,7 +69,7 @@ public class g {
             return n2;
         }
         catch (Exception exception) {
-            c.c("FraudDbAdapter", exception.getMessage(), exception);
+            Log.c("FraudDbAdapter", exception.getMessage(), exception);
             return -1;
         }
     }
@@ -85,7 +84,7 @@ public class g {
             return l2;
         }
         catch (Exception exception) {
-            c.c("FraudDbAdapter", exception.getMessage(), exception);
+            Log.c("FraudDbAdapter", exception.getMessage(), exception);
             return -1L;
         }
     }
@@ -96,10 +95,10 @@ public class g {
             l2 = this.ob.insert(b2.bB(), null, b2.bC());
         }
         catch (Exception exception) {
-            c.c("FraudDbAdapter", exception.getMessage(), exception);
+            Log.c("FraudDbAdapter", exception.getMessage(), exception);
             return -1L;
         }
-        c.d("FraudDbAdapter", "addTransactionDetail: rowId = " + l2);
+        Log.d("FraudDbAdapter", "addTransactionDetail: rowId = " + l2);
         return l2;
     }
 
@@ -112,7 +111,7 @@ public class g {
             return cursor;
         }
         catch (Exception exception) {
-            c.c("FraudDbAdapter", exception.getMessage(), exception);
+            Log.c("FraudDbAdapter", exception.getMessage(), exception);
             return null;
         }
     }

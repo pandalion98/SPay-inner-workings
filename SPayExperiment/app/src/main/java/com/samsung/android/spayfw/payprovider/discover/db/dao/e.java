@@ -18,10 +18,9 @@ package com.samsung.android.spayfw.payprovider.discover.db.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.db.DcDbException;
-import com.samsung.android.spayfw.payprovider.discover.db.dao.b;
 import com.samsung.android.spayfw.payprovider.discover.db.models.DcPaymentProfile;
 import java.util.List;
 
@@ -33,11 +32,11 @@ extends b<DcPaymentProfile> {
 
     protected ContentValues a(DcPaymentProfile dcPaymentProfile) {
         if (dcPaymentProfile == null) {
-            c.e("DCSDK_DcPaymentProfileDaoImpl", "getContentValues: Data null");
+            Log.e("DCSDK_DcPaymentProfileDaoImpl", "getContentValues: Data null");
             return null;
         }
         if (dcPaymentProfile.getCardMasterId() == -1L) {
-            c.e("DCSDK_DcPaymentProfileDaoImpl", "getContentValues: INVALID_ROW_ID");
+            Log.e("DCSDK_DcPaymentProfileDaoImpl", "getContentValues: INVALID_ROW_ID");
             return null;
         }
         ContentValues contentValues = new ContentValues();
@@ -92,7 +91,7 @@ extends b<DcPaymentProfile> {
 lbl21: // 2 sources:
             do {
                 try {
-                    c.e("DCSDK_DcPaymentProfileDaoImpl", "NPE occured during getData");
+                    Log.e("DCSDK_DcPaymentProfileDaoImpl", "NPE occured during getData");
                     throw new DcDbException("NP Exception Occurred", 6);
                 }
                 catch (Throwable var9_9) {
@@ -179,7 +178,7 @@ lbl28: // 2 sources:
 lbl15: // 2 sources:
             do {
                 try {
-                    c.e("DCSDK_DcPaymentProfileDaoImpl", "NPE occured during getData");
+                    Log.e("DCSDK_DcPaymentProfileDaoImpl", "NPE occured during getData");
                     throw new DcDbException("NP Exception Occurred", 6);
                 }
                 catch (Throwable var7_6) {

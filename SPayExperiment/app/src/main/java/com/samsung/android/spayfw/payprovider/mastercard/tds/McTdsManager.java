@@ -25,10 +25,10 @@
  */
 package com.samsung.android.spayfw.payprovider.mastercard.tds;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.i;
 import com.samsung.android.spayfw.payprovider.mastercard.McProvider;
 import com.samsung.android.spayfw.payprovider.mastercard.card.McCardMaster;
@@ -75,10 +75,10 @@ public class McTdsManager {
         if (registrationState == null) {
             registrationState = RegistrationState.DEFAULT;
         }
-        c.e(TDS_TAG_INFO, "tokenId: " + l2 + " init: " + registrationState.getValue());
+        Log.e(TDS_TAG_INFO, "tokenId: " + l2 + " init: " + registrationState.getValue());
         McTdsManager.setRegistrationState(l2, registrationState);
         if (registrationState == RegistrationState.TDS_NOT_REGISTERED) {
-            c.e(TDS_TAG_ERROR, "tokenId: " + l2 + " add to List" + registrationState.getValue());
+            Log.e(TDS_TAG_ERROR, "tokenId: " + l2 + " add to List" + registrationState.getValue());
             McTdsManager.addTokenToRegPendingList(l2);
             McTdsTimerUtil.startTdsTimer();
         }
@@ -143,19 +143,19 @@ public class McTdsManager {
 
     private String generateHash(String string, String string2) {
         if (TextUtils.isEmpty((CharSequence)string) || TextUtils.isEmpty((CharSequence)string2)) {
-            c.e(TDS_TAG_ERROR, "generateHash: Invalid params passed");
+            Log.e(TDS_TAG_ERROR, "generateHash: Invalid params passed");
             return null;
         }
         try {
             String string3 = string + string2;
-            c.d(TAG, "generateHash: Combined code : " + string3);
+            Log.d(TAG, "generateHash: Combined code : " + string3);
             String string4 = CryptoUtils.convertbyteToHexString(CryptoUtils.getShaDigest(string3, CryptoUtils.ShaConstants.SHA256));
-            c.d(TAG, "generateHash: Hash generated : " + string4);
+            Log.d(TAG, "generateHash: Hash generated : " + string4);
             return string4;
         }
         catch (Exception exception) {
             exception.printStackTrace();
-            c.e(TDS_TAG_ERROR, "generateHash: Exception during hashing " + exception.getMessage());
+            Log.e(TDS_TAG_ERROR, "generateHash: Exception during hashing " + exception.getMessage());
             return null;
         }
     }
@@ -177,7 +177,7 @@ public class McTdsManager {
             }
             catch (Exception exception) {
                 exception.printStackTrace();
-                c.e(TDS_TAG_ERROR, "checkForRegistrationReTry: Err : " + exception.getMessage());
+                Log.e(TDS_TAG_ERROR, "checkForRegistrationReTry: Err : " + exception.getMessage());
                 return null;
             }
         }
@@ -198,7 +198,7 @@ public class McTdsManager {
                 mcTdsManager = new McTdsManager(l2);
                 mInstanceMap.put((Object)l2, (Object)mcTdsManager);
             }
-            c.i(TDS_TAG_INFO, "tokenId: " + l2 + " Ref: " + mcTdsManager.mTokenRefSuffix);
+            Log.i(TDS_TAG_INFO, "tokenId: " + l2 + " Ref: " + mcTdsManager.mTokenRefSuffix);
             // ** MonitorExit[var5_1] (shouldn't be in output)
             return mcTdsManager;
         }
@@ -242,7 +242,7 @@ public class McTdsManager {
     private String getTokenSuffix() {
         String string = ((McCardMaster)new McCardMasterDaoImpl(McProvider.getContext()).getData(this.mTokenId.get())).getTokenUniqueReference();
         if (TextUtils.isEmpty((CharSequence)string)) {
-            c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " register: Err...TokenUniqueReference missing in DB. Cannot complete TDS registration");
+            Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " register: Err...TokenUniqueReference missing in DB. Cannot complete TDS registration");
             return DEFAULT_TOKEN_REF;
         }
         return string.substring(Math.max((int)(-8 + string.length()), (int)0));
@@ -250,50 +250,50 @@ public class McTdsManager {
 
     private int getTransactions(i i2, String string) {
         if (this.mTokenId == null) {
-            c.e(TDS_TAG_ERROR, "getTransactions: Empty tokenId..Cant register tds");
+            Log.e(TDS_TAG_ERROR, "getTransactions: Empty tokenId..Cant register tds");
             return -2;
         }
         try {
             String string2 = ((McCardMaster)new McCardMasterDaoImpl(McProvider.getContext()).getData(this.mTokenId.get())).getTokenUniqueReference();
             if (TextUtils.isEmpty((CharSequence)string2)) {
-                c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " getTransactions: Err...TokenUniqueReference missing in DB. Cannot complete TDS fetch");
+                Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " getTransactions: Err...TokenUniqueReference missing in DB. Cannot complete TDS fetch");
                 return -2;
             }
             McTdsMetaData mcTdsMetaData = (McTdsMetaData)new McTdsMetaDataDaoImpl(McProvider.getContext()).getData(this.mTokenId.get());
             if (TextUtils.isEmpty((CharSequence)mcTdsMetaData.getAuthCode())) {
-                c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " getTransactions: Auth Code missing in db. Cannot fetch transactions");
+                Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " getTransactions: Auth Code missing in db. Cannot fetch transactions");
                 return -2;
             }
-            c.d(TAG, "tokenId: " + this.mTokenId.get() + " getTransactions: Using tdsUrl: " + string);
+            Log.d(TAG, "tokenId: " + this.mTokenId.get() + " getTransactions: Using tdsUrl: " + string);
             McTdsRequestBuilder.TdsRequest tdsRequest = McTdsRequestBuilder.build(McTdsRequestBuilder.RequestType.GET_TRANSACTIONS, mcTdsMetaData, string2, i2, string);
             return 0;
         }
         catch (Exception exception) {
             exception.printStackTrace();
-            c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " getTransactions: Err retriving TDS data from DB. Cannot register for TDS: " + exception.getMessage());
+            Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " getTransactions: Err retriving TDS data from DB. Cannot register for TDS: " + exception.getMessage());
             return -2;
         }
         finally {
             if (false) {
                 if (!McTdsRequestor.sendRequest(null)) {
-                    c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get());
+                    Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get());
                     return -2;
                 }
-                c.i(TAG, "tokenId: " + this.mTokenId.get() + " getTransactions: making fetchTransactionRequest");
+                Log.i(TAG, "tokenId: " + this.mTokenId.get() + " getTransactions: making fetchTransactionRequest");
             }
         }
     }
 
     private int onRegistrationCode2(String string) {
         if (this.mTokenId == null) {
-            c.e(TDS_TAG_ERROR, "onRegistrationCode2: Empty tokenId..Cant process onRegistrationCode2");
+            Log.e(TDS_TAG_ERROR, "onRegistrationCode2: Empty tokenId..Cant process onRegistrationCode2");
             return -2;
         }
         if (TextUtils.isEmpty((CharSequence)string)) {
-            c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " onAuthorizationCode2: Err...Input validation failed");
+            Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " onAuthorizationCode2: Err...Input validation failed");
             return -4;
         }
-        c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " onRegistrationCode2: " + System.currentTimeMillis());
+        Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " onRegistrationCode2: " + System.currentTimeMillis());
         this.setRegCode2(string);
         this.register();
         return 0;
@@ -304,32 +304,32 @@ public class McTdsManager {
             return 0;
         }
         if (this.mTokenId == null) {
-            c.e(TDS_TAG_ERROR, "revokeCheck: tokenId cannot be null");
+            Log.e(TDS_TAG_ERROR, "revokeCheck: tokenId cannot be null");
             return -2;
         }
         RegistrationState registrationState = McTdsManager.getCurrentRegistrationState(this.mTokenId.get(), true);
         if (registrationState == null) {
-            c.e(TDS_TAG_ERROR, "revokeCheck: Failed to get current state from DB");
+            Log.e(TDS_TAG_ERROR, "revokeCheck: Failed to get current state from DB");
             return -2;
         }
         switch (1.$SwitchMap$com$samsung$android$spayfw$payprovider$mastercard$tds$McTdsManager$RegistrationState[registrationState.ordinal()]) {
             default: {
-                c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " revokeRevokeCheck: invalid tdsState: " + registrationState.name());
+                Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " revokeRevokeCheck: invalid tdsState: " + registrationState.name());
                 return 0;
             }
             case 1: 
             case 2: {
-                c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " revokeRevokeCheck: No tds support. Nothing to do here" + registrationState.name());
+                Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " revokeRevokeCheck: No tds support. Nothing to do here" + registrationState.name());
                 return 0;
             }
             case 3: {
-                c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " revokeRevokeCheck: revoking tdsState: " + registrationState.name());
+                Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " revokeRevokeCheck: revoking tdsState: " + registrationState.name());
                 this.unRegister();
                 return 0;
             }
             case 4: 
         }
-        c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " revokeRevokeCheck: tds not registered before. so delete entry");
+        Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " revokeRevokeCheck: tds not registered before. so delete entry");
         new McTdsMetaDataDaoImpl(McTokenManager.getContext()).deleteData(this.mTokenId.get());
         return 0;
     }
@@ -386,11 +386,11 @@ public class McTdsManager {
     private int storeOrUpdateTdsMetaData(String string, String string2, boolean bl) {
         int n2 = -2;
         if (this.mTokenId == null || this.mTokenId.get() < 1L || TextUtils.isEmpty((CharSequence)string)) {
-            c.d(TAG, "Invalid TDS data received in token call");
+            Log.d(TAG, "Invalid TDS data received in token call");
             if (this.mTokenId != null) {
-                c.d(TAG, "Invalid TDS data received in token call: cardId : " + this.mTokenId.get());
+                Log.d(TAG, "Invalid TDS data received in token call: cardId : " + this.mTokenId.get());
             }
-            c.d(TAG, "Invalid TDS data received in token call: tdsRegisterUrl : " + string);
+            Log.d(TAG, "Invalid TDS data received in token call: tdsRegisterUrl : " + string);
             return n2;
         } else {
             RegistrationState registrationState;
@@ -398,7 +398,7 @@ public class McTdsManager {
             McTdsMetaData mcTdsMetaData = (McTdsMetaData)mcTdsMetaDataDaoImpl.getData(this.mTokenId.get());
             if (mcTdsMetaData == null) {
                 if (TextUtils.isEmpty((CharSequence)string2)) {
-                    c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " Invalid TDS data received in token call: paymentAppInstanceId : " + string2);
+                    Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " Invalid TDS data received in token call: paymentAppInstanceId : " + string2);
                     return n2;
                 }
                 McTdsMetaData mcTdsMetaData2 = new McTdsMetaData();
@@ -448,32 +448,32 @@ public class McTdsManager {
     public int getTransactionData(Bundle bundle, i i2) {
         String string;
         if (this.mTokenId == null) {
-            c.e(TDS_TAG_ERROR, "getTransactionData: Empty tokenId..Cant fetch tds");
+            Log.e(TDS_TAG_ERROR, "getTransactionData: Empty tokenId..Cant fetch tds");
             return -9;
         }
-        c.i(TDS_TAG_INFO, "getTransactionData: entryTime:" + System.currentTimeMillis());
+        Log.i(TDS_TAG_INFO, "getTransactionData: entryTime:" + System.currentTimeMillis());
         if (bundle != null && bundle.containsKey("pushtransactionUrl") && !TextUtils.isEmpty((CharSequence)bundle.getString("pushtransactionUrl"))) {
             string = bundle.getString("pushtransactionUrl");
-            c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " getTransactionData: new tds URL obtained : ");
-            c.d(TAG, "url: " + string);
+            Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " getTransactionData: new tds URL obtained : ");
+            Log.d(TAG, "url: " + string);
         } else {
             string = this.getResponseHostTds();
             if (!TextUtils.isEmpty((CharSequence)string)) {
                 this.setResponseHostTds(null);
-                c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " getTransactionData: responseHost from before ignored: ");
-                c.d(TAG, "getResponseHostTds: " + this.getResponseHostTds());
+                Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " getTransactionData: responseHost from before ignored: ");
+                Log.d(TAG, "getResponseHostTds: " + this.getResponseHostTds());
             }
-            c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " getTransactionData: using responseHost : ");
-            c.d(TAG, "url: " + string);
+            Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " getTransactionData: using responseHost : ");
+            Log.d(TAG, "url: " + string);
         }
         if (bundle != null && bundle.containsKey("authorizationCode") && !TextUtils.isEmpty((CharSequence)bundle.getString("authorizationCode"))) {
             String string2 = bundle.getString("authorizationCode");
-            c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " getTransactionData: RegistrationCode2 received: ");
-            c.d(TDS_TAG_INFO, "RegistrationCode2: " + string2);
+            Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " getTransactionData: RegistrationCode2 received: ");
+            Log.d(TDS_TAG_INFO, "RegistrationCode2: " + string2);
             return this.onRegistrationCode2(string2);
         }
         if (i2 == null) {
-            c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " getTransactionData: callBack missing");
+            Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " getTransactionData: callBack missing");
             return -4;
         }
         return this.getTransactions(i2, string);
@@ -486,12 +486,12 @@ public class McTdsManager {
      */
     public void onRegisterCode1(String string, String string2) {
         if (this.mTokenId == null) {
-            c.e(TDS_TAG_ERROR, "onRegisterCode1: Empty tokenId..Cant process onRegisterCode1");
+            Log.e(TDS_TAG_ERROR, "onRegisterCode1: Empty tokenId..Cant process onRegisterCode1");
             return;
         }
         try {
             if (TextUtils.isEmpty((CharSequence)string2)) {
-                c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " onRegisterCode1: Invalid RegistrationCode1 received");
+                Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " onRegisterCode1: Invalid RegistrationCode1 received");
                 return;
             }
             if (!TextUtils.isEmpty((CharSequence)string)) {
@@ -503,7 +503,7 @@ public class McTdsManager {
         }
         catch (Exception exception) {
             exception.printStackTrace();
-            c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " onRegisterCode1: Exception occured: " + exception.getMessage());
+            Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " onRegisterCode1: Exception occured: " + exception.getMessage());
             return;
         }
     }
@@ -515,7 +515,7 @@ public class McTdsManager {
         }
         int n3 = this.storeOrUpdateTdsMetaData(string, string2, true);
         if (n3 != 0 || this.mTokenId == null) {
-            c.e(TDS_TAG_ERROR, "onTokenStateUpdate: dbOperation failed: ");
+            Log.e(TDS_TAG_ERROR, "onTokenStateUpdate: dbOperation failed: ");
             return n3;
         }
         RegistrationState registrationState = McTdsManager.getCurrentRegistrationState(this.mTokenId.get(), false);
@@ -524,18 +524,18 @@ public class McTdsManager {
         }
         switch (1.$SwitchMap$com$samsung$android$spayfw$payprovider$mastercard$tds$McTdsManager$RegistrationState[registrationState.ordinal()]) {
             default: {
-                c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " onTokenStateUpdate: invalid tdsState: " + registrationState.name());
+                Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " onTokenStateUpdate: invalid tdsState: " + registrationState.name());
                 return n3;
             }
             case 1: 
             case 2: 
             case 3: {
-                c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " onTokenStateUpdate: tdsState: " + registrationState.name());
+                Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " onTokenStateUpdate: tdsState: " + registrationState.name());
                 return n3;
             }
             case 4: 
         }
-        c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " onTokenStateUpdate: Triggering tds flow first time");
+        Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " onTokenStateUpdate: Triggering tds flow first time");
         this.reRegisterIfNeeded(null);
         return n3;
     }
@@ -545,7 +545,7 @@ public class McTdsManager {
      */
     public void reRegisterIfNeeded(String string) {
         if (this.mTokenId == null) {
-            c.e(TDS_TAG_ERROR, "reRegisterIfNeeded: Empty tokenId..Cant process reRegisterIfNeeded");
+            Log.e(TDS_TAG_ERROR, "reRegisterIfNeeded: Empty tokenId..Cant process reRegisterIfNeeded");
             return;
         } else {
             boolean bl = TextUtils.isEmpty((CharSequence)string);
@@ -557,7 +557,7 @@ public class McTdsManager {
                     boolean bl3 = mcTdsError.getErrorCode().equalsIgnoreCase(McTdsError.INVALID_AUTHENTICATION_CODE.getErrorCode());
                     bl2 = false;
                     if (bl3) {
-                        c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " reRegisterIfNeeded: Auth expired");
+                        Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " reRegisterIfNeeded: Auth expired");
                         bl2 = true;
                     }
                 }
@@ -565,7 +565,7 @@ public class McTdsManager {
             if (!bl2 && !this.registerReTry()) return;
             {
                 this.cleanupRegCodes();
-                c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " reRegisterIfNeeded: triggering re-register flow :");
+                Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " reRegisterIfNeeded: triggering re-register flow :");
                 this.register();
                 return;
             }
@@ -582,24 +582,24 @@ public class McTdsManager {
         synchronized (mcTdsManager) {
             block33 : {
                 if (this.mTokenId == null) {
-                    c.e(TDS_TAG_ERROR, "register: Empty tokenId..Cant register tds");
+                    Log.e(TDS_TAG_ERROR, "register: Empty tokenId..Cant register tds");
                 } else {
                     try {
                         McTdsMetaData mcTdsMetaData = (McTdsMetaData)new McTdsMetaDataDaoImpl(McProvider.getContext()).getData(this.mTokenId.get());
                         String string = ((McCardMaster)new McCardMasterDaoImpl(McProvider.getContext()).getData(this.mTokenId.get())).getTokenUniqueReference();
                         if (TextUtils.isEmpty((CharSequence)string)) {
-                            c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " register: Err...TokenUniqueReference missing in DB. Cannot complete TDS registration");
+                            Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + " register: Err...TokenUniqueReference missing in DB. Cannot complete TDS registration");
                         } else if (TextUtils.isEmpty((CharSequence)this.getRegCode1()) && TextUtils.isEmpty((CharSequence)this.getRegCode2())) {
-                            c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " register: Triggering getRegistrationCode");
+                            Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " register: Triggering getRegistrationCode");
                             McTdsRequestBuilder.TdsRequest tdsRequest = McTdsRequestBuilder.build(McTdsRequestBuilder.RequestType.REGISTRATION_CODE, mcTdsMetaData, string, null, null);
                         } else if (TextUtils.isEmpty((CharSequence)this.getRegCode1())) {
-                            c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " register: Missing regCode1");
+                            Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " register: Missing regCode1");
                         } else if (TextUtils.isEmpty((CharSequence)this.getRegCode2())) {
-                            c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " register: Missing regCode2..");
+                            Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " register: Missing regCode2..");
                         } else {
                             String string2 = this.generateHash(this.getRegCode1(), this.getRegCode2());
                             if (TextUtils.isEmpty((CharSequence)string2)) {
-                                c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + "register: Err...Could not generate Hash! Cannot complete TDS registration");
+                                Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + "register: Err...Could not generate Hash! Cannot complete TDS registration");
                             } else {
                                 mcTdsMetaData.setHash(string2);
                                 this.cleanupRegCodes();
@@ -609,15 +609,15 @@ public class McTdsManager {
                     }
                     catch (Exception exception) {
                         exception.printStackTrace();
-                        c.e(TDS_TAG_ERROR, "register: Err retriving TDS data from DB. Cannot register for TDS: " + exception.getMessage());
+                        Log.e(TDS_TAG_ERROR, "register: Err retriving TDS data from DB. Cannot register for TDS: " + exception.getMessage());
                     }
                     finally {
                         if (!false) break block33;
                         if (!McTdsRequestor.sendRequest(null)) {
-                            c.e(TDS_TAG_ERROR, "registration Err tokenId: " + this.mTokenId.get());
+                            Log.e(TDS_TAG_ERROR, "registration Err tokenId: " + this.mTokenId.get());
                             break block33;
                         }
-                        c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " register: making registration request");
+                        Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " register: making registration request");
                     }
                 }
             }
@@ -628,7 +628,7 @@ public class McTdsManager {
     public boolean registerReTry() {
         try {
             RegistrationState registrationState = McTdsManager.getCurrentRegistrationState(this.mTokenId.get(), false);
-            c.d(TAG, "registerReTry:" + registrationState.name());
+            Log.d(TAG, "registerReTry:" + registrationState.name());
             RegistrationState registrationState2 = RegistrationState.TDS_NOT_REGISTERED;
             boolean bl = false;
             if (registrationState == registrationState2) {
@@ -638,7 +638,7 @@ public class McTdsManager {
         }
         catch (NullPointerException nullPointerException) {
             nullPointerException.printStackTrace();
-            c.e(TDS_TAG_ERROR, "registerReTry: NPE" + nullPointerException.getMessage());
+            Log.e(TDS_TAG_ERROR, "registerReTry: NPE" + nullPointerException.getMessage());
             return false;
         }
     }
@@ -673,12 +673,12 @@ public class McTdsManager {
             block37 : {
                 mcTdsMetaDataDaoImpl = new McTdsMetaDataDaoImpl(McProvider.getContext());
                 if (mcTdsMetaDataDaoImpl == null || this.mTokenId == null) {
-                    c.e(TDS_TAG_ERROR, "unRegister: Empty tokenId..Cant unRegister tds : " + mcTdsMetaDataDaoImpl);
+                    Log.e(TDS_TAG_ERROR, "unRegister: Empty tokenId..Cant unRegister tds : " + mcTdsMetaDataDaoImpl);
                     return;
                 }
                 string = ((McCardMaster)new McCardMasterDaoImpl(McProvider.getContext()).getData(this.mTokenId.get())).getTokenUniqueReference();
                 if (!TextUtils.isEmpty((CharSequence)string)) break block37;
-                c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + "unRegister: Err...TokenUniqueReference missing in DB. Cannot complete TDS unRegistration");
+                Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + "unRegister: Err...TokenUniqueReference missing in DB. Cannot complete TDS unRegistration");
                 mcTdsMetaDataDaoImpl.deleteData(this.mTokenId.get());
                 if (mInstanceMap != null) {
                     mInstanceMap.remove((Object)this.mTokenId.get());
@@ -691,16 +691,16 @@ public class McTdsManager {
                     // ** MonitorExit[var27_3] (shouldn't be in output)
                     if (!false) return;
                     if (!McTdsRequestor.sendRequest(null)) {
-                        c.e(TDS_TAG_ERROR, "unregistration Err tokenId: " + this.mTokenId.get());
+                        Log.e(TDS_TAG_ERROR, "unregistration Err tokenId: " + this.mTokenId.get());
                         return;
                     }
-                    c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " unRegister: making Unregistration request");
+                    Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " unRegister: making Unregistration request");
                     return;
                 }
             }
             mcTdsMetaData = (McTdsMetaData)mcTdsMetaDataDaoImpl.getData(this.mTokenId.get());
             if (mcTdsMetaData != null && !TextUtils.isEmpty((CharSequence)string) && !TextUtils.isEmpty((CharSequence)mcTdsMetaData.getAuthCode())) break block38;
-            c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + "unRegister: TDS not registered..Nothing to do");
+            Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + "unRegister: TDS not registered..Nothing to do");
             mcTdsMetaDataDaoImpl.deleteData(this.mTokenId.get());
             if (mInstanceMap != null) {
                 mInstanceMap.remove((Object)this.mTokenId.get());
@@ -713,10 +713,10 @@ public class McTdsManager {
                 // ** MonitorExit[var27_4] (shouldn't be in output)
                 if (!false) return;
                 if (!McTdsRequestor.sendRequest(null)) {
-                    c.e(TDS_TAG_ERROR, "unregistration Err tokenId: " + this.mTokenId.get());
+                    Log.e(TDS_TAG_ERROR, "unregistration Err tokenId: " + this.mTokenId.get());
                     return;
                 }
-                c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " unRegister: making Unregistration request");
+                Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " unRegister: making Unregistration request");
                 return;
             }
         }
@@ -726,7 +726,7 @@ public class McTdsManager {
         catch (Exception exception) {
             try {
                 exception.printStackTrace();
-                c.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + "unRegister: Err retriving TDS data from DB. Cannot register for TDS: " + exception.getMessage());
+                Log.e(TDS_TAG_ERROR, "tokenId: " + this.mTokenId.get() + "unRegister: Err retriving TDS data from DB. Cannot register for TDS: " + exception.getMessage());
             }
             catch (Throwable throwable) {
                 mcTdsMetaDataDaoImpl.deleteData(this.mTokenId.get());
@@ -741,10 +741,10 @@ public class McTdsManager {
                     // ** MonitorExit[var27_7] (shouldn't be in output)
                     if (!false) throw throwable;
                     if (!McTdsRequestor.sendRequest(null)) {
-                        c.e(TDS_TAG_ERROR, "unregistration Err tokenId: " + this.mTokenId.get());
+                        Log.e(TDS_TAG_ERROR, "unregistration Err tokenId: " + this.mTokenId.get());
                         throw throwable;
                     }
-                    c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " unRegister: making Unregistration request");
+                    Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " unRegister: making Unregistration request");
                     throw throwable;
                 }
             }
@@ -760,10 +760,10 @@ public class McTdsManager {
                 // ** MonitorExit[var27_6] (shouldn't be in output)
                 if (!false) return;
                 if (!McTdsRequestor.sendRequest(null)) {
-                    c.e(TDS_TAG_ERROR, "unregistration Err tokenId: " + this.mTokenId.get());
+                    Log.e(TDS_TAG_ERROR, "unregistration Err tokenId: " + this.mTokenId.get());
                     return;
                 }
-                c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " unRegister: making Unregistration request");
+                Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " unRegister: making Unregistration request");
                 return;
             }
         }
@@ -779,10 +779,10 @@ public class McTdsManager {
             // ** MonitorExit[var27_5] (shouldn't be in output)
             if (tdsRequest == null) return;
             if (!McTdsRequestor.sendRequest(tdsRequest)) {
-                c.e(TDS_TAG_ERROR, "unregistration Err tokenId: " + this.mTokenId.get());
+                Log.e(TDS_TAG_ERROR, "unregistration Err tokenId: " + this.mTokenId.get());
                 return;
             }
-            c.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " unRegister: making Unregistration request");
+            Log.i(TDS_TAG_INFO, "tokenId: " + this.mTokenId.get() + " unRegister: making Unregistration request");
             return;
         }
     }

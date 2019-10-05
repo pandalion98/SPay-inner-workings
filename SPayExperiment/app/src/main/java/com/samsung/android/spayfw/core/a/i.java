@@ -13,19 +13,14 @@ package com.samsung.android.spayfw.core.a;
 import android.content.Context;
 import android.os.RemoteException;
 import com.samsung.android.spayfw.appinterface.IRefreshIdvCallback;
-import com.samsung.android.spayfw.appinterface.IdvMethod;
-import com.samsung.android.spayfw.core.a.o;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.m;
 import com.samsung.android.spayfw.core.p;
-import com.samsung.android.spayfw.core.q;
 import com.samsung.android.spayfw.remoteservice.Request;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.h;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.IdvOptionsData;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
-import java.util.List;
 
 public class i
 extends o {
@@ -40,20 +35,20 @@ extends o {
 
     protected int ba() {
         if (this.mEnrollmentId == null || this.mEnrollmentId.isEmpty() || this.lm == null) {
-            com.samsung.android.spayfw.b.c.e("IdvRefresher", "refreshIdv Failed - Invalid inputs");
+            Log.e("IdvRefresher", "refreshIdv Failed - Invalid inputs");
             return -5;
         }
         int n2 = super.a(true, this.mEnrollmentId, null, true);
         if (n2 != 0) {
-            com.samsung.android.spayfw.b.c.e("IdvRefresher", "refreshIdv Failed - validate failed: " + n2);
+            Log.e("IdvRefresher", "refreshIdv Failed - validate failed: " + n2);
             return n2;
         }
         if (this.iJ == null) {
-            com.samsung.android.spayfw.b.c.e("IdvRefresher", "refreshIdv Failed - mAccount is null: ");
+            Log.e("IdvRefresher", "refreshIdv Failed - mAccount is null: ");
             return -1;
         }
         if (!super.a(this.iJ.q(this.mEnrollmentId), "PENDING_PROVISION")) {
-            com.samsung.android.spayfw.b.c.w("IdvRefresher", "refreshIdv Failed - Not valid token status");
+            Log.w("IdvRefresher", "refreshIdv Failed - Not valid token status");
             return -4;
         }
         return 0;
@@ -65,10 +60,10 @@ extends o {
      * Enabled aggressive exception aggregation
      */
     public void process() {
-        com.samsung.android.spayfw.b.c.d("IdvRefresher", "refreshIdv()");
+        Log.d("IdvRefresher", "refreshIdv()");
         int n2 = this.ba();
         if (n2 != 0) {
-            com.samsung.android.spayfw.b.c.e("IdvRefresher", "refreshIdv validation failed");
+            Log.e("IdvRefresher", "refreshIdv validation failed");
             if (this.lm == null) return;
             {
                 try {
@@ -76,7 +71,7 @@ extends o {
                     return;
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("IdvRefresher", remoteException.getMessage(), remoteException);
+                    Log.c("IdvRefresher", remoteException.getMessage(), remoteException);
                     return;
                 }
             }
@@ -86,14 +81,14 @@ extends o {
             this.lQ.y(c.y(c2.getCardBrand()), c2.ac().getTokenId()).a(new a());
             return;
         }
-        com.samsung.android.spayfw.b.c.e("IdvRefresher", "invalid cardInfo found in the PF");
+        Log.e("IdvRefresher", "invalid cardInfo found in the PF");
         if (this.lm == null) return;
         try {
             this.lm.onFail(this.mEnrollmentId, -1);
             return;
         }
         catch (RemoteException remoteException) {
-            com.samsung.android.spayfw.b.c.c("IdvRefresher", remoteException.getMessage(), remoteException);
+            Log.c("IdvRefresher", remoteException.getMessage(), remoteException);
             return;
         }
     }
@@ -115,14 +110,14 @@ extends o {
             block12 : {
                 block11 : {
                     var3_3 = null;
-                    com.samsung.android.spayfw.b.c.d("IdvRefresher", "RefreshIdv : onRequestComplete:  " + var1_1);
+                    Log.d("IdvRefresher", "RefreshIdv : onRequestComplete:  " + var1_1);
                     var4_4 = i.this.ba();
                     if (var4_4 != 0 && i.this.lm != null) {
                         try {
                             i.this.lm.onFail(i.this.mEnrollmentId, var4_4);
                         }
                         catch (RemoteException var11_8) {
-                            com.samsung.android.spayfw.b.c.c("IdvRefresher", var11_8.getMessage(), var11_8);
+                            Log.c("IdvRefresher", var11_8.getMessage(), var11_8);
                         }
                     }
                     var5_5 = i.this.iJ.q(i.this.mEnrollmentId);
@@ -134,11 +129,11 @@ extends o {
                             if (var2_2 == null) ** GOTO lbl21
                             var3_3 = m.a(var5_5, var2_2.getResult());
                             if (var3_3 != null) break block11;
-                            com.samsung.android.spayfw.b.c.e("IdvRefresher", "IdvMethod is null");
+                            Log.e("IdvRefresher", "IdvMethod is null");
                             var6_7 = -3;
                             break block12;
 lbl21: // 1 sources:
-                            com.samsung.android.spayfw.b.c.e("IdvRefresher", "IdvMethod is null");
+                            Log.e("IdvRefresher", "IdvMethod is null");
                             var6_7 = -3;
                             var3_3 = null;
                             break block12;
@@ -166,7 +161,7 @@ lbl21: // 1 sources:
                 return;
             }
             catch (RemoteException var9_9) {
-                com.samsung.android.spayfw.b.c.c("IdvRefresher", var9_9.getMessage(), var9_9);
+                Log.c("IdvRefresher", var9_9.getMessage(), var9_9);
                 return;
             }
         }

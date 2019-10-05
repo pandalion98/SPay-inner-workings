@@ -41,7 +41,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.samsung.android.spayfw.appinterface.TransactionData;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.payprovider.amex.models.AmexTransactionData;
 import com.samsung.android.spayfw.payprovider.amex.models.AmexTransactionRequest;
@@ -57,7 +57,7 @@ import com.samsung.android.spayfw.remoteservice.tokenrequester.g;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.DeviceInfo;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenResponseData;
-import com.samsung.android.spayfw.utils.a;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -86,7 +86,7 @@ public class b {
 
     private int a(f f2, i i2) {
         AmexTAController.ProcessRequestDataResponse processRequestDataResponse;
-        c.d("AmexTransactionManager", "startRegistration");
+        Log.d("AmexTransactionManager", "startRegistration");
         String string = f2.cn();
         e e2 = new e();
         JsonObject jsonObject = this.cs();
@@ -99,7 +99,7 @@ public class b {
             processRequestDataResponse = this.pg.b(this.pl.getContent(), null, string);
         }
         catch (AmexTAException amexTAException) {
-            c.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             return -6;
         }
         jsonObject2.addProperty("tokenRefIdSignature", processRequestDataResponse.requestDataSignature);
@@ -111,7 +111,7 @@ public class b {
     }
 
     private int a(final f f2, final i i2, final String string) {
-        c.d("AmexTransactionManager", "getRegistrationData");
+        Log.d("AmexTransactionManager", "getRegistrationData");
         String string2 = f2.cn();
         l.Q((Context)PaymentFrameworkApp.aB()).x("credit/ax", string2).a(new Request.a<com.samsung.android.spayfw.remoteservice.c<TokenResponseData>, g>(){
 
@@ -122,7 +122,7 @@ public class b {
             public void a(int n2, com.samsung.android.spayfw.remoteservice.c<TokenResponseData> c2) {
                 String string3;
                 String string2;
-                c.d("AmexTransactionManager", "onRequestComplete: Get Token Data for Transaction: status code " + n2);
+                Log.d("AmexTransactionManager", "onRequestComplete: Get Token Data for Transaction: status code " + n2);
                 switch (n2) {
                     default: {
                         i2.a(f2, -7, null, null);
@@ -132,7 +132,7 @@ public class b {
                 }
                 TokenResponseData tokenResponseData = c2.getResult();
                 if (tokenResponseData == null) {
-                    c.e("AmexTransactionManager", "TokenResponseData is null");
+                    Log.e("AmexTransactionManager", "TokenResponseData is null");
                     return;
                 }
                 JsonObject jsonObject = tokenResponseData.getData();
@@ -145,7 +145,7 @@ public class b {
                 }
                 if (string3 != null && string2 != null) {
                     if (b.this.a(f2, i2, string3, string2) != 0) {
-                        c.e("AmexTransactionManager", "saveTransactionData failed");
+                        Log.e("AmexTransactionManager", "saveTransactionData failed");
                         return;
                     }
                     b.this.b(f2, i2, string);
@@ -168,8 +168,8 @@ public class b {
             string5 = this.pg.o(string, string2);
         }
         catch (AmexTAException amexTAException) {
-            c.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
-            c.e("AmexTransactionManager", "encryptedData is invalid");
+            Log.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.e("AmexTransactionManager", "encryptedData is invalid");
             i2.a(f2, -6, null, null);
             return -6;
         }
@@ -179,14 +179,14 @@ public class b {
             string3 = processRequestDataResponse2.requestDataSignature;
         }
         catch (AmexTAException amexTAException) {
-            c.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             return -6;
         }
         try {
             processRequestDataResponse = this.pg.b(this.pl.getContent(), null, string6);
         }
         catch (AmexTAException amexTAException) {
-            c.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             return -6;
         }
         String string8 = gson.toJson((Object)new a(string7, string3, processRequestDataResponse.requestDataSignature));
@@ -194,7 +194,7 @@ public class b {
             string4 = this.pg.a(string8, true);
         }
         catch (AmexTAException amexTAException) {
-            c.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             i2.a(f2, -6, null, null);
             return -6;
         }
@@ -228,15 +228,15 @@ public class b {
             return null;
         }
         try {
-            c.d("Data", string);
+            Log.d("Data", string);
             MessageDigest messageDigest = MessageDigest.getInstance((String)"SHA256");
             messageDigest.update(string.getBytes());
             String string2 = Base64.encodeToString((byte[])messageDigest.digest(), (int)2);
-            c.d("Hash", string2);
+            Log.d("Hash", string2);
             return string2;
         }
         catch (NoSuchAlgorithmException noSuchAlgorithmException) {
-            c.c("AmexTransactionManager", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
+            Log.c("AmexTransactionManager", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
             return null;
         }
     }
@@ -252,7 +252,7 @@ public class b {
         final String string3 = f2.cn();
         String string4 = this.pp.getString(string3 + "_transaction_json_data", null);
         if (string4 == null) {
-            c.e("AmexTransactionManager", "Error: Transaction Data in Preference file is empty");
+            Log.e("AmexTransactionManager", "Error: Transaction Data in Preference file is empty");
             i2.a(f2, -6, null, null);
             return -6;
         }
@@ -260,7 +260,7 @@ public class b {
             string2 = this.pg.a(string4, false);
         }
         catch (AmexTAException amexTAException) {
-            c.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.c("AmexTransactionManager", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             i2.a(f2, -6, null, null);
             return -6;
         }
@@ -273,13 +273,13 @@ public class b {
         amexTransactionRequest.setSecureDeviceData(jsonObject);
         amexTransactionRequest.setAccessKeySignature(a2.accessKeySignature);
         String string5 = gson.toJson((Object)amexTransactionRequest);
-        c.d("AmexTransactionManager", "Request Data : " + string5);
+        Log.d("AmexTransactionManager", "Request Data : " + string5);
         com.samsung.android.spayfw.utils.a a3 = new com.samsung.android.spayfw.utils.a();
         try {
             new StringEntity(string5);
         }
         catch (UnsupportedEncodingException unsupportedEncodingException) {
-            c.c("AmexTransactionManager", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
+            Log.c("AmexTransactionManager", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
         }
         a3.addHeader("Content-Type", "application/json");
         a3.addHeader("tokenRequesterId", "30000000025");
@@ -298,7 +298,7 @@ public class b {
             public void onComplete(int n2, Map<String, List<String>> map, byte[] arrby) {
                 e e2;
                 block10 : {
-                    c.e("AmexTransactionManager", "Status Code : " + n2);
+                    Log.e("AmexTransactionManager", "Status Code : " + n2);
                     switch (n2) {
                         default: {
                             e2 = new e();
@@ -306,7 +306,7 @@ public class b {
                             if (arrby != null) {
                                 if (arrby.length > 0) {
                                     String string = new String(arrby);
-                                    c.e("AmexTransactionManager", string);
+                                    Log.e("AmexTransactionManager", string);
                                     e2.as(n2 + " : " + string);
                                 }
                             }
@@ -315,9 +315,9 @@ public class b {
                         case 200: {
                             if (arrby != null && arrby.length > 0) {
                                 String string = new String(arrby);
-                                c.d("AmexTransactionManager", "AmexTransactionResponse : " + string);
+                                Log.d("AmexTransactionManager", "AmexTransactionResponse : " + string);
                                 AmexTransactionResponse amexTransactionResponse = (AmexTransactionResponse)gson.fromJson(string, AmexTransactionResponse.class);
-                                c.d("AmexTransactionManager", "AmexTransactionResponse : " + amexTransactionResponse);
+                                Log.d("AmexTransactionManager", "AmexTransactionResponse : " + amexTransactionResponse);
                                 if (amexTransactionResponse != null && amexTransactionResponse.getTransactionDetail() != null && amexTransactionResponse.getTransactionDetail().length > 0) {
                                     i2.a(f2, 0, amexTransactionResponse.getTransactionDetail(), null);
                                     return;
@@ -325,7 +325,7 @@ public class b {
                                 i2.a(f2, -9, null, null);
                                 return;
                             }
-                            c.e("AmexTransactionManager", "Transaction Data is empty");
+                            Log.e("AmexTransactionManager", "Transaction Data is empty");
                             i2.a(f2, -7, null, null);
                             return;
                         }
@@ -343,7 +343,7 @@ public class b {
                         }
                     }
                     catch (Exception exception) {
-                        c.c("AmexTransactionManager", exception.getMessage(), exception);
+                        Log.c("AmexTransactionManager", exception.getMessage(), exception);
                         e2.as(n2 + " : " + exception.getMessage());
                     }
                 }
@@ -369,27 +369,27 @@ public class b {
             return jsonObject;
         }
         catch (Exception exception) {
-            c.c("AmexTransactionManager", exception.getMessage(), exception);
+            Log.c("AmexTransactionManager", exception.getMessage(), exception);
             return null;
         }
     }
 
     int a(f f2, Bundle bundle, i i2) {
         if (f2 == null || bundle == null || i2 == null) {
-            c.e("AmexTransactionManager", "getTransactionData : invalid input ");
+            Log.e("AmexTransactionManager", "getTransactionData : invalid input ");
             return -4;
         }
         String string = bundle.getString("transactionUrl");
         if (string == null) {
-            c.d("AmexTransactionManager", "transactionUrl is empty, start registration");
+            Log.d("AmexTransactionManager", "transactionUrl is empty, start registration");
             return this.a(f2, i2);
         }
         String string2 = f2.cn();
         if (this.pp.getString(string2 + "_transaction_json_data", null) == null) {
-            c.d("AmexTransactionManager", "accessKey is empty, get registration data");
+            Log.d("AmexTransactionManager", "accessKey is empty, get registration data");
             return this.a(f2, i2, string);
         }
-        c.d("AmexTransactionManager", "get transaction data");
+        Log.d("AmexTransactionManager", "get transaction data");
         return this.b(f2, i2, string);
     }
 
@@ -401,7 +401,7 @@ public class b {
     TransactionDetails a(f f2, Object object) {
         AmexTransactionData[] arramexTransactionData = (AmexTransactionData[])object;
         if (arramexTransactionData == null || arramexTransactionData.length <= 0) {
-            c.e("AmexTransactionManager", "Raw Transaction Data is empty");
+            Log.e("AmexTransactionManager", "Raw Transaction Data is empty");
             return null;
         }
         TransactionDetails transactionDetails = new TransactionDetails();
@@ -414,22 +414,22 @@ public class b {
                 return transactionDetails;
             }
             AmexTransactionData amexTransactionData = arramexTransactionData[n3];
-            c.d("AmexTransactionManager", amexTransactionData.toString());
+            Log.d("AmexTransactionManager", amexTransactionData.toString());
             TransactionData transactionData = new TransactionData();
             transactionData.setAmount(amexTransactionData.getTransactionAmount());
             transactionData.setCurrencyCode(amexTransactionData.getTransactionCurrency());
             transactionData.setMechantName(amexTransactionData.getMerchantName());
             try {
                 Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZ", Locale.US).parse(amexTransactionData.getTransactionTimestamp());
-                c.d("AmexTransactionManager", date.toString());
+                Log.d("AmexTransactionManager", date.toString());
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone((String)"GMT"));
                 String string = simpleDateFormat.format(date);
-                c.d("AmexTransactionManager", string);
+                Log.d("AmexTransactionManager", string);
                 transactionData.setTransactionDate(string);
             }
             catch (Exception exception) {
-                c.e("AmexTransactionManager", exception.getMessage());
+                Log.e("AmexTransactionManager", exception.getMessage());
             }
             if (amexTransactionData.getTransactionIdentifier() != null && !amexTransactionData.getTransactionIdentifier().isEmpty()) {
                 transactionData.setTransactionId(amexTransactionData.getTransactionIdentifier());

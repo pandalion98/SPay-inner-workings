@@ -19,14 +19,12 @@ import android.content.Context;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.e;
-import com.samsung.android.spayfw.payprovider.PaymentProviderException;
 import com.samsung.android.spayfw.remoteservice.e.b;
 import com.samsung.android.spayfw.utils.GLDManager;
 import com.samsung.android.spayfw.utils.g;
 import com.samsung.android.spayfw.utils.h;
-import javax.net.ssl.SSLSocketFactory;
 
 public class MerchantServerRequester {
     private static MerchantServerRequester oN = null;
@@ -48,13 +46,13 @@ public class MerchantServerRequester {
 
     public void a(MerchantInfo merchantInfo) {
         if (merchantInfo == null || merchantInfo.getResultCode() == null) {
-            c.e("MerchantServerRequester", " while parsing response, result code not found!");
+            Log.e("MerchantServerRequester", " while parsing response, result code not found!");
             throw new PaymentProviderException(-205);
         }
         String string = merchantInfo.getResultCode();
         if (!"0".equals((Object)string)) {
-            c.e("MerchantServerRequester", "Error msg: " + merchantInfo.getResultMessage());
-            c.e("MerchantServerRequester", "resultcode: " + string);
+            Log.e("MerchantServerRequester", "Error msg: " + merchantInfo.getResultMessage());
+            Log.e("MerchantServerRequester", "resultcode: " + string);
             throw new PaymentProviderException(-205);
         }
     }
@@ -66,16 +64,16 @@ public class MerchantServerRequester {
      */
     public MerchantInfo c(Context var1_1, String var2_2) {
         if (var1_1 == null || TextUtils.isEmpty((CharSequence)var2_2)) {
-            c.e("MerchantServerRequester", "Invalid input");
+            Log.e("MerchantServerRequester", "Invalid input");
             throw new PaymentProviderException(-5);
         }
-        c.d("MerchantServerRequester", "getMerchantInfo: start ");
+        Log.d("MerchantServerRequester", "getMerchantInfo: start ");
         var3_3 = h.fP();
         var4_4 = e.h(var1_1).getConfig("CONFIG_WALLET_ID");
         var5_5 = h.ah(var1_1);
         var6_6 = GLDManager.af(var1_1).by("PROD");
         if (TextUtils.isEmpty((CharSequence)var6_6)) {
-            c.e("MerchantServerRequester", "failed to get url from GLDManager!");
+            Log.e("MerchantServerRequester", "failed to get url from GLDManager!");
             throw new PaymentProviderException(-36);
         }
         var7_7 = new StringBuilder();
@@ -93,13 +91,13 @@ public class MerchantServerRequester {
         var10_8.b(20000, 20000, true);
         var10_8.setSSLSocketFactory(var12_10);
         var13_11 = var10_8.bz(var7_7.toString());
-        c.d("MerchantServerRequester", "Merchant status code response is " + var13_11.statusCode);
+        Log.d("MerchantServerRequester", "Merchant status code response is " + var13_11.statusCode);
         switch (var13_11.statusCode) {
             default: {
                 throw new PaymentProviderException(-205);
             }
 lbl31: // 1 sources:
-            c.e("MerchantServerRequester", "JWT Token is EMPTY!");
+            Log.e("MerchantServerRequester", "JWT Token is EMPTY!");
             throw new PaymentProviderException(-36);
             case 200: 
             case 201: 
@@ -109,20 +107,20 @@ lbl31: // 1 sources:
                     var15_13 = new GsonBuilder().disableHtmlEscaping().create();
                     var16_14 = (MerchantInfo)var15_13.fromJson(var14_12, MerchantInfo.class);
                     this.a(var16_14);
-                    c.d("MerchantServerRequester", "Merchant raw response is: " + var14_12);
-                    c.d("MerchantServerRequester", "Merchant response is: " + var15_13.toJson((Object)var16_14));
+                    Log.d("MerchantServerRequester", "Merchant raw response is: " + var14_12);
+                    Log.d("MerchantServerRequester", "Merchant response is: " + var15_13.toJson((Object)var16_14));
                     return var16_14;
                 }
-                c.e("MerchantServerRequester", "Merchant response is null!");
+                Log.e("MerchantServerRequester", "Merchant response is null!");
                 throw new PaymentProviderException(-205);
             }
             case 408: 
             case 503: {
-                c.d("MerchantServerRequester", "Server No Response");
+                Log.d("MerchantServerRequester", "Server No Response");
                 throw new PaymentProviderException(-201);
             }
             case 0: {
-                c.d("MerchantServerRequester", "Fail No Network");
+                Log.d("MerchantServerRequester", "Fail No Network");
                 throw new PaymentProviderException(-9);
             }
             case 401: 
@@ -178,24 +176,24 @@ lbl31: // 1 sources:
 
         public String getMerchantCertificateChain() {
             if (this.productInfo == null || this.productInfo.getCertificate() == null) {
-                c.e("MerchantServerRequester", "Invalid input productInfo");
+                Log.e("MerchantServerRequester", "Invalid input productInfo");
                 return null;
             }
             String string = this.productInfo.getCertificate().getContent();
             if (string == null || string.isEmpty()) {
-                c.e("MerchantServerRequester", "Invalid input merchantCert");
+                Log.e("MerchantServerRequester", "Invalid input merchantCert");
                 return null;
             }
             String string2 = this.signingInfo.getContent();
             if (string2 == null || string2.isEmpty()) {
-                c.e("MerchantServerRequester", "Invalid input caCert");
+                Log.e("MerchantServerRequester", "Invalid input caCert");
                 return null;
             }
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(string);
             stringBuilder.append(string2);
             String string3 = stringBuilder.toString();
-            c.d("MerchantServerRequester", "cert chain: " + string3);
+            Log.d("MerchantServerRequester", "cert chain: " + string3);
             return string3;
         }
 
@@ -235,7 +233,7 @@ lbl31: // 1 sources:
                 return this.payloadType.equals((Object)"JWE/JWS");
             }
             if (this.pgInfo == null || this.pgInfo.getIntegrationType() == null) {
-                c.e("MerchantServerRequester", "pgInfo not exist");
+                Log.e("MerchantServerRequester", "pgInfo not exist");
                 return false;
             }
             return "INDIRECT".equals((Object)this.pgInfo.getIntegrationType());

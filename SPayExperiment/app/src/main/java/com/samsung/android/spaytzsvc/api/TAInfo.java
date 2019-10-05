@@ -18,9 +18,10 @@ package com.samsung.android.spaytzsvc.api;
 
 import android.os.Build;
 import android.spay.PaymentTZServiceConfig;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.e.d;
-import com.samsung.android.spaytzsvc.api.TACommands;
+
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -150,7 +151,7 @@ public class TAInfo {
                 exception.printStackTrace();
                 return null;
             }
-            c.d(TAG, "New TA Config Constructor not present.");
+            Log.d(TAG, "New TA Config Constructor not present.");
             return null;
         }
         Object[] arrobject = new Object[]{this.getTATechnology(), this.getUnifiedRoot(), this.getUnifiedProcess(), commandsInfo.mMaxRequestSize, commandsInfo.mMaxResponseSize};
@@ -172,7 +173,7 @@ public class TAInfo {
                 exception.printStackTrace();
                 return null;
             }
-            c.d(TAG, "Old TA Config Constructor not present.");
+            Log.d(TAG, "Old TA Config Constructor not present.");
             return null;
         }
         Object[] arrobject = new Object[]{commandsInfo.mMaxRequestSize, commandsInfo.mMaxResponseSize};
@@ -187,11 +188,11 @@ public class TAInfo {
     public String getPinRandomFileName() {
         if (bQC) {
             String string = this.getTAFileName().substring(0, -4 + this.getTAFileName().length()) + PINRANDOMFILE_POSTFIX;
-            c.d(TAG, "File name for QC is " + string);
+            Log.d(TAG, "File name for QC is " + string);
             return string;
         }
         String string = this.getTAFileName().substring(-6 + this.getTAFileName().length(), -4 + this.getTAFileName().length()) + PINRANDOMFILE_POSTFIX;
-        c.d(TAG, "File name for Tbase is " + string);
+        Log.d(TAG, "File name for Tbase is " + string);
         return string;
     }
 
@@ -237,7 +238,7 @@ public class TAInfo {
         try {
             Class[] arrclass = new Class[]{String.class, String.class, String.class, Integer.TYPE, Integer.TYPE};
             if (PaymentTZServiceConfig.TAConfig.class.getConstructor(arrclass) == null) {
-                c.d(TAG, "New TA Config Constructor not present. Use old API");
+                Log.d(TAG, "New TA Config Constructor not present. Use old API");
                 return false;
             }
             return true;

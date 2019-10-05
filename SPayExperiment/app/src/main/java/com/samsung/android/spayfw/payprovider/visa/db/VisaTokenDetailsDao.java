@@ -19,10 +19,9 @@ package com.samsung.android.spayfw.payprovider.visa.db;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.visa.db.a;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.storage.DbAdapter;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +100,7 @@ lbl-1000: // 2 sources:
         if (list != null) {
             return (a)list.get(0);
         }
-        c.e("VisaTokenDetailsDao", "cannot find token by tr token id");
+        Log.e("VisaTokenDetailsDao", "cannot find token by tr token id");
         return null;
     }
 
@@ -110,7 +109,7 @@ lbl-1000: // 2 sources:
         if (list != null) {
             return (a)list.get(0);
         }
-        c.e("VisaTokenDetailsDao", "cannot find token by provider token id");
+        Log.e("VisaTokenDetailsDao", "cannot find token by provider token id");
         return null;
     }
 
@@ -129,8 +128,8 @@ lbl-1000: // 2 sources:
             return n2;
         }
         catch (SQLiteException sQLiteException) {
-            c.e("VisaTokenDetailsDao", "cannot add token");
-            c.c("VisaTokenDetailsDao", sQLiteException.getMessage(), sQLiteException);
+            Log.e("VisaTokenDetailsDao", "cannot add token");
+            Log.c("VisaTokenDetailsDao", sQLiteException.getMessage(), sQLiteException);
             return -1;
         }
     }

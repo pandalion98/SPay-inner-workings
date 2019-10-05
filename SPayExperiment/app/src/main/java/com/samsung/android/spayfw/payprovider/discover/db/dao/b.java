@@ -21,11 +21,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.e.a.a;
 import com.samsung.android.spayfw.interfacelibrary.db.DBName;
 import com.samsung.android.spayfw.payprovider.discover.db.DcDbException;
-import com.samsung.android.spayfw.payprovider.discover.db.dao.DcCommonDao;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +97,7 @@ lbl19: // 1 sources:
 lbl23: // 2 sources:
             do {
                 try {
-                    c.e("DCSDK_DCAbstractDaoImpl<T>", "NPE occured during getData");
+                    Log.e("DCSDK_DCAbstractDaoImpl<T>", "NPE occured during getData");
                     throw new DcDbException("NP Exception Occurred", 6);
                 }
                 catch (Throwable var5_5) {
@@ -170,7 +171,7 @@ lbl30: // 2 sources:
 lbl22: // 2 sources:
             do {
                 try {
-                    c.e("DCSDK_DCAbstractDaoImpl<T>", "NPE occured during getData");
+                    Log.e("DCSDK_DCAbstractDaoImpl<T>", "NPE occured during getData");
                     throw new DcDbException("NP Exception Occurred", 6);
                 }
                 catch (Throwable var7_8) {
@@ -211,7 +212,7 @@ lbl29: // 2 sources:
             return l2;
         }
         catch (SQLException sQLException) {
-            c.e("DCSDK_DCAbstractDaoImpl<T>", "SQLException during insert" + sQLException.getMessage());
+            Log.e("DCSDK_DCAbstractDaoImpl<T>", "SQLException during insert" + sQLException.getMessage());
             sQLException.printStackTrace();
             throw new DcDbException("SQL Exception Occurred", 5);
         }

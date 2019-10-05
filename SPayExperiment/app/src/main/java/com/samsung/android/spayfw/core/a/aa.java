@@ -37,11 +37,9 @@ import com.samsung.android.spayfw.appinterface.ITransactionDetailsCallback;
 import com.samsung.android.spayfw.appinterface.PushMessage;
 import com.samsung.android.spayfw.appinterface.TransactionData;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
-import com.samsung.android.spayfw.core.a.o;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.c;
-import com.samsung.android.spayfw.core.q;
 import com.samsung.android.spayfw.core.retry.e;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.payprovider.i;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
@@ -49,7 +47,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -90,7 +87,7 @@ extends o {
         JsonObject jsonObject2 = new JsonObject();
         jsonObject2.add("elements", (JsonElement)jsonArray);
         jsonObject.add("txn", (JsonElement)jsonObject2);
-        com.samsung.android.spayfw.b.c.d("TransactionDetailsRetriever", "reportData = " + (Object)jsonObject);
+        Log.d("TransactionDetailsRetriever", "reportData = " + (Object)jsonObject);
         return jsonObject;
     }
 
@@ -101,11 +98,11 @@ extends o {
         String string = this.kU.getTokenId();
         com.samsung.android.spayfw.storage.models.a a2 = this.jJ.bq(string);
         if (a2 == null) {
-            com.samsung.android.spayfw.b.c.e("TransactionDetailsRetriever", "Token Record is NULL");
+            Log.e("TransactionDetailsRetriever", "Token Record is NULL");
             return false;
         } else {
             List<String> list = a2.fC();
-            com.samsung.android.spayfw.b.c.d("TransactionDetailsRetriever", "TIDs : " + list);
+            Log.d("TransactionDetailsRetriever", "TIDs : " + list);
             if (list == null || !list.contains((Object)transactionData.getTransactionId())) return false;
             return true;
         }
@@ -120,12 +117,12 @@ extends o {
         }
         com.samsung.android.spayfw.storage.models.a a2 = this.jJ.bq(this.mTokenId);
         if (a2 == null) {
-            com.samsung.android.spayfw.b.c.e("TransactionDetailsRetriever", "Token Record is NULL");
+            Log.e("TransactionDetailsRetriever", "Token Record is NULL");
             return false;
         }
         ArrayList arrayList = a2.fC();
         ArrayList arrayList2 = arrayList == null ? new ArrayList() : arrayList;
-        com.samsung.android.spayfw.b.c.d("TransactionDetailsRetriever", "TIDs : " + (Object)arrayList2);
+        Log.d("TransactionDetailsRetriever", "TIDs : " + (Object)arrayList2);
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone((String)"GMT"));
         Collections.sort(transactionDetails.getTransactionData(), (Comparator)new Comparator<TransactionData>(){
@@ -136,12 +133,12 @@ extends o {
                     return n2;
                 }
                 catch (Exception exception) {
-                    com.samsung.android.spayfw.b.c.c("TransactionDetailsRetriever", exception.getMessage(), exception);
+                    Log.c("TransactionDetailsRetriever", exception.getMessage(), exception);
                     return 0;
                 }
             }
         });
-        com.samsung.android.spayfw.b.c.d("TransactionDetailsRetriever", "Transaction Details : " + transactionDetails.getTransactionData());
+        Log.d("TransactionDetailsRetriever", "Transaction Details : " + transactionDetails.getTransactionData());
         for (TransactionData transactionData : transactionDetails.getTransactionData()) {
             if (arrayList2.contains((Object)transactionData.getTransactionId())) {
                 arrayList2.remove((Object)transactionData.getTransactionId());
@@ -153,7 +150,7 @@ extends o {
         if (arrayList2.size() >= 10) {
             arrayList2 = arrayList2.subList(-10 + arrayList2.size(), arrayList2.size());
         }
-        com.samsung.android.spayfw.b.c.d("TransactionDetailsRetriever", "Final TIDs : " + (Object)arrayList2);
+        Log.d("TransactionDetailsRetriever", "Final TIDs : " + (Object)arrayList2);
         a2.c((List<String>)arrayList2);
         a2.i(true);
         this.jJ.d(a2);
@@ -179,20 +176,20 @@ extends o {
     protected void a(TransactionDetails transactionDetails) {
         try {
             if (this.mG != null) {
-                com.samsung.android.spayfw.b.c.i("TransactionDetailsRetriever", "Invoking Success Transaction Callback");
+                Log.i("TransactionDetailsRetriever", "Invoking Success Transaction Callback");
                 this.mG.onTransactionUpdate(this.mTokenId, transactionDetails);
             } else if (this.kV != null) {
-                com.samsung.android.spayfw.b.c.d("TransactionDetailsRetriever", "Oob value = " + this.kU.getOob());
-                com.samsung.android.spayfw.b.c.i("TransactionDetailsRetriever", "Invoking Success Push Callback");
+                Log.d("TransactionDetailsRetriever", "Oob value = " + this.kU.getOob());
+                Log.i("TransactionDetailsRetriever", "Invoking Success Push Callback");
                 this.kV.onTransactionUpdate(this.kU.getNotificationId(), this.mTokenId, transactionDetails, this.kU.getOob());
             } else {
-                com.samsung.android.spayfw.b.c.e("TransactionDetailsRetriever", "No Callbacks");
+                Log.e("TransactionDetailsRetriever", "No Callbacks");
             }
             e.w(this.mContext).remove(this.mTokenId);
             return;
         }
         catch (RemoteException remoteException) {
-            com.samsung.android.spayfw.b.c.c("TransactionDetailsRetriever", remoteException.getMessage(), remoteException);
+            Log.c("TransactionDetailsRetriever", remoteException.getMessage(), remoteException);
             return;
         }
     }
@@ -205,20 +202,20 @@ extends o {
     protected void notifyError(int n2) {
         try {
             if (this.mG != null) {
-                com.samsung.android.spayfw.b.c.i("TransactionDetailsRetriever", "Invoking Error Transaction Callback " + n2);
+                Log.i("TransactionDetailsRetriever", "Invoking Error Transaction Callback " + n2);
                 this.mG.onFail(this.mTokenId, n2);
                 return;
             }
             if (this.kV != null) {
-                com.samsung.android.spayfw.b.c.i("TransactionDetailsRetriever", "Invoking Error Push Callback " + n2);
+                Log.i("TransactionDetailsRetriever", "Invoking Error Push Callback " + n2);
                 this.kV.onFail(this.kU.getNotificationId(), n2);
                 return;
             }
-            com.samsung.android.spayfw.b.c.e("TransactionDetailsRetriever", "No Callbacks");
+            Log.e("TransactionDetailsRetriever", "No Callbacks");
             return;
         }
         catch (RemoteException remoteException) {
-            com.samsung.android.spayfw.b.c.c("TransactionDetailsRetriever", remoteException.getMessage(), remoteException);
+            Log.c("TransactionDetailsRetriever", remoteException.getMessage(), remoteException);
             return;
         }
     }
@@ -227,10 +224,10 @@ extends o {
      * Enabled aggressive block sorting
      */
     public void process() {
-        com.samsung.android.spayfw.b.c.d("TransactionDetailsRetriever", "process : tokenId " + this.mTokenId);
+        Log.d("TransactionDetailsRetriever", "process : tokenId " + this.mTokenId);
         c c2 = this.iJ.r(this.mTokenId);
         if (c2 == null) {
-            com.samsung.android.spayfw.b.c.e("TransactionDetailsRetriever", "Unable to get card based on tokenId. ignore request");
+            Log.e("TransactionDetailsRetriever", "Unable to get card based on tokenId. ignore request");
             this.notifyError(-5);
             return;
         } else {
@@ -239,7 +236,7 @@ extends o {
             String string2 = this.jJ.b(TokenRecordStorage.TokenGroup.TokenColumn.CA, c2.ac().getTokenId());
             if (string != null) {
                 if (string2 == null) {
-                    com.samsung.android.spayfw.b.c.i("TransactionDetailsRetriever", "Update Transact URL in DB");
+                    Log.i("TransactionDetailsRetriever", "Update Transact URL in DB");
                     com.samsung.android.spayfw.storage.models.a a2 = this.jJ.bq(c2.ac().getTokenId());
                     if (a2 != null) {
                         a2.bv(string);
@@ -266,7 +263,7 @@ extends o {
             }
             if ((n2 = c2.ad().getTransactionDataTA(bundle, new a())) == 0) return;
             {
-                com.samsung.android.spayfw.b.c.e("TransactionDetailsRetriever", " pay provider returns error. can't get transaction");
+                Log.e("TransactionDetailsRetriever", " pay provider returns error. can't get transaction");
                 com.samsung.android.spayfw.payprovider.e e2 = new com.samsung.android.spayfw.payprovider.e();
                 e2.setErrorCode(n2);
                 this.notifyError(-1);
@@ -290,14 +287,14 @@ extends o {
         @Override
         public void a(f f2, int n2, Object object, com.samsung.android.spayfw.payprovider.e e2) {
             int n3 = -3;
-            com.samsung.android.spayfw.b.c.d("TransactionDetailsRetriever", "PayProviderTransactionResponse onComplete: status: " + n2);
+            Log.d("TransactionDetailsRetriever", "PayProviderTransactionResponse onComplete: status: " + n2);
             c c2 = aa.this.iJ.r(aa.this.mTokenId);
             if (c2 == null) {
-                com.samsung.android.spayfw.b.c.e("TransactionDetailsRetriever", "processTransaction : unable to get Card object :" + aa.this.mTokenId);
+                Log.e("TransactionDetailsRetriever", "processTransaction : unable to get Card object :" + aa.this.mTokenId);
                 aa.this.notifyError(-5);
                 return;
             } else if (n2 != 0 || object == null) {
-                com.samsung.android.spayfw.b.c.e("TransactionDetailsRetriever", " pay provider returns error. can't get transaction");
+                Log.e("TransactionDetailsRetriever", " pay provider returns error. can't get transaction");
                 if (n2 == -5) {
                     n3 = -6;
                 } else if (n2 == -7) {

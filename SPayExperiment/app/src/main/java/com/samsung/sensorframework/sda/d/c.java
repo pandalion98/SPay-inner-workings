@@ -10,6 +10,8 @@
 package com.samsung.sensorframework.sda.d;
 
 import android.content.Context;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.SDAException;
 import com.samsung.sensorframework.sda.a.a.a.a;
 import com.samsung.sensorframework.sda.d.a.d;
@@ -19,7 +21,6 @@ import com.samsung.sensorframework.sda.d.a.n;
 import com.samsung.sensorframework.sda.d.a.o;
 import com.samsung.sensorframework.sda.d.a.p;
 import com.samsung.sensorframework.sda.d.a.q;
-import com.samsung.sensorframework.sda.d.b;
 import com.samsung.sensorframework.sda.d.b.e;
 import com.samsung.sensorframework.sda.d.b.f;
 import com.samsung.sensorframework.sda.d.b.g;
@@ -31,7 +32,7 @@ public class c {
     public static b a(int n2, Context context) {
         switch (n2) {
             default: {
-                com.samsung.android.spayfw.b.c.d("SensorUtils", "Unknown sensor id: " + n2);
+                Log.d("SensorUtils", "Unknown sensor id: " + n2);
                 throw new SDAException(8001, "Unknown sensor id");
             }
             case 5001: {

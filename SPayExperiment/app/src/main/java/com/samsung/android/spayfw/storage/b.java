@@ -17,9 +17,9 @@ package com.samsung.android.spayfw.storage;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.storage.DbAdapter;
+
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +31,7 @@ extends DbAdapter {
     private b(Context context) {
         super(context);
         this.execSQL("CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT NOT NULL)");
-        c.i("ConfigStorage", "Create Config Table If Not Exists");
+        Log.i("ConfigStorage", "Create Config Table If Not Exists");
     }
 
     public static final b ab(Context context) {
@@ -47,9 +47,9 @@ extends DbAdapter {
     }
 
     public int bm(String string) {
-        c.d("ConfigStorage", "removeConfig : " + string);
+        Log.d("ConfigStorage", "removeConfig : " + string);
         if (string == null) {
-            c.e("ConfigStorage", "Key is NULL");
+            Log.e("ConfigStorage", "Key is NULL");
             return -1;
         }
         return this.e("config", "key", string);
@@ -72,7 +72,7 @@ extends DbAdapter {
                 while (var3_3.moveToNext()) {
                     var5_4 = var3_3.getString(var3_3.getColumnIndex("key"));
                     var6_5 = var3_3.getString(var3_3.getColumnIndex("value"));
-                    c.d("ConfigStorage", "getAllConfigRows: key = " + var5_4 + "; value = " + var6_5);
+                    Log.d("ConfigStorage", "getAllConfigRows: key = " + var5_4 + "; value = " + var6_5);
                     var1_1.put((Object)var5_4, (Object)var6_5);
                 }
                 break block5;
@@ -93,23 +93,23 @@ lbl-1000: // 2 sources:
     }
 
     public String getConfig(String string) {
-        c.d("ConfigStorage", "getConfig : " + string);
+        Log.d("ConfigStorage", "getConfig : " + string);
         if (string == null) {
-            c.e("ConfigStorage", "Key is NULL");
+            Log.e("ConfigStorage", "Key is NULL");
             return null;
         }
         List<String> list = this.a("config", "value", "key", string);
         if (list != null && list.size() > 0) {
             return (String)list.get(0);
         }
-        c.e("ConfigStorage", "Value is NULL");
+        Log.e("ConfigStorage", "Value is NULL");
         return null;
     }
 
     public int setConfig(String string, String string2) {
-        c.d("ConfigStorage", "setConfig : " + string + " " + string2);
+        Log.d("ConfigStorage", "setConfig : " + string + " " + string2);
         if (string == null) {
-            c.e("ConfigStorage", "Key is NULL");
+            Log.e("ConfigStorage", "Key is NULL");
             return -1;
         }
         ContentValues contentValues = new ContentValues();

@@ -41,6 +41,7 @@ import com.samsung.android.spayfw.appinterface.EnrollCardInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardPanInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardReferenceInfo;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.k;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
@@ -65,15 +66,12 @@ import com.samsung.android.visasdk.facade.data.VerifyingEntity;
 import com.samsung.android.visasdk.facade.data.VerifyingType;
 import com.samsung.android.visasdk.facade.exception.TokenInvalidException;
 import com.samsung.android.visasdk.facade.exception.TokenKeyInvalidException;
-import com.samsung.android.visasdk.paywave.model.DynParams;
-import com.samsung.android.visasdk.paywave.model.HceData;
 import com.samsung.android.visasdk.paywave.model.TokenInfo;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class c {
     private static Map<String, a> zO = null;
@@ -100,7 +98,7 @@ public class c {
         if (n2 <= 15) {
             d2 += 1.0;
         }
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "calculatereplenishpmts - maxPmts= " + n2 + " replenishPmts = " + (int)d2);
+        Log.d("VisaPayProviderSdk", "calculatereplenishpmts - maxPmts= " + n2 + " replenishPmts = " + (int)d2);
         return (int)d2;
     }
 
@@ -122,7 +120,7 @@ public class c {
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", exception.getMessage(), exception);
+            Log.c("VisaPayProviderSdk", exception.getMessage(), exception);
             return;
         }
     }
@@ -187,10 +185,10 @@ public class c {
         catch (Exception exception) {
             string2 = null;
             Exception exception2 = exception;
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", exception2.getMessage(), exception2);
+            Log.c("VisaPayProviderSdk", exception2.getMessage(), exception2);
             return string2;
         }
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", " emailHash: " + string2);
+        Log.d("VisaPayProviderSdk", " emailHash: " + string2);
         return string2;
         {
             catch (Exception exception) {}
@@ -200,7 +198,7 @@ public class c {
     private void init() {
         if (this.eF() == -1) {
             List<String> list = this.zG.eM();
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", " init: " + list);
+            Log.d("VisaPayProviderSdk", " init: " + list);
             if (list != null && !list.isEmpty()) {
                 for (int i2 = 0; i2 < list.size(); ++i2) {
                     this.a(this.zG.ba((String)list.get(i2)));
@@ -210,34 +208,34 @@ public class c {
     }
 
     private long w(long l2) {
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "getReplenishTsinMs - keyExpTs = " + l2);
+        Log.d("VisaPayProviderSdk", "getReplenishTsinMs - keyExpTs = " + l2);
         if (l2 <= 0L) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "getReplenishTsinMs - keyExpTs  value is negative. setting default interval ");
+            Log.e("VisaPayProviderSdk", "getReplenishTsinMs - keyExpTs  value is negative. setting default interval ");
             return 600000L + com.samsung.android.spayfw.utils.h.am(this.mContext);
         }
         if (Long.toString((long)l2).length() <= 10) {
             l2 *= 1000L;
         }
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "getReplenishTsinMs - keyExpTs in milliseconds= " + l2);
+        Log.d("VisaPayProviderSdk", "getReplenishTsinMs - keyExpTs in milliseconds= " + l2);
         return l2;
     }
 
     private long x(long l2) {
         long l3;
         long l4 = com.samsung.android.spayfw.utils.h.am(this.mContext);
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "calculatereplenishts - keyExpTs = " + l2 + " CurrnetTime: " + l4);
+        Log.d("VisaPayProviderSdk", "calculatereplenishts - keyExpTs = " + l2 + " CurrnetTime: " + l4);
         if (l2 <= 0L) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "calculatereplenishts - keyExpTs  value is negative. setting default interval ");
+            Log.e("VisaPayProviderSdk", "calculatereplenishts - keyExpTs  value is negative. setting default interval ");
             return l4 + 600000L;
         }
         if (Long.toString((long)l2).length() <= 10) {
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "calculatereplenishts - keyExpTs in milliseconds= " + (l2 *= 1000L));
+            Log.d("VisaPayProviderSdk", "calculatereplenishts - keyExpTs in milliseconds= " + (l2 *= 1000L));
         }
         if ((l3 = l4 + 3L * (l2 - l4) / 4L) <= l4) {
-            com.samsung.android.spayfw.b.c.i("VisaPayProviderSdk", "Replenish time is <= currnetTime. Setting default Replenish Time600000");
+            Log.i("VisaPayProviderSdk", "Replenish time is <= currnetTime. Setting default Replenish Time600000");
             l3 = l4 + 600000L;
         }
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "calculatereplenishts - replenishTs = " + l3);
+        Log.d("VisaPayProviderSdk", "calculatereplenishts - replenishTs = " + l3);
         return l3;
     }
 
@@ -250,11 +248,11 @@ public class c {
         int n2 = -5;
         this.eE();
         if (this.zN == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "updateTokenStatus:Sdk instance is null");
+            Log.e("VisaPayProviderSdk", "updateTokenStatus:Sdk instance is null");
             return -4;
         }
         if (f2 == null || f2.cn() == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "updateTokenStatus:provider token key is null");
+            Log.e("VisaPayProviderSdk", "updateTokenStatus:provider token key is null");
             return -4;
         }
         String string = null;
@@ -262,20 +260,20 @@ public class c {
             string = tokenStatus.getCode();
         }
         if (string == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "updateTokenStatus:status code is null");
+            Log.e("VisaPayProviderSdk", "updateTokenStatus:status code is null");
             return -4;
         }
         String string2 = f2.cn();
         TokenKey tokenKey = new TokenKey(f2.cm());
         a a2 = this.zG.ba(string2);
         if (a2 == null) {
-            com.samsung.android.spayfw.b.c.i("VisaPayProviderSdk", "updateTokenStatus:record is null for providerTokenKey: " + string2);
+            Log.i("VisaPayProviderSdk", "updateTokenStatus:record is null for providerTokenKey: " + string2);
             return -4;
         }
         f2.setTrTokenId(a2.getTrTokenId());
         try {
             String string3 = this.zN.getTokenStatus(tokenKey);
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "VisaTokenStatus: " + string3);
+            Log.d("VisaPayProviderSdk", "VisaTokenStatus: " + string3);
             UpdateReason updateReason = new UpdateReason();
             if (string.equals((Object)"SUSPENDED")) {
                 this.zN.suspendToken(tokenKey, updateReason);
@@ -286,33 +284,33 @@ public class c {
                 a2.R(-1);
                 this.zG.d(a2);
                 this.a(a2);
-                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "updateTokenStatus:token suspended so replenish values set to zero ");
+                Log.d("VisaPayProviderSdk", "updateTokenStatus:token suspended so replenish values set to zero ");
                 return 0;
             } else if (string.equals((Object)"ACTIVE")) {
                 this.zN.resumeToken(tokenKey);
                 if (k2 != null && "SUSPENDED".equals((Object)string3)) {
-                    com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "token resumed so triggering replenish: trTokenId: " + a2.getTrTokenId() + " providerKey: " + string2);
+                    Log.d("VisaPayProviderSdk", "token resumed so triggering replenish: trTokenId: " + a2.getTrTokenId() + " providerKey: " + string2);
                     k2.a(f2);
                 }
                 if (k2 == null) return 0;
                 if (!"INACTIVE".equals((Object)string3)) return 0;
-                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "token resumed so setup replenish alarm: trTokenId: " + a2.getTrTokenId() + " providerKey: " + string2);
+                Log.d("VisaPayProviderSdk", "token resumed so setup replenish alarm: trTokenId: " + a2.getTrTokenId() + " providerKey: " + string2);
                 this.b(a2.getTrTokenId(), f2, k2);
                 return 0;
             } else if (string.equals((Object)"DISPOSED")) {
-                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "updateTokenStatus:Sdk: deleting token from sdk:tokenId " + a2.getTrTokenId());
+                Log.d("VisaPayProviderSdk", "updateTokenStatus:Sdk: deleting token from sdk:tokenId " + a2.getTrTokenId());
                 h.a(this.mContext, f2);
                 this.zN.deleteToken(tokenKey);
                 this.zG.bb(string2);
                 this.deleteEntry(string2);
                 return 0;
             } else {
-                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "updateTokenStatus:Sdk: statusCode " + string);
+                Log.d("VisaPayProviderSdk", "updateTokenStatus:Sdk: statusCode " + string);
             }
             return 0;
         }
         catch (TokenInvalidException tokenInvalidException) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", tokenInvalidException.getMessage(), (Throwable)((Object)tokenInvalidException));
+            Log.c("VisaPayProviderSdk", tokenInvalidException.getMessage(), (Throwable)((Object)tokenInvalidException));
             return n2;
         }
         catch (TokenKeyInvalidException tokenKeyInvalidException) {
@@ -333,13 +331,13 @@ public class c {
         this.eE();
         Bundle bundle = new Bundle();
         if (f2 == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "stopNfcPay ProviderTokenKey is null");
+            Log.e("VisaPayProviderSdk", "stopNfcPay ProviderTokenKey is null");
             bundle.putShort("nfcApduErrorCode", (short)1);
             return bundle;
         }
         TokenKey tokenKey = new TokenKey(f2.cm());
         TransactionStatus transactionStatus = this.zN.processTransactionComplete(tokenKey);
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "stopNfcPay: reason : " + n2 + ", sdk ret = " + (Object)((Object)transactionStatus.getError()));
+        Log.d("VisaPayProviderSdk", "stopNfcPay: reason : " + n2 + ", sdk ret = " + (Object)((Object)transactionStatus.getError()));
         short s2 = transactionStatus.getError() != TransactionError.NO_ERROR ? (short)3 : 2;
         bundle.putShort("nfcApduErrorCode", s2);
         if (transactionStatus.getError() == TransactionError.NO_ERROR && transactionStatus.isTapNGoAllowed()) {
@@ -372,14 +370,14 @@ public class c {
         c2.setErrorCode(0);
         if (this.zN == null || tokenKey == null) {
             if (this.zN == null) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "getReplenishmentRequestData:Sdk instance is null");
+                Log.e("VisaPayProviderSdk", "getReplenishmentRequestData:Sdk instance is null");
             } else {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "getReplenishmentRequestData:tokenId is null");
+                Log.e("VisaPayProviderSdk", "getReplenishmentRequestData:tokenId is null");
             }
             c2.setErrorCode(-4);
             return c2;
         }
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "getReplenishmentRequestData:tokenId: " + tokenKey);
+        Log.d("VisaPayProviderSdk", "getReplenishmentRequestData:tokenId: " + tokenKey);
         try {
             ReplenishRequest replenishRequest = this.zN.constructReplenishRequest(tokenKey);
             if (replenishRequest == null) return c2;
@@ -387,15 +385,15 @@ public class c {
             Gson gson = new Gson();
             String string = gson.toJson((Object)replenishRequest);
             JsonObject jsonObject = (JsonObject)gson.fromJson(string, JsonObject.class);
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "getReplenishmentRequestData: jsonData: " + string);
+            Log.d("VisaPayProviderSdk", "getReplenishmentRequestData: jsonData: " + string);
             c2.a(jsonObject);
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "getReplenishmentRequestData:data: " + (Object)c2.ch());
+            Log.d("VisaPayProviderSdk", "getReplenishmentRequestData:data: " + (Object)c2.ch());
             c2.setErrorCode(0);
             return c2;
         }
         catch (TokenInvalidException tokenInvalidException) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", tokenInvalidException.getMessage(), (Throwable)((Object)tokenInvalidException));
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "constructReplenishRequest returns exception");
+            Log.c("VisaPayProviderSdk", tokenInvalidException.getMessage(), (Throwable)((Object)tokenInvalidException));
+            Log.e("VisaPayProviderSdk", "constructReplenishRequest returns exception");
             c2.setErrorCode(-2);
             return c2;
         }
@@ -416,7 +414,7 @@ public class c {
         e e2 = new e();
         e2.setErrorCode(0);
         if (this.zN == null || string == null || this.zG == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "setProvisionResponse invalid input");
+            Log.e("VisaPayProviderSdk", "setProvisionResponse invalid input");
             e2.setErrorCode(-4);
             return e2;
         }
@@ -424,40 +422,40 @@ public class c {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         try {
             ProvisionResponse provisionResponse = (ProvisionResponse)gson.fromJson((JsonElement)jsonObject, ProvisionResponse.class);
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "ProvisionToken: " + gson.toJson((Object)provisionResponse));
+            Log.d("VisaPayProviderSdk", "ProvisionToken: " + gson.toJson((Object)provisionResponse));
             TokenKey tokenKey = this.zN.storeProvisionedToken(provisionResponse, null);
             if (tokenKey != null) {
-                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "setProvisionResponse : trTokenId: " + string + " tokenKey: " + tokenKey.getTokenId());
+                Log.d("VisaPayProviderSdk", "setProvisionResponse : trTokenId: " + string + " tokenKey: " + tokenKey.getTokenId());
                 f f2 = new f(tokenKey.getTokenId());
                 e2.setProviderTokenKey(f2);
                 ProvisionAckRequest provisionAckRequest = this.zN.constructProvisionAck(tokenKey);
                 if (provisionAckRequest != null) {
                     Gson gson2 = new Gson();
                     String string2 = gson2.toJson((Object)provisionAckRequest);
-                    com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "constructProvisionAck : " + string2);
+                    Log.d("VisaPayProviderSdk", "constructProvisionAck : " + string2);
                     e2.b((JsonObject)gson2.fromJson(string2, JsonObject.class));
                 } else {
                     e2.setErrorCode(-2);
-                    com.samsung.android.spayfw.b.c.w("VisaPayProviderSdk", "constructProvisionAck returns null");
+                    Log.w("VisaPayProviderSdk", "constructProvisionAck returns null");
                 }
                 if (provisionResponse == null) return e2;
                 if (provisionResponse.getTokenInfo().getHceData() == null) return e2;
                 if (provisionResponse.getTokenInfo().getHceData().getDynParams() == null) return e2;
                 int n2 = provisionResponse.getTokenInfo().getHceData().getDynParams().getMaxPmts();
                 long l2 = provisionResponse.getTokenInfo().getHceData().getDynParams().getKeyExpTS();
-                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "maxPmts: " + n2);
+                Log.d("VisaPayProviderSdk", "maxPmts: " + n2);
                 a a2 = new a(string, f2.cn(), n2, this.Q(n2), this.w(l2), this.x(l2), com.samsung.android.spayfw.utils.h.am(this.mContext));
                 this.zG.c(a2);
                 this.a(a2);
                 return e2;
             }
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "storeProvisionedToken returns null");
+            Log.e("VisaPayProviderSdk", "storeProvisionedToken returns null");
             e2.setErrorCode(-2);
             return e2;
         }
         catch (JsonSyntaxException jsonSyntaxException) {
             e2.setErrorCode(-2);
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", jsonSyntaxException.getMessage(), jsonSyntaxException);
+            Log.c("VisaPayProviderSdk", jsonSyntaxException.getMessage(), jsonSyntaxException);
             return e2;
         }
         catch (Exception exception) {
@@ -477,12 +475,12 @@ public class c {
         e e2 = new e();
         e2.setErrorCode(0);
         if (this.zN == null || string == null || f2 == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "replenishToken:Sdk instance or tokenId is null");
+            Log.e("VisaPayProviderSdk", "replenishToken:Sdk instance or tokenId is null");
             e2.setErrorCode(-4);
             return e2;
         }
         if (jsonObject == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "replenishToken:data is null");
+            Log.e("VisaPayProviderSdk", "replenishToken:data is null");
             e2.setErrorCode(-4);
             return e2;
         }
@@ -490,46 +488,46 @@ public class c {
         Gson gson = new Gson();
         try {
             ProvisionResponse provisionResponse = (ProvisionResponse)gson.fromJson((JsonElement)jsonObject, ProvisionResponse.class);
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "replenishToken:ProvisionResponse " + gson.toJson((Object)provisionResponse));
+            Log.d("VisaPayProviderSdk", "replenishToken:ProvisionResponse " + gson.toJson((Object)provisionResponse));
             if (provisionResponse == null || provisionResponse.getTokenInfo() == null) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "replenishToken:incoming data is invalid");
+                Log.e("VisaPayProviderSdk", "replenishToken:incoming data is invalid");
                 e2.setErrorCode(-2);
                 return e2;
             }
             TokenInfo tokenInfo = provisionResponse.getTokenInfo();
             if (tokenInfo == null || tokenInfo.getHceData() == null || tokenInfo.getHceData().getDynParams() == null || tokenInfo.getHceData().getDynParams().getEncKeyInfo() == null) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "replenishToken:incoming data(tokenInfo) is invalid");
+                Log.e("VisaPayProviderSdk", "replenishToken:incoming data(tokenInfo) is invalid");
                 e2.setErrorCode(-2);
                 return e2;
             }
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "replenishToken:TokenInfo " + gson.toJson((Object)tokenInfo));
+            Log.d("VisaPayProviderSdk", "replenishToken:TokenInfo " + gson.toJson((Object)tokenInfo));
             int n2 = tokenInfo.getHceData().getDynParams().getMaxPmts();
             long l2 = tokenInfo.getHceData().getDynParams().getKeyExpTS();
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "maxPmts " + n2);
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "keyExpTs " + l2);
+            Log.d("VisaPayProviderSdk", "maxPmts " + n2);
+            Log.d("VisaPayProviderSdk", "keyExpTs " + l2);
             TokenKey tokenKey = new TokenKey(f2.cm());
             if (!this.zN.processReplenishmentResponse(tokenKey, tokenInfo)) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "processReplenishmentResponse: ret false");
+                Log.e("VisaPayProviderSdk", "processReplenishmentResponse: ret false");
                 e2.setErrorCode(-2);
                 return e2;
             }
-            com.samsung.android.spayfw.b.c.i("VisaPayProviderSdk", "constructReplenishAcknowledgementRequest: ");
+            Log.i("VisaPayProviderSdk", "constructReplenishAcknowledgementRequest: ");
             ReplenishAckRequest replenishAckRequest = this.zN.constructReplenishAcknowledgementRequest(tokenKey);
             if (replenishAckRequest == null) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "constructReplenishAcknowledgementRequest returns null");
+                Log.e("VisaPayProviderSdk", "constructReplenishAcknowledgementRequest returns null");
                 e2.setErrorCode(-5);
                 return e2;
             }
             Gson gson2 = new Gson();
             String string2 = gson2.toJson((Object)replenishAckRequest);
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "constructReplenishAcknowledgementRequest : " + string2);
+            Log.d("VisaPayProviderSdk", "constructReplenishAcknowledgementRequest : " + string2);
             e2.b((JsonObject)gson2.fromJson(string2, JsonObject.class));
             long l3 = this.w(l2);
             int n3 = this.Q(n2);
             long l4 = this.x(l3);
             a a2 = this.zG.aZ(string);
             if (a2 == null) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "constructReplenishAcknowledgementRequest returns null");
+                Log.e("VisaPayProviderSdk", "constructReplenishAcknowledgementRequest returns null");
                 e2.setErrorCode(-5);
                 return e2;
             }
@@ -539,10 +537,10 @@ public class c {
             a2.z(l4);
             this.zG.d(a2);
             this.a(a2);
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "updateReplenishStatus : maxPmts:  " + n2 + " replenishPmts: " + n3 + "keyExpTs: " + l3 + " replenishExpTs: " + l4);
+            Log.d("VisaPayProviderSdk", "updateReplenishStatus : maxPmts:  " + n2 + " replenishPmts: " + n3 + "keyExpTs: " + l3 + " replenishExpTs: " + l4);
             a a3 = this.zG.aZ(string);
             if (a3 != null) {
-                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "updateReplenishStatus from db : " + a3.dump());
+                Log.d("VisaPayProviderSdk", "updateReplenishStatus from db : " + a3.dump());
             }
             this.b(string, f2, k2);
             f2.setTrTokenId(string);
@@ -550,14 +548,14 @@ public class c {
             return e2;
         }
         catch (JsonSyntaxException jsonSyntaxException) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", jsonSyntaxException.getMessage(), jsonSyntaxException);
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "replenishToken = JsonSyntaxException");
+            Log.c("VisaPayProviderSdk", jsonSyntaxException.getMessage(), jsonSyntaxException);
+            Log.e("VisaPayProviderSdk", "replenishToken = JsonSyntaxException");
             e2.setErrorCode(-4);
             return e2;
         }
         catch (TokenInvalidException tokenInvalidException) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", tokenInvalidException.getMessage(), (Throwable)((Object)tokenInvalidException));
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "replenishToken = TokenInvalidException");
+            Log.c("VisaPayProviderSdk", tokenInvalidException.getMessage(), (Throwable)((Object)tokenInvalidException));
+            Log.e("VisaPayProviderSdk", "replenishToken = TokenInvalidException");
             e2.setErrorCode(-5);
             return e2;
         }
@@ -574,14 +572,14 @@ public class c {
      * Enabled aggressive exception aggregation
      */
     public PaymentDataRequest a(TokenKey tokenKey, String string, boolean bl) {
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "getInAppRequestData");
+        Log.d("VisaPayProviderSdk", "getInAppRequestData");
         this.eE();
         if (string == null || tokenKey == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "getInAppRequestData, input is null");
+            Log.e("VisaPayProviderSdk", "getInAppRequestData, input is null");
             return null;
         }
         if (this.zN == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "getInAppRequestData, sdk is null");
+            Log.e("VisaPayProviderSdk", "getInAppRequestData, sdk is null");
             return null;
         }
         try {
@@ -595,7 +593,7 @@ public class c {
             return visaPaymentSDK.constructPaymentDataRequest(null, tokenKey, string, string2);
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", exception.getMessage(), exception);
+            Log.c("VisaPayProviderSdk", exception.getMessage(), exception);
             return null;
         }
     }
@@ -605,7 +603,7 @@ public class c {
         synchronized (c2) {
             if (zO != null && a2 != null && a2.eH() != null) {
                 zO.put((Object)a2.eH(), (Object)a2);
-                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", " addEntry: " + a2.dump());
+                Log.d("VisaPayProviderSdk", " addEntry: " + a2.dump());
             }
             return;
         }
@@ -619,14 +617,14 @@ public class c {
     void a(TokenKey tokenKey, boolean bl, boolean bl2) {
         String string;
         VisaPaymentSDK visaPaymentSDK;
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "processInAppTransactionComplete " + bl2);
+        Log.d("VisaPayProviderSdk", "processInAppTransactionComplete " + bl2);
         this.eE();
         if (tokenKey == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "tokenKey is null ");
+            Log.e("VisaPayProviderSdk", "tokenKey is null ");
             return;
         }
         if (this.zN == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "sdk is null");
+            Log.e("VisaPayProviderSdk", "sdk is null");
             return;
         }
         try {
@@ -634,7 +632,7 @@ public class c {
             string = bl ? "RECURRING" : "ECOM";
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", exception.getMessage(), exception);
+            Log.c("VisaPayProviderSdk", exception.getMessage(), exception);
             return;
         }
         visaPaymentSDK.processInAppTransactionComplete(tokenKey, string, bl2);
@@ -646,30 +644,30 @@ public class c {
     public void a(String string, f f2, k k2) {
         String string2 = this.f(f2);
         if (string2 == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "setupReplenishAlarm :  tokenStatus is null");
+            Log.e("VisaPayProviderSdk", "setupReplenishAlarm :  tokenStatus is null");
             return;
         } else {
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "setupReplenishAlarm :  tokenStatus " + string2);
+            Log.d("VisaPayProviderSdk", "setupReplenishAlarm :  tokenStatus " + string2);
             if (!string2.equals((Object)"ACTIVE")) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "Not Replenishing as Token is Suspended or Pending.");
+                Log.e("VisaPayProviderSdk", "Not Replenishing as Token is Suspended or Pending.");
                 return;
             }
             if (string == null) return;
             {
                 a a2 = this.zG.ba(string);
                 if (a2 == null) {
-                    com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "no token record. ignore updateAndCheckReplenishStatus ");
+                    Log.e("VisaPayProviderSdk", "no token record. ignore updateAndCheckReplenishStatus ");
                     return;
                 }
                 int n2 = a2.getMaxPmts();
                 int n3 = a2.eI();
-                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "current: maxPmts " + n2 + "replenishPmts: " + n3);
+                Log.d("VisaPayProviderSdk", "current: maxPmts " + n2 + "replenishPmts: " + n3);
                 int n4 = n2 - 1;
                 if (n4 < 0) {
                     n4 = 0;
                 }
                 this.zG.a(VisaTokenDetailsDao.VisaTokenGroup.TokenColumn.MAX_PMTS, n4, string);
-                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", " New current: maxPmts " + n4 + " replenishPmts: " + n3);
+                Log.d("VisaPayProviderSdk", " New current: maxPmts " + n4 + " replenishPmts: " + n3);
                 a a3 = this.aX(string);
                 if (a3 != null) {
                     a3.setMaxPmts(n4);
@@ -677,7 +675,7 @@ public class c {
                 }
                 if (n4 > n3) return;
                 {
-                    com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "updateAndCheckReplenishStatus: triggering Replenish request ");
+                    Log.d("VisaPayProviderSdk", "updateAndCheckReplenishStatus: triggering Replenish request ");
                     f2.setTrTokenId(a2.getTrTokenId());
                     k2.a(f2);
                     return;
@@ -687,15 +685,15 @@ public class c {
     }
 
     boolean a(TokenKey tokenKey, int n2) {
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "isPresentationModeSupported " + n2);
+        Log.d("VisaPayProviderSdk", "isPresentationModeSupported " + n2);
         if (n2 == 2) {
             this.eE();
             if (tokenKey == null) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "tokenKey is null ");
+                Log.e("VisaPayProviderSdk", "tokenKey is null ");
                 return false;
             }
             if (this.zN == null) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "sdk is null");
+                Log.e("VisaPayProviderSdk", "sdk is null");
                 return false;
             }
             try {
@@ -703,7 +701,7 @@ public class c {
                 return bl;
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", exception.getMessage(), exception);
+                Log.c("VisaPayProviderSdk", exception.getMessage(), exception);
                 return false;
             }
         }
@@ -738,13 +736,13 @@ public class c {
             this.eE();
             c2 = new com.samsung.android.spayfw.payprovider.c();
             c2.setErrorCode(0);
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "getEnrollRequestData: enter ");
+            Log.d("VisaPayProviderSdk", "getEnrollRequestData: enter ");
             if (enrollCardInfo == null || this.zN == null) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "getEnrollRequestData: input is invalid ");
+                Log.e("VisaPayProviderSdk", "getEnrollRequestData: input is invalid ");
                 c2.setErrorCode(-4);
                 return c2;
             }
-            com.samsung.android.spayfw.b.c.m("VisaPayProviderSdk", "EnrollCardInfo:" + enrollCardInfo.toString());
+            Log.m("VisaPayProviderSdk", "EnrollCardInfo:" + enrollCardInfo.toString());
             this.zN.getEnrollPANTemplate();
             JsonObject jsonObject = new JsonObject();
             if (enrollCardInfo instanceof EnrollCardPanInfo) {
@@ -754,29 +752,29 @@ public class c {
                     JsonObject jsonObject3 = new JsonObject();
                     JsonObject jsonObject4 = new JsonObject();
                     if (billingInfo != null) {
-                        com.samsung.android.spayfw.b.c.m("VisaPayProviderSdk", "BillingInfo:" + billingInfo.toString());
+                        Log.m("VisaPayProviderSdk", "BillingInfo:" + billingInfo.toString());
                         if (billingInfo.getStreet1() != null && !billingInfo.getStreet1().equals((Object)"")) {
-                            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "street1:" + billingInfo.getStreet1());
+                            Log.d("VisaPayProviderSdk", "street1:" + billingInfo.getStreet1());
                             jsonObject3.addProperty("line1", billingInfo.getStreet1());
                         }
                         if (billingInfo.getStreet2() != null && !billingInfo.getStreet2().equals((Object)"")) {
-                            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "street2:" + billingInfo.getStreet2());
+                            Log.d("VisaPayProviderSdk", "street2:" + billingInfo.getStreet2());
                             jsonObject3.addProperty("line2", billingInfo.getStreet2());
                         }
                         if (billingInfo.getCity() != null && !billingInfo.getCity().equals((Object)"")) {
-                            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "city:" + billingInfo.getCity());
+                            Log.d("VisaPayProviderSdk", "city:" + billingInfo.getCity());
                             jsonObject3.addProperty("city", billingInfo.getCity());
                         }
                         if (billingInfo.getState() != null && !billingInfo.getState().equals((Object)"")) {
-                            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "state:" + billingInfo.getState());
+                            Log.d("VisaPayProviderSdk", "state:" + billingInfo.getState());
                             jsonObject3.addProperty("state", billingInfo.getState());
                         }
                         if (billingInfo.getCountry() != null && !billingInfo.getCountry().equals((Object)"")) {
-                            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "country:" + billingInfo.getCountry());
+                            Log.d("VisaPayProviderSdk", "country:" + billingInfo.getCountry());
                             jsonObject3.addProperty("country", billingInfo.getCountry());
                         }
                         if (billingInfo.getZip() != null && !billingInfo.getZip().equals((Object)"")) {
-                            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "zip:" + billingInfo.getZip());
+                            Log.d("VisaPayProviderSdk", "zip:" + billingInfo.getZip());
                             jsonObject3.addProperty("postalCode", billingInfo.getZip());
                         }
                         jsonObject2.add("billingAddress", (JsonElement)jsonObject3);
@@ -793,24 +791,24 @@ public class c {
                     if (jsonObject4.has("month") && jsonObject4.has("year")) {
                         jsonObject2.add("expirationDate", (JsonElement)jsonObject4);
                     }
-                    com.samsung.android.spayfw.b.c.m("VisaPayProviderSdk", "paymentInstrument: " + jsonObject2.toString());
+                    Log.m("VisaPayProviderSdk", "paymentInstrument: " + jsonObject2.toString());
                     byte[] arrby = jsonObject2.toString().getBytes("utf-8");
                     byte[] arrby2 = new byte[1 + arrby.length];
                     arrby2[0] = 21;
                     System.arraycopy((Object)arrby, (int)0, (Object)arrby2, (int)1, (int)arrby.length);
                     EnrollPanRequest enrollPanRequest = this.zN.constructEnrollRequest(arrby2);
                     if (enrollPanRequest == null) {
-                        com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "constructEnrollRequest null");
+                        Log.e("VisaPayProviderSdk", "constructEnrollRequest null");
                         c2.setErrorCode(-2);
                         break block37;
                     }
                     jsonObject.addProperty("encPaymentInstrument", enrollPanRequest.getEncPaymentInstrument());
-                    com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "getEnrollRequestData: " + enrollPanRequest.getEncPaymentInstrument());
+                    Log.d("VisaPayProviderSdk", "getEnrollRequestData: " + enrollPanRequest.getEncPaymentInstrument());
                     c2.a(jsonObject);
                 }
                 catch (UnsupportedEncodingException unsupportedEncodingException) {
                     c2.setErrorCode(-2);
-                    com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
+                    Log.c("VisaPayProviderSdk", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
                 }
                 catch (Exception exception) {
                     c2.setErrorCode(-2);
@@ -819,12 +817,12 @@ public class c {
             } else if (enrollCardInfo instanceof EnrollCardReferenceInfo) {
                 EnrollCardReferenceInfo enrollCardReferenceInfo = (EnrollCardReferenceInfo)enrollCardInfo;
                 if (enrollCardReferenceInfo.getReferenceType() != null && enrollCardReferenceInfo.getExtraEnrollData() != null) {
-                    com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "Card Type : " + enrollCardReferenceInfo.getReferenceType());
+                    Log.d("VisaPayProviderSdk", "Card Type : " + enrollCardReferenceInfo.getReferenceType());
                     if (enrollCardReferenceInfo.getReferenceType().equals((Object)"app2app")) {
                         jsonObject.addProperty("encPaymentInstrument", new String(enrollCardReferenceInfo.getExtraEnrollData().getByteArray("enrollPayload")));
                         c2.a(jsonObject);
                     } else if (enrollCardReferenceInfo.getReferenceType().equals((Object)"referenceId")) {
-                        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "Card Import enrollment");
+                        Log.d("VisaPayProviderSdk", "Card Import enrollment");
                         try {
                             Bundle bundle = ((EnrollCardReferenceInfo)enrollCardInfo).getExtraEnrollData();
                             if (bundle != null) {
@@ -836,7 +834,7 @@ public class c {
                                 JsonObject jsonObject6 = new JsonObject();
                                 JsonObject jsonObject7 = new JsonObject();
                                 if (string4 != null && !string4.isEmpty()) {
-                                    com.samsung.android.spayfw.b.c.m("VisaPayProviderSdk", "BillingInfo:" + string4);
+                                    Log.m("VisaPayProviderSdk", "BillingInfo:" + string4);
                                     jsonObject6.addProperty("postalCode", string4);
                                     jsonObject5.add("billingAddress", (JsonElement)jsonObject6);
                                 }
@@ -850,18 +848,18 @@ public class c {
                                 if (jsonObject7.has("month") && jsonObject7.has("year")) {
                                     jsonObject5.add("expirationDate", (JsonElement)jsonObject7);
                                 }
-                                com.samsung.android.spayfw.b.c.m("VisaPayProviderSdk", "paymentInstrument: " + jsonObject5.toString());
+                                Log.m("VisaPayProviderSdk", "paymentInstrument: " + jsonObject5.toString());
                                 byte[] arrby = jsonObject5.toString().getBytes("utf-8");
                                 byte[] arrby3 = new byte[1 + arrby.length];
                                 arrby3[0] = 21;
                                 System.arraycopy((Object)arrby, (int)0, (Object)arrby3, (int)1, (int)arrby.length);
                                 EnrollPanRequest enrollPanRequest = this.zN.constructEnrollRequest(arrby3);
                                 if (enrollPanRequest == null) {
-                                    com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "constructEnrollRequest null");
+                                    Log.e("VisaPayProviderSdk", "constructEnrollRequest null");
                                     c2.setErrorCode(-2);
                                 }
                                 jsonObject.addProperty("encPaymentInstrument", enrollPanRequest.getEncPaymentInstrument());
-                                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "getEnrollRequestData: " + enrollPanRequest.getEncPaymentInstrument());
+                                Log.d("VisaPayProviderSdk", "getEnrollRequestData: " + enrollPanRequest.getEncPaymentInstrument());
                                 c2.a(jsonObject);
                             } else {
                                 c2.setErrorCode(-2);
@@ -869,7 +867,7 @@ public class c {
                         }
                         catch (UnsupportedEncodingException unsupportedEncodingException) {
                             c2.setErrorCode(-2);
-                            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
+                            Log.c("VisaPayProviderSdk", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
                         }
                         catch (Exception exception) {
                             c2.setErrorCode(-2);
@@ -877,7 +875,7 @@ public class c {
                         }
                     }
                 } else {
-                    com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "enrollCardReferenceInfo reference type or extra data is null");
+                    Log.e("VisaPayProviderSdk", "enrollCardReferenceInfo reference type or extra data is null");
                 }
             }
         }
@@ -894,35 +892,35 @@ public class c {
      */
     public void b(String string, f f2, k k2) {
         String string2;
-        com.samsung.android.spayfw.b.c.i("VisaPayProviderSdk", "Entered setup Replenish Alarm");
+        Log.i("VisaPayProviderSdk", "Entered setup Replenish Alarm");
         a a2 = null;
         if (string != null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "trtokenid not null");
+            Log.e("VisaPayProviderSdk", "trtokenid not null");
             a2 = this.zG.aZ(string);
         }
         if ((string2 = this.f(f2)) == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "setupReplenishAlarm :  tokenStatus is null");
+            Log.e("VisaPayProviderSdk", "setupReplenishAlarm :  tokenStatus is null");
             return;
         }
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "setupReplenishAlarm :  tokenStatus " + string2);
+        Log.d("VisaPayProviderSdk", "setupReplenishAlarm :  tokenStatus " + string2);
         if (!string2.equals((Object)"ACTIVE")) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "Not Replenishing as Token is Suspended or Pending.");
+            Log.e("VisaPayProviderSdk", "Not Replenishing as Token is Suspended or Pending.");
             return;
         }
         if (a2 == null) return;
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "visa token details not null");
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "visa token details replenishts = " + a2.eK());
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "current time  = " + com.samsung.android.spayfw.utils.h.am(this.mContext));
+        Log.d("VisaPayProviderSdk", "visa token details not null");
+        Log.d("VisaPayProviderSdk", "visa token details replenishts = " + a2.eK());
+        Log.d("VisaPayProviderSdk", "current time  = " + com.samsung.android.spayfw.utils.h.am(this.mContext));
         if (string == null) return;
         {
             if (a2.eK() - com.samsung.android.spayfw.utils.h.am(this.mContext) > 0L && a2.getMaxPmts() > a2.eI()) {
-                com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "Setting up Replenish Alarm");
+                Log.d("VisaPayProviderSdk", "Setting up Replenish Alarm");
                 h.a(this.mContext, a2.eK(), f2);
                 return;
             }
         }
-        com.samsung.android.spayfw.b.c.i("VisaPayProviderSdk", "Run Replenish Rightaway: trTokenId " + string);
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "Visa token record: " + a2.dump());
+        Log.i("VisaPayProviderSdk", "Run Replenish Rightaway: trTokenId " + string);
+        Log.d("VisaPayProviderSdk", "Visa token record: " + a2.dump());
         k2.a(f2);
     }
 
@@ -933,7 +931,7 @@ public class c {
             return;
         }
         catch (TokenInvalidException tokenInvalidException) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", tokenInvalidException.getMessage(), (Throwable)((Object)tokenInvalidException));
+            Log.c("VisaPayProviderSdk", tokenInvalidException.getMessage(), (Throwable)((Object)tokenInvalidException));
             return;
         }
         catch (Exception exception) {
@@ -945,7 +943,7 @@ public class c {
     String f(f f2) {
         this.eE();
         if (f2 == null || f2.cn() == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "getTokenStatus :  token key is null");
+            Log.e("VisaPayProviderSdk", "getTokenStatus :  token key is null");
             return null;
         }
         TokenKey tokenKey = new TokenKey(f2.cm());
@@ -960,27 +958,27 @@ public class c {
     Bundle getTokenMetaData(TokenKey tokenKey) {
         String string;
         if (this.zN == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "sdk is null");
+            Log.e("VisaPayProviderSdk", "sdk is null");
             return null;
         }
         if (tokenKey == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "tokenKey is null");
+            Log.e("VisaPayProviderSdk", "tokenKey is null");
             return null;
         }
         try {
             Bundle bundle = this.zN.getTokenMetaData(tokenKey);
             if (bundle == null) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "metaData is null");
+                Log.e("VisaPayProviderSdk", "metaData is null");
                 return null;
             }
             string = bundle.getString("qvsdc_issuercountrycode");
             if (string == null) {
-                com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "issuerCountryCode is null");
+                Log.e("VisaPayProviderSdk", "issuerCountryCode is null");
                 return null;
             }
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", exception.getMessage(), exception);
+            Log.c("VisaPayProviderSdk", exception.getMessage(), exception);
             return null;
         }
         Bundle bundle = new Bundle();
@@ -997,26 +995,26 @@ public class c {
             new ProvisionResponse();
             ProvisionResponse provisionResponse = (ProvisionResponse)new Gson().fromJson((JsonElement)jsonObject, ProvisionResponse.class);
             if (provisionResponse == null || provisionResponse.getTokenInfo() == null) {
-                com.samsung.android.spayfw.b.c.i("VisaPayProviderSdk", "isReplenishDataAvailable:incoming data is invalid");
+                Log.i("VisaPayProviderSdk", "isReplenishDataAvailable:incoming data is invalid");
                 return false;
             }
             TokenInfo tokenInfo = provisionResponse.getTokenInfo();
             if (tokenInfo == null || tokenInfo.getHceData() == null || tokenInfo.getHceData().getDynParams() == null || tokenInfo.getHceData().getDynParams().getEncKeyInfo() == null) {
-                com.samsung.android.spayfw.b.c.i("VisaPayProviderSdk", "isReplenishDataAvailable:incoming data(tokenInfo) is invalid");
+                Log.i("VisaPayProviderSdk", "isReplenishDataAvailable:incoming data(tokenInfo) is invalid");
                 return false;
             }
             bl = true;
         } else {
             bl = false;
         }
-        com.samsung.android.spayfw.b.c.i("VisaPayProviderSdk", "isReplenishDataAvailable:ret :" + bl);
+        Log.i("VisaPayProviderSdk", "isReplenishDataAvailable:ret :" + bl);
         return bl;
     }
 
     public boolean prepareMstPay() {
         this.eE();
         if (this.zN == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "prepareMstPay:Sdk instance is null");
+            Log.e("VisaPayProviderSdk", "prepareMstPay:Sdk instance is null");
             return false;
         }
         try {
@@ -1024,7 +1022,7 @@ public class c {
             return bl;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "prepareMstData returns exception");
+            Log.e("VisaPayProviderSdk", "prepareMstData returns exception");
             exception.printStackTrace();
             return false;
         }
@@ -1034,31 +1032,31 @@ public class c {
         ApduResponse apduResponse;
         this.eE();
         if (this.zN == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "processApdu:Sdk instance is null");
+            Log.e("VisaPayProviderSdk", "processApdu:Sdk instance is null");
             return null;
         }
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "processApdu = " + new String(arrby));
+        Log.d("VisaPayProviderSdk", "processApdu = " + new String(arrby));
         boolean bl = this.zN.isCvmVerified();
         long l2 = System.currentTimeMillis();
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "visa start processApdu measuretime=" + l2);
+        Log.d("VisaPayProviderSdk", "visa start processApdu measuretime=" + l2);
         try {
             apduResponse = this.zN.processCommandApdu(arrby, bundle, bl);
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", exception.getMessage(), exception);
+            Log.c("VisaPayProviderSdk", exception.getMessage(), exception);
             return new byte[]{105, -123};
         }
         long l3 = System.currentTimeMillis();
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "visa end processApdu measuretime=" + l3);
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "visa total processApdu measuretime=" + (l3 - l2));
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "apduResponse = " + new String(apduResponse.getApduData()));
+        Log.d("VisaPayProviderSdk", "visa end processApdu measuretime=" + l3);
+        Log.d("VisaPayProviderSdk", "visa total processApdu measuretime=" + (l3 - l2));
+        Log.d("VisaPayProviderSdk", "apduResponse = " + new String(apduResponse.getApduData()));
         return apduResponse.getApduData();
     }
 
     public void selectCard(TokenKey tokenKey) {
         this.eE();
         if (this.zN == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "selectCard:Sdk instance is null ");
+            Log.e("VisaPayProviderSdk", "selectCard:Sdk instance is null ");
             return;
         }
         try {
@@ -1066,7 +1064,7 @@ public class c {
             return;
         }
         catch (TokenInvalidException tokenInvalidException) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", tokenInvalidException.getMessage(), (Throwable)((Object)tokenInvalidException));
+            Log.c("VisaPayProviderSdk", tokenInvalidException.getMessage(), (Throwable)((Object)tokenInvalidException));
             return;
         }
         catch (Exception exception) {
@@ -1082,7 +1080,7 @@ public class c {
      */
     public void setPayAuthenticationMode(String string) {
         this.eE();
-        com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "setPayAuthenticationMode: " + string);
+        Log.d("VisaPayProviderSdk", "setPayAuthenticationMode: " + string);
         VerifyingType verifyingType = VerifyingType.PASSCODE;
         boolean bl = true;
         if ("FP".equalsIgnoreCase(string)) {
@@ -1095,20 +1093,20 @@ public class c {
             CvmMode cvmMode = new CvmMode(VerifyingEntity.MOBILE_APP, verifyingType);
             this.zN.setCvmVerificationMode(cvmMode);
             this.zN.setCvmVerified(bl);
-            com.samsung.android.spayfw.b.c.d("VisaPayProviderSdk", "setPayAuthenticationMode: type " + (Object)((Object)verifyingType));
+            Log.d("VisaPayProviderSdk", "setPayAuthenticationMode: type " + (Object)((Object)verifyingType));
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", exception.getMessage(), exception);
+            Log.c("VisaPayProviderSdk", exception.getMessage(), exception);
             return;
         }
     }
 
     public void stopMstPay(boolean bl) {
         this.eE();
-        com.samsung.android.spayfw.b.c.i("VisaPayProviderSdk", "stopMstPay: status: " + bl);
+        Log.i("VisaPayProviderSdk", "stopMstPay: status: " + bl);
         if (this.zN == null) {
-            com.samsung.android.spayfw.b.c.e("VisaPayProviderSdk", "stopMstPay:Sdk instance is null");
+            Log.e("VisaPayProviderSdk", "stopMstPay:Sdk instance is null");
             return;
         }
         try {
@@ -1116,7 +1114,7 @@ public class c {
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("VisaPayProviderSdk", exception.getMessage(), exception);
+            Log.c("VisaPayProviderSdk", exception.getMessage(), exception);
             return;
         }
     }

@@ -12,7 +12,8 @@
  */
 package com.samsung.contextservice.b;
 
-import com.samsung.contextservice.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -48,24 +49,24 @@ public final class b {
                 return;
             }
             case 2: {
-                com.samsung.android.spayfw.b.c.e(string3, string2);
+                Log.e(string3, string2);
                 return;
             }
             case 3: {
-                com.samsung.android.spayfw.b.c.w(string3, string2);
+                Log.w(string3, string2);
                 return;
             }
             case 4: {
-                com.samsung.android.spayfw.b.c.v(string3, string2);
+                Log.v(string3, string2);
                 return;
             }
             case 5: {
-                com.samsung.android.spayfw.b.c.i(string3, string2);
+                Log.i(string3, string2);
                 return;
             }
             case 6: 
         }
-        com.samsung.android.spayfw.b.c.d(string3, string2);
+        Log.d(string3, string2);
     }
 
     private static void b(int n2, String string, Throwable throwable, String string2) {
@@ -86,7 +87,7 @@ public final class b {
             block5 : {
                 if (string.length() > 28 - "CTX_".length()) {
                     if (!HJ) {
-                        com.samsung.android.spayfw.b.c.d("CTX_CS", string);
+                        Log.d("CTX_CS", string);
                     }
                     string.substring(0, 28 - "CTX_".length());
                 }

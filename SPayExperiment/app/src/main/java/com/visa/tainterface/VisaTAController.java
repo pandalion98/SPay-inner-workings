@@ -19,16 +19,11 @@ package com.visa.tainterface;
 import android.content.Context;
 import android.os.Build;
 import android.spay.CertInfo;
-import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
-import com.samsung.android.spaytzsvc.api.Blob;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.TAController;
 import com.samsung.android.spaytzsvc.api.TAInfo;
-import com.visa.tainterface.VisaCommands;
-import com.visa.tainterface.VisaTAException;
-import com.visa.tainterface.b;
-import com.visa.tainterface.c;
-import javolution.io.Struct;
 
 public class VisaTAController
 extends TAController {
@@ -59,78 +54,78 @@ extends TAController {
     private boolean b(byte[] arrby, com.visa.tainterface.a a2) {
         if (arrby == null || arrby.length > 4096) {
             if (arrby != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: _encrypted_luk length invalid! _encrypted_luk.len = " + arrby.length);
+                Log.e("VisaTAController", "validateInputPrepareMstData: Error: _encrypted_luk length invalid! _encrypted_luk.len = " + arrby.length);
                 return false;
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: _encrypted_luk is null!");
+            Log.e("VisaTAController", "validateInputPrepareMstData: Error: _encrypted_luk is null!");
             return false;
         }
         if (a2 == null) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: trackData is null!");
+            Log.e("VisaTAController", "validateInputPrepareMstData: Error: trackData is null!");
             return false;
         }
         if (a2.ii() == null || a2.ii().length > 256) {
             if (a2.ii() != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: tokenBytes length invalid! tokenBytes.len = " + a2.ii().length);
+                Log.e("VisaTAController", "validateInputPrepareMstData: Error: tokenBytes length invalid! tokenBytes.len = " + a2.ii().length);
                 return false;
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: tokenBytes is null!");
+            Log.e("VisaTAController", "validateInputPrepareMstData: Error: tokenBytes is null!");
             return false;
         }
         if (a2.ij() == null || a2.ij().length > 256) {
             if (a2.ij() != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: TokenExpirationDate length invalid! TokenExpirationDate.len = " + a2.ij().length);
+                Log.e("VisaTAController", "validateInputPrepareMstData: Error: TokenExpirationDate length invalid! TokenExpirationDate.len = " + a2.ij().length);
                 return false;
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: TokenExpirationDate is null!");
+            Log.e("VisaTAController", "validateInputPrepareMstData: Error: TokenExpirationDate is null!");
             return false;
         }
         if (a2.ik() == null || a2.ik().length > 256) {
             if (a2.ik() != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: ServiceCode length invalid! ServiceCode.len = " + a2.ik().length);
+                Log.e("VisaTAController", "validateInputPrepareMstData: Error: ServiceCode length invalid! ServiceCode.len = " + a2.ik().length);
                 return false;
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: ServiceCode is null!");
+            Log.e("VisaTAController", "validateInputPrepareMstData: Error: ServiceCode is null!");
             return false;
         }
         if (a2.il() == null || a2.il().length > 256) {
             if (a2.il() != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: Timestamp length invalid! Timestamp.len = " + a2.il().length);
+                Log.e("VisaTAController", "validateInputPrepareMstData: Error: Timestamp length invalid! Timestamp.len = " + a2.il().length);
                 return false;
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: Timestamp is null!");
+            Log.e("VisaTAController", "validateInputPrepareMstData: Error: Timestamp is null!");
             return false;
         }
         if (a2.im() == null || a2.im().length > 256) {
             if (a2.im() != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: SequenceCounter length invalid! SequenceCounter.len = " + a2.im().length);
+                Log.e("VisaTAController", "validateInputPrepareMstData: Error: SequenceCounter length invalid! SequenceCounter.len = " + a2.im().length);
                 return false;
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: SequenceCounter is null!");
+            Log.e("VisaTAController", "validateInputPrepareMstData: Error: SequenceCounter is null!");
             return false;
         }
         if (a2.in() == null || a2.in().length > 256) {
             if (a2.in() != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: AppTransactionCounter length invalid! AppTransactionCounter.len = " + a2.in().length);
+                Log.e("VisaTAController", "validateInputPrepareMstData: Error: AppTransactionCounter length invalid! AppTransactionCounter.len = " + a2.in().length);
                 return false;
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: AppTransactionCounter is null!");
+            Log.e("VisaTAController", "validateInputPrepareMstData: Error: AppTransactionCounter is null!");
             return false;
         }
         if (a2.io() == null || a2.io().length > 256) {
             if (a2.io() != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: CVV length invalid! CVV.len = " + a2.io().length);
+                Log.e("VisaTAController", "validateInputPrepareMstData: Error: CVV length invalid! CVV.len = " + a2.io().length);
                 return false;
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: CVV is null!");
+            Log.e("VisaTAController", "validateInputPrepareMstData: Error: CVV is null!");
             return false;
         }
         if (a2.ip() == null || a2.ip().length > 256) {
             if (a2.ip() != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: ReservedBytes length invalid! ReservedBytes.len = " + a2.ip().length);
+                Log.e("VisaTAController", "validateInputPrepareMstData: Error: ReservedBytes length invalid! ReservedBytes.len = " + a2.ip().length);
                 return false;
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "validateInputPrepareMstData: Error: ReservedBytes is null!");
+            Log.e("VisaTAController", "validateInputPrepareMstData: Error: ReservedBytes is null!");
             return false;
         }
         return true;
@@ -165,39 +160,39 @@ extends TAController {
     private void ir() {
         TACommandResponse tACommandResponse;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling loadAllCerts");
+            Log.d("VisaTAController", "Calling loadAllCerts");
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "loadAllCerts: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "loadAllCerts: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", 1);
         }
         if (!this.MK.isLoaded()) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "mVisaDeviceCerts is not loaded");
+            Log.d("VisaTAController", "mVisaDeviceCerts is not loaded");
             if (!this.MK.load()) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "Error: Visa Device Certs Load failed");
+                Log.e("VisaTAController", "Error: Visa Device Certs Load failed");
                 throw new VisaTAException("Error loading Visa Certs", 2);
             }
         }
         byte[] arrby = this.MK.getDevicePrivateSignCert();
         byte[] arrby2 = this.MK.getDevicePrivateEncryptionCert();
         if (arrby == null || arrby2 == null) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "loadAllCerts: Error: Certificate Data is NULL");
+            Log.e("VisaTAController", "loadAllCerts: Error: Certificate Data is NULL");
             this.certsInfoCache = null;
             throw new VisaTAException("Error loading Visa Certs", 2);
         }
         if (arrby.length > 4096 || arrby2.length > 4096 || this.MI != null && this.MI.length > 4096 || this.MJ != null && this.MJ.length > 4096) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "loadAllCerts: Error: certs length invalid! - signCertData.length = " + arrby.length + "; encryptCertData.length = " + arrby2.length);
+            Log.e("VisaTAController", "loadAllCerts: Error: certs length invalid! - signCertData.length = " + arrby.length + "; encryptCertData.length = " + arrby2.length);
             this.certsInfoCache = null;
             throw new VisaTAException("Error loading Visa Certs", 2);
         }
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.LoadCerts.Request(arrby, arrby2, this.MI, this.MJ));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "loadAllCerts: Error: executeNoLoad failed");
+                Log.e("VisaTAController", "loadAllCerts: Error: executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "loadAllCerts: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "loadAllCerts: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -211,13 +206,13 @@ extends TAController {
         VisaCommands.LoadCerts.Response response = new VisaCommands.LoadCerts.Response(tACommandResponse);
         int n2 = (int)response.Mf.return_code.get();
         if (n2 != 0) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "Error processing LoadCerts");
+            Log.e("VisaTAController", "Error processing LoadCerts");
             throw new VisaTAException("Error processing LoadCerts", n2);
         }
         this.MH = new a(response.Mf.cert_drk.getData(), response.Mf.cert_sign.getData(), response.Mf.cert_encrypt.getData(), response.Mf.Mg.get(), response.Mf.Mh.get(), response.Mf.Mi.getData());
         if (!DEBUG) return;
         {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "loadAllCerts called Successfully");
+            Log.d("VisaTAController", "loadAllCerts called Successfully");
         }
     }
 
@@ -230,28 +225,28 @@ extends TAController {
         TACommandResponse tACommandResponse;
         boolean bl = true;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling transmitMstData");
+            Log.d("VisaTAController", "Calling transmitMstData");
         }
         if (arrby == null || arrby.length > 28) {
             if (arrby != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "transmitMstData: Error: config length invalid! config.len = " + arrby.length);
+                Log.e("VisaTAController", "transmitMstData: Error: config length invalid! config.len = " + arrby.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "transmitMstData: Error: config is null!");
+            Log.e("VisaTAController", "transmitMstData: Error: config is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "transmitMstData: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "transmitMstData: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", (int)bl);
         }
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.TransmitMstData.Request(n2, arrby));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "Error: transmitMstData executeNoLoad failed");
+                Log.e("VisaTAController", "Error: transmitMstData executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "transmitMstData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "transmitMstData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -265,7 +260,7 @@ extends TAController {
             bl = false;
         }
         if (!DEBUG) return bl;
-        com.samsung.android.spayfw.b.c.d("VisaTAController", "TransmitMstData: ret = " + bl);
+        Log.d("VisaTAController", "TransmitMstData: ret = " + bl);
         return bl;
     }
 
@@ -277,24 +272,24 @@ extends TAController {
     public boolean a(byte[] arrby, com.visa.tainterface.a a2) {
         TACommandResponse tACommandResponse;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling prepareMstData");
+            Log.d("VisaTAController", "Calling prepareMstData");
         }
         if (!this.b(arrby, a2)) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "prepareMstData: Error: one of the inputs is invalid!");
+            Log.e("VisaTAController", "prepareMstData: Error: one of the inputs is invalid!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "prepareMstData: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "prepareMstData: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", 1);
         }
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.PrepareMstData.Request(a2.ii(), a2.ij(), a2.ik(), a2.il(), a2.im(), a2.in(), a2.io(), a2.ip(), arrby));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "prepareMstData: Error: executeNoLoad failed");
+                Log.e("VisaTAController", "prepareMstData: Error: executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "prepareMstData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "prepareMstData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -308,13 +303,13 @@ extends TAController {
         VisaCommands.PrepareMstData.Response response = new VisaCommands.PrepareMstData.Response(tACommandResponse);
         int n2 = (int)response.Mt.return_code.get();
         if (n2 != 0) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "Error processing PrepareMstData");
+            Log.e("VisaTAController", "Error processing PrepareMstData");
             throw new VisaTAException("Error processing PrepareMstData", n2);
         }
         long l2 = response.Mt.return_code.get();
         if (!DEBUG) return l2 == 0L;
         {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "prepareMstData: response.mRetVal.error_msg = " + response.Mt.error_msg);
+            Log.d("VisaTAController", "prepareMstData: response.mRetVal.error_msg = " + response.Mt.error_msg);
         }
         return l2 == 0L;
     }
@@ -327,28 +322,28 @@ extends TAController {
     public byte[] a(byte[] arrby, VISA_CRYPTO_ALG vISA_CRYPTO_ALG, byte[] arrby2) {
         TACommandResponse tACommandResponse;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling generate  ");
+            Log.d("VisaTAController", "Calling generate  ");
         }
         if (arrby == null || arrby2 == null) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "generate: Error: input is null! encryptedLUK = " + arrby + "; transactionData = " + arrby2);
+            Log.e("VisaTAController", "generate: Error: input is null! encryptedLUK = " + arrby + "; transactionData = " + arrby2);
             throw new VisaTAException("Invalid Input", 5);
         }
         if (arrby.length > 4096 || arrby2.length > 4096) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "generate: Error: input length invalid! encryptedLUK.length = " + arrby.length + "; transactionData.length = " + arrby2.length);
+            Log.e("VisaTAController", "generate: Error: input length invalid! encryptedLUK.length = " + arrby.length + "; transactionData.length = " + arrby2.length);
             throw new VisaTAException("Invalid Input", 5);
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "generate: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "generate: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", 1);
         }
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.Generate.Request(arrby, vISA_CRYPTO_ALG, arrby2));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "generate: Error: executeNoLoad failed");
+                Log.e("VisaTAController", "generate: Error: executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "generate: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "generate: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -360,11 +355,11 @@ extends TAController {
         VisaCommands.Generate.Response response = new VisaCommands.Generate.Response(tACommandResponse);
         int n2 = (int)response.Mc.return_code.get();
         if (n2 != 0) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "Error processing Generate");
+            Log.e("VisaTAController", "Error processing Generate");
             throw new VisaTAException("Error processing Generate", n2);
         }
         if (!DEBUG) return response.Mc.Md.getData();
-        com.samsung.android.spayfw.b.c.d("VisaTAController", "generate called Successfully");
+        Log.d("VisaTAController", "generate called Successfully");
         return response.Mc.Md.getData();
     }
 
@@ -377,28 +372,28 @@ extends TAController {
         TACommandResponse tACommandResponse;
         boolean bl = true;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling authenticateTransaction");
+            Log.d("VisaTAController", "Calling authenticateTransaction");
         }
         if (arrby == null || arrby.length > 4096) {
             if (arrby != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "authenticateTransaction: Error: secureObject length invalid! secureObject.len = " + arrby.length);
+                Log.e("VisaTAController", "authenticateTransaction: Error: secureObject length invalid! secureObject.len = " + arrby.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "authenticateTransaction: Error: secureObject is null!");
+            Log.e("VisaTAController", "authenticateTransaction: Error: secureObject is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "authenticateTransaction: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "authenticateTransaction: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", (int)bl);
         }
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.AuthenticateTransaction.Request(arrby));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "Error: authenticateTransaction executeNoLoad failed");
+                Log.e("VisaTAController", "Error: authenticateTransaction executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "authenticateTransaction: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "authenticateTransaction: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -412,7 +407,7 @@ extends TAController {
             bl = false;
         }
         if (!DEBUG) return bl;
-        com.samsung.android.spayfw.b.c.d("VisaTAController", "authenticateTransaction: auth_result = " + l2);
+        Log.d("VisaTAController", "authenticateTransaction: auth_result = " + l2);
         return bl;
     }
 
@@ -424,29 +419,29 @@ extends TAController {
     public byte[] b(byte[] arrby, boolean bl) {
         TACommandResponse tACommandResponse;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling prepareDataForVTS");
+            Log.d("VisaTAController", "Calling prepareDataForVTS");
         }
         if (arrby == null || arrby.length > 4096) {
             if (arrby != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "prepareDataForVTS: Error: data length invalid! data.len = " + arrby.length);
+                Log.e("VisaTAController", "prepareDataForVTS: Error: data length invalid! data.len = " + arrby.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "prepareDataForVTS: Error: data is null!");
+            Log.e("VisaTAController", "prepareDataForVTS: Error: data is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "prepareDataForVTS: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "prepareDataForVTS: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", 1);
         }
         this.ir();
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.PrepareDataForVTS.Request(arrby, bl));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "prepareDataForVTS: Error: executeNoLoad failed");
+                Log.e("VisaTAController", "prepareDataForVTS: Error: executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "prepareDataForVTS: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "prepareDataForVTS: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -458,11 +453,11 @@ extends TAController {
         VisaCommands.PrepareDataForVTS.Response response = new VisaCommands.PrepareDataForVTS.Response(tACommandResponse);
         int n2 = (int)response.Mk.return_code.get();
         if (n2 != 0) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "Error processing PrepareDataForVTS");
+            Log.e("VisaTAController", "Error processing PrepareDataForVTS");
             throw new VisaTAException("Error processing PrepareDataForVTS", n2);
         }
         if (!DEBUG) return response.Mk.resp.getData();
-        com.samsung.android.spayfw.b.c.d("VisaTAController", "prepareDataForVTS called Successfully");
+        Log.d("VisaTAController", "prepareDataForVTS called Successfully");
         return response.Mk.resp.getData();
     }
 
@@ -474,53 +469,53 @@ extends TAController {
     public byte[] b(byte[] arrby, byte[] arrby2, byte[] arrby3, byte[] arrby4) {
         TACommandResponse tACommandResponse;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling getInAppJwePayload");
+            Log.d("VisaTAController", "Calling getInAppJwePayload");
         }
         if (arrby == null || arrby.length > 4096) {
             if (arrby != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppJwePayload: Error: data length invalid! data.len = " + arrby.length);
+                Log.e("VisaTAController", "getInAppJwePayload: Error: data length invalid! data.len = " + arrby.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppJwePayload: Error: data is null!");
+            Log.e("VisaTAController", "getInAppJwePayload: Error: data is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (arrby2 == null || arrby2.length > 4096) {
             if (arrby2 != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppJwePayload: Error: encToken length invalid! encToken.len = " + arrby2.length);
+                Log.e("VisaTAController", "getInAppJwePayload: Error: encToken length invalid! encToken.len = " + arrby2.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppJwePayload: Error: encToken is null!");
+            Log.e("VisaTAController", "getInAppJwePayload: Error: encToken is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (arrby3 == null || arrby3.length > 4096) {
             if (arrby3 != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppJwePayload: Error: merchantCert length invalid! merchantCert.len = " + arrby3.length);
+                Log.e("VisaTAController", "getInAppJwePayload: Error: merchantCert length invalid! merchantCert.len = " + arrby3.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppJwePayload: Error: merchantCert is null!");
+            Log.e("VisaTAController", "getInAppJwePayload: Error: merchantCert is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (arrby4 == null || arrby4.length > 4096) {
             if (arrby4 != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppJwePayload: Error: caCert length invalid! caCert.len = " + arrby2.length);
+                Log.e("VisaTAController", "getInAppJwePayload: Error: caCert length invalid! caCert.len = " + arrby2.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppJwePayload: Error: caCert is null!");
+            Log.e("VisaTAController", "getInAppJwePayload: Error: caCert is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppJwePayload: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "getInAppJwePayload: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", 1);
         }
         this.ir();
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.GenInAppJwePaymentInfo.Request(arrby, arrby2, arrby3, arrby4));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppJwePayload: Error: executeNoLoad failed");
+                Log.e("VisaTAController", "getInAppJwePayload: Error: executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppJwePayload: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "getInAppJwePayload: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -532,11 +527,11 @@ extends TAController {
         VisaCommands.GenInAppPaymentInfo.Response response = new VisaCommands.GenInAppPaymentInfo.Response(tACommandResponse);
         int n2 = (int)response.LY.return_code.get();
         if (n2 != 0) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "Error processing getInAppJwePayload");
+            Log.e("VisaTAController", "Error processing getInAppJwePayload");
             throw new VisaTAException("Error processing getInAppJwePayload", n2);
         }
         if (!DEBUG) return response.LY.resp.getData();
-        com.samsung.android.spayfw.b.c.d("VisaTAController", "getInAppJwePayload called Successfully");
+        Log.d("VisaTAController", "getInAppJwePayload called Successfully");
         return response.LY.resp.getData();
     }
 
@@ -547,20 +542,20 @@ extends TAController {
      */
     public boolean clearMstData() {
         TACommandResponse tACommandResponse;
-        com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling clearMstData");
+        Log.d("VisaTAController", "Calling clearMstData");
         this.resetMstFlag();
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "clearMstData: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "clearMstData: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", 1);
         }
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.ClearMstData.Request(0));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "Error: clearMstData executeNoLoad failed");
+                Log.e("VisaTAController", "Error: clearMstData executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "clearMstData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "clearMstData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -575,7 +570,7 @@ extends TAController {
         long l2 = response.LT.return_code.get();
         if (!DEBUG) return l2 == 0L;
         {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "clearMstData: success ");
+            Log.d("VisaTAController", "clearMstData: success ");
         }
         return l2 == 0L;
     }
@@ -588,41 +583,41 @@ extends TAController {
     public byte[] e(byte[] arrby, byte[] arrby2, byte[] arrby3) {
         TACommandResponse tACommandResponse;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling getInAppPayload");
+            Log.d("VisaTAController", "Calling getInAppPayload");
         }
         if (arrby == null || arrby.length > 4096) {
             if (arrby != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppPayload: Error: data length invalid! data.len = " + arrby.length);
+                Log.e("VisaTAController", "getInAppPayload: Error: data length invalid! data.len = " + arrby.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppPayload: Error: data is null!");
+            Log.e("VisaTAController", "getInAppPayload: Error: data is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (arrby2 == null || arrby2.length > 4096) {
             if (arrby2 != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppPayload: Error: encToken length invalid! merchantCert.len = " + arrby2.length);
+                Log.e("VisaTAController", "getInAppPayload: Error: encToken length invalid! merchantCert.len = " + arrby2.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppPayload: Error: encToken is null!");
+            Log.e("VisaTAController", "getInAppPayload: Error: encToken is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (arrby3 == null) {
-            com.samsung.android.spayfw.b.c.w("VisaTAController", "getInAppPayload: Error: nonce is null!");
+            Log.w("VisaTAController", "getInAppPayload: Error: nonce is null!");
             throw new VisaTAException("Invalid NONCE Input", 5);
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppPayload: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "getInAppPayload: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", 1);
         }
         this.ir();
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.GenInAppPaymentInfo.Request(arrby, arrby2, arrby3));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppPayload: Error: executeNoLoad failed");
+                Log.e("VisaTAController", "getInAppPayload: Error: executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "getInAppPayload: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "getInAppPayload: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -634,11 +629,11 @@ extends TAController {
         VisaCommands.GenInAppPaymentInfo.Response response = new VisaCommands.GenInAppPaymentInfo.Response(tACommandResponse);
         int n2 = (int)response.LY.return_code.get();
         if (n2 != 0) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "Error processing getInAppPayload");
+            Log.e("VisaTAController", "Error processing getInAppPayload");
             throw new VisaTAException("Error processing getInAppPayload", n2);
         }
         if (!DEBUG) return response.LY.resp.getData();
-        com.samsung.android.spayfw.b.c.d("VisaTAController", "getInAppPayload called Successfully");
+        Log.d("VisaTAController", "getInAppPayload called Successfully");
         return response.LY.resp.getData();
     }
 
@@ -650,21 +645,21 @@ extends TAController {
     public byte[] getNonce(int n2) {
         TACommandResponse tACommandResponse;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling getNonce");
+            Log.d("VisaTAController", "Calling getNonce");
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "getNonce: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "getNonce: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", 1);
         }
         VisaCommands.GetNonce.Request request = new VisaCommands.GetNonce.Request(n2);
         try {
             tACommandResponse = this.executeNoLoad(request);
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "Error:getNonce executeNoLoad failed");
+                Log.e("VisaTAController", "Error:getNonce executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "getNonce: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "getNonce: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -678,7 +673,7 @@ extends TAController {
         VisaCommands.GetNonce.Response response = new VisaCommands.GetNonce.Response(tACommandResponse);
         int n3 = (int)response.Me.return_code.get();
         if (n3 != 0) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "Error processing GetNonce");
+            Log.e("VisaTAController", "Error processing GetNonce");
             throw new VisaTAException("Error processing GetNonce", n3);
         }
         byte[] arrby = response.Me.out_data.getData();
@@ -692,7 +687,7 @@ extends TAController {
     @Override
     protected boolean init() {
         if (!super.init()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "Error: init failed");
+            Log.e("VisaTAController", "Error: init failed");
             return false;
         }
         this.MK = new b(this);
@@ -719,29 +714,29 @@ extends TAController {
     public byte[] q(byte[] arrby) {
         TACommandResponse tACommandResponse;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling storeVTSData");
+            Log.d("VisaTAController", "Calling storeVTSData");
         }
         if (arrby == null || arrby.length > 4096) {
             if (arrby != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "storeVTSData: Error: vtsData length invalid! vtsData.len = " + arrby.length);
+                Log.e("VisaTAController", "storeVTSData: Error: vtsData length invalid! vtsData.len = " + arrby.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "storeVTSData: Error: vtsData is null!");
+            Log.e("VisaTAController", "storeVTSData: Error: vtsData is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "storeVTSData: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "storeVTSData: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", 1);
         }
         this.ir();
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.StoreVTSData.Request(arrby));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "StoreVTSData: Error: executeNoLoad failed");
+                Log.e("VisaTAController", "StoreVTSData: Error: executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "StoreVTSData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "StoreVTSData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -753,7 +748,7 @@ extends TAController {
         VisaCommands.StoreVTSData.Response response = new VisaCommands.StoreVTSData.Response(tACommandResponse);
         int n2 = (int)response.MB.return_code.get();
         if (n2 == 0) return response.MB.MC.getData();
-        com.samsung.android.spayfw.b.c.e("VisaTAController", "Error processing StoreVTSData");
+        Log.e("VisaTAController", "Error processing StoreVTSData");
         throw new VisaTAException("Error processing StoreVTSData", n2);
     }
 
@@ -765,28 +760,28 @@ extends TAController {
     public byte[] retrieveFromStorage(byte[] arrby) {
         TACommandResponse tACommandResponse;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling retrieveFromStorage");
+            Log.d("VisaTAController", "Calling retrieveFromStorage");
         }
         if (arrby == null || arrby.length > 4096) {
             if (arrby != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "retrieveFromStorage: Error: data length invalid! data.len = " + arrby.length);
+                Log.e("VisaTAController", "retrieveFromStorage: Error: data length invalid! data.len = " + arrby.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "retrieveFromStorage: Error: data is null!");
+            Log.e("VisaTAController", "retrieveFromStorage: Error: data is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "retrieveFromStorage: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "retrieveFromStorage: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", 1);
         }
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.RetrieveFromStorage.Request(arrby));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "RetrieveFromStorage: Error: executeNoLoad failed");
+                Log.e("VisaTAController", "RetrieveFromStorage: Error: executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "RetrieveFromStorage: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "RetrieveFromStorage: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -798,7 +793,7 @@ extends TAController {
         VisaCommands.RetrieveFromStorage.Response response = new VisaCommands.RetrieveFromStorage.Response(tACommandResponse);
         int n2 = (int)response.Mv.return_code.get();
         if (n2 == 0) return response.Mv.Mw.getData();
-        com.samsung.android.spayfw.b.c.e("VisaTAController", "Error processing RetrieveFromStorage");
+        Log.e("VisaTAController", "Error processing RetrieveFromStorage");
         throw new VisaTAException("Error processing RetrieveFromStorage", n2);
     }
 
@@ -810,28 +805,28 @@ extends TAController {
     public byte[] storeData(byte[] arrby) {
         TACommandResponse tACommandResponse;
         if (DEBUG) {
-            com.samsung.android.spayfw.b.c.d("VisaTAController", "Calling storeData");
+            Log.d("VisaTAController", "Calling storeData");
         }
         if (arrby == null || arrby.length > 4096) {
             if (arrby != null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "storeData: Error: dataToStore length invalid! dataToStore.len = " + arrby.length);
+                Log.e("VisaTAController", "storeData: Error: dataToStore length invalid! dataToStore.len = " + arrby.length);
                 throw new VisaTAException("Invalid Input", 5);
             }
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "storeData: Error: dataToStore is null!");
+            Log.e("VisaTAController", "storeData: Error: dataToStore is null!");
             throw new VisaTAException("Invalid Input", 5);
         }
         if (!this.isTALoaded()) {
-            com.samsung.android.spayfw.b.c.e("VisaTAController", "storeData: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e("VisaTAController", "storeData: Error: TA is not loaded, please call loadTA() API first!");
             throw new VisaTAException("Visa TA not loaded", 1);
         }
         try {
             tACommandResponse = this.executeNoLoad(new VisaCommands.StoreData.Request(arrby));
             if (tACommandResponse == null) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "storeData: Error: executeNoLoad failed");
+                Log.e("VisaTAController", "storeData: Error: executeNoLoad failed");
                 throw new VisaTAException("Error communicating with the TA", 3);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                com.samsung.android.spayfw.b.c.e("VisaTAController", "storeData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e("VisaTAController", "storeData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new VisaTAException("TA command returned error", 4);
             }
         }
@@ -843,7 +838,7 @@ extends TAController {
         VisaCommands.StoreData.Response response = new VisaCommands.StoreData.Response(tACommandResponse);
         int n2 = (int)response.My.return_code.get();
         if (n2 == 0) return response.My.Mz.getData();
-        com.samsung.android.spayfw.b.c.e("VisaTAController", "Error processing StoreData");
+        Log.e("VisaTAController", "Error processing StoreData");
         throw new VisaTAException("Error processing StoreData", n2);
     }
 

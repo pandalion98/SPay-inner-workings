@@ -38,8 +38,8 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.mastercard.mobile_api.bytes.ByteArray;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.dao.MCAbstractDaoImpl;
+import com.samsung.android.spayfw.b.Log;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +55,12 @@ extends MCAbstractDaoImpl<T> {
 
     protected Gson createGson(CardInfoType cardInfoType) {
         if (cardInfoType == null) {
-            c.d(TAG, "Invalid cardInfo type selected..Using default gson:" + (Object)((Object)cardInfoType));
+            Log.d(TAG, "Invalid cardInfo type selected..Using default gson:" + (Object)((Object)cardInfoType));
             return new GsonBuilder().create();
         }
         switch (1.$SwitchMap$com$samsung$android$spayfw$payprovider$mastercard$dao$McCommonCardDaoImpl$CardInfoType[cardInfoType.ordinal()]) {
             default: {
-                c.d(TAG, "Invalid cardInfo type selected..Using default gson" + cardInfoType.name());
+                Log.d(TAG, "Invalid cardInfo type selected..Using default gson" + cardInfoType.name());
                 return null;
             }
             case 1: {
@@ -104,7 +104,7 @@ extends MCAbstractDaoImpl<T> {
         private Type typeForName(JsonElement jsonElement) {
             block4 : {
                 if (sWhiteList.contains((Object)jsonElement.getAsString())) break block4;
-                c.e(McCommonCardDaoImpl.TAG, "deSerialization Err.. Not part of whitelist: " + jsonElement.getAsString());
+                Log.e(McCommonCardDaoImpl.TAG, "deSerialization Err.. Not part of whitelist: " + jsonElement.getAsString());
                 return null;
             }
             try {
@@ -134,7 +134,7 @@ extends MCAbstractDaoImpl<T> {
             }
             catch (Exception exception) {
                 exception.printStackTrace();
-                c.e(McCommonCardDaoImpl.TAG, "Exception occured in during custom serialization: " + exception.getMessage());
+                Log.e(McCommonCardDaoImpl.TAG, "Exception occured in during custom serialization: " + exception.getMessage());
                 return null;
             }
         }

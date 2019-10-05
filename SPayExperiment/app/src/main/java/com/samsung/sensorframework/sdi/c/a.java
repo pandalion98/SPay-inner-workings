@@ -12,11 +12,11 @@
 package com.samsung.sensorframework.sdi.c;
 
 import android.content.Context;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.SDAException;
-import com.samsung.sensorframework.sdi.c.b;
 import com.samsung.sensorframework.sdi.exception.SDIException;
-import com.samsung.sensorframework.sdm.datahandler.except.DataHandlerException;
+
 import java.util.HashMap;
 
 public class a {
@@ -39,7 +39,7 @@ public class a {
         if (this.HQ == null) {
             throw new SDIException(9001, "sensorManager cannot be null.");
         }
-        c.d("SDISensorHandler", "instance created.");
+        Log.d("SDISensorHandler", "instance created.");
     }
 
     /*
@@ -50,9 +50,9 @@ public class a {
     private void a(int[] arrn) {
         a a2 = this;
         synchronized (a2) {
-            c.d("SDISensorHandler", "enableSensors()");
+            Log.d("SDISensorHandler", "enableSensors()");
             if (this.c(arrn)) {
-                c.e("SDISensorHandler", "enableSensors() already enabled.");
+                Log.e("SDISensorHandler", "enableSensors() already enabled.");
             } else {
                 this.hO();
                 for (int n2 : arrn) {
@@ -112,7 +112,7 @@ lbl7: // 1 sources:
         block10 : {
             var8_2 = this;
             // MONITORENTER : var8_2
-            c.d("SDISensorHandler", "subscribeToSensor()");
+            Log.d("SDISensorHandler", "subscribeToSensor()");
             if (this.Lg == null) {
                 this.Lg = new HashMap();
             }
@@ -132,7 +132,7 @@ lbl-1000: // 2 sources:
             if (!this.ax(var1_1)) {
                 var5_4 = this.HQ.a(var1_1, this.Kl);
                 this.Lg.put((Object)var1_1, (Object)var5_4);
-                c.d("SDISensorHandler", "subscribeToSensor() subscribed to sensor: " + com.samsung.sensorframework.sda.d.c.ap(var1_1));
+                Log.d("SDISensorHandler", "subscribeToSensor() subscribed to sensor: " + com.samsung.sensorframework.sda.d.c.ap(var1_1));
             }
             // MONITOREXIT : var8_2
             return;
@@ -150,7 +150,7 @@ lbl-1000: // 2 sources:
             if (bl) {
                 this.HQ.ac((Integer)this.Lg.get((Object)n2));
                 this.Lg.remove((Object)n2);
-                c.d("SDISensorHandler", "unsubscribeFromSensor() unsubscribed from sensor: " + com.samsung.sensorframework.sda.d.c.ap(n2));
+                Log.d("SDISensorHandler", "unsubscribeFromSensor() unsubscribed from sensor: " + com.samsung.sensorframework.sda.d.c.ap(n2));
             }
             return;
         }
@@ -159,7 +159,7 @@ lbl-1000: // 2 sources:
     private void b(int[] arrn) {
         a a2 = this;
         synchronized (a2) {
-            c.d("SDISensorHandler", "disableSensors()");
+            Log.d("SDISensorHandler", "disableSensors()");
             this.d(arrn);
             return;
         }
@@ -186,7 +186,7 @@ lbl-1000: // 2 sources:
     private void d(int[] arrn) {
         a a2 = this;
         synchronized (a2) {
-            c.d("SDISensorHandler", "unsubscribeFromSensors()");
+            Log.d("SDISensorHandler", "unsubscribeFromSensors()");
             int n2 = arrn.length;
             for (int i2 = 0; i2 < n2; ++i2) {
                 this.az(arrn[i2]);
@@ -203,7 +203,7 @@ lbl-1000: // 2 sources:
         a a2 = this;
         synchronized (a2) {
             try {
-                c.d("SDISensorHandler", "setGlobalConfig()");
+                Log.d("SDISensorHandler", "setGlobalConfig()");
                 this.HQ.b("INTENT_BROADCASTER_PERMISSION", "com.samsung.android.spayfw.permission.ACCESS_PF");
                 do {
                     return;
@@ -228,10 +228,10 @@ lbl-1000: // 2 sources:
         synchronized (a2) {
             block4 : {
                 if (this.Lg == null || this.Lg.size() <= 0 || !this.Lg.containsKey((Object)n2)) break block4;
-                c.d("SDISensorHandler", "isSubscribedToSensor() true");
+                Log.d("SDISensorHandler", "isSubscribedToSensor() true");
                 return true;
             }
-            c.d("SDISensorHandler", "isSubscribedToSensor() false");
+            Log.d("SDISensorHandler", "isSubscribedToSensor() false");
             return false;
         }
     }
@@ -243,10 +243,10 @@ lbl-1000: // 2 sources:
     public void c(int n2, long l2) {
         a a2 = this;
         synchronized (a2) {
-            c.d("SDISensorHandler", "setDutyCyclingInterval(), interval: " + l2 + " Sensor: " + com.samsung.sensorframework.sda.f.a.ap(n2));
+            Log.d("SDISensorHandler", "setDutyCyclingInterval(), interval: " + l2 + " Sensor: " + com.samsung.sensorframework.sda.f.a.ap(n2));
             try {
                 long l3 = l2 + (long)com.samsung.sensorframework.sdi.g.a.aA(1000);
-                c.d("SDISensorHandler", "setDutyCyclingInterval(), updated interval after adding additional random time: " + l3);
+                Log.d("SDISensorHandler", "setDutyCyclingInterval(), updated interval after adding additional random time: " + l3);
                 this.HQ.a(n2, "POST_SENSE_SLEEP_LENGTH_MILLIS", l3);
                 do {
                     return;
@@ -292,7 +292,7 @@ lbl-1000: // 2 sources:
     public void hK() {
         a a2 = this;
         synchronized (a2) {
-            c.d("SDISensorHandler", "enableRadioSensors()");
+            Log.d("SDISensorHandler", "enableRadioSensors()");
             this.a(this.Lj);
             return;
         }
@@ -301,7 +301,7 @@ lbl-1000: // 2 sources:
     public void hL() {
         a a2 = this;
         synchronized (a2) {
-            c.d("SDISensorHandler", "enableBatteryAndConnectionSensors()");
+            Log.d("SDISensorHandler", "enableBatteryAndConnectionSensors()");
             this.a(this.Li);
             return;
         }
@@ -310,7 +310,7 @@ lbl-1000: // 2 sources:
     public void hM() {
         a a2 = this;
         synchronized (a2) {
-            c.d("SDISensorHandler", "disableAllSensors()");
+            Log.d("SDISensorHandler", "disableAllSensors()");
             this.b(this.Lh);
             if (this.Lg != null) {
                 this.Lg.clear();
@@ -329,7 +329,7 @@ lbl-1000: // 2 sources:
     public void hN() {
         a a2 = this;
         synchronized (a2) {
-            c.d("SDISensorHandler", "disableRadioSensors()");
+            Log.d("SDISensorHandler", "disableRadioSensors()");
             this.d(this.Lj);
             return;
         }

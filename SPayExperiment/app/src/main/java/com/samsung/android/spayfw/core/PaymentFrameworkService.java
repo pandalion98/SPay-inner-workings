@@ -84,26 +84,17 @@ import com.samsung.android.spayfw.appinterface.ServerRequest;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
 import com.samsung.android.spayfw.appinterface.UpdateLoyaltyCardInfo;
 import com.samsung.android.spayfw.appinterface.VerifyIdvInfo;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.core.BinAttribute;
-import com.samsung.android.spayfw.core.PFGenericReceiver;
-import com.samsung.android.spayfw.core.PackageStateReceiver;
-import com.samsung.android.spayfw.core.PaymentFrameworkApp;
-import com.samsung.android.spayfw.core.UpdateReceiver;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.a.n;
 import com.samsung.android.spayfw.core.a.r;
 import com.samsung.android.spayfw.core.a.x;
-import com.samsung.android.spayfw.core.e;
-import com.samsung.android.spayfw.core.f;
 import com.samsung.android.spayfw.core.hce.SPayHCEReceiver;
 import com.samsung.android.spayfw.core.hce.SPayHCEService;
-import com.samsung.android.spayfw.core.i;
-import com.samsung.android.spayfw.core.j;
 import com.samsung.android.spayfw.fraud.FraudReceiver;
 import com.samsung.android.spayfw.payprovider.TokenReplenishReceiver;
 import com.samsung.android.spayfw.utils.h;
 import com.sec.enterprise.knox.seams.SEAMS;
-import java.io.FileDescriptor;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -116,13 +107,13 @@ extends Service {
 
         @Override
         public int acceptTnC(String string, boolean bl, ICommonCallback iCommonCallback) {
-            c.i("PaymentFrameworkService", "Entered method = acceptTnC");
+            Log.i("PaymentFrameworkService", "Entered method = acceptTnC");
             if (!PaymentFrameworkService.this.o("acceptTnC")) {
-                c.e("PaymentFrameworkService", "acceptTnC:permission denied");
+                Log.e("PaymentFrameworkService", "acceptTnC:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "acceptTnC:TAException");
+                Log.e("PaymentFrameworkService", "acceptTnC:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(2, string, bl, iCommonCallback);
@@ -137,13 +128,13 @@ extends Service {
          */
         @Override
         public void clearCard() {
-            c.d("PaymentFrameworkService", "clearCard()");
+            Log.d("PaymentFrameworkService", "clearCard()");
             if (!PaymentFrameworkService.this.o("clearCard")) {
-                c.e("PaymentFrameworkService", "clearCard:permission denied");
+                Log.e("PaymentFrameworkService", "clearCard:permission denied");
                 return;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "clearCard:TAException");
+                Log.e("PaymentFrameworkService", "clearCard:TAException");
                 return;
             }
             try {
@@ -158,13 +149,13 @@ extends Service {
 
         @Override
         public int clearEnrolledCard(String string) {
-            c.d("PaymentFrameworkService", "clearEnrolledCard : " + string);
+            Log.d("PaymentFrameworkService", "clearEnrolledCard : " + string);
             if (!PaymentFrameworkService.this.o("clearEnrolledCard")) {
-                c.e("PaymentFrameworkService", "clearEnrolledCard:permission denied");
+                Log.e("PaymentFrameworkService", "clearEnrolledCard:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "clearEnrolledCard:TAException");
+                Log.e("PaymentFrameworkService", "clearEnrolledCard:TAException");
                 return PaymentFrameworkApp.ay();
             }
             return new x(PaymentFrameworkService.this.mContext).clearEnrolledCard(string);
@@ -172,13 +163,13 @@ extends Service {
 
         @Override
         public int deleteCard(String string, Bundle bundle, IDeleteCardCallback iDeleteCardCallback) {
-            c.d("PaymentFrameworkService", "Entered method = deleteCard : " + string);
+            Log.d("PaymentFrameworkService", "Entered method = deleteCard : " + string);
             if (!PaymentFrameworkService.this.o("deleteCard")) {
-                c.e("PaymentFrameworkService", "deleteCard:permission denied");
+                Log.e("PaymentFrameworkService", "deleteCard:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "deleteCard:TAException");
+                Log.e("PaymentFrameworkService", "deleteCard:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(22, string, (Object)bundle, iDeleteCardCallback);
@@ -190,13 +181,13 @@ extends Service {
         public int enrollCard(EnrollCardInfo enrollCardInfo, BillingInfo billingInfo, IEnrollCardCallback iEnrollCardCallback) {
             Bundle bundle;
             i i2;
-            c.i("PaymentFrameworkService", "Entered method = enrollCard");
+            Log.i("PaymentFrameworkService", "Entered method = enrollCard");
             if (!PaymentFrameworkService.this.o("enrollCard")) {
-                c.e("PaymentFrameworkService", "enrollCard:permission denied");
+                Log.e("PaymentFrameworkService", "enrollCard:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "enrollCard:TAException");
+                Log.e("PaymentFrameworkService", "enrollCard:TAException");
                 return PaymentFrameworkApp.ay();
             }
             String string = h.a(PaymentFrameworkService.this.mContext, Binder.getCallingPid());
@@ -205,11 +196,11 @@ extends Service {
             }
             Message message = j.a(1, enrollCardInfo, billingInfo, iEnrollCardCallback);
             if (enrollCardInfo != null && enrollCardInfo.getExtraEnrollData() != null && (i2 = PaymentFrameworkService.this.a(bundle = enrollCardInfo.getExtraEnrollData())) != null) {
-                c.d("PaymentFrameworkService", "send to restore handler");
+                Log.d("PaymentFrameworkService", "send to restore handler");
                 i2.a(message);
                 return 0;
             }
-            c.d("PaymentFrameworkService", "send to main handler");
+            Log.d("PaymentFrameworkService", "send to main handler");
             PaymentFrameworkService.this.jB.a(message);
             return 0;
         }
@@ -221,9 +212,9 @@ extends Service {
          */
         @Override
         public int extractGiftCardDetail(ExtractGiftCardDetailRequest extractGiftCardDetailRequest, SecuredObject securedObject, IGiftCardExtractDetailCallback iGiftCardExtractDetailCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  extractGiftCardDetail()");
+            Log.d("PaymentFrameworkService", "Entered method =  extractGiftCardDetail()");
             if (!PaymentFrameworkService.this.o("extractGiftCardDetail")) {
-                c.e("PaymentFrameworkService", "extractGiftCardDetail:permission denied");
+                Log.e("PaymentFrameworkService", "extractGiftCardDetail:permission denied");
                 return -40;
             }
             try {
@@ -244,9 +235,9 @@ extends Service {
          */
         @Override
         public int extractGlobalMembershipCardDetail(List<ExtractGlobalMembershipCardDetailRequest> list, IGlobalMembershipCardExtractDetailCallback iGlobalMembershipCardExtractDetailCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  extractGlobalMembershipCardDetail()");
+            Log.d("PaymentFrameworkService", "Entered method =  extractGlobalMembershipCardDetail()");
             if (!PaymentFrameworkService.this.o("extractGlobalMembershipCardDetail")) {
-                c.e("PaymentFrameworkService", "extractGlobalMembershipCardDetail:permission denied");
+                Log.e("PaymentFrameworkService", "extractGlobalMembershipCardDetail:permission denied");
                 return -40;
             }
             try {
@@ -267,13 +258,13 @@ extends Service {
          */
         @Override
         public int extractLoyaltyCardDetails(ExtractLoyaltyCardDetailRequest extractLoyaltyCardDetailRequest, IExtractLoyaltyCardDetailResponseCallback iExtractLoyaltyCardDetailResponseCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  extractLoyaltyCardDetails()");
+            Log.d("PaymentFrameworkService", "Entered method =  extractLoyaltyCardDetails()");
             if (!PaymentFrameworkService.this.o("extractLoyaltyCardDetails")) {
-                c.e("PaymentFrameworkService", "extractLoyaltyCardDetails:CallerPermission failed");
+                Log.e("PaymentFrameworkService", "extractLoyaltyCardDetails:CallerPermission failed");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "extractLoyaltyCardDetails:TAException");
+                Log.e("PaymentFrameworkService", "extractLoyaltyCardDetails:TAException");
                 return PaymentFrameworkApp.ay();
             }
             try {
@@ -289,13 +280,13 @@ extends Service {
 
         @Override
         public List<CardState> getAllCardState(Bundle bundle) {
-            c.d("PaymentFrameworkService", "getAllTokenState : ");
+            Log.d("PaymentFrameworkService", "getAllTokenState : ");
             if (!PaymentFrameworkService.this.o("getAllTokenState")) {
-                c.e("PaymentFrameworkService", "getAllCardState:permission denied");
+                Log.e("PaymentFrameworkService", "getAllCardState:permission denied");
                 return null;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "getAllCardState:TAException");
+                Log.e("PaymentFrameworkService", "getAllCardState:TAException");
                 return null;
             }
             return new x(PaymentFrameworkService.this.mContext).getAllCardState(bundle);
@@ -303,13 +294,13 @@ extends Service {
 
         @Override
         public int getCardAttributes(String string, boolean bl, ICardAttributeCallback iCardAttributeCallback) {
-            c.d("PaymentFrameworkService", "Entered method = getCardAttributes");
+            Log.d("PaymentFrameworkService", "Entered method = getCardAttributes");
             if (!PaymentFrameworkService.this.o("getCardAttributes")) {
-                c.e("PaymentFrameworkService", "getCardAttributes:permission denied");
+                Log.e("PaymentFrameworkService", "getCardAttributes:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "getCardAttributes:TAException");
+                Log.e("PaymentFrameworkService", "getCardAttributes:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(14, string, bl, iCardAttributeCallback);
@@ -319,13 +310,13 @@ extends Service {
 
         @Override
         public int getCardData(String string, ICardDataCallback iCardDataCallback) {
-            c.d("PaymentFrameworkService", "Entered method = getTokenData : " + string);
+            Log.d("PaymentFrameworkService", "Entered method = getTokenData : " + string);
             if (!PaymentFrameworkService.this.o("getTokenData")) {
-                c.e("PaymentFrameworkService", "getCardData:permission denied");
+                Log.e("PaymentFrameworkService", "getCardData:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "getCardData:TAException");
+                Log.e("PaymentFrameworkService", "getCardData:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(20, string, iCardDataCallback);
@@ -335,7 +326,7 @@ extends Service {
 
         @Override
         public String getConfig(String string) {
-            c.d("PaymentFrameworkService", "Entered method =  getConfig()");
+            Log.d("PaymentFrameworkService", "Entered method =  getConfig()");
             if (!PaymentFrameworkService.this.o("getConfig")) {
                 return String.valueOf((int)-40);
             }
@@ -353,13 +344,13 @@ extends Service {
         public int getGiftCardRegisterData(GiftCardRegisterRequestData giftCardRegisterRequestData, IGiftCardRegisterCallback iGiftCardRegisterCallback) {
             i i2;
             Bundle bundle;
-            c.d("PaymentFrameworkService", "Entered method =  getGiftCardRegisterData()");
+            Log.d("PaymentFrameworkService", "Entered method =  getGiftCardRegisterData()");
             if (!PaymentFrameworkService.this.o("getGiftCardRegisterData")) {
                 return -40;
             }
             Message message = j.a(27, giftCardRegisterRequestData, iGiftCardRegisterCallback);
             if (giftCardRegisterRequestData != null && giftCardRegisterRequestData.getExtraData() != null && (i2 = PaymentFrameworkService.this.a(bundle = giftCardRegisterRequestData.getExtraData())) != null) {
-                c.d("PaymentFrameworkService", "send to restore handler");
+                Log.d("PaymentFrameworkService", "send to restore handler");
                 i2.a(message);
                 return 0;
             }
@@ -371,13 +362,13 @@ extends Service {
         public int getGiftCardTzEncData(GiftCardRegisterRequestData giftCardRegisterRequestData, IGiftCardRegisterCallback iGiftCardRegisterCallback) {
             i i2;
             Bundle bundle;
-            c.d("PaymentFrameworkService", "Entered method =  getGiftCardTzEncData()");
+            Log.d("PaymentFrameworkService", "Entered method =  getGiftCardTzEncData()");
             if (!PaymentFrameworkService.this.o("getGiftCardTzEncData")) {
                 return -40;
             }
             Message message = j.a(28, giftCardRegisterRequestData, iGiftCardRegisterCallback);
             if (giftCardRegisterRequestData != null && giftCardRegisterRequestData.getExtraData() != null && (i2 = PaymentFrameworkService.this.a(bundle = giftCardRegisterRequestData.getExtraData())) != null) {
-                c.d("PaymentFrameworkService", "send to restore handler");
+                Log.d("PaymentFrameworkService", "send to restore handler");
                 i2.a(message);
                 return 0;
             }
@@ -387,7 +378,7 @@ extends Service {
 
         @Override
         public int getGlobalMembershipCardRegisterData(GlobalMembershipCardRegisterRequestData globalMembershipCardRegisterRequestData, IGlobalMembershipCardRegisterCallback iGlobalMembershipCardRegisterCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  getGlobalMembershipCardRegisterData()");
+            Log.d("PaymentFrameworkService", "Entered method =  getGlobalMembershipCardRegisterData()");
             if (!PaymentFrameworkService.this.o("getGlobalMembershipCardRegisterData")) {
                 return -40;
             }
@@ -398,7 +389,7 @@ extends Service {
 
         @Override
         public int getGlobalMembershipCardTzEncData(GlobalMembershipCardRegisterRequestData globalMembershipCardRegisterRequestData, IGlobalMembershipCardRegisterCallback iGlobalMembershipCardRegisterCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  getGlobalMembershipCardTzEncData()");
+            Log.d("PaymentFrameworkService", "Entered method =  getGlobalMembershipCardTzEncData()");
             if (!PaymentFrameworkService.this.o("getGlobalMembershipCardTzEncData")) {
                 return -40;
             }
@@ -416,14 +407,14 @@ extends Service {
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "getLogs:TAException");
+                Log.e("PaymentFrameworkService", "getLogs:TAException");
                 return PaymentFrameworkApp.ay();
             }
             try {
                 new SecurityManager().checkWrite(parcelFileDescriptor.getFileDescriptor());
             }
             catch (SecurityException securityException) {
-                c.e("PaymentFrameworkService", "can't write to file descriptor");
+                Log.e("PaymentFrameworkService", "can't write to file descriptor");
                 return -5;
             }
             Message message = j.a(25, (Object)parcelFileDescriptor, string, iCommonCallback);
@@ -433,13 +424,13 @@ extends Service {
 
         @Override
         public List<String> getPaymentReadyState(String string) {
-            c.d("PaymentFrameworkService", "getPaymentReadyState : ");
+            Log.d("PaymentFrameworkService", "getPaymentReadyState : ");
             if (!PaymentFrameworkService.this.o("getPaymentReadyState")) {
-                c.e("PaymentFrameworkService", "getPaymentReadyState:permission denied");
+                Log.e("PaymentFrameworkService", "getPaymentReadyState:permission denied");
                 return null;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "getPaymentReadyState:TAException");
+                Log.e("PaymentFrameworkService", "getPaymentReadyState:TAException");
                 return null;
             }
             return new x(PaymentFrameworkService.this.mContext).getPaymentReadyState(string);
@@ -447,13 +438,13 @@ extends Service {
 
         @Override
         public TokenStatus getTokenStatus(String string) {
-            c.i("PaymentFrameworkService", "Entered method = getTokenStatus");
+            Log.i("PaymentFrameworkService", "Entered method = getTokenStatus");
             if (!PaymentFrameworkService.this.o("getTokenStatus")) {
-                c.e("PaymentFrameworkService", "getTokenStatus:permission denied");
+                Log.e("PaymentFrameworkService", "getTokenStatus:permission denied");
                 return null;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "getTokenStatus:TAException");
+                Log.e("PaymentFrameworkService", "getTokenStatus:TAException");
                 return null;
             }
             return new x(PaymentFrameworkService.this.mContext).getTokenStatus(string);
@@ -461,12 +452,12 @@ extends Service {
 
         @Override
         public int getTransactionDetails(String string, long l2, long l3, int n2, ITransactionDetailsCallback iTransactionDetailsCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  getTransactionDetails()");
+            Log.d("PaymentFrameworkService", "Entered method =  getTransactionDetails()");
             if (!PaymentFrameworkService.this.o("getTransactionDetails")) {
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "getTransactionDetails:TAException");
+                Log.e("PaymentFrameworkService", "getTransactionDetails:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(37, string, l2, l3, n2, iTransactionDetailsCallback);
@@ -476,12 +467,12 @@ extends Service {
 
         @Override
         public int getUserSignature(String string, IUserSignatureCallback iUserSignatureCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  getUserSignature()");
+            Log.d("PaymentFrameworkService", "Entered method =  getUserSignature()");
             if (!PaymentFrameworkService.this.o("getUserSignature")) {
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "getUserSignature:TAException");
+                Log.e("PaymentFrameworkService", "getUserSignature:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(31, string, iUserSignatureCallback);
@@ -491,14 +482,14 @@ extends Service {
 
         @Override
         public List<String> isDsrpBlobMissing() {
-            c.d("PaymentFrameworkService", "isDsrpBlobMissing : ");
+            Log.d("PaymentFrameworkService", "isDsrpBlobMissing : ");
             ArrayList arrayList = new ArrayList();
             if (!PaymentFrameworkService.this.o("isDsrpBlobMissing")) {
-                c.e("PaymentFrameworkService", "isDsrpBlobMissing:permission denied");
+                Log.e("PaymentFrameworkService", "isDsrpBlobMissing:permission denied");
                 return arrayList;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "isDsrpBlobMissing:TAException");
+                Log.e("PaymentFrameworkService", "isDsrpBlobMissing:TAException");
                 return arrayList;
             }
             return new x(PaymentFrameworkService.this.mContext).isDsrpBlobMissing();
@@ -506,13 +497,13 @@ extends Service {
 
         @Override
         public int isDsrpBlobMissingForTokenId(String string) {
-            c.d("PaymentFrameworkService", "isDsrpBlobMissing : ");
+            Log.d("PaymentFrameworkService", "isDsrpBlobMissing : ");
             if (!PaymentFrameworkService.this.o("isDsrpBlobMissing")) {
-                c.e("PaymentFrameworkService", "isDsrpBlobMissing:permission denied");
+                Log.e("PaymentFrameworkService", "isDsrpBlobMissing:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "isDsrpBlobMissing:TAException");
+                Log.e("PaymentFrameworkService", "isDsrpBlobMissing:TAException");
                 return PaymentFrameworkApp.ay();
             }
             return new x(PaymentFrameworkService.this.mContext).isDsrpBlobMissingForTokenId(string);
@@ -525,13 +516,13 @@ extends Service {
 
         @Override
         public int processPushMessage(PushMessage pushMessage, IPushMessageCallback iPushMessageCallback) {
-            c.d("PaymentFrameworkService", "processPushMessage()");
+            Log.d("PaymentFrameworkService", "processPushMessage()");
             if (!PaymentFrameworkService.this.o("processPushMessage")) {
-                c.e("PaymentFrameworkService", "processPushMessage:permission denied");
+                Log.e("PaymentFrameworkService", "processPushMessage:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "processPushMessage:TAException");
+                Log.e("PaymentFrameworkService", "processPushMessage:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(9, pushMessage, 1, iPushMessageCallback);
@@ -541,12 +532,12 @@ extends Service {
 
         @Override
         public int processServerRequest(final ServerRequest serverRequest, final IServerResponseCallback iServerResponseCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  processServerRequest()");
+            Log.d("PaymentFrameworkService", "Entered method =  processServerRequest()");
             if (!PaymentFrameworkService.this.o("processServerRequest")) {
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "processServerRequest:TAException");
+                Log.e("PaymentFrameworkService", "processServerRequest:TAException");
                 return PaymentFrameworkApp.ay();
             }
             new Thread(){
@@ -568,12 +559,12 @@ extends Service {
         @Override
         public CommonSpayResponse processSpayApdu(byte[] arrby, Bundle bundle) {
             CommonSpayResponse commonSpayResponse = new CommonSpayResponse();
-            c.d("PaymentFrameworkService", "Entered method =  processSpayApdu()");
+            Log.d("PaymentFrameworkService", "Entered method =  processSpayApdu()");
             if (arrby != null) {
-                c.d("PaymentFrameworkService", "processSpayApdu data : " + Arrays.toString((byte[])arrby));
+                Log.d("PaymentFrameworkService", "processSpayApdu data : " + Arrays.toString((byte[])arrby));
             }
             if (bundle != null) {
-                c.d("PaymentFrameworkService", "processSpayApdu extras size [" + bundle.size() + "]");
+                Log.d("PaymentFrameworkService", "processSpayApdu extras size [" + bundle.size() + "]");
             }
             commonSpayResponse.setStatus(0);
             commonSpayResponse.setData(new byte[]{1, 2, 3, 4, 5});
@@ -584,35 +575,35 @@ extends Service {
         public int provisionToken(String string, ProvisionTokenInfo provisionTokenInfo, IProvisionTokenCallback iProvisionTokenCallback) {
             Bundle bundle;
             i i2;
-            c.i("PaymentFrameworkService", "Entered method = provisionToken");
+            Log.i("PaymentFrameworkService", "Entered method = provisionToken");
             if (!PaymentFrameworkService.this.o("provisionToken")) {
-                c.e("PaymentFrameworkService", "provisionToken:permission denied");
+                Log.e("PaymentFrameworkService", "provisionToken:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "provisionToken:TAException");
+                Log.e("PaymentFrameworkService", "provisionToken:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(3, string, provisionTokenInfo, iProvisionTokenCallback);
             if (provisionTokenInfo != null && provisionTokenInfo.getActivationParamsBundle() != null && (i2 = PaymentFrameworkService.this.a(bundle = provisionTokenInfo.getActivationParamsBundle())) != null) {
-                c.d("PaymentFrameworkService", "send to restore handler");
+                Log.d("PaymentFrameworkService", "send to restore handler");
                 i2.a(message);
                 return 0;
             }
-            c.d("PaymentFrameworkService", "send to handler ");
+            Log.d("PaymentFrameworkService", "send to handler ");
             PaymentFrameworkService.this.jB.a(message);
             return 0;
         }
 
         @Override
         public int refreshIdv(String string, IRefreshIdvCallback iRefreshIdvCallback) {
-            c.i("PaymentFrameworkService", "Entered method = refreshIdv");
+            Log.i("PaymentFrameworkService", "Entered method = refreshIdv");
             if (!PaymentFrameworkService.this.o("refreshIdv")) {
-                c.e("PaymentFrameworkService", "refreshIdv:permission denied");
+                Log.e("PaymentFrameworkService", "refreshIdv:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "refreshIdv:TAException");
+                Log.e("PaymentFrameworkService", "refreshIdv:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(38, string, iRefreshIdvCallback);
@@ -622,9 +613,9 @@ extends Service {
 
         @Override
         public int reset(String string, ICommonCallback iCommonCallback) {
-            c.d("PaymentFrameworkService", "Entered method = reset : " + string);
+            Log.d("PaymentFrameworkService", "Entered method = reset : " + string);
             if (!PaymentFrameworkService.this.o("reset")) {
-                c.e("PaymentFrameworkService", "reset:permission denied");
+                Log.e("PaymentFrameworkService", "reset:permission denied");
                 return -40;
             }
             Message message = j.a(13, string, iCommonCallback);
@@ -634,13 +625,13 @@ extends Service {
 
         @Override
         public int retryPay(PayConfig payConfig) {
-            c.d("PaymentFrameworkService", "Entered method =  retryPay()");
+            Log.d("PaymentFrameworkService", "Entered method =  retryPay()");
             if (!PaymentFrameworkService.this.o("retryPay")) {
-                c.e("PaymentFrameworkService", "retryPay:permission denied");
+                Log.e("PaymentFrameworkService", "retryPay:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "retryPay:TAException");
+                Log.e("PaymentFrameworkService", "retryPay:TAException");
                 return PaymentFrameworkApp.ay();
             }
             return n.q(PaymentFrameworkService.this.mContext).retryPay(payConfig);
@@ -653,13 +644,13 @@ extends Service {
          */
         @Override
         public int selectCard(String string, ISelectCardCallback iSelectCardCallback) {
-            c.d("PaymentFrameworkService", "Entered method = selectCard");
+            Log.d("PaymentFrameworkService", "Entered method = selectCard");
             if (!PaymentFrameworkService.this.o("selectCard")) {
-                c.e("PaymentFrameworkService", "selectCard:permission denied");
+                Log.e("PaymentFrameworkService", "selectCard:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "selectCard:TAException");
+                Log.e("PaymentFrameworkService", "selectCard:TAException");
                 return PaymentFrameworkApp.ay();
             }
             try {
@@ -675,13 +666,13 @@ extends Service {
 
         @Override
         public int selectIdv(String string, IdvMethod idvMethod, ISelectIdvCallback iSelectIdvCallback) {
-            c.i("PaymentFrameworkService", "Entered method = selectIdv");
+            Log.i("PaymentFrameworkService", "Entered method = selectIdv");
             if (!PaymentFrameworkService.this.o("selectIdv")) {
-                c.e("PaymentFrameworkService", "selectIdv:permission denied");
+                Log.e("PaymentFrameworkService", "selectIdv:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "selectIdv:TAException");
+                Log.e("PaymentFrameworkService", "selectIdv:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(4, string, idvMethod, iSelectIdvCallback);
@@ -691,7 +682,7 @@ extends Service {
 
         @Override
         public int setConfig(String string, String string2) {
-            c.d("PaymentFrameworkService", "Entered method =  setConfig()");
+            Log.d("PaymentFrameworkService", "Entered method =  setConfig()");
             if (!PaymentFrameworkService.this.o("setConfig")) {
                 return -40;
             }
@@ -700,13 +691,13 @@ extends Service {
 
         @Override
         public int setJwtToken(String string) {
-            c.i("PaymentFrameworkService", "Entered method = setJwtToken");
+            Log.i("PaymentFrameworkService", "Entered method = setJwtToken");
             if (!PaymentFrameworkService.this.o("setJwtToken")) {
-                c.e("PaymentFrameworkService", "not enough permission.throwing security exception");
+                Log.e("PaymentFrameworkService", "not enough permission.throwing security exception");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "setJwtToken:TAException");
+                Log.e("PaymentFrameworkService", "setJwtToken:TAException");
                 return PaymentFrameworkApp.ay();
             }
             return e.h(PaymentFrameworkService.this.mContext).setConfig("CONFIG_JWT_TOKEN", string);
@@ -714,12 +705,12 @@ extends Service {
 
         @Override
         public int setPin(String string, char[] arrc, ICommonCallback iCommonCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  setPin()");
+            Log.d("PaymentFrameworkService", "Entered method =  setPin()");
             if (!PaymentFrameworkService.this.o("setPin")) {
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "setPin:TAException");
+                Log.e("PaymentFrameworkService", "setPin:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(39, string, arrc, iCommonCallback);
@@ -729,9 +720,9 @@ extends Service {
 
         @Override
         public int startGiftCardPay(byte[] arrby, byte[] arrby2, SecuredObject securedObject, PayConfig payConfig, IPayCallback iPayCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  startGiftCardPay()");
+            Log.d("PaymentFrameworkService", "Entered method =  startGiftCardPay()");
             if (!PaymentFrameworkService.this.o("startGiftCardPay")) {
-                c.e("PaymentFrameworkService", "startGiftCardPay:permission denied");
+                Log.e("PaymentFrameworkService", "startGiftCardPay:permission denied");
                 return -40;
             }
             Message message = j.a(29, arrby, arrby2, securedObject, payConfig, iPayCallback);
@@ -741,9 +732,9 @@ extends Service {
 
         @Override
         public int startGlobalMembershipCardPay(String string, byte[] arrby, SecuredObject securedObject, PayConfig payConfig, IPayCallback iPayCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  startGlobalMembershipCardPay()");
+            Log.d("PaymentFrameworkService", "Entered method =  startGlobalMembershipCardPay()");
             if (!PaymentFrameworkService.this.o("startGlobalMembershipCardPay")) {
-                c.e("PaymentFrameworkService", "startGlobalMembershipCardPay:permission denied");
+                Log.e("PaymentFrameworkService", "startGlobalMembershipCardPay:permission denied");
                 return -40;
             }
             Message message = j.a(42, string, arrby, securedObject, payConfig, iPayCallback);
@@ -753,12 +744,12 @@ extends Service {
 
         @Override
         public int startInAppPay(SecuredObject securedObject, InAppTransactionInfo inAppTransactionInfo, IInAppPayCallback iInAppPayCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  startInAppPay()");
+            Log.d("PaymentFrameworkService", "Entered method =  startInAppPay()");
             if (!PaymentFrameworkService.this.o("startInAppPay")) {
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "startInAppPay:TAException");
+                Log.e("PaymentFrameworkService", "startInAppPay:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(24, securedObject, inAppTransactionInfo, iInAppPayCallback);
@@ -768,12 +759,12 @@ extends Service {
 
         @Override
         public int startLoyaltyCardPay(LoyaltyCardShowRequest loyaltyCardShowRequest, IPayCallback iPayCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  storeUserSignature()");
+            Log.d("PaymentFrameworkService", "Entered method =  storeUserSignature()");
             if (!PaymentFrameworkService.this.o("storeUserSignature")) {
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "storeUserSignature:TAException");
+                Log.e("PaymentFrameworkService", "storeUserSignature:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(36, loyaltyCardShowRequest, iPayCallback);
@@ -783,13 +774,13 @@ extends Service {
 
         @Override
         public int startPay(SecuredObject securedObject, PayConfig payConfig, IPayCallback iPayCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  startPay()");
+            Log.d("PaymentFrameworkService", "Entered method =  startPay()");
             if (!PaymentFrameworkService.this.o("startPay")) {
-                c.e("PaymentFrameworkService", "startPay:permission denied");
+                Log.e("PaymentFrameworkService", "startPay:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "startPay:TAException");
+                Log.e("PaymentFrameworkService", "startPay:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(7, securedObject, payConfig, iPayCallback);
@@ -799,13 +790,13 @@ extends Service {
 
         @Override
         public int stopPay(ICommonCallback iCommonCallback) {
-            c.d("PaymentFrameworkService", "Entered method = stopPay()");
+            Log.d("PaymentFrameworkService", "Entered method = stopPay()");
             if (!PaymentFrameworkService.this.o("stopPay")) {
-                c.e("PaymentFrameworkService", "stopPay:permission denied");
+                Log.e("PaymentFrameworkService", "stopPay:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "stopPay:TAException");
+                Log.e("PaymentFrameworkService", "stopPay:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(8, null, iCommonCallback);
@@ -815,12 +806,12 @@ extends Service {
 
         @Override
         public int storeUserSignature(String string, byte[] arrby, ICommonCallback iCommonCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  storeUserSignature()");
+            Log.d("PaymentFrameworkService", "Entered method =  storeUserSignature()");
             if (!PaymentFrameworkService.this.o("storeUserSignature")) {
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "storeUserSignature:TAException");
+                Log.e("PaymentFrameworkService", "storeUserSignature:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(32, string, arrby, iCommonCallback);
@@ -835,13 +826,13 @@ extends Service {
 
         @Override
         public int updateBinAttribute(String string, String string2, ICommonCallback iCommonCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  updateBinAttribute()");
+            Log.d("PaymentFrameworkService", "Entered method =  updateBinAttribute()");
             if (!PaymentFrameworkService.this.o("updateBinAttribute")) {
-                c.e("PaymentFrameworkService", "updateBinAttribute:permission denied");
+                Log.e("PaymentFrameworkService", "updateBinAttribute:permission denied");
                 return -40;
             }
             if (TextUtils.equals((CharSequence)BinAttribute.getServerBinVersion(), (CharSequence)string)) {
-                c.d("PaymentFrameworkService", "updateBinAttribute. requested version is same. skip update BIN");
+                Log.d("PaymentFrameworkService", "updateBinAttribute. requested version is same. skip update BIN");
                 return -3;
             }
             Message message = j.a(44, string, string2, iCommonCallback);
@@ -851,12 +842,12 @@ extends Service {
 
         @Override
         public int updateLoyaltyCard(UpdateLoyaltyCardInfo updateLoyaltyCardInfo, IUpdateLoyaltyCardCallback iUpdateLoyaltyCardCallback) {
-            c.d("PaymentFrameworkService", "Entered method =  updateLoyaltyCard()");
+            Log.d("PaymentFrameworkService", "Entered method =  updateLoyaltyCard()");
             if (!PaymentFrameworkService.this.o("updateLoyaltyCard")) {
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "updateLoyaltyCard:TAException");
+                Log.e("PaymentFrameworkService", "updateLoyaltyCard:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(34, updateLoyaltyCardInfo, iUpdateLoyaltyCardCallback);
@@ -866,13 +857,13 @@ extends Service {
 
         @Override
         public int verifyIdv(String string, VerifyIdvInfo verifyIdvInfo, IVerifyIdvCallback iVerifyIdvCallback) {
-            c.d("PaymentFrameworkService", "Entered method = verifyIdv");
+            Log.d("PaymentFrameworkService", "Entered method = verifyIdv");
             if (!PaymentFrameworkService.this.o("verifyIdv")) {
-                c.e("PaymentFrameworkService", "verifyIdv:permission denied");
+                Log.e("PaymentFrameworkService", "verifyIdv:permission denied");
                 return -40;
             }
             if (PaymentFrameworkApp.ay() != 0) {
-                c.e("PaymentFrameworkService", "verifyIdv:TAException");
+                Log.e("PaymentFrameworkService", "verifyIdv:TAException");
                 return PaymentFrameworkApp.ay();
             }
             Message message = j.a(5, string, verifyIdvInfo, iVerifyIdvCallback);
@@ -889,29 +880,29 @@ extends Service {
     private i a(Bundle bundle) {
         String string = bundle != null ? bundle.getString("operation", null) : null;
         if (string == null) {
-            c.d("PaymentFrameworkService", "no operation type for handler");
+            Log.d("PaymentFrameworkService", "no operation type for handler");
             return null;
         }
         if (string.equals((Object)"restore")) {
             i i2 = PaymentFrameworkApp.aA();
-            c.d("PaymentFrameworkService", "getRestoreHandler");
+            Log.d("PaymentFrameworkService", "getRestoreHandler");
             return i2;
         }
-        c.e("PaymentFrameworkService", "no registered handler for " + string);
+        Log.e("PaymentFrameworkService", "no registered handler for " + string);
         return null;
     }
 
     private boolean o(String string) {
         SEAMS sEAMS = SEAMS.getInstance((Context)this.getApplicationContext());
         if (sEAMS == null) {
-            c.e("PaymentFrameworkService", "PaymentFrameworkService.checkCallerPermission(): SEAMS is null");
+            Log.e("PaymentFrameworkService", "PaymentFrameworkService.checkCallerPermission(): SEAMS is null");
             return false;
         }
         if (sEAMS.isAuthorized(Binder.getCallingPid(), Binder.getCallingUid(), "PaymentFramework", string) == 0) {
-            c.d("PaymentFrameworkService", "PaymentFrameworkService.checkCallerPermission(): Access Granted");
+            Log.d("PaymentFrameworkService", "PaymentFrameworkService.checkCallerPermission(): Access Granted");
             return true;
         }
-        c.e("PaymentFrameworkService", "PaymentFrameworkService.checkCallerPermission(): Access Denied");
+        Log.e("PaymentFrameworkService", "PaymentFrameworkService.checkCallerPermission(): Access Denied");
         return false;
     }
 
@@ -925,19 +916,19 @@ extends Service {
         IBinder iBinder;
         int n2 = b.getCallingUserId();
         if (n2 != b.USER_OWNER) {
-            c.e("PaymentFrameworkService", "onBind: only app which runs on USER_OWNER has permission to bind: " + n2);
+            Log.e("PaymentFrameworkService", "onBind: only app which runs on USER_OWNER has permission to bind: " + n2);
             return null;
         }
         if (!PaymentFrameworkApp.aB().isReady()) {
-            c.i("PaymentFrameworkService", "PF not ready. requesting init ");
+            Log.i("PaymentFrameworkService", "PF not ready. requesting init ");
             if (!PaymentFrameworkApp.aB().init()) {
-                c.e("PaymentFrameworkService", "PF init failed. Not return binder to caller ");
+                Log.e("PaymentFrameworkService", "PF init failed. Not return binder to caller ");
                 return null;
             }
-            c.d("PaymentFrameworkService", "PF init success ");
+            Log.d("PaymentFrameworkService", "PF init success ");
         }
         if ((bundle = intent.getExtras()) != null && (iBinder = bundle.getBinder("deathDetectorBinder")) != null) {
-            c.d("PaymentFrameworkService", "onBind: registering deathBinder : " + (Object)iBinder);
+            Log.d("PaymentFrameworkService", "onBind: registering deathBinder : " + (Object)iBinder);
             try {
                 this.jT.a(iBinder);
                 iBinder.linkToDeath((IBinder.DeathRecipient)this.jT, 0);
@@ -978,7 +969,7 @@ extends Service {
         }
 
         public void binderDied() {
-            c.e("PaymentFrameworkService", "DeathRecipient: Error: Wallet App died, handle clean up");
+            Log.e("PaymentFrameworkService", "DeathRecipient: Error: Wallet App died, handle clean up");
             if (this.iG != null) {
                 this.iG.unlinkToDeath((IBinder.DeathRecipient)this, 0);
             }

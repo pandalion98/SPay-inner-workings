@@ -17,7 +17,7 @@ import android.content.Context;
 import android.os.Bundle;
 import com.samsung.android.spayfw.appinterface.TransactionData;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.accttxns.models.AcctTransactionDetail;
 import com.samsung.android.spayfw.payprovider.discover.accttxns.models.AcctTransactionRecord;
 import com.samsung.android.spayfw.payprovider.discover.accttxns.models.AcctTransactionsResponseData;
@@ -27,7 +27,6 @@ import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.payprovider.i;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
 import com.samsung.android.spayfw.utils.h;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -124,9 +123,9 @@ public class b {
         @Override
         public void a(int n2, com.samsung.android.spayfw.remoteservice.c<AcctTransactionsResponseData> c2) {
             int n3 = -7;
-            c.i("DCSDK_DcAcctTransactionsManager", "AcctTransactionsRequesterCB: onRequestComplete: status " + n2);
+            Log.i("DCSDK_DcAcctTransactionsManager", "AcctTransactionsRequesterCB: onRequestComplete: status " + n2);
             if (b.this.sp == null) {
-                c.e("DCSDK_DcAcctTransactionsManager", "AcctTransactionsRequesterCB: onRequestComplete: mAcctTxnRespCb object is null ");
+                Log.e("DCSDK_DcAcctTransactionsManager", "AcctTransactionsRequesterCB: onRequestComplete: mAcctTxnRespCb object is null ");
                 return;
             }
             e e2 = new e();
@@ -163,7 +162,7 @@ public class b {
                 b.this.sp.a(f2, 0, acctTransactionsResponseData, null);
                 return;
             }
-            c.e("DCSDK_DcAcctTransactionsManager", "AcctTransactionsRequesterCB: onRequestComplete: response is null");
+            Log.e("DCSDK_DcAcctTransactionsManager", "AcctTransactionsRequesterCB: onRequestComplete: response is null");
             e2.setErrorCode(n3);
             b.this.sp.a(f2, n3, null, e2);
         }

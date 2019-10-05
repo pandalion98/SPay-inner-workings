@@ -30,10 +30,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.SmsMessage;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.sensorframework.sda.b.b.i;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.c.b.h;
-import com.samsung.sensorframework.sda.d.b.a;
 
 public class l
 extends a {
@@ -52,7 +50,7 @@ extends a {
             {
                 try {
                     Cursor cursor;
-                    c.d("SmsSensor", "Received onChange notification");
+                    Log.d("SmsSensor", "Received onChange notification");
                     Uri uri = Uri.parse((String)"content://sms");
                     ContentResolver contentResolver = l.this.HR.getContentResolver();
                     if (contentResolver == null || (cursor = contentResolver.query(uri, null, null, null, null)) == null) return;

@@ -19,7 +19,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
 import com.google.gson.JsonObject;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.plcc.db.PlccCardDetailsDao;
 import com.samsung.android.spayfw.payprovider.plcc.db.PlccCardDetailsDaoImpl;
 import com.samsung.android.spayfw.payprovider.plcc.domain.ActivationResponse;
@@ -31,7 +31,6 @@ import com.samsung.android.spayfw.payprovider.plcc.tzsvc.PlccTAController;
 import com.samsung.android.spayfw.payprovider.plcc.util.Util;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class PlccPayProviderSdk {
     private static final String TAG = "PlccPayProvider";
@@ -51,7 +50,7 @@ public class PlccPayProviderSdk {
 
     public PlccCard addCard(String string, String string2, JsonObject jsonObject) {
         if (jsonObject == null) {
-            c.i(TAG, "Create Token - Response Data was null");
+            Log.i(TAG, "Create Token - Response Data was null");
             return null;
         }
         ActivationResponse activationResponse = ActivationResponse.fromJson(jsonObject.toString());
@@ -60,7 +59,7 @@ public class PlccPayProviderSdk {
         String string5 = activationResponse.getMstSeqConfig();
         if (TextUtils.isEmpty((CharSequence)string5)) {
             string5 = "(t2, r300, LZ30, TZ30, D1200)\n(t2, r300, LZ30, TZ30, D1200)\n(t2, r300, LZ30, TZ30, D1200)\n(t2, r300, LZ30, TZ30, D1200)\n(t1, r300, LZ30, TZ4, D0)\n(t2, r300, LZ6, TZ30, R, D1200)\n(t1, r300, LZ30, TZ4, D0)\n(t2, r300, LZ6, TZ30, R, D1200)\n(t1, r300, LZ30, TZ4, D0)\n(t2, r300, LZ6, TZ30, R, D1200)\n(t2, r800, LZ30, TZ30, D1200)\n(t2, r800, LZ30, TZ30, D1200)\n(t2, r800, LZ30, TZ30, D1200)\n(t2, r800, LZ30, TZ30, D1200)\n(t1, r500, LZ30, TZ4, D0)\n(t2, r500, LZ6, TZ30, R, D1200)\n(t1, r500, LZ30, TZ4, D0)\n(t2, r500, LZ6, TZ30, R, D1200)\n(t1, r500, LZ30, TZ4, D0)\n(t2, r500, LZ6, TZ30, R, D0)\n";
-            c.i(TAG, "MstSeqConfig = " + string5);
+            Log.i(TAG, "MstSeqConfig = " + string5);
         }
         return this.addCard(string2, string, string3, string4, "ACTIVE", string5, activationResponse.getTimestamp());
     }

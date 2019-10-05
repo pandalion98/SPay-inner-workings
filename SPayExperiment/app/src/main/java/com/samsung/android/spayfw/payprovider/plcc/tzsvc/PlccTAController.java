@@ -27,17 +27,9 @@ package com.samsung.android.spayfw.payprovider.plcc.tzsvc;
 
 import android.content.Context;
 import android.spay.CertInfo;
-import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.plcc.tzsvc.ExtractCardDetailResult;
-import com.samsung.android.spayfw.payprovider.plcc.tzsvc.MstConfigLump;
-import com.samsung.android.spayfw.payprovider.plcc.tzsvc.MstConfigSegment;
-import com.samsung.android.spayfw.payprovider.plcc.tzsvc.PlccCommands;
-import com.samsung.android.spayfw.payprovider.plcc.tzsvc.PlccDeviceCerts;
-import com.samsung.android.spayfw.payprovider.plcc.tzsvc.PlccTAException;
-import com.samsung.android.spayfw.payprovider.plcc.tzsvc.PlccTAInfo;
-import com.samsung.android.spaytzsvc.api.Blob;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.TAController;
 import com.samsung.android.spaytzsvc.api.TAInfo;
 import java.nio.ByteBuffer;
@@ -46,10 +38,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import javolution.io.Struct;
 
 public class PlccTAController
 extends TAController {
@@ -97,7 +87,7 @@ extends TAController {
     private static byte[] getCurrentTimestamp(long l2) {
         String string = PlccTAController.gmtTimestamp(new Date(l2));
         if (DEBUG) {
-            c.d(TAG, "Network timestamp in sdf  =" + string);
+            Log.d(TAG, "Network timestamp in sdf  =" + string);
         }
         return PlccTAController.hexStringToBytes(string);
     }
@@ -147,23 +137,23 @@ extends TAController {
     private boolean loadAllCerts(String string) {
         PlccCommands.LoadCerts.Response response;
         if (DEBUG) {
-            c.d(TAG, "Calling loadAllCerts: cardBrand:  " + string);
+            Log.d(TAG, "Calling loadAllCerts: cardBrand:  " + string);
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "loadAllCerts: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e(TAG, "loadAllCerts: Error: TA is not loaded, please call loadTA() API first!");
             return false;
         }
         if (!this.mPlccDeviceCerts.isLoaded()) {
-            c.d(TAG, "mPlccDeviceCerts is not loaded");
+            Log.d(TAG, "mPlccDeviceCerts is not loaded");
             if (!this.mPlccDeviceCerts.load()) {
-                c.e(TAG, "Error: Plcc Device Certs Load failed");
+                Log.e(TAG, "Error: Plcc Device Certs Load failed");
                 return false;
             }
         }
         byte[] arrby = this.mPlccDeviceCerts.getDevicePrivateSignCert();
         byte[] arrby2 = this.mPlccDeviceCerts.getDevicePrivateEncryptionCert();
         if (arrby == null || arrby2 == null) {
-            c.e(TAG, "loadAllCerts: Error: Certificate Data is NULL");
+            Log.e(TAG, "loadAllCerts: Error: Certificate Data is NULL");
             this.certsInfoCache = null;
             return false;
         }
@@ -172,18 +162,18 @@ extends TAController {
             PlccCommands.LoadCerts.Request request = serverCerts != null ? new PlccCommands.LoadCerts.Request(arrby, arrby2, serverCerts.plcc_cert_sign, serverCerts.plcc_cert_enc, serverCerts.plcc_cert_sub) : new PlccCommands.LoadCerts.Request(arrby, arrby2, null, null, null);
             TACommandResponse tACommandResponse = this.executeNoLoad(request);
             if (tACommandResponse == null) {
-                c.e(TAG, "loadAllCerts: Error: executeNoLoad failed");
+                Log.e(TAG, "loadAllCerts: Error: executeNoLoad failed");
                 return false;
             }
             response = new PlccCommands.LoadCerts.Response(tACommandResponse);
             long l2 = response.mRetVal.return_code.get();
             if (tACommandResponse.mResponseCode != 0 || l2 != 0L) {
-                c.e(TAG, "loadAllCerts: Error: code: " + tACommandResponse.mResponseCode + " errorMsg:" + tACommandResponse.mErrorMsg);
+                Log.e(TAG, "loadAllCerts: Error: code: " + tACommandResponse.mResponseCode + " errorMsg:" + tACommandResponse.mErrorMsg);
                 return false;
             }
         }
         catch (Exception exception) {
-            c.c(TAG, exception.getMessage(), exception);
+            Log.c(TAG, exception.getMessage(), exception);
             if (!(exception instanceof IllegalArgumentException)) throw new PlccTAException("Error communicating with the TA", 1001);
             {
                 throw new PlccTAException("Invalid Input", 1004);
@@ -192,10 +182,10 @@ extends TAController {
         this.mTACerts = new TACerts(response.mRetVal.cert_drk.getData(), response.mRetVal.cert_sign.getData(), response.mRetVal.cert_encrypt.getData());
         if (!DEBUG) return true;
         {
-            c.d(TAG, "enc_cert= " + Arrays.toString((byte[])response.mRetVal.cert_encrypt.getData()));
-            c.d(TAG, "sign_cert= " + Arrays.toString((byte[])response.mRetVal.cert_sign.getData()));
-            c.d(TAG, "drk= " + Arrays.toString((byte[])response.mRetVal.cert_drk.getData()));
-            c.d(TAG, "loadAllCerts called Successfully");
+            Log.d(TAG, "enc_cert= " + Arrays.toString((byte[])response.mRetVal.cert_encrypt.getData()));
+            Log.d(TAG, "sign_cert= " + Arrays.toString((byte[])response.mRetVal.cert_sign.getData()));
+            Log.d(TAG, "drk= " + Arrays.toString((byte[])response.mRetVal.cert_drk.getData()));
+            Log.d(TAG, "loadAllCerts called Successfully");
         }
         return true;
     }
@@ -234,31 +224,31 @@ extends TAController {
         PlccTAController plccTAController = this;
         // MONITORENTER : plccTAController
         if (DEBUG) {
-            c.d(TAG, "Calling plcc add card");
+            Log.d(TAG, "Calling plcc add card");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "addCard: Error: TA is not loaded, please call loadTA() API first!");
+            Log.e(TAG, "addCard: Error: TA is not loaded, please call loadTA() API first!");
             // MONITOREXIT : plccTAController
             return arrby2;
         }
         if (!this.loadAllCerts(string)) {
-            c.e(TAG, "addCard: Error: loadAllCerts returned false!");
+            Log.e(TAG, "addCard: Error: loadAllCerts returned false!");
             return null;
         }
         try {
             TACommandResponse tACommandResponse = this.executeNoLoad(new PlccCommands.AddCard.Request(arrby));
             if (tACommandResponse == null) {
-                c.e(TAG, "add Card: Error: executeNoLoad failed");
+                Log.e(TAG, "add Card: Error: executeNoLoad failed");
                 return null;
             }
             PlccCommands.AddCard.Response response = new PlccCommands.AddCard.Response(tACommandResponse);
             byte[] arrby3 = response.mRetVal.encPlccData.getData();
             if (!DEBUG) return arrby3;
-            c.d(TAG, "tzEnc data  = " + Arrays.toString((byte[])response.mRetVal.encPlccData.getData()));
+            Log.d(TAG, "tzEnc data  = " + Arrays.toString((byte[])response.mRetVal.encPlccData.getData()));
             return arrby3;
         }
         catch (Exception exception) {
-            c.c(TAG, exception.getMessage(), exception);
+            Log.c(TAG, exception.getMessage(), exception);
             if (!(exception instanceof IllegalArgumentException)) throw new PlccTAException("Error communicating with the TA", 1001);
             throw new PlccTAException("Invalid Input", 1004);
         }
@@ -278,16 +268,16 @@ extends TAController {
             PlccTAController plccTAController = this;
             // MONITORENTER : plccTAController
             if (DEBUG) {
-                c.d(TAG, "Calling authenticateTransaction");
+                Log.d(TAG, "Calling authenticateTransaction");
             }
             if (!this.isTALoaded()) {
-                c.e(TAG, "authenticateTransaction: Error: TA is not loaded, please call loadTA() API first!");
+                Log.e(TAG, "authenticateTransaction: Error: TA is not loaded, please call loadTA() API first!");
                 return bl;
             }
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new PlccCommands.AuthenticateTransaction.Request(arrby));
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: authenticateTransaction executeNoLoad failed");
+                    Log.e(TAG, "Error: authenticateTransaction executeNoLoad failed");
                     return false;
                 }
                 long l2 = new PlccCommands.AuthenticateTransaction.Response((TACommandResponse)tACommandResponse).mRetVal.auth_result.get();
@@ -297,11 +287,11 @@ extends TAController {
                     bl = true;
                 }
                 if (!DEBUG) break block10;
-                c.d(TAG, "authenticateTransaction: auth_result = " + l2);
+                Log.d(TAG, "authenticateTransaction: auth_result = " + l2);
                 return bl;
             }
             catch (Exception exception) {
-                c.c(TAG, exception.getMessage(), exception);
+                Log.c(TAG, exception.getMessage(), exception);
                 if (!(exception instanceof IllegalArgumentException)) throw new PlccTAException("Error communicating with the TA", 1001);
                 throw new PlccTAException("Invalid Input", 1004);
             }
@@ -320,32 +310,32 @@ extends TAController {
         synchronized (plccTAController) {
             TACommandResponse tACommandResponse;
             if (DEBUG) {
-                c.d(TAG, "Calling clearMstData");
+                Log.d(TAG, "Calling clearMstData");
             }
             this.resetMstFlag();
             if (!this.isTALoaded()) {
-                c.e(TAG, "clearMstData: Error: TA is not loaded, please call loadTA() API first!");
+                Log.e(TAG, "clearMstData: Error: TA is not loaded, please call loadTA() API first!");
                 throw new PlccTAException("Plcc TA not loaded", 1003);
             }
             try {
                 tACommandResponse = this.executeNoLoad(new PlccCommands.ClearData.Request(0));
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: clearMstData executeNoLoad failed");
+                    Log.e(TAG, "Error: clearMstData executeNoLoad failed");
                     throw new PlccTAException("Error communicating with the TA", 1001);
                 }
                 if (tACommandResponse.mResponseCode != 0) {
-                    c.e(TAG, "clearMstData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                    Log.e(TAG, "clearMstData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                     throw new PlccTAException("TA command returned error", 9001);
                 }
             }
             catch (Exception exception) {
-                c.c(TAG, exception.getMessage(), exception);
+                Log.c(TAG, exception.getMessage(), exception);
                 if (!(exception instanceof IllegalArgumentException)) throw new PlccTAException("Error communicating with the TA", 1001);
                 throw new PlccTAException("Invalid Input", 1004);
             }
             PlccCommands.ClearData.Response response = new PlccCommands.ClearData.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "clearMstData: success ");
+                Log.d(TAG, "clearMstData: success ");
             }
             long l2 = response.mRetVal.return_code.get();
             long l3 = l2 LCMP 0L;
@@ -367,14 +357,14 @@ extends TAController {
             block15 : {
                 block16 : {
                     if (DEBUG) {
-                        c.d(TAG, "Calling extractGiftCardDetail");
+                        Log.d(TAG, "Calling extractGiftCardDetail");
                     }
                     extractCardDetailResult = new ExtractCardDetailResult();
                     extractCardDetailResult.setErrorCode(-1);
                     try {
                         TACommandResponse tACommandResponse = this.executeNoLoad(new PlccCommands.ExtractGiftCardDetail.Request(arrby, arrby2));
                         if (tACommandResponse == null) {
-                            c.e(TAG, "Error: extractGiftCardDetail executeNoLoad failed");
+                            Log.e(TAG, "Error: extractGiftCardDetail executeNoLoad failed");
                             break block15;
                         }
                         PlccCommands.ExtractGiftCardDetail.Response response = new PlccCommands.ExtractGiftCardDetail.Response(tACommandResponse);
@@ -382,7 +372,7 @@ extends TAController {
                         long l2 = response.mRetVal.return_code.get();
                         if (l2 == 0L) {
                             if (DEBUG) {
-                                c.d(TAG, "extractGiftCardDetail Success: ");
+                                Log.d(TAG, "extractGiftCardDetail Success: ");
                             }
                             if (response.mRetVal.cardnumber != null) {
                                 extractCardDetailResult.setCardnumber(new String(response.mRetVal.cardnumber.getData(), "UTF-8"));
@@ -395,19 +385,19 @@ extends TAController {
                             }
                             extractCardDetailResult.setErrorCode(0);
                         } else {
-                            c.e(TAG, "extractGiftCardDetail Fail: respValue = " + l2);
+                            Log.e(TAG, "extractGiftCardDetail Fail: respValue = " + l2);
                         }
                         break block15;
                     }
                     catch (Exception exception) {
-                        c.c(TAG, exception.getMessage(), exception);
+                        Log.c(TAG, exception.getMessage(), exception);
                         if (!(exception instanceof IllegalArgumentException)) throw new PlccTAException("Error communicating with the TA", 1001);
                         {
                             throw new PlccTAException("Invalid Input", 1004);
                         }
                     }
                 }
-                c.e(TAG, "response or response.mRetVal or response.mRetVal.return_code is null");
+                Log.e(TAG, "response or response.mRetVal or response.mRetVal.return_code is null");
             }
             return extractCardDetailResult;
         }
@@ -424,56 +414,56 @@ extends TAController {
         synchronized (plccTAController) {
             block17 : {
                 if (DEBUG) {
-                    c.d(TAG, "Calling extractLoyaltyCardDetail");
+                    Log.d(TAG, "Calling extractLoyaltyCardDetail");
                 }
                 if (arrby == null || arrby.length <= 0) {
-                    c.e(TAG, "extractLoyaltyCardDetail: cardId is null or empty");
+                    Log.e(TAG, "extractLoyaltyCardDetail: cardId is null or empty");
                 }
                 if (arrby2 == null || arrby2.length <= 0) {
-                    c.e(TAG, "extractLoyaltyCardDetail: cardTzEncData is null or empty");
+                    Log.e(TAG, "extractLoyaltyCardDetail: cardTzEncData is null or empty");
                 } else {
-                    c.i(TAG, "extractLoyaltyCardDetail data : " + new String(arrby2));
+                    Log.i(TAG, "extractLoyaltyCardDetail data : " + new String(arrby2));
                 }
                 ExtractCardDetailResult extractCardDetailResult2 = new ExtractCardDetailResult();
                 extractCardDetailResult2.setErrorCode(-1);
                 try {
                     TACommandResponse tACommandResponse = this.executeNoLoad(new PlccCommands.ExtractLoyaltyCardDetail.Request(arrby, arrby2));
                     if (tACommandResponse == null) {
-                        c.e(TAG, "Error: extractLoyaltyCardDetail executeNoLoad failed");
+                        Log.e(TAG, "Error: extractLoyaltyCardDetail executeNoLoad failed");
                         break block17;
                     }
                     PlccCommands.ExtractLoyaltyCardDetail.Response response = new PlccCommands.ExtractLoyaltyCardDetail.Response(tACommandResponse);
                     if (response != null && response.mRetVal != null && response.mRetVal.return_code != null) {
                         long l2 = response.mRetVal.return_code.get();
                         if (l2 == 0L) {
-                            c.i(TAG, "extractLoyaltyCardDetail Success: ");
+                            Log.i(TAG, "extractLoyaltyCardDetail Success: ");
                             if (response.mRetVal.cardnumber != null && response.mRetVal.cardnumber.getData().length > 0) {
-                                c.i(TAG, "cardNumber not null ");
+                                Log.i(TAG, "cardNumber not null ");
                                 extractCardDetailResult2.setCardnumber(new String(response.mRetVal.cardnumber.getData(), "UTF-8"));
                             }
                             if (response.mRetVal.barcodecontent != null && response.mRetVal.barcodecontent.getData().length > 0) {
-                                c.i(TAG, "barcode content not null ");
+                                Log.i(TAG, "barcode content not null ");
                                 extractCardDetailResult2.setBarcodeContent(new String(response.mRetVal.barcodecontent.getData(), "UTF-8"));
                             }
                             if (response.mRetVal.imgSessionKey != null && response.mRetVal.imgSessionKey.getData().length > 0) {
-                                c.i(TAG, "key not null ");
+                                Log.i(TAG, "key not null ");
                                 extractCardDetailResult2.setImgSessionKey(new String(response.mRetVal.imgSessionKey.getData(), "UTF-8"));
                             }
                             if (response.mRetVal.extra != null && response.mRetVal.extra.getData().length > 0) {
-                                c.i(TAG, "extra not null ");
+                                Log.i(TAG, "extra not null ");
                                 extractCardDetailResult2.setExtraContent(new String(response.mRetVal.extra.getData(), "UTF-8"));
                             }
                             extractCardDetailResult2.setErrorCode(0);
                             return extractCardDetailResult2;
                         }
-                        c.e(TAG, "extractLoyaltyCardDetail Fail: respValue = " + l2);
+                        Log.e(TAG, "extractLoyaltyCardDetail Fail: respValue = " + l2);
                         return null;
                     }
-                    c.e(TAG, "response or response.mRetVal or response.mRetVal.return_code is null");
+                    Log.e(TAG, "response or response.mRetVal or response.mRetVal.return_code is null");
                     return null;
                 }
                 catch (Exception exception) {
-                    c.c(TAG, exception.getMessage(), exception);
+                    Log.c(TAG, exception.getMessage(), exception);
                     if (!(exception instanceof IllegalArgumentException)) throw new PlccTAException("Error communicating with the TA", 1001);
                     throw new PlccTAException("Invalid Input", 1004);
                 }
@@ -486,7 +476,7 @@ extends TAController {
         PlccTAController plccTAController = this;
         synchronized (plccTAController) {
             if (this.mTACerts == null && !this.loadAllCerts(string)) {
-                c.e(TAG, "getCerts: Error: loadAllCerts returned false!");
+                Log.e(TAG, "getCerts: Error: loadAllCerts returned false!");
             }
             TACerts tACerts = this.mTACerts;
             return tACerts;
@@ -502,7 +492,7 @@ extends TAController {
         PlccTAController plccTAController = this;
         synchronized (plccTAController) {
             if (this.mTACerts == null && !this.loadAllCerts(string)) {
-                c.e(TAG, "getCerts: Error: loadAllCerts returned false!");
+                Log.e(TAG, "getCerts: Error: loadAllCerts returned false!");
                 return null;
             }
             byte[] arrby = new byte[2 + (1 + (2 + (1 + (3 + this.mTACerts.drk.length)) + this.mTACerts.signcert.length)) + this.mTACerts.encryptcert.length];
@@ -541,16 +531,16 @@ extends TAController {
             PlccTAController plccTAController = this;
             // MONITORENTER : plccTAController
             if (DEBUG) {
-                c.d(TAG, "Calling getNonce");
+                Log.d(TAG, "Calling getNonce");
             }
             if (!this.isTALoaded()) {
-                c.e(TAG, "getNonce: Error: TA is not loaded, please call loadTA() API first!");
+                Log.e(TAG, "getNonce: Error: TA is not loaded, please call loadTA() API first!");
                 return arrby;
             }
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new PlccCommands.GetNonce.Request(n2));
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error:getNonce executeNoLoad failed");
+                    Log.e(TAG, "Error:getNonce executeNoLoad failed");
                     return null;
                 }
                 arrby = new PlccCommands.GetNonce.Response((TACommandResponse)tACommandResponse).mRetVal.out_data.getData();
@@ -559,7 +549,7 @@ extends TAController {
                 return arrby;
             }
             catch (Exception exception) {
-                c.c(TAG, exception.getMessage(), exception);
+                Log.c(TAG, exception.getMessage(), exception);
                 if (!(exception instanceof IllegalArgumentException)) throw new PlccTAException("Error communicating with the TA", 1001);
                 throw new PlccTAException("Invalid Input", 1004);
             }
@@ -571,7 +561,7 @@ extends TAController {
     @Override
     protected boolean init() {
         if (!super.init()) {
-            c.e(TAG, "Error: init failed");
+            Log.e(TAG, "Error: init failed");
             return false;
         }
         this.mPlccDeviceCerts = new PlccDeviceCerts(this);
@@ -587,13 +577,13 @@ extends TAController {
         PlccTAController plccTAController = this;
         synchronized (plccTAController) {
             if (DEBUG) {
-                c.d(TAG, "Calling mstTransmit");
+                Log.d(TAG, "Calling mstTransmit");
             }
             boolean bl = false;
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new PlccCommands.MstTransmit.Request(n2, arrby, arrby2));
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Error: mstTransmit executeNoLoad failed");
+                    Log.e(TAG, "Error: mstTransmit executeNoLoad failed");
                 } else {
                     long l2 = new PlccCommands.MstTransmit.Response((TACommandResponse)tACommandResponse).mRetVal.return_code.get() LCMP 0L;
                     bl = false;
@@ -601,13 +591,13 @@ extends TAController {
                         bl = true;
                     }
                     if (DEBUG) {
-                        c.d(TAG, "mstTransmit: " + bl);
+                        Log.d(TAG, "mstTransmit: " + bl);
                     }
                 }
                 return bl;
             }
             catch (Exception exception) {
-                c.c(TAG, exception.getMessage(), exception);
+                Log.c(TAG, exception.getMessage(), exception);
                 if (exception instanceof IllegalArgumentException) {
                     throw new PlccTAException("Invalid Input", 1004);
                 }
@@ -628,7 +618,7 @@ extends TAController {
                 byte[] arrby2 = null;
                 tACommandResponse = this.executeNoLoad(new PlccCommands.RetrieveFromStorage.Request(arrby));
                 if (tACommandResponse != null) break block7;
-                c.e(TAG, "Error: retrieveFromStorage executeNoLoad failed");
+                Log.e(TAG, "Error: retrieveFromStorage executeNoLoad failed");
                 return arrby2;
             }
             try {
@@ -637,8 +627,8 @@ extends TAController {
             }
             catch (Exception exception) {
                 try {
-                    c.e(TAG, "Error: retrieveFromStorage failed");
-                    c.c(TAG, exception.getMessage(), exception);
+                    Log.e(TAG, "Error: retrieveFromStorage failed");
+                    Log.c(TAG, exception.getMessage(), exception);
                     if (!(exception instanceof IllegalArgumentException)) throw new PlccTAException("Error communicating with the TA", 1001);
                     throw new PlccTAException("Invalid Input", 1004);
                 }
@@ -657,7 +647,7 @@ extends TAController {
     public void setPlccServerCerts(String string, byte[] arrby, byte[] arrby2, byte[] arrby3) {
         PlccTAController plccTAController = this;
         synchronized (plccTAController) {
-            c.d(TAG, "setPlccServerCerts: cardBrand " + string);
+            Log.d(TAG, "setPlccServerCerts: cardBrand " + string);
             ServerCerts serverCerts = new ServerCerts();
             serverCerts.plcc_cert_sign = arrby;
             serverCerts.plcc_cert_enc = arrby2;
@@ -685,7 +675,7 @@ extends TAController {
                 byte[] arrby2 = null;
                 tACommandResponse = this.executeNoLoad(new PlccCommands.StoreData.Request(arrby));
                 if (tACommandResponse != null) break block7;
-                c.e(TAG, "Error: storeData executeNoLoad failed");
+                Log.e(TAG, "Error: storeData executeNoLoad failed");
                 return arrby2;
             }
             try {
@@ -694,8 +684,8 @@ extends TAController {
             }
             catch (Exception exception) {
                 try {
-                    c.e(TAG, "Error: storeData failed");
-                    c.c(TAG, exception.getMessage(), exception);
+                    Log.e(TAG, "Error: storeData failed");
+                    Log.c(TAG, exception.getMessage(), exception);
                     if (!(exception instanceof IllegalArgumentException)) throw new PlccTAException("Error communicating with the TA", 1001);
                     throw new PlccTAException("Invalid Input", 1004);
                 }
@@ -720,36 +710,36 @@ extends TAController {
             PlccTAController plccTAController = this;
             // MONITORENTER : plccTAController
             if (DEBUG) {
-                c.d(TAG, "Calling utility_enc4Server_Transport");
+                Log.d(TAG, "Calling utility_enc4Server_Transport");
             }
             if (!this.isTALoaded()) {
-                c.e(TAG, "utility_enc4Server_Transport: Error: TA is not loaded, please call loadTA() API first!");
+                Log.e(TAG, "utility_enc4Server_Transport: Error: TA is not loaded, please call loadTA() API first!");
                 return arrby2;
             }
             if (!this.loadAllCerts(string)) {
-                c.e(TAG, "utility_enc4Server_Transport: Error: loadAllCerts returned false!");
+                Log.e(TAG, "utility_enc4Server_Transport: Error: loadAllCerts returned false!");
                 return null;
             }
             byte[] arrby3 = PlccTAController.getCurrentTimestamp(l2);
             if (arrby3 != null && DEBUG) {
-                c.d(TAG, "Utility_enc4Server_Transport: timestamp_bytes = " + Arrays.toString((byte[])arrby3));
+                Log.d(TAG, "Utility_enc4Server_Transport: timestamp_bytes = " + Arrays.toString((byte[])arrby3));
             }
             try {
                 TACommandResponse tACommandResponse = this.executeNoLoad(new PlccCommands.Utility_enc4Server_Transport.Request(arrby, arrby3));
                 if (tACommandResponse == null) {
-                    c.e(TAG, "Utility_enc4Server_Transport: Error: executeNoLoad failed");
+                    Log.e(TAG, "Utility_enc4Server_Transport: Error: executeNoLoad failed");
                     return null;
                 }
                 PlccCommands.Utility_enc4Server_Transport.Response response = new PlccCommands.Utility_enc4Server_Transport.Response(tACommandResponse);
                 if (DEBUG) {
-                    c.d(TAG, "Utility_enc4Server_Transport called Successfully");
+                    Log.d(TAG, "Utility_enc4Server_Transport called Successfully");
                 }
                 if ((arrby2 = response.mRetVal.resp.getData()) == null || !DEBUG) break block12;
-                c.d(TAG, "utility_enc4Server_Transport: encryptedData length = " + arrby2.length);
+                Log.d(TAG, "utility_enc4Server_Transport: encryptedData length = " + arrby2.length);
                 return arrby2;
             }
             catch (Exception exception) {
-                c.c(TAG, exception.getMessage(), exception);
+                Log.c(TAG, exception.getMessage(), exception);
                 if (!(exception instanceof IllegalArgumentException)) throw new PlccTAException("Error communicating with the TA", 1001);
                 throw new PlccTAException("Invalid Input", 1004);
             }

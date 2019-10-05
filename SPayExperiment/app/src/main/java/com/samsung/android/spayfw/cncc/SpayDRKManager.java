@@ -27,15 +27,13 @@ import android.os.Build;
 import android.spay.CertInfo;
 import com.samsung.android.service.DeviceRootKeyService.DeviceRootKeyServiceManager;
 import com.samsung.android.service.DeviceRootKeyService.Tlv;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.cncc.CNCCTAController;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.TAController;
 import com.samsung.android.spaytzsvc.api.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import org.bouncycastle.asn1.ASN1Encodable;
+
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.DERBitString;
 import org.bouncycastle.asn1.DERObjectIdentifier;
@@ -89,7 +87,7 @@ public class SpayDRKManager {
             return tlv;
         }
         catch (Exception exception) {
-            c.e(TAG, "Error constructing TLV for createServiceKeySession api : " + exception.toString());
+            Log.e(TAG, "Error constructing TLV for createServiceKeySession api : " + exception.toString());
             exception.printStackTrace();
             return null;
         }
@@ -106,23 +104,23 @@ public class SpayDRKManager {
         try {
             deviceRootKeyServiceManager = SpayDRKManager.getDRKService(this.mCardTAController.getContext());
             if (!SpayDRKManager.isSupported(this.mCardTAController.getContext())) {
-                c.e(TAG, "Error: isDRKExist failed");
+                Log.e(TAG, "Error: isDRKExist failed");
                 return false;
             }
             if (this.bUseCNCC) {
                 CNCCTAController.getInstance().doManagedLoad();
             }
-            c.d(TAG, "createServiceKey " + string);
+            Log.d(TAG, "createServiceKey " + string);
             Tlv tlv = this.createSPaySpecificTlv(deviceRootKeyServiceManager, n2);
             byte[] arrby2 = deviceRootKeyServiceManager.createServiceKeySession(this.mSKMMServiceName, 1, tlv);
             if (arrby2 == null) {
-                c.e(TAG, "Error: createServiceKeySession failed");
+                Log.e(TAG, "Error: createServiceKeySession failed");
                 return false;
             }
-            c.i(TAG, "createServiceKey: done");
+            Log.i(TAG, "createServiceKey: done");
             arrby = this.rewrapCertForActualPayService(arrby2);
             if (arrby == null) {
-                c.e(TAG, "Error: rewrapCertForActualPayService failed");
+                Log.e(TAG, "Error: rewrapCertForActualPayService failed");
                 return false;
             }
         }
@@ -130,13 +128,13 @@ public class SpayDRKManager {
             exception.printStackTrace();
             return false;
         }
-        c.i(TAG, "rewrapCertForActualPayService: done");
+        Log.i(TAG, "rewrapCertForActualPayService: done");
         if (!Utils.writeFile(arrby, string)) {
-            c.e(TAG, "Error: Write File failed");
+            Log.e(TAG, "Error: Write File failed");
             return false;
         }
         if (deviceRootKeyServiceManager.releaseServiceKeySession() != 0) {
-            c.e(TAG, "Error: releaseServiceKeySession failed");
+            Log.e(TAG, "Error: releaseServiceKeySession failed");
         }
         return true;
     }
@@ -155,7 +153,7 @@ public class SpayDRKManager {
 
     public static String getDeviceRootKeyUID(Context context) {
         if (!SpayDRKManager.isSupported(context)) {
-            c.e(TAG, "Error: isDRKExist failed");
+            Log.e(TAG, "Error: isDRKExist failed");
             return null;
         }
         return SpayDRKManager.getDRKService(context).getDeviceRootKeyUID(1);
@@ -206,7 +204,7 @@ public class SpayDRKManager {
 
     private static final boolean isAndroidM() {
         if (Build.VERSION.SDK_INT > 22) {
-            c.d(TAG, "You are using Android Version " + Build.VERSION.SDK_INT);
+            Log.d(TAG, "You are using Android Version " + Build.VERSION.SDK_INT);
             return true;
         }
         return false;
@@ -215,32 +213,32 @@ public class SpayDRKManager {
     private static final boolean isDRKServiceAvail() {
         try {
             Class.forName((String)"com.samsung.android.service.DeviceRootKeyService.DeviceRootKeyServiceManager");
-            c.d(TAG, "DeviceRootKeyServiceManager is available");
+            Log.d(TAG, "DeviceRootKeyServiceManager is available");
             return true;
         }
         catch (ClassNotFoundException classNotFoundException) {
-            c.d(TAG, "DeviceRootKeyServiceManager is not available");
+            Log.d(TAG, "DeviceRootKeyServiceManager is not available");
             return false;
         }
     }
 
     public static boolean isSupported(Context context) {
         if (mIsInitialized) {
-            c.d(TAG, "mIsSupported = " + mIsSupported);
+            Log.d(TAG, "mIsSupported = " + mIsSupported);
             if (!mIsSupported) {
-                c.e(TAG, "mErrorFlag = " + SpayDRKManager.getErrorStatus());
+                Log.e(TAG, "mErrorFlag = " + SpayDRKManager.getErrorStatus());
             }
             return mIsSupported;
         }
         if (!SpayDRKManager.isAndroidM()) {
-            c.e(TAG, "DRK Service is not available");
+            Log.e(TAG, "DRK Service is not available");
             mIsSupported = false;
             mIsInitialized = true;
             SpayDRKManager.setErrorFlag(ErrorFlag.E_UNSUPPORTED_OS);
             return false;
         }
         if (!SpayDRKManager.isDRKServiceAvail()) {
-            c.e(TAG, "DeviceRootKeyServiceManager is not available");
+            Log.e(TAG, "DeviceRootKeyServiceManager is not available");
             mIsSupported = false;
             mIsInitialized = true;
             SpayDRKManager.setErrorFlag(ErrorFlag.E_NO_DRKSVC);
@@ -248,14 +246,14 @@ public class SpayDRKManager {
         }
         DeviceRootKeyServiceManager deviceRootKeyServiceManager = SpayDRKManager.getDRKService(context);
         if (!deviceRootKeyServiceManager.isAliveDeviceRootKeyService()) {
-            c.e(TAG, "Error: isAliveDeviceRootKeyService failed");
+            Log.e(TAG, "Error: isAliveDeviceRootKeyService failed");
             mIsSupported = false;
             mIsInitialized = true;
             SpayDRKManager.setErrorFlag(ErrorFlag.E_INACTIVE_DRKSVC);
             return false;
         }
         if (!deviceRootKeyServiceManager.isExistDeviceRootKey(1)) {
-            c.e(TAG, "Error: isDRKExist failed");
+            Log.e(TAG, "Error: isDRKExist failed");
             mIsSupported = false;
             mIsInitialized = true;
             SpayDRKManager.setErrorFlag(ErrorFlag.E_NO_DRK);
@@ -279,7 +277,7 @@ public class SpayDRKManager {
                     if (!this.bUseCNCC) break block3;
                     arrby2 = CNCCTAController.getInstance().processData(null, arrby, CNCCTAController.DataType.DATATYPE_CERTIFICATE, CNCCTAController.ProcessingOption.OPTION_UNWRAP_FROM_SRCTA_AND_WRAP_FOR_DESTTA, SKMM_TA_ID, this.mCardTAName);
                     if (arrby2 == null) {
-                        c.e(TAG, "Error : rewrappedCert = mCNCCTAController.processData == null");
+                        Log.e(TAG, "Error : rewrappedCert = mCNCCTAController.processData == null");
                         return null;
                     }
                     break block4;
@@ -308,7 +306,7 @@ public class SpayDRKManager {
     public boolean generateDeviceCertificates() {
         Class<SpayDRKManager> class_ = SpayDRKManager.class;
         synchronized (SpayDRKManager.class) {
-            c.d(TAG, "generateDeviceCertificates");
+            Log.d(TAG, "generateDeviceCertificates");
             int n2 = 0;
             do {
                 if (n2 >= this.mCertFileNames.size()) {
@@ -317,11 +315,11 @@ public class SpayDRKManager {
                 }
                 String string = this.mRootDir + "/" + ((CertFileInfo)this.mCertFileNames.get((int)n2)).mCertFile;
                 if (new File(string).exists()) {
-                    c.d(TAG, "Certificate File " + string + " exists. No need to generate");
+                    Log.d(TAG, "Certificate File " + string + " exists. No need to generate");
                 } else {
-                    c.d(TAG, "Certificate File " + string + " do not exist. Lets create it");
+                    Log.d(TAG, "Certificate File " + string + " do not exist. Lets create it");
                     if (!this.createServiceKey(string, ((CertFileInfo)this.mCertFileNames.get((int)n2)).mUsageType)) {
-                        c.e(TAG, "Error: createServiceKey failed");
+                        Log.e(TAG, "Error: createServiceKey failed");
                         // ** MonitorExit[var4_1] (shouldn't be in output)
                         return false;
                     }
@@ -340,14 +338,14 @@ public class SpayDRKManager {
         int n2;
         block6 : {
             if (this.generateDeviceCertificates()) break block6;
-            c.e(TAG, "generateDeviceCertificates() failed");
+            Log.e(TAG, "generateDeviceCertificates() failed");
             return null;
         }
         try {
             if (DEBUG) {
-                c.d(TAG, "TAController::Certificate Files exist. Lets fetch them");
+                Log.d(TAG, "TAController::Certificate Files exist. Lets fetch them");
             }
-            c.d(TAG, "TAController::Certificate Files exist. Lets fetch them");
+            Log.d(TAG, "TAController::Certificate Files exist. Lets fetch them");
             certInfo = new CertInfo();
             n2 = 0;
         }
@@ -359,7 +357,7 @@ public class SpayDRKManager {
             if (n2 >= this.mCertFileNames.size()) break;
             byte[] arrby = Utils.readFile(this.mRootDir + "/" + ((CertFileInfo)this.mCertFileNames.get((int)n2)).mCertFile);
             certInfo.mCerts.put((Object)((CertFileInfo)this.mCertFileNames.get((int)n2)).mCertFile, (Object)arrby);
-            c.d(TAG, "put certs " + ((CertFileInfo)this.mCertFileNames.get((int)n2)).mCertFile);
+            Log.d(TAG, "put certs " + ((CertFileInfo)this.mCertFileNames.get((int)n2)).mCertFile);
             ++n2;
         } while (true);
         return certInfo;

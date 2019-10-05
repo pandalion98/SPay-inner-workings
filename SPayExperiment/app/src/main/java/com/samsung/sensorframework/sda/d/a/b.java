@@ -13,10 +13,10 @@
 package com.samsung.sensorframework.sda.d.a;
 
 import android.content.Context;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.SDAException;
 import com.samsung.sensorframework.sda.d.a;
-import com.samsung.sensorframework.sda.d.a.m;
 
 public abstract class b
 extends a
@@ -54,11 +54,11 @@ implements m {
                     this.Ji = true;
                     this.Jn = System.currentTimeMillis();
                     if (!this.hc()) {
-                        c.d(this.he(), "Sensing not started.");
+                        Log.d(this.he(), "Sensing not started.");
                         this.Ji = false;
                         return null;
                     }
-                    c.d(this.he(), "Sensing started.");
+                    Log.d(this.he(), "Sensing started.");
                     try {
                         Object object;
                         if (this.Id.bR("NUMBER_OF_SENSE_CYCLES")) break block13;
@@ -89,7 +89,7 @@ implements m {
         }
         this.hd();
         this.Ji = false;
-        c.d(this.he(), "Sensing stopped.");
+        Log.d(this.he(), "Sensing stopped.");
         this.hm();
         com.samsung.sensorframework.sda.b.a a2 = this.hl();
         if (a2 != null) {

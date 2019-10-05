@@ -11,10 +11,9 @@
  */
 package com.samsung.android.spayfw.core;
 
-import android.os.Bundle;
 import com.samsung.android.spayfw.appinterface.ApduReasonCode;
-import com.samsung.android.spayfw.core.c;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.Arrays;
 
 public class b {
@@ -259,14 +258,14 @@ public class b {
                 if (!iK) break block7;
                 iT.setCommand(s2);
                 iT.setCode(s3);
-                com.samsung.android.spayfw.b.c.d("ApduHelper", "Apdu message error: command=" + s2 + ", code=" + s3);
+                Log.d("ApduHelper", "Apdu message error: command=" + s2 + ", code=" + s3);
             }
             do {
                 return b.a(s2, (int)s3);
                 break;
             } while (true);
         }
-        com.samsung.android.spayfw.b.c.i("ApduHelper", "NFC terminal is in discover mode");
+        Log.i("ApduHelper", "NFC terminal is in discover mode");
         return b.a(s2, (int)s3);
     }
 
@@ -275,7 +274,7 @@ public class b {
      */
     public static void a(short s2) {
         if (s2 == 2) {
-            com.samsung.android.spayfw.b.c.i("APDU_LOG", "set apdu error command to TRANSACTION_COMPLETE");
+            Log.i("APDU_LOG", "set apdu error command to TRANSACTION_COMPLETE");
             iT.setCommand((short)2);
             iT.setCode((short)-28672);
             return;
@@ -283,23 +282,23 @@ public class b {
         if (iT.getCode() == -28672) {
             switch (s2) {
                 default: {
-                    com.samsung.android.spayfw.b.c.i("APDU_LOG", "set apdu error command to NO_ERROR by default");
+                    Log.i("APDU_LOG", "set apdu error command to NO_ERROR by default");
                     iT.setCommand((short)1);
                     break;
                 }
                 case 3: {
-                    com.samsung.android.spayfw.b.c.i("APDU_LOG", "set apdu error command to NFC_TERMINAL_DETACHED");
+                    Log.i("APDU_LOG", "set apdu error command to NFC_TERMINAL_DETACHED");
                     iT.setCommand((short)3);
                     break;
                 }
                 case 5: {
-                    com.samsung.android.spayfw.b.c.i("APDU_LOG", "set apdu error command to NFC_IN_DISCOVER_MODE");
+                    Log.i("APDU_LOG", "set apdu error command to NFC_IN_DISCOVER_MODE");
                     iT.setCommand((short)5);
                     break;
                 }
             }
         } else {
-            com.samsung.android.spayfw.b.c.d("APDU_LOG", "apdu error: command=" + iT.getCommand() + ", code=" + iT.getCode());
+            Log.d("APDU_LOG", "apdu error: command=" + iT.getCommand() + ", code=" + iT.getCode());
         }
         iM = iL;
     }
@@ -361,21 +360,21 @@ public class b {
 
     public static boolean hasError() {
         int n2 = b.Y().getCode();
-        com.samsung.android.spayfw.b.c.d("APDU_LOG", "status error " + (short)n2);
+        Log.d("APDU_LOG", "status error " + (short)n2);
         return b.i(n2);
     }
 
     private static boolean i(int n2) {
         switch (n2) {
             default: {
-                com.samsung.android.spayfw.b.c.d("APDU_LOG", "isUnrecoverableError " + (short)n2);
+                Log.d("APDU_LOG", "isUnrecoverableError " + (short)n2);
                 return true;
             }
             case -28672: 
             case 25219: 
             case 27266: 
         }
-        com.samsung.android.spayfw.b.c.d("APDU_LOG", "not error " + (short)n2);
+        Log.d("APDU_LOG", "not error " + (short)n2);
         return false;
     }
 }

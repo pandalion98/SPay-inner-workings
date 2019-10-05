@@ -34,15 +34,13 @@ import android.location.Location;
 import android.provider.Settings;
 import android.text.TextUtils;
 import com.samsung.android.spayfw.appinterface.ProvisionTokenInfo;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.fraud.b;
 import com.samsung.android.spayfw.payprovider.RiskDataParam;
-import com.samsung.android.spayfw.payprovider.visa.d;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.DeviceInfo;
 import com.samsung.android.spayfw.utils.h;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 public class a {
@@ -53,7 +51,7 @@ public class a {
      */
     public static ArrayList<RiskDataParam> a(Context context, ProvisionTokenInfo provisionTokenInfo, d d2) {
         ArrayList arrayList = new ArrayList();
-        c.d("RiskDataCollector", "getRiskData: tokenInfo = " + provisionTokenInfo);
+        Log.d("RiskDataCollector", "getRiskData: tokenInfo = " + provisionTokenInfo);
         if (provisionTokenInfo != null && provisionTokenInfo.getActivationParams() != null) {
             String string = (String)provisionTokenInfo.getActivationParams().get((Object)"cvv2");
             String string2 = (String)provisionTokenInfo.getActivationParams().get((Object)"billingZip");
@@ -75,7 +73,7 @@ public class a {
             String string18 = (String)provisionTokenInfo.getActivationParams().get((Object)"month");
             String string19 = (String)provisionTokenInfo.getActivationParams().get((Object)"year");
             if (h.DEBUG) {
-                c.d("RiskDataCollector", "getRiskData: cvv = " + string + "; zip = " + string2 + "; line1 = " + string3 + "; sinceAccSettingsChanged = " + string4 + "; walletAccFirstCreated = " + string5 + "; userAccFirstCreated = " + string6 + "; walletAccHolderCardNameMatch = " + string7 + "; accHolderName = " + string8 + "; accToDevBindingAge = " + string9 + "; walletAccCountry = " + string10 + "; susCardsInAcc = " + string11 + "; sinceLastAccActivity = " + string12 + "; numTransacLast12Months = " + string13 + "; numActiveTokens = " + string14 + "; devWithActiveTokens = " + string15 + "; activeTokOnAllDevicesForAcc" + string16 + "; billingCountryCode = " + string17 + "; expirationDateMM = " + string18 + "; expirationDateYY = " + string19);
+                Log.d("RiskDataCollector", "getRiskData: cvv = " + string + "; zip = " + string2 + "; line1 = " + string3 + "; sinceAccSettingsChanged = " + string4 + "; walletAccFirstCreated = " + string5 + "; userAccFirstCreated = " + string6 + "; walletAccHolderCardNameMatch = " + string7 + "; accHolderName = " + string8 + "; accToDevBindingAge = " + string9 + "; walletAccCountry = " + string10 + "; susCardsInAcc = " + string11 + "; sinceLastAccActivity = " + string12 + "; numTransacLast12Months = " + string13 + "; numActiveTokens = " + string14 + "; devWithActiveTokens = " + string15 + "; activeTokOnAllDevicesForAcc" + string16 + "; billingCountryCode = " + string17 + "; expirationDateMM = " + string18 + "; expirationDateYY = " + string19);
             }
             if (string != null && string.length() > 0 && string.length() <= 4 && TextUtils.isDigitsOnly((CharSequence)string)) {
                 if (d2 != null) {
@@ -83,9 +81,9 @@ public class a {
                     if (arrby != null && arrby.length > 0) {
                         String string20 = new String(arrby);
                         arrayList.add((Object)new RiskDataParam("encCvv2", string20));
-                        c.d("RiskDataCollector", "Encrypted cvv added to risk data: length " + arrby.length);
+                        Log.d("RiskDataCollector", "Encrypted cvv added to risk data: length " + arrby.length);
                     } else {
-                        c.e("RiskDataCollector", "unable to get Encrypted cvv for risk data");
+                        Log.e("RiskDataCollector", "unable to get Encrypted cvv for risk data");
                     }
                 }
                 h.clearMemory(string);
@@ -101,7 +99,7 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("line1", string3));
                 }
                 catch (IndexOutOfBoundsException indexOutOfBoundsException) {
-                    c.d("RiskDataCollector", "getRiskData: line1 incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: line1 incorrect format!");
                 }
             }
             if (string4 != null && string4.length() > 0 && string4.length() <= 4) {
@@ -112,7 +110,7 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("daysSinceConsumerDataLastAccountChange", string4));
                 }
                 catch (NumberFormatException numberFormatException) {
-                    c.d("RiskDataCollector", "getRiskData: sinceAccSettingsChanged incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: sinceAccSettingsChanged incorrect format!");
                 }
             }
             if (string5 != null && string5.length() > 0 && string5.length() <= 4) {
@@ -123,7 +121,7 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("walletAccountFirstCreated", string5));
                 }
                 catch (NumberFormatException numberFormatException) {
-                    c.d("RiskDataCollector", "getRiskData: walletAccFirstCreated incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: walletAccFirstCreated incorrect format!");
                 }
             }
             if (string6 != null && string6.length() > 0 && string6.length() <= 4 && TextUtils.isDigitsOnly((CharSequence)string6)) {
@@ -134,7 +132,7 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("userAccountFirstCreated", string6));
                 }
                 catch (NumberFormatException numberFormatException) {
-                    c.d("RiskDataCollector", "getRiskData: userAccFirstCreated incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: userAccFirstCreated incorrect format!");
                 }
             }
             if (string7 != null && string7.length() == 1 && (string7.equals((Object)"Y") || string7.equals((Object)"N"))) {
@@ -148,7 +146,7 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("accountHolderName", string8));
                 }
                 catch (IndexOutOfBoundsException indexOutOfBoundsException) {
-                    c.d("RiskDataCollector", "getRiskData: accHolderName incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: accHolderName incorrect format!");
                 }
             }
             if (string9 != null && string9.length() > 0 && string9.length() <= 4) {
@@ -159,7 +157,7 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("accountToDeviceBindingAge", string9));
                 }
                 catch (NumberFormatException numberFormatException) {
-                    c.d("RiskDataCollector", "getRiskData: accToDevBindingAge incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: accToDevBindingAge incorrect format!");
                 }
             }
             if (string10 != null && string10.length() == 2) {
@@ -173,7 +171,7 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("suspendedCardsInAccount", string11));
                 }
                 catch (NumberFormatException numberFormatException) {
-                    c.d("RiskDataCollector", "getRiskData: susCardsInAcc incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: susCardsInAcc incorrect format!");
                 }
             }
             if (string12 != null && string12.length() > 0 && string12.length() <= 4) {
@@ -184,7 +182,7 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("daysSinceLastAccountActivity", string12));
                 }
                 catch (NumberFormatException numberFormatException) {
-                    c.d("RiskDataCollector", "getRiskData: sinceLastAccActivity incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: sinceLastAccActivity incorrect format!");
                 }
             }
             if (string13 != null && string13.length() > 0 && string13.length() <= 4) {
@@ -195,7 +193,7 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("numberOfTransactionsInLast12months", string13));
                 }
                 catch (NumberFormatException numberFormatException) {
-                    c.d("RiskDataCollector", "getRiskData: numTransacLast12Months incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: numTransacLast12Months incorrect format!");
                 }
             }
             if (string14 != null && string14.length() > 0 && string14.length() <= 2) {
@@ -206,7 +204,7 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("numberOfActiveTokens", string14));
                 }
                 catch (NumberFormatException numberFormatException) {
-                    c.d("RiskDataCollector", "getRiskData: numActiveTokens incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: numActiveTokens incorrect format!");
                 }
             }
             if (string15 != null && string15.length() > 0 && string15.length() <= 2) {
@@ -217,7 +215,7 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("deviceWithActiveTokens", string15));
                 }
                 catch (NumberFormatException numberFormatException) {
-                    c.d("RiskDataCollector", "getRiskData: devWithActiveTokens incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: devWithActiveTokens incorrect format!");
                 }
             }
             if (string16 != null && string16.length() > 0 && string16.length() <= 4) {
@@ -228,46 +226,46 @@ public class a {
                     arrayList.add((Object)new RiskDataParam("activeTokenOnAllDevicesForAccount", string16));
                 }
                 catch (NumberFormatException numberFormatException) {
-                    c.d("RiskDataCollector", "getRiskData: activeTokOnAllDevicesForAcc incorrect format!");
+                    Log.d("RiskDataCollector", "getRiskData: activeTokOnAllDevicesForAcc incorrect format!");
                 }
             }
             if (string17 != null && string17.length() == 2) {
                 arrayList.add((Object)new RiskDataParam("billingCountryCode", string17));
             }
             if (string18 != null && !string18.isEmpty() && string19 != null && !string19.isEmpty()) {
-                c.d("RiskDataCollector", "getRiskData: adding expiration month & year");
+                Log.d("RiskDataCollector", "getRiskData: adding expiration month & year");
                 arrayList.add((Object)new RiskDataParam("paymentInstrument.expirationDate.month", string18));
                 arrayList.add((Object)new RiskDataParam("paymentInstrument.expirationDate.year", a.aV(string19)));
             }
         }
         String string = DeviceInfo.getDeviceSerialNumber();
-        c.d("RiskDataCollector", "getRiskData: devSerialNumber = " + string);
+        Log.d("RiskDataCollector", "getRiskData: devSerialNumber = " + string);
         if (string != null) {
-            c.d("RiskDataCollector", "getRiskData: devSerialNumber.len = " + string.length());
+            Log.d("RiskDataCollector", "getRiskData: devSerialNumber.len = " + string.length());
         }
         if (string != null && string.length() > 0 && string.length() <= 24) {
             arrayList.add((Object)new RiskDataParam("deviceSerialNumber", string));
         }
         String string21 = DeviceInfo.getDeviceImei(context);
-        c.d("RiskDataCollector", "getRiskData: imei = " + string21);
+        Log.d("RiskDataCollector", "getRiskData: imei = " + string21);
         if (string21 != null) {
-            c.d("RiskDataCollector", "getRiskData: imei.len = " + string21.length());
+            Log.d("RiskDataCollector", "getRiskData: imei.len = " + string21.length());
         }
         if (string21 != null && string21.length() > 0 && string21.length() <= 24) {
             arrayList.add((Object)new RiskDataParam("deviceIMEI", string21));
         }
         String string22 = DeviceInfo.getDeviceBluetoothMac();
-        c.d("RiskDataCollector", "getRiskData: deviceBluetoothMac = " + string22);
+        Log.d("RiskDataCollector", "getRiskData: deviceBluetoothMac = " + string22);
         if (string22 != null) {
-            c.d("RiskDataCollector", "getRiskData: devBtMac.len = " + string22.length());
+            Log.d("RiskDataCollector", "getRiskData: devBtMac.len = " + string22.length());
         }
         if (string22 != null && string22.length() > 0 && string22.length() <= 24) {
             arrayList.add((Object)new RiskDataParam("deviceBluetoothMac", string22));
         }
         String string23 = TimeZone.getDefault().getDisplayName(false, 0);
-        c.d("RiskDataCollector", "getRiskData: timeZone = " + string23);
+        Log.d("RiskDataCollector", "getRiskData: timeZone = " + string23);
         if (string23 != null) {
-            c.d("RiskDataCollector", "getRiskData: timeZone.len = " + string23.length());
+            Log.d("RiskDataCollector", "getRiskData: timeZone.len = " + string23.length());
         }
         if (string23 != null && string23.length() > 0 && string23.length() <= 5) {
             arrayList.add((Object)new RiskDataParam("deviceTimeZone", string23));
@@ -275,32 +273,32 @@ public class a {
         try {
             int n2 = Settings.Global.getInt((ContentResolver)context.getContentResolver(), (String)"auto_time_zone");
             String string24 = n2 == 1 ? "1" : "2";
-            c.d("RiskDataCollector", "getRiskData: deviceTimeZoneSetting = " + n2 + "; tzSetting = " + string24);
+            Log.d("RiskDataCollector", "getRiskData: deviceTimeZoneSetting = " + n2 + "; tzSetting = " + string24);
             arrayList.add((Object)new RiskDataParam("deviceTimeZoneSetting", string24));
         }
         catch (Settings.SettingNotFoundException settingNotFoundException) {
-            c.c("RiskDataCollector", settingNotFoundException.getMessage(), settingNotFoundException);
+            Log.c("RiskDataCollector", settingNotFoundException.getMessage(), settingNotFoundException);
         }
         String string25 = DeviceInfo.getDeviceId(context);
-        c.d("RiskDataCollector", "getRiskData: seId = " + string25);
+        Log.d("RiskDataCollector", "getRiskData: seId = " + string25);
         if (string25 != null) {
-            c.d("RiskDataCollector", "getRiskData: seId.len = " + string25.length());
+            Log.d("RiskDataCollector", "getRiskData: seId.len = " + string25.length());
         }
         if (string25 != null && string25.length() > 0 && string25.length() <= 24) {
             arrayList.add((Object)new RiskDataParam("seID", string25));
         }
         String string26 = DeviceInfo.getAndroidId(context);
-        c.d("RiskDataCollector", "getRiskData: androidId = " + string26);
+        Log.d("RiskDataCollector", "getRiskData: androidId = " + string26);
         if (string26 != null) {
-            c.d("RiskDataCollector", "getRiskData: androidId.len = " + string26.length());
+            Log.d("RiskDataCollector", "getRiskData: androidId.len = " + string26.length());
         }
         if (string26 != null && string26.length() > 0 && string26.length() <= 24) {
             arrayList.add((Object)new RiskDataParam("androidId", string26));
         }
         String string27 = DeviceInfo.getSimSerialNumber(context);
-        c.d("RiskDataCollector", "getRiskData: simSerialNum = " + string27);
+        Log.d("RiskDataCollector", "getRiskData: simSerialNum = " + string27);
         if (string27 != null) {
-            c.d("RiskDataCollector", "getRiskData: simSerialNum.len = " + string27.length());
+            Log.d("RiskDataCollector", "getRiskData: simSerialNum.len = " + string27.length());
         }
         if (string27 != null && string27.length() > 0 && string27.length() <= 24) {
             arrayList.add((Object)new RiskDataParam("simSerialNumber", string27));
@@ -312,13 +310,13 @@ public class a {
                 n3 = 99;
             }
             String string28 = String.valueOf((int)n3);
-            c.d("RiskDataCollector", "getRiskData: provAttempts = " + string28);
+            Log.d("RiskDataCollector", "getRiskData: provAttempts = " + string28);
             if (string28 != null && !string28.isEmpty()) {
                 arrayList.add((Object)new RiskDataParam("provisioningAttemptsOnDevicein24hours", string28));
             }
         }
         catch (Exception exception) {
-            c.c("RiskDataCollector", exception.getMessage(), exception);
+            Log.c("RiskDataCollector", exception.getMessage(), exception);
         }
         try {
             int n4 = b2.A(-1);
@@ -326,13 +324,13 @@ public class a {
                 n4 = 99;
             }
             String string29 = String.valueOf((int)n4);
-            c.d("RiskDataCollector", "getRiskData: distinctNames = " + string29);
+            Log.d("RiskDataCollector", "getRiskData: distinctNames = " + string29);
             if (string29 != null && !string29.isEmpty()) {
                 arrayList.add((Object)new RiskDataParam("distinctCardholderNames", string29));
             }
         }
         catch (Exception exception) {
-            c.c("RiskDataCollector", exception.getMessage(), exception);
+            Log.c("RiskDataCollector", exception.getMessage(), exception);
         }
         Location location = DeviceInfo.getLastKnownLocation(context);
         Geocoder geocoder = new Geocoder(context);
@@ -341,23 +339,23 @@ public class a {
                 List list = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 if (list != null && !list.isEmpty()) {
                     String string30 = ((Address)list.get(0)).getCountryCode();
-                    c.d("RiskDataCollector", "getRiskData: deviceCountry = " + string30);
+                    Log.d("RiskDataCollector", "getRiskData: deviceCountry = " + string30);
                     if (string30 != null && string30.length() == 2) {
                         arrayList.add((Object)new RiskDataParam("deviceCountry", string30));
                     }
                 }
             }
             catch (Exception exception) {
-                c.c("RiskDataCollector", exception.getMessage(), exception);
+                Log.c("RiskDataCollector", exception.getMessage(), exception);
             }
         }
         String string31 = String.valueOf((int)((int)Math.round((double)b2.D(0))));
-        c.d("RiskDataCollector", "getRiskData: accountScore = " + string31);
+        Log.d("RiskDataCollector", "getRiskData: accountScore = " + string31);
         if (string31 != null && !string31.isEmpty()) {
             arrayList.add((Object)new RiskDataParam("accountScore", string31));
         }
         String string32 = String.valueOf((int)b2.E((int)0).nk);
-        c.d("RiskDataCollector", "getRiskData: deviceScore = " + string32);
+        Log.d("RiskDataCollector", "getRiskData: deviceScore = " + string32);
         if (string32 != null && !string32.isEmpty()) {
             arrayList.add((Object)new RiskDataParam("deviceScore", string32));
         }

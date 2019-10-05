@@ -3,17 +3,11 @@
  */
 package com.samsung.android.spayfw.payprovider.mastercard.pce.nfc;
 
-import com.mastercard.mcbp.core.mcbpcards.profile.AlternateContactlessPaymentData;
-import com.mastercard.mcbp.core.mcbpcards.profile.ContactlessPaymentData;
-import com.mastercard.mcbp.core.mcbpcards.profile.DC_CP_MPP;
 import com.mastercard.mcbp.core.mcbpcards.profile.Records;
 import com.mastercard.mobile_api.bytes.ByteArray;
 import com.mastercard.mobile_api.bytes.ByteArrayFactory;
 import com.mastercard.mobile_api.utils.apdu.emv.ReadRecordApdu;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.context.MTBPTransactionContext;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.nfc.MCCAPDUBaseCommandHandler;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.nfc.MCCommandResult;
+import com.samsung.android.spayfw.b.Log;
 
 public class MCAPDUCommandHandlerRR
 extends MCCAPDUBaseCommandHandler {
@@ -38,7 +32,7 @@ extends MCCAPDUBaseCommandHandler {
     @Override
     public MCCommandResult generateResponseAPDU() {
         if (this.mResponseData == null || this.mRecord == -1 || this.mSFI == -1) {
-            c.e("mcpce_MCCAPDUBaseCommandHandler", "Read Record: record not found. RespData is null.");
+            Log.e("mcpce_MCCAPDUBaseCommandHandler", "Read Record: record not found. RespData is null.");
             return this.completeCommand(27267);
         }
         ByteArray byteArray = this.getPaymentProfile().getContactlessPaymentData().getGPO_Response();
@@ -57,11 +51,11 @@ extends MCCAPDUBaseCommandHandler {
                 ++n2;
             }
             if (!bl) {
-                c.e("mcpce_MCCAPDUBaseCommandHandler", "Read Record: record not found in AFL: SFI = " + this.mSFI + ", record = " + this.mRecord);
+                Log.e("mcpce_MCCAPDUBaseCommandHandler", "Read Record: record not found in AFL: SFI = " + this.mSFI + ", record = " + this.mRecord);
                 return this.completeCommand(27013);
             }
         } else {
-            c.e("mcpce_MCCAPDUBaseCommandHandler", "Read Record: cannot get AFL from gpo_response.");
+            Log.e("mcpce_MCCAPDUBaseCommandHandler", "Read Record: cannot get AFL from gpo_response.");
             return this.completeCommand(27013);
         }
         return this.completeCommand(this.mResponseData.clone().append(ByteArrayFactory.getInstance().getFromWord(-28672)));
@@ -93,7 +87,7 @@ extends MCCAPDUBaseCommandHandler {
                 ++n3;
             } while (true);
         }
-        c.e("mcpce_MCCAPDUBaseCommandHandler", "Read Record: record not found : SFI = " + this.mSFI + ", record = " + this.mRecord);
+        Log.e("mcpce_MCCAPDUBaseCommandHandler", "Read Record: record not found : SFI = " + this.mSFI + ", record = " + this.mRecord);
         return this.completeCommand(27267);
     }
 }

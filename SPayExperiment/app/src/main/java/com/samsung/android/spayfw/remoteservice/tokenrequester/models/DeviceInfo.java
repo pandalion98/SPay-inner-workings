@@ -69,8 +69,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -96,19 +94,11 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.samsung.android.spayfw.a.a;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.e.d;
 import com.samsung.android.spayfw.remoteservice.e.c;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Id;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Locale;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Location;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.NetworkInfo;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.OsInfo;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.PushProviders;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.SimInfo;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.StorageInfo;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Wifi;
 import com.samsung.android.spayfw.utils.h;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -186,17 +176,17 @@ extends Id {
      */
     public static void cacheLocation(Context context) {
         int n2;
-        com.samsung.android.spayfw.b.c.d(TAG, "cacheLocation");
+        Log.d(TAG, "cacheLocation");
         final LocationManager locationManager = (LocationManager)context.getSystemService("location");
         try {
             int n3;
             n2 = n3 = Settings.Secure.getInt((ContentResolver)context.getContentResolver(), (String)"location_mode");
         }
         catch (Settings.SettingNotFoundException settingNotFoundException) {
-            com.samsung.android.spayfw.b.c.c(TAG, settingNotFoundException.getMessage(), settingNotFoundException);
+            Log.c(TAG, settingNotFoundException.getMessage(), settingNotFoundException);
             n2 = 0;
         }
-        com.samsung.android.spayfw.b.c.d(TAG, "Current Location Mode : " + n2);
+        Log.d(TAG, "Current Location Mode : " + n2);
         if (n2 == 0) {
             return;
         }
@@ -208,7 +198,7 @@ extends Id {
              * Enabled aggressive exception aggregation
              */
             public void onLocationChanged(android.location.Location location) {
-                com.samsung.android.spayfw.b.c.d(TAG, "onLocationChanged");
+                Log.d(TAG, "onLocationChanged");
                 Class<DeviceInfo> class_ = DeviceInfo.class;
                 synchronized (DeviceInfo.class) {
                     sLocation = new android.location.Location(location);
@@ -220,15 +210,15 @@ extends Id {
             }
 
             public void onProviderDisabled(String string) {
-                com.samsung.android.spayfw.b.c.d(TAG, "onProviderDisabled - " + string);
+                Log.d(TAG, "onProviderDisabled - " + string);
             }
 
             public void onProviderEnabled(String string) {
-                com.samsung.android.spayfw.b.c.d(TAG, "onProviderEnabled - " + string);
+                Log.d(TAG, "onProviderEnabled - " + string);
             }
 
             public void onStatusChanged(String string, int n2, Bundle bundle) {
-                com.samsung.android.spayfw.b.c.d(TAG, "onStatusChanged");
+                Log.d(TAG, "onStatusChanged");
             }
         };
         HandlerThread handlerThread = new HandlerThread("GetLocThread");
@@ -253,7 +243,7 @@ extends Id {
             return n2 == 1;
         }
         catch (Settings.SettingNotFoundException settingNotFoundException) {
-            com.samsung.android.spayfw.b.c.c(TAG, settingNotFoundException.getMessage(), settingNotFoundException);
+            Log.c(TAG, settingNotFoundException.getMessage(), settingNotFoundException);
             return false;
         }
     }
@@ -311,10 +301,10 @@ extends Id {
                     String string4 = h.aj(context) ? "WIFI" : "NETWORK";
                     string = string4;
                 } else {
-                    com.samsung.android.spayfw.b.c.e(TAG, "Unknown Location Provider : " + location.getProvider());
+                    Log.e(TAG, "Unknown Location Provider : " + location.getProvider());
                 }
             } else {
-                com.samsung.android.spayfw.b.c.e(TAG, "Unknown Location Provider : " + location.getProvider());
+                Log.e(TAG, "Unknown Location Provider : " + location.getProvider());
             }
             deviceInfo.location = new Location(location.getLatitude() + "", location.getLongitude() + "", TimeZone.getDefault().getID(), string, location.getAltitude() + "");
         }
@@ -383,17 +373,17 @@ extends Id {
                     mGoogleApiClient = com.samsung.android.spayfw.utils.d.fH().fI();
                 }
                 if (mGoogleApiClient != null) break block7;
-                com.samsung.android.spayfw.b.c.i(TAG, "mGoogleApiClient is null");
+                Log.i(TAG, "mGoogleApiClient is null");
                 // ** MonitorExit[var4] (shouldn't be in output)
                 return location;
             }
             try {
-                com.samsung.android.spayfw.b.c.d(TAG, "mGoogleApiClient is not null");
+                Log.d(TAG, "mGoogleApiClient is not null");
                 android.location.Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 return location;
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.c(TAG, exception.getMessage(), exception);
+                Log.c(TAG, exception.getMessage(), exception);
                 return null;
             }
         }
@@ -402,7 +392,7 @@ extends Id {
     public static android.location.Location getLastKnownLocation(Context context) {
         Class<DeviceInfo> class_ = DeviceInfo.class;
         synchronized (DeviceInfo.class) {
-            com.samsung.android.spayfw.b.c.d(TAG, "getLastKnownLocation: " + (Object)sLocation);
+            Log.d(TAG, "getLastKnownLocation: " + (Object)sLocation);
             android.location.Location location = sLocation;
             // ** MonitorExit[var3_1] (shouldn't be in output)
             return location;
@@ -423,7 +413,7 @@ extends Id {
             }
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("IP Address", exception.toString());
+            Log.e("IP Address", exception.toString());
         }
         return null;
     }
@@ -437,14 +427,14 @@ extends Id {
         Class<DeviceInfo> class_ = DeviceInfo.class;
         synchronized (DeviceInfo.class) {
             int n2;
-            com.samsung.android.spayfw.b.c.d(TAG, "getLocation");
+            Log.d(TAG, "getLocation");
             final ConditionVariable conditionVariable = new ConditionVariable();
             final LocationManager locationManager = (LocationManager)context.getSystemService("location");
             final android.location.Location location = new android.location.Location("N/A");
             final LocationListener locationListener = new LocationListener(){
 
                 public void onLocationChanged(android.location.Location location2) {
-                    com.samsung.android.spayfw.b.c.d(TAG, "onLocationChanged");
+                    Log.d(TAG, "onLocationChanged");
                     sLocation = new android.location.Location(location2);
                     location.setLatitude(location2.getLatitude());
                     location.setLongitude(location2.getLongitude());
@@ -453,15 +443,15 @@ extends Id {
                 }
 
                 public void onProviderDisabled(String string) {
-                    com.samsung.android.spayfw.b.c.d(TAG, "onProviderDisabled - " + string);
+                    Log.d(TAG, "onProviderDisabled - " + string);
                 }
 
                 public void onProviderEnabled(String string) {
-                    com.samsung.android.spayfw.b.c.d(TAG, "onProviderEnabled - " + string);
+                    Log.d(TAG, "onProviderEnabled - " + string);
                 }
 
                 public void onStatusChanged(String string, int n2, Bundle bundle) {
-                    com.samsung.android.spayfw.b.c.d(TAG, "onStatusChanged");
+                    Log.d(TAG, "onStatusChanged");
                 }
             };
             HandlerThread handlerThread = new HandlerThread("GetLocThread");
@@ -479,10 +469,10 @@ extends Id {
                 n2 = n3 = Settings.Secure.getInt((ContentResolver)context.getContentResolver(), (String)"location_mode");
             }
             catch (Settings.SettingNotFoundException settingNotFoundException) {
-                com.samsung.android.spayfw.b.c.c(TAG, settingNotFoundException.getMessage(), settingNotFoundException);
+                Log.c(TAG, settingNotFoundException.getMessage(), settingNotFoundException);
                 n2 = 0;
             }
-            com.samsung.android.spayfw.b.c.d(TAG, "Current Location Mode : " + n2);
+            Log.d(TAG, "Current Location Mode : " + n2);
             if (n2 == 0) {
                 return null;
             }
@@ -558,7 +548,7 @@ extends Id {
         Class<DeviceInfo> class_ = DeviceInfo.class;
         synchronized (DeviceInfo.class) {
             if (context == null) {
-                com.samsung.android.spayfw.b.c.i(TAG, "context is null");
+                Log.i(TAG, "context is null");
                 return null;
             }
             ArrayList arrayList = new ArrayList();
@@ -568,7 +558,7 @@ extends Id {
                 for (ScanResult scanResult : list) {
                     if (scanResult == null) continue;
                     if (scanResult.level >= 0) {
-                        com.samsung.android.spayfw.b.c.d(TAG, "Invalid RSSI");
+                        Log.d(TAG, "Invalid RSSI");
                         continue;
                     }
                     String string = String.valueOf((double)Math.pow((double)10.0, (double)((27.55 - 20.0 * Math.log10((double)scanResult.frequency) + (double)Math.abs((int)scanResult.level)) / 20.0)));
@@ -638,14 +628,14 @@ extends Id {
             return false;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Exception in isLocationEnabled");
+            Log.e(TAG, "Exception in isLocationEnabled");
             return false;
         }
     }
 
     public static boolean isProxyEnabled(Context context) {
         String string = Settings.Global.getString((ContentResolver)context.getContentResolver(), (String)"http_proxy");
-        com.samsung.android.spayfw.b.c.i(TAG, "proxy: " + string);
+        Log.i(TAG, "proxy: " + string);
         return string != null && !string.isEmpty();
     }
 
@@ -656,17 +646,17 @@ extends Id {
         ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService("connectivity");
         Network[] arrnetwork = connectivityManager.getAllNetworks();
         if (arrnetwork == null) {
-            com.samsung.android.spayfw.b.c.i(TAG, "Networks are NULL");
+            Log.i(TAG, "Networks are NULL");
             return false;
         }
-        com.samsung.android.spayfw.b.c.i(TAG, "Network count: " + arrnetwork.length);
+        Log.i(TAG, "Network count: " + arrnetwork.length);
         int n2 = 0;
         while (n2 < arrnetwork.length) {
             NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(arrnetwork[n2]);
-            com.samsung.android.spayfw.b.c.d(TAG, "Network " + n2 + ": " + arrnetwork[n2].toString());
+            Log.d(TAG, "Network " + n2 + ": " + arrnetwork[n2].toString());
             if (networkCapabilities != null) {
-                com.samsung.android.spayfw.b.c.d(TAG, "VPN transport is: " + networkCapabilities.hasTransport(4));
-                com.samsung.android.spayfw.b.c.d(TAG, "NOT_VPN capability is: " + networkCapabilities.hasCapability(15));
+                Log.d(TAG, "VPN transport is: " + networkCapabilities.hasTransport(4));
+                Log.d(TAG, "NOT_VPN capability is: " + networkCapabilities.hasCapability(15));
                 if (networkCapabilities.hasTransport(4)) {
                     return true;
                 }
@@ -677,7 +667,7 @@ extends Id {
     }
 
     private static void setupLocationUpdateParameters() {
-        com.samsung.android.spayfw.b.c.d(TAG, "Setting up location update parameters");
+        Log.d(TAG, "Setting up location update parameters");
         try {
             if (mLocationRequest == null) {
                 mLocationRequest = LocationRequest.create();
@@ -696,7 +686,7 @@ extends Id {
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.d(TAG, "Exception in setupLocationUpdateParameters");
+            Log.d(TAG, "Exception in setupLocationUpdateParameters");
             return;
         }
     }
@@ -709,26 +699,26 @@ extends Id {
     public static void startGoogleLocationScan(Context context) {
         Class<DeviceInfo> class_ = DeviceInfo.class;
         synchronized (DeviceInfo.class) {
-            com.samsung.android.spayfw.b.c.d(TAG, "start Google Location Scan");
+            Log.d(TAG, "start Google Location Scan");
             try {
                 if (!DeviceInfo.isLocationEnabled(context)) {
-                    com.samsung.android.spayfw.b.c.i(TAG, "Location settings off");
+                    Log.i(TAG, "Location settings off");
                 } else {
                     if (com.samsung.android.spayfw.utils.d.fH() != null) {
                         mGoogleApiClient = com.samsung.android.spayfw.utils.d.fH().fI();
                     }
                     if (mGoogleApiClient == null) {
-                        com.samsung.android.spayfw.b.c.i(TAG, "mGoogleApiClient is null");
+                        Log.i(TAG, "mGoogleApiClient is null");
                     }
-                    com.samsung.android.spayfw.b.c.d(TAG, "mGoogleApiClient is not null");
+                    Log.d(TAG, "mGoogleApiClient is not null");
                     DeviceInfo.setupLocationUpdateParameters();
                     if (googleLocThread == null) {
-                        com.samsung.android.spayfw.b.c.d(TAG, "googleLocThread null");
+                        Log.d(TAG, "googleLocThread null");
                         googleLocThread = new HandlerThread("GetGoogleLocThread");
                         googleLocThread.start();
                     }
                     if (googleLocHandler == null) {
-                        com.samsung.android.spayfw.b.c.d(TAG, "googleLocHandler null");
+                        Log.d(TAG, "googleLocHandler null");
                         googleLocHandler = new Handler(googleLocThread.getLooper()){
 
                             /*
@@ -737,22 +727,22 @@ extends Id {
                              * Enabled aggressive exception aggregation
                              */
                             public void handleMessage(Message message) {
-                                com.samsung.android.spayfw.b.c.d(TAG, "googleLocHandler handle message");
+                                Log.d(TAG, "googleLocHandler handle message");
                                 Class<DeviceInfo> class_ = DeviceInfo.class;
                                 synchronized (DeviceInfo.class) {
                                     if (mFusedLocationProviderApi != null) {
                                         if (mGoogleApiClient == null) {
-                                            com.samsung.android.spayfw.b.c.d(TAG, "mGoogleApiClient is null");
+                                            Log.d(TAG, "mGoogleApiClient is null");
                                         } else {
                                             try {
                                                 mFusedLocationProviderApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mLocationListener);
                                             }
                                             catch (Exception exception) {
-                                                com.samsung.android.spayfw.b.c.c(TAG, exception.getMessage(), exception);
+                                                Log.c(TAG, exception.getMessage(), exception);
                                             }
                                         }
                                     } else {
-                                        com.samsung.android.spayfw.b.c.i(TAG, "mFusedLocationProviderApi is null");
+                                        Log.i(TAG, "mFusedLocationProviderApi is null");
                                     }
                                     // ** MonitorExit[var5_2] (shouldn't be in output)
                                     return;
@@ -766,7 +756,7 @@ extends Id {
                 }
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.c(TAG, exception.getMessage(), exception);
+                Log.c(TAG, exception.getMessage(), exception);
             }
             return;
         }
@@ -780,22 +770,22 @@ extends Id {
     public static void startWifiScans(Context context) {
         Class<DeviceInfo> class_ = DeviceInfo.class;
         synchronized (DeviceInfo.class) {
-            com.samsung.android.spayfw.b.c.d(TAG, "startWifiScans");
+            Log.d(TAG, "startWifiScans");
             if (context == null) {
-                com.samsung.android.spayfw.b.c.d(TAG, "context is null");
+                Log.d(TAG, "context is null");
             } else {
                 WifiManager wifiManager = (WifiManager)context.getSystemService("wifi");
                 if (mWifiScanReceiver == null) {
-                    com.samsung.android.spayfw.b.c.d(TAG, "Register New Wifi Scan Receiver");
+                    Log.d(TAG, "Register New Wifi Scan Receiver");
                     mWifiScanReceiver = new BroadcastReceiver(){
 
                         public void onReceive(final Context context, Intent intent) {
-                            com.samsung.android.spayfw.b.c.d(TAG, "Intent : " + intent.getAction());
+                            Log.d(TAG, "Intent : " + intent.getAction());
                             PaymentFrameworkApp.az().postDelayed(new Runnable(){
 
                                 public void run() {
                                     WifiManager wifiManager;
-                                    com.samsung.android.spayfw.b.c.d(TAG, "Run Wifi Scan Again");
+                                    Log.d(TAG, "Run Wifi Scan Again");
                                     if (context != null && (wifiManager = (WifiManager)context.getSystemService("wifi")) != null) {
                                         wifiManager.startScan();
                                     }
@@ -818,9 +808,9 @@ extends Id {
     public static void stopWifiScans(Context context) {
         Class<DeviceInfo> class_ = DeviceInfo.class;
         synchronized (DeviceInfo.class) {
-            com.samsung.android.spayfw.b.c.d(TAG, "stopWifiScans");
+            Log.d(TAG, "stopWifiScans");
             if (mWifiScanReceiver != null) {
-                com.samsung.android.spayfw.b.c.d(TAG, "Unregister Wifi Scan Receiver");
+                Log.d(TAG, "Unregister Wifi Scan Receiver");
                 context.unregisterReceiver(mWifiScanReceiver);
                 mWifiScanReceiver = null;
             }
@@ -889,12 +879,12 @@ extends Id {
          */
         public void onLocationChanged(android.location.Location location) {
             try {
-                com.samsung.android.spayfw.b.c.d(TAG, "Location Listener - on location changed");
+                Log.d(TAG, "Location Listener - on location changed");
                 Class<DeviceInfo> class_ = DeviceInfo.class;
                 // MONITORENTER : com.samsung.android.spayfw.remoteservice.tokenrequester.models.DeviceInfo.class
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.d(TAG, "Exception in googleLocationListener");
+                Log.d(TAG, "Exception in googleLocationListener");
                 return;
             }
             mLocation = new android.location.Location(location);
@@ -902,12 +892,12 @@ extends Id {
                 mGoogleApiClient = com.samsung.android.spayfw.utils.d.fH().fI();
             }
             if (mFusedLocationProviderApi != null && mGoogleApiClient != null) {
-                com.samsung.android.spayfw.b.c.d(TAG, "remove location updates");
+                Log.d(TAG, "remove location updates");
                 mFusedLocationProviderApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
                 // MONITOREXIT : class_
                 return;
             }
-            com.samsung.android.spayfw.b.c.i(TAG, "mFusedLocationProviderApi is null");
+            Log.i(TAG, "mFusedLocationProviderApi is null");
         }
     }
 

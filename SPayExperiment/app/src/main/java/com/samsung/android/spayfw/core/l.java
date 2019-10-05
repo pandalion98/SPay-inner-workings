@@ -23,7 +23,7 @@ import com.samsung.android.spayfw.appinterface.EnrollCardLoyaltyInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardPanInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardReferenceInfo;
 import com.samsung.android.spayfw.appinterface.ProvisionTokenInfo;
-import com.samsung.android.spayfw.core.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.RiskDataParam;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Activation;
@@ -40,12 +40,10 @@ import com.samsung.android.spayfw.remoteservice.tokenrequester.models.UserInfo;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.UserName;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.WalletInfo;
 import com.samsung.android.spayfw.utils.h;
-import java.io.Serializable;
+
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 public class l {
     /*
@@ -92,7 +90,7 @@ public class l {
                         break block11;
                     }
                     if (var5_5 != null) {
-                        com.samsung.android.spayfw.b.c.d("RequestDataBuilder", "CardRef Id based enrollment. setting cardRef id ");
+                        Log.d("RequestDataBuilder", "CardRef Id based enrollment. setting cardRef id ");
                         var7_7.setReference(var5_5);
                     }
                     var2_2.setParentId(var0.getDeviceParentId());
@@ -100,7 +98,7 @@ public class l {
                     if (var1_1 != null) {
                         var2_2.setCertificates(var1_1);
                     } else {
-                        com.samsung.android.spayfw.b.c.w("RequestDataBuilder", "device certificates are empty");
+                        Log.w("RequestDataBuilder", "device certificates are empty");
                         var2_2.setCertificates(new CertificateInfo[3]);
                     }
                     var6_6.setDevice(var2_2);
@@ -124,8 +122,8 @@ public class l {
                     if (var13_20 == null) {
                         if (var12_19 == null) return var6_6;
                     }
-                    com.samsung.android.spayfw.b.c.d("RequestDataBuilder", "Initiator id " + var13_20);
-                    com.samsung.android.spayfw.b.c.d("RequestDataBuilder", "Initiator feature " + var12_19);
+                    Log.d("RequestDataBuilder", "Initiator id " + var13_20);
+                    Log.d("RequestDataBuilder", "Initiator feature " + var12_19);
                     var6_6.setInitiator(new Initiator(var13_20, var12_19));
                     return var6_6;
                 }
@@ -177,7 +175,7 @@ lbl21: // 2 sources:
                 if (!var14_13.hasNext()) continue block0;
                 var15_14 = (RiskDataParam)var14_13.next();
                 if (var15_14 == null || var15_14.getKey() == null || var15_14.getValue() == null) continue;
-                com.samsung.android.spayfw.b.c.d("RequestDataBuilder", "RiskData: key = " + var15_14.getKey() + "; value = " + var15_14.getValue());
+                Log.d("RequestDataBuilder", "RiskData: key = " + var15_14.getKey() + "; value = " + var15_14.getValue());
                 var11_10.add((Object)new ActivationParameters(var15_14.getKey(), var15_14.getValue()));
             } while (true);
             break;
@@ -212,7 +210,7 @@ lbl21: // 2 sources:
             }
             return;
         }
-        com.samsung.android.spayfw.b.c.d("RequestDataBuilder", "CardRef Id based enrollment. setting cardRef id ");
+        Log.d("RequestDataBuilder", "CardRef Id based enrollment. setting cardRef id ");
         enrollmentRequestData.getCard().setReference(string);
     }
 

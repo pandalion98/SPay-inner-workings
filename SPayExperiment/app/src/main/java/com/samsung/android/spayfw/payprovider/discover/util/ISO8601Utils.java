@@ -12,7 +12,8 @@
  */
 package com.samsung.android.spayfw.payprovider.discover.util;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,7 +35,7 @@ public class ISO8601Utils {
 
     public static String a(Format format, Format format2, String string) {
         if (format.ordinal() >= Format.zd.ordinal() || format2.ordinal() >= Format.zd.ordinal()) {
-            c.e("ISO8601Utils", (Object)((Object)format) + " to " + (Object)((Object)format2) + " is not supported currently.");
+            Log.e("ISO8601Utils", (Object)((Object)format) + " to " + (Object)((Object)format2) + " is not supported currently.");
             return null;
         }
         try {

@@ -24,11 +24,10 @@
  */
 package com.samsung.android.spayfw.payprovider.discover.db;
 
-import android.content.Context;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.samsung.android.spayfw.payprovider.discover.db.DcDbException;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.db.dao.DcCommonDao;
 import com.samsung.android.spayfw.payprovider.discover.db.dao.a;
 import com.samsung.android.spayfw.payprovider.discover.db.dao.c;
@@ -62,17 +61,17 @@ public class DcStorageManager {
         try {
             CardDetails cardDetails = a2.b(l2, l3);
             if (cardDetails == null) {
-                com.samsung.android.spayfw.b.c.i("DCSDK_DcStorageManager", "No existing record");
+                Log.i("DCSDK_DcStorageManager", "No existing record");
                 a2.saveData(new CardDetails(l2, n2, arrby));
                 return ResultCode.sw;
             }
-            com.samsung.android.spayfw.b.c.i("DCSDK_DcStorageManager", "Found existing record.");
+            Log.i("DCSDK_DcStorageManager", "Found existing record.");
             cardDetails.setData(arrby);
             a2.a(cardDetails, l2);
             return ResultCode.sw;
         }
         catch (DcDbException dcDbException) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", dcDbException.getMessage());
+            Log.e("DCSDK_DcStorageManager", dcDbException.getMessage());
             dcDbException.printStackTrace();
             if (dcDbException.getErrorCode() != 7) return ResultCode.sA;
             return ResultCode.sB;
@@ -121,7 +120,7 @@ public class DcStorageManager {
         synchronized (DcStorageManager.class) {
             ResultCode resultCode;
             block8 : {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcStorageManager", "saveContactlessPaymentData");
+                Log.d("DCSDK_DcStorageManager", "saveContactlessPaymentData");
                 try {
                     Set set = discoverContactlessPaymentData.getPaymentProfiles().entrySet();
                     resultCode = ResultCode.sw;
@@ -129,13 +128,13 @@ public class DcStorageManager {
                     while (iterator.hasNext() && (resultCode = DcStorageManager.a(l2, (DiscoverPaymentProfile)((Map.Entry)iterator.next()).getValue())) == ResultCode.sw) {
                     }
                     if (resultCode != ResultCode.sw) {
-                        com.samsung.android.spayfw.b.c.d("DCSDK_DcStorageManager", "saveContactlessPaymentData: Failed to save Payment Profiles");
+                        Log.d("DCSDK_DcStorageManager", "saveContactlessPaymentData: Failed to save Payment Profiles");
                         break block8;
                     }
                     discoverContactlessPaymentData.setPaymentProfiles(null);
                     String string = mGson.toJson((Object)discoverContactlessPaymentData);
                     if (TextUtils.isEmpty((CharSequence)string)) {
-                        com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "saveContactlessPaymentData: jsonData failed");
+                        Log.e("DCSDK_DcStorageManager", "saveContactlessPaymentData: jsonData failed");
                         return ResultCode.sy;
                     }
                     byte[] arrby = string.getBytes("UTF8");
@@ -164,11 +163,11 @@ public class DcStorageManager {
     public static ResultCode a(long l2, DiscoverInnAppPaymentData discoverInnAppPaymentData) {
         Class<DcStorageManager> class_ = DcStorageManager.class;
         synchronized (DcStorageManager.class) {
-            com.samsung.android.spayfw.b.c.d("DCSDK_DcStorageManager", "saveInAppPaymentData");
+            Log.d("DCSDK_DcStorageManager", "saveInAppPaymentData");
             try {
                 String string = mGson.toJson((Object)discoverInnAppPaymentData);
                 if (TextUtils.isEmpty((CharSequence)string)) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "saveInAppPaymentData: jsonData failed");
+                    Log.e("DCSDK_DcStorageManager", "saveInAppPaymentData: jsonData failed");
                     return ResultCode.sy;
                 }
                 byte[] arrby = string.getBytes("UTF8");
@@ -191,27 +190,27 @@ public class DcStorageManager {
         Class<DcStorageManager> class_ = DcStorageManager.class;
         synchronized (DcStorageManager.class) {
             e e2 = new e(com.samsung.android.spayfw.payprovider.discover.a.cC());
-            com.samsung.android.spayfw.b.c.d("DCSDK_DcStorageManager", "saveOrUpdatePaymentProfile");
+            Log.d("DCSDK_DcStorageManager", "saveOrUpdatePaymentProfile");
             try {
                 DcPaymentProfile dcPaymentProfile = e2.c(l2, discoverPaymentProfile.getProfileId());
                 if (dcPaymentProfile == null) {
-                    com.samsung.android.spayfw.b.c.i("DCSDK_DcStorageManager", "No existing record");
+                    Log.i("DCSDK_DcStorageManager", "No existing record");
                     DcPaymentProfile dcPaymentProfile2 = new DcPaymentProfile();
                     dcPaymentProfile2.init(l2, discoverPaymentProfile);
                     e2.saveData(dcPaymentProfile2);
                     return ResultCode.sw;
                 }
-                com.samsung.android.spayfw.b.c.i("DCSDK_DcStorageManager", "Found existing record.");
+                Log.i("DCSDK_DcStorageManager", "Found existing record.");
                 dcPaymentProfile.init(l2, discoverPaymentProfile);
                 if (dcPaymentProfile.getRowId() != -1L) {
                     e2.updateData(dcPaymentProfile, dcPaymentProfile.getRowId());
                     return ResultCode.sw;
                 }
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "Invalid Row Id for Payment Profile Record");
+                Log.e("DCSDK_DcStorageManager", "Invalid Row Id for Payment Profile Record");
                 return ResultCode.sB;
             }
             catch (DcDbException dcDbException) {
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", dcDbException.getMessage());
+                Log.e("DCSDK_DcStorageManager", dcDbException.getMessage());
                 if (dcDbException.getErrorCode() != 7) return ResultCode.sA;
                 return ResultCode.sB;
             }
@@ -257,23 +256,23 @@ public class DcStorageManager {
             long l2 = discoverPaymentCard.getTokenId();
             ResultCode resultCode = DcStorageManager.a(l2, discoverPaymentCard.getDiscoverContactlessPaymentData());
             if (resultCode != ResultCode.sw) {
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "saveDiscoverPaymentCard: Failed to save ContactlessPaymentData. Error: " + resultCode.getErrorMessage());
+                Log.e("DCSDK_DcStorageManager", "saveDiscoverPaymentCard: Failed to save ContactlessPaymentData. Error: " + resultCode.getErrorMessage());
             } else {
                 resultCode = DcStorageManager.a(l2, discoverPaymentCard.getDiscoverInnAppPaymentData());
                 if (resultCode != ResultCode.sw) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "saveDiscoverPaymentCard: Failed to save InnAppPaymentData. Error: " + resultCode.getErrorMessage());
+                    Log.e("DCSDK_DcStorageManager", "saveDiscoverPaymentCard: Failed to save InnAppPaymentData. Error: " + resultCode.getErrorMessage());
                 } else {
                     resultCode = DcStorageManager.c(l2, discoverPaymentCard.getOTPK());
                     if (resultCode != ResultCode.sw) {
-                        com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "saveDiscoverPaymentCard: Failed to save OTPK Data. Error: " + resultCode.getErrorMessage());
+                        Log.e("DCSDK_DcStorageManager", "saveDiscoverPaymentCard: Failed to save OTPK Data. Error: " + resultCode.getErrorMessage());
                     } else {
                         resultCode = DcStorageManager.a(l2, discoverPaymentCard.getSecureObject());
                         if (resultCode != ResultCode.sw) {
-                            com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "saveDiscoverPaymentCard: Failed to save SecureObject. Error: " + resultCode.getErrorMessage());
+                            Log.e("DCSDK_DcStorageManager", "saveDiscoverPaymentCard: Failed to save SecureObject. Error: " + resultCode.getErrorMessage());
                         } else {
                             resultCode = DcStorageManager.b(l2, discoverPaymentCard.getDiscoverContactlessPaymentData().getPth().getBytes());
                             if (resultCode != ResultCode.sw) {
-                                com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "saveDiscoverPaymentCard: Failed to save PTH Data. Error: " + resultCode.getErrorMessage());
+                                Log.e("DCSDK_DcStorageManager", "saveDiscoverPaymentCard: Failed to save PTH Data. Error: " + resultCode.getErrorMessage());
                             }
                         }
                     }
@@ -286,14 +285,14 @@ public class DcStorageManager {
 
     private static CardDetails a(long l2, int n2) {
         a a2 = new a(com.samsung.android.spayfw.payprovider.discover.a.cC());
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcStorageManager", "loadCardDetailsRecord: tokenId - " + l2 + ", detailDataId - " + n2);
+        Log.d("DCSDK_DcStorageManager", "loadCardDetailsRecord: tokenId - " + l2 + ", detailDataId - " + n2);
         long l3 = n2;
         try {
             CardDetails cardDetails = a2.b(l2, l3);
             return cardDetails;
         }
         catch (DcDbException dcDbException) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", dcDbException.getMessage());
+            Log.e("DCSDK_DcStorageManager", dcDbException.getMessage());
             dcDbException.printStackTrace();
             return null;
         }
@@ -339,7 +338,7 @@ public class DcStorageManager {
             DiscoverContactlessPaymentData discoverContactlessPaymentData;
             CardDetails cardDetails;
             block10 : {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcStorageManager", "getContactlessPaymentData");
+                Log.d("DCSDK_DcStorageManager", "getContactlessPaymentData");
                 try {
                     cardDetails = DcStorageManager.a(l2, DcCommonDao.DetailDataId.sK.cJ());
                     if (cardDetails != null) break block10;
@@ -349,7 +348,7 @@ public class DcStorageManager {
                     discoverContactlessPaymentData = null;
                     return discoverContactlessPaymentData;
                 }
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "getContactlessPaymentData, loadCardDetailsRecord returns null, tokenId " + l2);
+                Log.e("DCSDK_DcStorageManager", "getContactlessPaymentData, loadCardDetailsRecord returns null, tokenId " + l2);
                 discoverContactlessPaymentData = null;
                 do {
                     return discoverContactlessPaymentData;
@@ -371,11 +370,11 @@ public class DcStorageManager {
     public static DiscoverInnAppPaymentData f(long l2) {
         Class<DcStorageManager> class_ = DcStorageManager.class;
         synchronized (DcStorageManager.class) {
-            com.samsung.android.spayfw.b.c.d("DCSDK_DcStorageManager", "getInAppPaymentData");
+            Log.d("DCSDK_DcStorageManager", "getInAppPaymentData");
             try {
                 CardDetails cardDetails = DcStorageManager.a(l2, DcCommonDao.DetailDataId.sL.cJ());
                 if (cardDetails == null) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "getInAppPaymentData, loadCardDetailsRecord returns null, tokenId " + l2);
+                    Log.e("DCSDK_DcStorageManager", "getInAppPaymentData, loadCardDetailsRecord returns null, tokenId " + l2);
                     return null;
                 }
                 String string = new String(cardDetails.getData(), "UTF8");
@@ -401,15 +400,15 @@ public class DcStorageManager {
         byte[] arrby = null;
         Class<DcStorageManager> class_ = DcStorageManager.class;
         synchronized (DcStorageManager.class) {
-            com.samsung.android.spayfw.b.c.d("DCSDK_DcStorageManager", "getPaymentSecureObj");
+            Log.d("DCSDK_DcStorageManager", "getPaymentSecureObj");
             try {
                 CardDetails cardDetails = DcStorageManager.a(l2, DcCommonDao.DetailDataId.sM.cJ());
                 byte[] arrby2 = cardDetails.getData();
                 if (cardDetails != null) return arrby2;
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "getPaymentSecureObj, loadCardDetailsRecord returns null, tokenId " + l2);
+                Log.e("DCSDK_DcStorageManager", "getPaymentSecureObj, loadCardDetailsRecord returns null, tokenId " + l2);
             }
             catch (NullPointerException nullPointerException) {
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", nullPointerException.getMessage());
+                Log.e("DCSDK_DcStorageManager", nullPointerException.getMessage());
                 nullPointerException.printStackTrace();
                 return null;
             }
@@ -426,7 +425,7 @@ public class DcStorageManager {
         Class<DcStorageManager> class_ = DcStorageManager.class;
         synchronized (DcStorageManager.class) {
             a a2 = new a(com.samsung.android.spayfw.payprovider.discover.a.cC());
-            com.samsung.android.spayfw.b.c.d("DCSDK_DcStorageManager", "getOTPKData");
+            Log.d("DCSDK_DcStorageManager", "getOTPKData");
             try {
                 CardDetails cardDetails = a2.b(l2, DcCommonDao.DetailDataId.sN.cJ());
                 byte[] arrby = null;
@@ -435,7 +434,7 @@ public class DcStorageManager {
                 return arrby2;
             }
             catch (DcDbException dcDbException) {
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", dcDbException.getMessage());
+                Log.e("DCSDK_DcStorageManager", dcDbException.getMessage());
                 dcDbException.printStackTrace();
                 return null;
             }
@@ -463,31 +462,31 @@ public class DcStorageManager {
                                 discoverPaymentCard = new DiscoverPaymentCard(l2, null, null, null);
                                 discoverContactlessPaymentData = DcStorageManager.e(l2);
                                 if (discoverContactlessPaymentData != null) break block15;
-                                com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "getDiscoverPaymentCard: Failed to get DiscoverContactlessPaymentData.");
+                                Log.e("DCSDK_DcStorageManager", "getDiscoverPaymentCard: Failed to get DiscoverContactlessPaymentData.");
                                 return null;
                             }
                             discoverPaymentCard.setDiscoverContactlessPaymentData(discoverContactlessPaymentData);
                             discoverInnAppPaymentData = DcStorageManager.f(l2);
                             if (discoverInnAppPaymentData != null) break block16;
-                            com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "getDiscoverPaymentCard: Failed to get DiscoverInnAppPaymentData.");
+                            Log.e("DCSDK_DcStorageManager", "getDiscoverPaymentCard: Failed to get DiscoverInnAppPaymentData.");
                             return null;
                         }
                         discoverPaymentCard.setDiscoverInnAppPaymentData(discoverInnAppPaymentData);
                         arrby2 = DcStorageManager.h(l2);
                         if (arrby2 != null) break block17;
-                        com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "getDiscoverPaymentCard: Failed to get otpkData.");
+                        Log.e("DCSDK_DcStorageManager", "getDiscoverPaymentCard: Failed to get otpkData.");
                         return null;
                     }
                     discoverPaymentCard.setOTPK(arrby2);
                     arrby = DcStorageManager.g(l2);
                     if (arrby != null) break block18;
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "getDiscoverPaymentCard: Failed to get secureObjData.");
+                    Log.e("DCSDK_DcStorageManager", "getDiscoverPaymentCard: Failed to get secureObjData.");
                     return null;
                 }
                 discoverPaymentCard.setSecureObject(arrby);
                 cardDetails = DcStorageManager.a(l2, DcCommonDao.DetailDataId.sO.cJ());
                 if (cardDetails != null) break block19;
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "getDiscoverPaymentCard: Failed to get pthData.");
+                Log.e("DCSDK_DcStorageManager", "getDiscoverPaymentCard: Failed to get pthData.");
                 return null;
             }
             discoverPaymentCard.getDiscoverContactlessPaymentData().setPth(new ByteBuffer(cardDetails.getData()));
@@ -514,13 +513,13 @@ public class DcStorageManager {
         synchronized (DcStorageManager.class) {
             c c2 = new c(com.samsung.android.spayfw.payprovider.discover.a.cC());
             ResultCode resultCode = ResultCode.sw;
-            com.samsung.android.spayfw.b.c.i("DCSDK_DcStorageManager", "deleteToken");
+            Log.i("DCSDK_DcStorageManager", "deleteToken");
             try {
                 c2.deleteData(l2);
             }
             catch (DcDbException dcDbException) {
                 try {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "delete: DB Exception while deleting data");
+                    Log.e("DCSDK_DcStorageManager", "delete: DB Exception while deleting data");
                     dcDbException.printStackTrace();
                     resultCode = ResultCode.sC;
                 }
@@ -542,7 +541,7 @@ public class DcStorageManager {
     private static DcCardMaster l(long l2) {
         DcCardMaster dcCardMaster;
         c c2 = new c(com.samsung.android.spayfw.payprovider.discover.a.cC());
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcStorageManager", "loadCardMaster: tokenId - " + l2);
+        Log.d("DCSDK_DcStorageManager", "loadCardMaster: tokenId - " + l2);
         try {
             dcCardMaster = (DcCardMaster)c2.getData(l2);
         }
@@ -551,7 +550,7 @@ public class DcStorageManager {
             dcCardMaster = null;
         }
         if (dcCardMaster == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "loadCardMaster: Failed to load CardMaster Record");
+            Log.e("DCSDK_DcStorageManager", "loadCardMaster: Failed to load CardMaster Record");
         }
         return dcCardMaster;
     }
@@ -562,7 +561,7 @@ public class DcStorageManager {
      * Enabled aggressive exception aggregation
      */
     private static HashMap<Integer, DiscoverPaymentProfile> m(long l2) {
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcStorageManager", "loadDiscoverPaymentProfiles: tokenId - " + l2);
+        Log.d("DCSDK_DcStorageManager", "loadDiscoverPaymentProfiles: tokenId - " + l2);
         e e2 = new e(com.samsung.android.spayfw.payprovider.discover.a.cC());
         HashMap hashMap = new HashMap();
         try {
@@ -573,12 +572,12 @@ public class DcStorageManager {
                 }
                 return hashMap;
             } else {
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "loadDiscoverPaymentProfiles: payment profiles list not found.");
+                Log.e("DCSDK_DcStorageManager", "loadDiscoverPaymentProfiles: payment profiles list not found.");
             }
             return hashMap;
         }
         catch (DcDbException dcDbException) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcStorageManager", "loadDiscoverPaymentProfiles: Exception - " + dcDbException.getMessage());
+            Log.e("DCSDK_DcStorageManager", "loadDiscoverPaymentProfiles: Exception - " + dcDbException.getMessage());
             dcDbException.printStackTrace();
             return null;
         }

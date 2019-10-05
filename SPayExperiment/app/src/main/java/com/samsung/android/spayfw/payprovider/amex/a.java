@@ -37,16 +37,14 @@ package com.samsung.android.spayfw.payprovider.amex;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Base64;
-import com.americanexpress.sdkmodulelib.model.APDUResponse;
+
 import com.americanexpress.sdkmodulelib.model.EndTransactionResponse;
 import com.americanexpress.sdkmodulelib.model.ProcessInAppPaymentResponse;
 import com.americanexpress.sdkmodulelib.model.TokenDataResponse;
 import com.americanexpress.sdkmodulelib.model.TokenDataStatus;
-import com.americanexpress.sdkmodulelib.model.TokenDataVersionResponse;
 import com.americanexpress.sdkmodulelib.model.TokenStatusResponse;
 import com.americanexpress.sdkmodulelib.payment.NFCPaymentProviderProxy;
 import com.americanexpress.sdkmodulelib.payment.NFCPaymentProviderProxyImpl;
@@ -61,27 +59,21 @@ import com.samsung.android.spayfw.appinterface.EnrollCardReferenceInfo;
 import com.samsung.android.spayfw.appinterface.ProvisionTokenInfo;
 import com.samsung.android.spayfw.appinterface.SecuredObject;
 import com.samsung.android.spayfw.appinterface.SelectCardResult;
-import com.samsung.android.spayfw.appinterface.TokenStatus;
 import com.samsung.android.spayfw.appinterface.TransactionData;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
-import com.samsung.android.spayfw.appinterface.VerifyIdvInfo;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.k;
 import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.RiskDataParam;
-import com.samsung.android.spayfw.payprovider.amex.AmexUtils;
-import com.samsung.android.spayfw.payprovider.amex.b;
 import com.samsung.android.spayfw.payprovider.amex.tzsvc.AmexTAController;
 import com.samsung.android.spayfw.payprovider.amex.tzsvc.AmexTAException;
 import com.samsung.android.spayfw.payprovider.amex.tzsvc.c;
-import com.samsung.android.spayfw.payprovider.d;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.payprovider.h;
-import com.samsung.android.spayfw.payprovider.i;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.DeviceInfo;
-import com.samsung.android.spaytzsvc.api.TAController;
-import com.samsung.android.spaytzsvc.api.TAInfo;
+
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -89,7 +81,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
@@ -114,7 +105,7 @@ extends PaymentNetworkProvider {
     public a(Context context, String string, f f2) {
         super(context, string);
         if (context == null) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "context is null");
+            Log.e("AmexPayProvider", "context is null");
             return;
         }
         this.mContext = context;
@@ -170,7 +161,7 @@ extends PaymentNetworkProvider {
                 }
             }
             catch (Exception var17_21) {
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", var17_21.getMessage(), var17_21);
+                Log.c("AmexPayProvider", var17_21.getMessage(), var17_21);
             }
             try {
                 var52_13 = (String)var5_5.get((Object)"walletAccountFirstCreated");
@@ -179,7 +170,7 @@ extends PaymentNetworkProvider {
                 }
             }
             catch (Exception var18_22) {
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", var18_22.getMessage(), var18_22);
+                Log.c("AmexPayProvider", var18_22.getMessage(), var18_22);
             }
             var2_2.add((Object)new RiskDataParam("countryOnDevice", DeviceInfo.getDeviceCountry()));
             var2_2.add((Object)new RiskDataParam("countryonAccountId", var5_5.get((Object)"walletAccountCountry")));
@@ -201,12 +192,12 @@ extends PaymentNetworkProvider {
                 }
             }
             catch (Exception var28_23) {
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", var28_23.getMessage(), var28_23);
+                Log.c("AmexPayProvider", var28_23.getMessage(), var28_23);
             }
             var2_2.add((Object)new RiskDataParam("noOfProvisioningAttempts", var14_9.x(1)));
             var2_2.add((Object)new RiskDataParam("tokensOnDeviceScore", var14_9.y(Integer.MAX_VALUE)));
             var32_16 = 1 + var14_9.x(30);
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "provAttempts : " + var32_16);
+            Log.d("AmexPayProvider", "provAttempts : " + var32_16);
             if (var32_16 >= 10) {
                 var4_4.add((Object)"XC");
             }
@@ -214,7 +205,7 @@ extends PaymentNetworkProvider {
                 var4_4.add((Object)"MC");
             }
             var35_17 = var14_9.B(30);
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "billingAddress : " + var35_17);
+            Log.d("AmexPayProvider", "billingAddress : " + var35_17);
             if (var35_17 >= 10) {
                 var4_4.add((Object)"XZ");
             }
@@ -222,7 +213,7 @@ extends PaymentNetworkProvider {
                 var4_4.add((Object)"MZ");
             }
             var38_18 = var14_9.z(30);
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "lastNames : " + var38_18);
+            Log.d("AmexPayProvider", "lastNames : " + var38_18);
             if (var38_18 >= 10) {
                 var4_4.add((Object)"XN");
             }
@@ -230,12 +221,12 @@ extends PaymentNetworkProvider {
                 var4_4.add((Object)"MN");
             }
             var41_19 = var14_9.C(30);
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "resetCount : " + var41_19);
+            Log.d("AmexPayProvider", "resetCount : " + var41_19);
             if (var41_19 < 10) break block27;
             var4_4.add((Object)"XR");
             {
                 catch (Exception var29_25) {
-                    com.samsung.android.spayfw.b.c.c("AmexPayProvider", var29_25.getMessage(), var29_25);
+                    Log.c("AmexPayProvider", var29_25.getMessage(), var29_25);
                     return var3_3;
                 }
             }
@@ -248,7 +239,7 @@ extends PaymentNetworkProvider {
             ** GOTO lbl98
         }
         catch (Exception var43_24) {
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", var43_24.getMessage(), var43_24);
+            Log.c("AmexPayProvider", var43_24.getMessage(), var43_24);
 lbl98: // 3 sources:
             if (DeviceInfo.isVpnConnected(this.mContext) || DeviceInfo.isProxyEnabled(this.mContext)) {
                 var4_4.add((Object)"GV");
@@ -269,7 +260,7 @@ lbl98: // 3 sources:
         String string;
         String string2 = null;
         String string3 = this.pp.getString(f2.cn() + "_replenish_retry", null);
-        com.samsung.android.spayfw.b.c.e("AmexPayProvider", "incrementReplenishRetryCount : " + bl);
+        Log.e("AmexPayProvider", "incrementReplenishRetryCount : " + bl);
         if (!com.samsung.android.spayfw.utils.h.al(this.mContext)) {
             bl = false;
         } else {
@@ -304,12 +295,12 @@ lbl98: // 3 sources:
                     }
                 }
             } else {
-                com.samsung.android.spayfw.b.c.w("AmexPayProvider", "Retry Data is Empty");
+                Log.w("AmexPayProvider", "Retry Data is Empty");
                 n2 = 1;
                 l2 = l3 + 600000L;
             }
             string = n2 + "|" + l2;
-            com.samsung.android.spayfw.b.c.i("AmexPayProvider", "Retry Count :" + n2);
+            Log.i("AmexPayProvider", "Retry Count :" + n2);
         } else {
             string = "4|" + (600000L + (86400000L + com.samsung.android.spayfw.utils.h.am(this.mContext)));
         }
@@ -318,7 +309,7 @@ lbl98: // 3 sources:
 
     private static String au(String string) {
         if (string == null) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Token Status received is null");
+            Log.e("AmexPayProvider", "Token Status received is null");
             return null;
         }
         if ("01".equals((Object)string)) {
@@ -330,7 +321,7 @@ lbl98: // 3 sources:
         if ("02".equals((Object)string)) {
             return "03";
         }
-        com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Token Status translation failure");
+        Log.e("AmexPayProvider", "Token Status translation failure");
         return null;
     }
 
@@ -340,20 +331,20 @@ lbl98: // 3 sources:
     private boolean aw(String string) {
         block5 : {
             block4 : {
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "canPay id " + string);
+                Log.d("AmexPayProvider", "canPay id " + string);
                 TokenDataResponse tokenDataResponse = this.pi.getTokenData(string);
                 TokenDataStatus tokenDataStatus = tokenDataResponse.getTokenDataStatus();
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
+                Log.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
                 if (!tokenDataStatus.getReasonCode().equals((Object)"00")) break block4;
                 AmexUtils.LupcMetaData lupcMetaData = AmexUtils.aA(tokenDataResponse.getLupcMetadataBlob());
                 if (lupcMetaData == null) {
-                    com.samsung.android.spayfw.b.c.d("AmexPayProvider", "lupcMetaData is null");
+                    Log.d("AmexPayProvider", "lupcMetaData is null");
                     return false;
                 }
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "nfcLupcCount : " + lupcMetaData.nfcLupcCount);
+                Log.d("AmexPayProvider", "nfcLupcCount : " + lupcMetaData.nfcLupcCount);
                 long l2 = com.samsung.android.spayfw.utils.h.am(this.mContext) / 1000L;
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "currentTime : " + l2);
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "nfcLupcExpiry : " + lupcMetaData.nfcLupcExpiry);
+                Log.d("AmexPayProvider", "currentTime : " + l2);
+                Log.d("AmexPayProvider", "nfcLupcExpiry : " + lupcMetaData.nfcLupcExpiry);
                 if (lupcMetaData.nfcLupcCount > 0 && lupcMetaData.nfcLupcExpiry > l2) break block5;
             }
             return false;
@@ -368,23 +359,23 @@ lbl98: // 3 sources:
             int n2 = arrstring.length;
             for (int i2 = 0; i2 < n2; ++i2) {
                 String string3 = arrstring[i2];
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "retryParts : " + string3);
+                Log.d("AmexPayProvider", "retryParts : " + string3);
             }
             try {
                 long l2 = Long.parseLong((String)arrstring[1]);
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "retryTime : " + l2);
+                Log.d("AmexPayProvider", "retryTime : " + l2);
                 f f2 = new f(string);
                 f2.setTrTokenId(string);
                 h.a(this.mContext, l2, f2);
                 return true;
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", exception.getMessage(), exception);
-                com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Exception when trying to set replenish retry alarm");
+                Log.c("AmexPayProvider", exception.getMessage(), exception);
+                Log.e("AmexPayProvider", "Exception when trying to set replenish retry alarm");
                 return false;
             }
         }
-        com.samsung.android.spayfw.b.c.w("AmexPayProvider", "Trying to set alarm but retry data is empty.");
+        Log.w("AmexPayProvider", "Trying to set alarm but retry data is empty.");
         return false;
     }
 
@@ -406,7 +397,7 @@ lbl98: // 3 sources:
 
     private byte[] generateRndBytes(int n2) {
         if (n2 < 1) {
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "Invalid input length");
+            Log.d("AmexPayProvider", "Invalid input length");
             return null;
         }
         SecureRandom secureRandom = new SecureRandom();
@@ -417,13 +408,13 @@ lbl98: // 3 sources:
 
     @Override
     protected boolean authenticateTransaction(SecuredObject securedObject) {
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "authenticateTransaction");
+        Log.d("AmexPayProvider", "authenticateTransaction");
         try {
             boolean bl = this.pg.authenticateTransaction(securedObject.getSecureObjectData());
             return bl;
         }
         catch (AmexTAException amexTAException) {
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             return false;
         }
     }
@@ -435,54 +426,54 @@ lbl98: // 3 sources:
         long l2;
         AmexUtils.LupcMetaData lupcMetaData;
         if (TextUtils.isEmpty((CharSequence)string)) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error handleReplenishment invalid trTokenId ");
+            Log.e("AmexPayProvider", "Error handleReplenishment invalid trTokenId ");
             return;
         }
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "replenishIfRequired id " + string);
+        Log.d("AmexPayProvider", "replenishIfRequired id " + string);
         TokenStatusResponse tokenStatusResponse = this.pi.getTokenStatus(string);
         if (tokenStatusResponse == null) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error handleReplenishment TokenStatusResponse object is null! ");
+            Log.e("AmexPayProvider", "Error handleReplenishment TokenStatusResponse object is null! ");
             return;
         }
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "AmexTokenDataManager token status : " + tokenStatusResponse.getTokenStatus());
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "AmexTokenDataManager status " + tokenStatusResponse.getTokenDataStatus().getReasonCode() + " : " + tokenStatusResponse.getTokenDataStatus().getDetailCode());
+        Log.d("AmexPayProvider", "AmexTokenDataManager token status : " + tokenStatusResponse.getTokenStatus());
+        Log.d("AmexPayProvider", "AmexTokenDataManager status " + tokenStatusResponse.getTokenDataStatus().getReasonCode() + " : " + tokenStatusResponse.getTokenDataStatus().getDetailCode());
         if (tokenStatusResponse.getTokenStatus() != null && (tokenStatusResponse.getTokenStatus().equals((Object)"02") || tokenStatusResponse.getTokenStatus().equals((Object)"03"))) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Not Replenishing as Token is Suspended or Pending.");
+            Log.e("AmexPayProvider", "Not Replenishing as Token is Suspended or Pending.");
             return;
         }
         if (this.ax(string)) {
-            com.samsung.android.spayfw.b.c.i("AmexPayProvider", "Replenish Retry Alarm Set");
+            Log.i("AmexPayProvider", "Replenish Retry Alarm Set");
             return;
         }
         TokenDataResponse tokenDataResponse = this.pi.getTokenData(string);
         if (tokenDataResponse == null || tokenDataResponse.getTokenDataStatus() == null) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error handleReplenishment TokenDataResponse object is null! ");
+            Log.e("AmexPayProvider", "Error handleReplenishment TokenDataResponse object is null! ");
             return;
         }
         TokenDataStatus tokenDataStatus = tokenDataResponse.getTokenDataStatus();
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
+        Log.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
         if (!tokenDataStatus.getReasonCode().equals((Object)"00")) return;
         {
             String string2 = tokenDataResponse.getLupcMetadataBlob();
             l2 = com.samsung.android.spayfw.utils.h.am(this.mContext) / 1000L;
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "currentTime : " + l2);
+            Log.d("AmexPayProvider", "currentTime : " + l2);
             lupcMetaData = AmexUtils.aA(string2);
             if (lupcMetaData == null) {
-                com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error in handleReplenishment lupcMetaData is null!");
+                Log.e("AmexPayProvider", "Error in handleReplenishment lupcMetaData is null!");
                 return;
             }
         }
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "nfcLupcCount : " + lupcMetaData.nfcLupcCount);
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "nfcLupcExpiry : " + lupcMetaData.nfcLupcExpiry);
+        Log.d("AmexPayProvider", "nfcLupcCount : " + lupcMetaData.nfcLupcCount);
+        Log.d("AmexPayProvider", "nfcLupcExpiry : " + lupcMetaData.nfcLupcExpiry);
         f f2 = new f(string);
         f2.setTrTokenId(string);
         if (lupcMetaData.nfcLupcCount < 3) {
-            com.samsung.android.spayfw.b.c.i("AmexPayProvider", "replenish token");
+            Log.i("AmexPayProvider", "replenish token");
             this.replenishAlarmExpired();
             return;
         }
         if (lupcMetaData.nfcLupcExpiry - l2 < 86400L) {
-            com.samsung.android.spayfw.b.c.i("AmexPayProvider", "replenish token");
+            Log.i("AmexPayProvider", "replenish token");
             this.replenishAlarmExpired();
             return;
         }
@@ -504,7 +495,7 @@ lbl98: // 3 sources:
         catch (Exception exception) {
             bundle = null;
             Exception exception2 = exception;
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", exception2.getMessage(), exception2);
+            Log.c("AmexPayProvider", exception2.getMessage(), exception2);
             return bundle;
         }
         if (enrollCardInfo.getUserEmail() != null) {
@@ -536,9 +527,9 @@ lbl98: // 3 sources:
         block6 : {
             block8 : {
                 block7 : {
-                    com.samsung.android.spayfw.b.c.d("AmexPayProvider", "startPayment");
+                    Log.d("AmexPayProvider", "startPayment");
                     if (this.pn) {
-                        com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: Previous Payment is not yet stopped");
+                        Log.e("AmexPayProvider", "Error: Previous Payment is not yet stopped");
                         return false;
                     }
                     try {
@@ -550,7 +541,7 @@ lbl98: // 3 sources:
                         break block8;
                     }
                     catch (Exception exception) {
-                        com.samsung.android.spayfw.b.c.c("AmexPayProvider", exception.getMessage(), exception);
+                        Log.c("AmexPayProvider", exception.getMessage(), exception);
                         return false;
                     }
                 }
@@ -562,7 +553,7 @@ lbl98: // 3 sources:
         String string = String.valueOf((long)(com.samsung.android.spayfw.utils.h.am(this.mContext) / 1000L));
         TokenDataStatus tokenDataStatus = this.ph.startTransaction(this.pj.cn(), 1, n2, string);
         if (!tokenDataStatus.getReasonCode().equals((Object)"00")) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "mAmexNfcPaymentProviderProxy.startTransaction failed Reason Code: " + tokenDataStatus.getReasonCode() + "Detail Code = " + tokenDataStatus.getDetailCode() + "Detail Message = " + tokenDataStatus.getDetailMessage());
+            Log.e("AmexPayProvider", "mAmexNfcPaymentProviderProxy.startTransaction failed Reason Code: " + tokenDataStatus.getReasonCode() + "Detail Code = " + tokenDataStatus.getDetailCode() + "Detail Message = " + tokenDataStatus.getDetailMessage());
             return false;
         }
         this.po = false;
@@ -575,43 +566,43 @@ lbl98: // 3 sources:
      * Lifted jumps to return sites
      */
     boolean cr() {
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "stopPayment");
+        Log.d("AmexPayProvider", "stopPayment");
         if (!this.pn) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: Stop Payment is called when there is no Payment in Progress");
+            Log.e("AmexPayProvider", "Error: Stop Payment is called when there is no Payment in Progress");
             return false;
         }
         try {
             EndTransactionResponse endTransactionResponse = this.ph.endTransaction();
             if (endTransactionResponse == null) {
-                com.samsung.android.spayfw.b.c.e("AmexPayProvider", "FATAL Error: mAmexNfcPaymentProviderProxy.endTransaction failed");
+                Log.e("AmexPayProvider", "FATAL Error: mAmexNfcPaymentProviderProxy.endTransaction failed");
                 return false;
             }
             TokenDataStatus tokenDataStatus = endTransactionResponse.getTokenDataStatus();
             if (!tokenDataStatus.getReasonCode().equals((Object)"00")) {
-                com.samsung.android.spayfw.b.c.e("AmexPayProvider", "mAmexNfcPaymentProviderProxy.endTransaction failed Reason Code: " + tokenDataStatus.getReasonCode() + "Detail Code = " + tokenDataStatus.getDetailCode() + "Detail Message = " + tokenDataStatus.getDetailMessage());
+                Log.e("AmexPayProvider", "mAmexNfcPaymentProviderProxy.endTransaction failed Reason Code: " + tokenDataStatus.getReasonCode() + "Detail Code = " + tokenDataStatus.getDetailCode() + "Detail Message = " + tokenDataStatus.getDetailMessage());
                 return false;
             }
             if (endTransactionResponse.getLupcMetaDataBlob() == null) {
-                com.samsung.android.spayfw.b.c.e("AmexPayProvider", "LUPC MetaDataBlob (returned by endTransaction is null");
+                Log.e("AmexPayProvider", "LUPC MetaDataBlob (returned by endTransaction is null");
                 return false;
             }
             AmexUtils.LupcMetaData lupcMetaData = AmexUtils.aA(endTransactionResponse.getLupcMetaDataBlob());
             if (lupcMetaData != null) {
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "Remaining LUPC Count (after endTransaction): " + lupcMetaData.nfcLupcCount);
+                Log.d("AmexPayProvider", "Remaining LUPC Count (after endTransaction): " + lupcMetaData.nfcLupcCount);
                 do {
                     return true;
                     break;
                 } while (true);
             }
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "lupcMetaData is null");
+            Log.d("AmexPayProvider", "lupcMetaData is null");
             return true;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", exception.getMessage(), exception);
+            Log.c("AmexPayProvider", exception.getMessage(), exception);
             return false;
         }
         finally {
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "stopPayment : cleanup state and check replenishment");
+            Log.d("AmexPayProvider", "stopPayment : cleanup state and check replenishment");
             if (this.pj != null) {
                 this.av(this.pj.cn());
             }
@@ -665,8 +656,8 @@ lbl98: // 3 sources:
             return c.fromBase64(string2);
         }
         catch (AmexTAException amexTAException) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "decryptUserSignature Error occured while gettting decrypted data from TA");
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.e("AmexPayProvider", "decryptUserSignature Error occured while gettting decrypted data from TA");
+            Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             return null;
         }
     }
@@ -688,8 +679,8 @@ lbl98: // 3 sources:
             return string;
         }
         catch (AmexTAException amexTAException) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "encryptUserSignature Error occured while gettting encypted data from TA");
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.e("AmexPayProvider", "encryptUserSignature Error occured while gettting encypted data from TA");
+            Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             return null;
         }
     }
@@ -704,13 +695,13 @@ lbl98: // 3 sources:
         byte[] arrby;
         long l2;
         long l3 = System.currentTimeMillis();
-        com.samsung.android.spayfw.b.c.i("AmexPayProvider", "generateInAppPaymentPayload: start: " + l3);
+        Log.i("AmexPayProvider", "generateInAppPaymentPayload: start: " + l3);
         if (this.pn) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: generateInAppPaymentPayload is called when payment is already in progress");
+            Log.e("AmexPayProvider", "Error: generateInAppPaymentPayload is called when payment is already in progress");
             return null;
         }
         if (!this.cq()) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Start Payment Failed");
+            Log.e("AmexPayProvider", "Start Payment Failed");
             return null;
         }
         String string = String.valueOf((long)com.samsung.android.spayfw.utils.h.am(this.mContext));
@@ -734,29 +725,29 @@ lbl98: // 3 sources:
                 processInAppPaymentResponse = this.ph.processInAppPayment(inAppTZTxnInfo, com.samsung.android.spayfw.utils.h.encodeHex(arrby2));
             }
             if (processInAppPaymentResponse == null) {
-                com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: mAmexNfcPaymentProviderProxy.processInAppPayment returned null");
+                Log.e("AmexPayProvider", "Error: mAmexNfcPaymentProviderProxy.processInAppPayment returned null");
                 return null;
             }
             TokenDataStatus tokenDataStatus = processInAppPaymentResponse.getTokenDataStatus();
             if (!tokenDataStatus.getReasonCode().equals((Object)"00")) {
-                com.samsung.android.spayfw.b.c.e("AmexPayProvider", "mAmexNfcPaymentProviderProxy.processInAppPayment failed Reason Code: " + tokenDataStatus.getReasonCode() + "Detail Code = " + tokenDataStatus.getDetailCode() + "Detail Message = " + tokenDataStatus.getDetailMessage());
+                Log.e("AmexPayProvider", "mAmexNfcPaymentProviderProxy.processInAppPayment failed Reason Code: " + tokenDataStatus.getReasonCode() + "Detail Code = " + tokenDataStatus.getDetailCode() + "Detail Message = " + tokenDataStatus.getDetailMessage());
                 return null;
             }
             arrby = com.samsung.android.spayfw.utils.h.fromBase64(processInAppPaymentResponse.getPaymentPayload());
             l2 = System.currentTimeMillis();
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", exception.getMessage(), exception);
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Exception occurred during generateInAppPaymentPayload ");
+            Log.c("AmexPayProvider", exception.getMessage(), exception);
+            Log.e("AmexPayProvider", "Exception occurred during generateInAppPaymentPayload ");
             return null;
         }
         finally {
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "stopping In App Payment");
+            Log.d("AmexPayProvider", "stopping In App Payment");
             this.cr();
         }
-        com.samsung.android.spayfw.b.c.i("AmexPayProvider", "generateInAppPaymentPayload: end: " + l2);
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "InApp Payload " + Arrays.toString((byte[])arrby));
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "InApp Payload " + arrby.length);
+        Log.i("AmexPayProvider", "generateInAppPaymentPayload: end: " + l2);
+        Log.d("AmexPayProvider", "InApp Payload " + Arrays.toString((byte[])arrby));
+        Log.d("AmexPayProvider", "InApp Payload " + arrby.length);
         return arrby;
     }
 
@@ -800,19 +791,19 @@ lbl98: // 3 sources:
             exception.printStackTrace();
         }
         TokenDataStatus tokenDataStatus = this.pi.getTokenData(string).getTokenDataStatus();
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
+        Log.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
         jsonObject.addProperty("tokenRefId", string);
         jsonObject.addProperty("responseCode", tokenDataStatus.getReasonCode());
         jsonObject.addProperty("detailCode", tokenDataStatus.getDetailCode());
         String string2 = a.c(jsonObject).toString();
-        com.samsung.android.spayfw.b.c.m("AmexPayProvider", "Sorted Data" + string2);
+        Log.m("AmexPayProvider", "Sorted Data" + string2);
         try {
             AmexTAController.ProcessRequestDataResponse processRequestDataResponse2;
             processRequestDataResponse = processRequestDataResponse2 = this.pg.b(this.pl.getContent(), null, string2);
         }
         catch (AmexTAException amexTAException) {
             c2.setErrorCode(-2);
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             processRequestDataResponse = null;
         }
         if (processRequestDataResponse == null) {
@@ -830,8 +821,8 @@ lbl98: // 3 sources:
                 string5 = string6 = this.pg.o(string3, string4);
             }
             catch (AmexTAException amexTAException) {
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
-                com.samsung.android.spayfw.b.c.e("AmexPayProvider", "encryptedData is invalid");
+                Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+                Log.e("AmexPayProvider", "encryptedData is invalid");
                 string5 = null;
             }
             if (string5 != null) {
@@ -842,7 +833,7 @@ lbl98: // 3 sources:
                     processRequestDataResponse3 = processRequestDataResponse4 = this.pg.b(this.pl.getContent(), string7, null);
                 }
                 catch (AmexTAException amexTAException) {
-                    com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+                    Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
                     processRequestDataResponse3 = null;
                 }
                 if (processRequestDataResponse3 != null) {
@@ -850,10 +841,10 @@ lbl98: // 3 sources:
                     jsonObject.addProperty("encryptionParameters", processRequestDataResponse3.encryptionParams);
                 }
             } else {
-                com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Cannot Decrypt Access Key");
+                Log.e("AmexPayProvider", "Cannot Decrypt Access Key");
             }
         } else {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "No Access Key.");
+            Log.e("AmexPayProvider", "No Access Key.");
         }
         c2.a(jsonObject);
         return c2;
@@ -886,7 +877,7 @@ lbl98: // 3 sources:
                 return arrcertificateInfo;
             }
             catch (AmexTAException amexTAException) {
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+                Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             }
         }
         return arrcertificateInfo;
@@ -971,13 +962,13 @@ lbl98: // 3 sources:
                 break block26;
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", exception.getMessage(), exception);
+                Log.c("AmexPayProvider", exception.getMessage(), exception);
                 c2.setErrorCode(-2);
                 return c2;
             }
             catch (AmexTAException amexTAException) {
                 c2.setErrorCode(-2);
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+                Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
                 processRequestDataResponse = null;
             }
         }
@@ -1059,7 +1050,7 @@ lbl98: // 3 sources:
 lbl-1000: // 3 sources:
             {
                 catch (Exception var3_17) {
-                    com.samsung.android.spayfw.b.c.c("AmexPayProvider", var3_17.getMessage(), var3_17);
+                    Log.c("AmexPayProvider", var3_17.getMessage(), var3_17);
                     var2_2.setErrorCode(-2);
                     return var2_2;
                 }
@@ -1095,14 +1086,14 @@ lbl-1000: // 2 sources:
             var10_15.printStackTrace();
 lbl63: // 2 sources:
             try {
-                com.samsung.android.spayfw.b.c.m("AmexPayProvider", "encryptedData.toString() " + var7_7.toString());
+                Log.m("AmexPayProvider", "encryptedData.toString() " + var7_7.toString());
                 var16_12 = a.c(var4_3).toString() + a.c(var8_8).toString();
-                com.samsung.android.spayfw.b.c.m("AmexPayProvider", "dataToBeSigned " + var16_12);
+                Log.m("AmexPayProvider", "dataToBeSigned " + var16_12);
                 var13_14 = var17_13 = this.pg.b(this.pl.getContent(), var7_7.toString(), var16_12);
             }
             catch (AmexTAException var12_18) {
                 var2_2.setErrorCode(-2);
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", var12_18.getMessage(), (Throwable)var12_18);
+                Log.c("AmexPayProvider", var12_18.getMessage(), (Throwable)var12_18);
                 var13_14 = null;
             }
             if (var13_14 == null) {
@@ -1184,7 +1175,7 @@ lbl63: // 2 sources:
             }
             TokenDataResponse tokenDataResponse = this.pi.getTokenData(string);
             TokenDataStatus tokenDataStatus = tokenDataResponse.getTokenDataStatus();
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
+            Log.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
             if (!tokenDataStatus.getReasonCode().equals((Object)"00")) {
                 c2.setErrorCode(-2);
                 return c2;
@@ -1203,7 +1194,7 @@ lbl63: // 2 sources:
                 string2 = "";
                 AmexTAException amexTAException2 = amexTAException;
                 c2.setErrorCode(-2);
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException2.getMessage(), (Throwable)((Object)amexTAException2));
+                Log.c("AmexPayProvider", amexTAException2.getMessage(), (Throwable)((Object)amexTAException2));
             }
         }
         String string6 = string2 + string3;
@@ -1213,7 +1204,7 @@ lbl63: // 2 sources:
         }
         catch (AmexTAException amexTAException) {
             c2.setErrorCode(-2);
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             processRequestDataResponse = null;
         }
         if (processRequestDataResponse == null) {
@@ -1266,7 +1257,7 @@ lbl7: // 1 sources:
                     var4_8.printStackTrace();
                 }
                 catch (Exception var8_7) {
-                    com.samsung.android.spayfw.b.c.c("AmexPayProvider", var8_7.getMessage(), var8_7);
+                    Log.c("AmexPayProvider", var8_7.getMessage(), var8_7);
                     var2_2.setErrorCode(-2);
                     return var2_2;
                 }
@@ -1276,7 +1267,7 @@ lbl25: // 4 sources:
             }
             catch (AmexTAException var5_9) {
                 var2_2.setErrorCode(-2);
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", var5_9.getMessage(), (Throwable)var5_9);
+                Log.c("AmexPayProvider", var5_9.getMessage(), (Throwable)var5_9);
                 var6_6 = null;
             }
         }
@@ -1297,30 +1288,30 @@ lbl25: // 4 sources:
     @Override
     public byte[] handleApdu(byte[] arrby, Bundle bundle) {
         long l2 = System.currentTimeMillis();
-        com.samsung.android.spayfw.b.c.i("AmexPayProvider", "handleApdu: start: " + l2);
+        Log.i("AmexPayProvider", "handleApdu: start: " + l2);
         if (!this.pn) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: prepareMstPay must never happen when there is already a pending MST");
+            Log.e("AmexPayProvider", "Error: prepareMstPay must never happen when there is already a pending MST");
             return null;
         }
         if (arrby == null) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: apduBuffer received is NULL");
+            Log.e("AmexPayProvider", "Error: apduBuffer received is NULL");
             return null;
         }
-        com.samsung.android.spayfw.b.c.m("AmexPayProvider", "HandlAPDU - Request = " + com.samsung.android.spayfw.utils.h.encodeHex(arrby));
+        Log.m("AmexPayProvider", "HandlAPDU - Request = " + com.samsung.android.spayfw.utils.h.encodeHex(arrby));
         byte[] arrby2 = this.ph.generateAPDU(arrby).getApduBytes();
         if (a.a(arrby, (short)0) == -32594 && arrby2 != null) {
             byte[] arrby3 = new byte[]{arrby2[-2 + arrby2.length], arrby2[-1 + arrby2.length]};
             short s2 = (short)(256 * (short)arrby3[0] + (short)arrby3[1]);
             if (s2 == -28672) {
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "set amex nfc payment to true");
+                Log.d("AmexPayProvider", "set amex nfc payment to true");
                 this.pr = true;
             } else {
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "amex nfc payment response code: " + s2);
+                Log.d("AmexPayProvider", "amex nfc payment response code: " + s2);
             }
-            com.samsung.android.spayfw.b.c.m("AmexPayProvider", "HandlAPDU - Response = " + com.samsung.android.spayfw.utils.h.encodeHex(arrby2));
+            Log.m("AmexPayProvider", "HandlAPDU - Response = " + com.samsung.android.spayfw.utils.h.encodeHex(arrby2));
         }
         long l3 = System.currentTimeMillis();
-        com.samsung.android.spayfw.b.c.i("AmexPayProvider", "handleApdu: end: " + l3 + "Time Taken = " + (1L + (l3 - l2)));
+        Log.i("AmexPayProvider", "handleApdu: end: " + l3 + "Time Taken = " + (1L + (l3 - l2)));
         return arrby2;
     }
 
@@ -1338,26 +1329,26 @@ lbl25: // 4 sources:
     @Override
     public boolean isPayAllowedForPresentationMode(int n2) {
         if (this.mProviderTokenKey == null) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "ProviderTokenKey is null");
+            Log.e("AmexPayProvider", "ProviderTokenKey is null");
             return false;
         }
         if (n2 != 2) return true;
         {
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "isPayAllowedForPresentationMode " + this.mProviderTokenKey.getTrTokenId());
+            Log.d("AmexPayProvider", "isPayAllowedForPresentationMode " + this.mProviderTokenKey.getTrTokenId());
             TokenDataResponse tokenDataResponse = this.pi.getTokenData(this.mProviderTokenKey.getTrTokenId());
             TokenDataStatus tokenDataStatus = tokenDataResponse.getTokenDataStatus();
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
+            Log.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
             if (!tokenDataStatus.getReasonCode().equals((Object)"00")) return false;
             {
                 AmexUtils.LupcMetaData lupcMetaData = AmexUtils.aA(tokenDataResponse.getLupcMetadataBlob());
                 if (lupcMetaData != null) {
-                    com.samsung.android.spayfw.b.c.d("AmexPayProvider", "otherLupcCount : " + lupcMetaData.otherLupcCount);
+                    Log.d("AmexPayProvider", "otherLupcCount : " + lupcMetaData.otherLupcCount);
                     if (lupcMetaData.otherLupcCount <= 0) return false;
                     return true;
                 }
             }
         }
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "lupcMetaData null");
+        Log.d("AmexPayProvider", "lupcMetaData null");
         return true;
     }
 
@@ -1369,31 +1360,31 @@ lbl25: // 4 sources:
     @Override
     protected void loadTA() {
         this.pg.loadTA();
-        com.samsung.android.spayfw.b.c.i("AmexPayProvider", "load real TA");
+        Log.i("AmexPayProvider", "load real TA");
     }
 
     @Override
     protected void onPaySwitch(int n2, int n3) {
         super.onPaySwitch(n2, n3);
         if (n2 == 1 && n3 == 2) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: Payment mode switching from NFC to MST. Must never happen");
+            Log.e("AmexPayProvider", "Error: Payment mode switching from NFC to MST. Must never happen");
             return;
         }
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "onPaySwitch");
+        Log.d("AmexPayProvider", "onPaySwitch");
     }
 
     @Override
     protected boolean prepareMstPay() {
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "prepareMstPay");
+        Log.d("AmexPayProvider", "prepareMstPay");
         if (!this.pn && !this.cq()) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: startPayment failed");
+            Log.e("AmexPayProvider", "Error: startPayment failed");
             return false;
         }
         if (!this.po) {
             this.po = true;
             TokenDataStatus tokenDataStatus = this.ph.processOther();
             if (!tokenDataStatus.getReasonCode().equals((Object)"00")) {
-                com.samsung.android.spayfw.b.c.e("AmexPayProvider", "mAmexNfcPaymentProviderProxy.processOther failed Reason Code: " + tokenDataStatus.getReasonCode() + "Detail Code = " + tokenDataStatus.getDetailCode() + "Detail Message = " + tokenDataStatus.getDetailMessage());
+                Log.e("AmexPayProvider", "mAmexNfcPaymentProviderProxy.processOther failed Reason Code: " + tokenDataStatus.getReasonCode() + "Detail Code = " + tokenDataStatus.getDetailCode() + "Detail Message = " + tokenDataStatus.getDetailMessage());
                 this.cr();
                 return false;
             }
@@ -1403,9 +1394,9 @@ lbl25: // 4 sources:
 
     @Override
     public boolean prepareNfcPay() {
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "prepareNfcPay");
+        Log.d("AmexPayProvider", "prepareNfcPay");
         if (!this.pn && !this.cq()) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Start Payment Failed");
+            Log.e("AmexPayProvider", "Start Payment Failed");
             return false;
         }
         return true;
@@ -1419,14 +1410,14 @@ lbl25: // 4 sources:
     @Override
     protected void replenishAlarmExpired() {
         if (this.mProviderTokenKey == null) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "cannot fire replenishment, providerTokenKey is null");
+            Log.e("AmexPayProvider", "cannot fire replenishment, providerTokenKey is null");
             return;
         }
         if (this.ps != null) {
             this.ps.a(this.mProviderTokenKey);
             return;
         }
-        com.samsung.android.spayfw.b.c.e("AmexPayProvider", "CMN FW REQUESTER IS NOT INITIALIZED");
+        Log.e("AmexPayProvider", "CMN FW REQUESTER IS NOT INITIALIZED");
     }
 
     /*
@@ -1436,7 +1427,7 @@ lbl25: // 4 sources:
      */
     @Override
     protected e replenishToken(JsonObject jsonObject, TokenStatus tokenStatus) {
-        com.samsung.android.spayfw.b.c.i("AmexPayProvider", "Replenish Token");
+        Log.i("AmexPayProvider", "Replenish Token");
         e e2 = new e();
         try {
             String string;
@@ -1446,7 +1437,7 @@ lbl25: // 4 sources:
                 AmexTAController.ProcessTokenDataResponse processTokenDataResponse;
                 e2.setErrorCode(0);
                 if (jsonObject == null || jsonObject.getAsJsonObject("secureTokenData") == null) {
-                    com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Input Data is NULL");
+                    Log.e("AmexPayProvider", "Input Data is NULL");
                     e2.setErrorCode(-4);
                     return e2;
                 }
@@ -1457,13 +1448,13 @@ lbl25: // 4 sources:
                 String string5 = jsonObject3.get("cloudPublicKeyCert").getAsString();
                 String string6 = this.kQ != null ? this.kQ.getWalletId() : com.samsung.android.spayfw.core.e.h(this.mContext).getConfig("CONFIG_WALLET_ID");
                 if (string6 == null) {
-                    com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Wallet Id is NULL");
+                    Log.e("AmexPayProvider", "Wallet Id is NULL");
                     e2.setErrorCode(-2);
                     return e2;
                 }
                 String string7 = a.au(jsonObject.get("tokenStatus").getAsString());
                 if (string7 == null) {
-                    com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Token Status is NULL");
+                    Log.e("AmexPayProvider", "Token Status is NULL");
                     e2.setErrorCode(-2);
                     return e2;
                 }
@@ -1479,23 +1470,23 @@ lbl25: // 4 sources:
                 }
                 catch (AmexTAException amexTAException) {
                     e2.setErrorCode(-2);
-                    com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+                    Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
                     processTokenDataResponse = null;
                 }
                 if (processTokenDataResponse == null) {
-                    com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Token Data Response is NULL");
+                    Log.e("AmexPayProvider", "Token Data Response is NULL");
                     e2.setErrorCode(-2);
                     return e2;
                 }
                 TokenDataStatus tokenDataStatus = this.pi.updateTokenData(string, processTokenDataResponse.eAPDUBlob, processTokenDataResponse.eNFCLUPCBlob, processTokenDataResponse.eOtherLUPCBlob, processTokenDataResponse.eMetadataBlob, processTokenDataResponse.lupcMetadataBlob);
                 if (!tokenDataStatus.getReasonCode().equals((Object)"00")) {
-                    com.samsung.android.spayfw.b.c.e("AmexPayProvider", "mAmexNfcPaymentProviderProxy.updateTokenData failed Reason Code: " + tokenDataStatus.getReasonCode() + "Detail Code = " + tokenDataStatus.getDetailCode() + "Detail Message = " + tokenDataStatus.getDetailMessage());
+                    Log.e("AmexPayProvider", "mAmexNfcPaymentProviderProxy.updateTokenData failed Reason Code: " + tokenDataStatus.getReasonCode() + "Detail Code = " + tokenDataStatus.getDetailCode() + "Detail Message = " + tokenDataStatus.getDetailMessage());
                     e2.setErrorCode(-2);
                     this.a(this.mProviderTokenKey, false);
                     this.ax(string);
                     return e2;
                 }
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
+                Log.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
                 jsonObject2 = new JsonObject();
                 try {
                     AmexTAController.DevicePublicCerts devicePublicCerts = this.pg.cu();
@@ -1516,7 +1507,7 @@ lbl25: // 4 sources:
             }
             catch (AmexTAException amexTAException) {
                 e2.setErrorCode(-2);
-                com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+                Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
                 processRequestDataResponse = null;
             }
             if (processRequestDataResponse == null) {
@@ -1534,7 +1525,7 @@ lbl25: // 4 sources:
             return e2;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", exception.getMessage(), exception);
+            Log.c("AmexPayProvider", exception.getMessage(), exception);
             this.replenishAlarmExpired();
             e2.setErrorCode(-2);
             return e2;
@@ -1549,16 +1540,16 @@ lbl25: // 4 sources:
     @Override
     public SelectCardResult selectCard() {
         byte[] arrby;
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "selectCard");
+        Log.d("AmexPayProvider", "selectCard");
         if (this.mProviderTokenKey == null) {
             return null;
         }
         if (!this.aw(this.mProviderTokenKey.cn())) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: Can not pay since LUPC reached zero or token status not active");
+            Log.e("AmexPayProvider", "Error: Can not pay since LUPC reached zero or token status not active");
             return null;
         }
         if (this.pn) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: Select Card called before previous Payment did not complete. This must never happen");
+            Log.e("AmexPayProvider", "Error: Select Card called before previous Payment did not complete. This must never happen");
             this.cr();
         }
         try {
@@ -1567,11 +1558,11 @@ lbl25: // 4 sources:
             arrby = arrby2 = this.pg.getNonce(32);
         }
         catch (AmexTAException amexTAException) {
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
+            Log.c("AmexPayProvider", amexTAException.getMessage(), (Throwable)((Object)amexTAException));
             arrby = null;
         }
         if (arrby == null) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: getNonce returned null");
+            Log.e("AmexPayProvider", "Error: getNonce returned null");
             return null;
         }
         SelectCardResult selectCardResult = new SelectCardResult(AmexTAController.ct().getTAInfo().getTAId(), arrby);
@@ -1603,10 +1594,10 @@ lbl25: // 4 sources:
 
     @Override
     public void setupReplenishAlarm() {
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "Entered setup Replenish Alarm");
+        Log.d("AmexPayProvider", "Entered setup Replenish Alarm");
         String string = this.mProviderTokenKey.cn();
         if (string == null) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "TrTokenId is null");
+            Log.e("AmexPayProvider", "TrTokenId is null");
             return;
         }
         this.av(string);
@@ -1620,29 +1611,29 @@ lbl25: // 4 sources:
     @Override
     public boolean startMstPay(int n2, byte[] arrby) {
         boolean bl;
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "startMstPay(for transmit)");
+        Log.d("AmexPayProvider", "startMstPay(for transmit)");
         if (!this.pn) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error: prepareMstPay must never happen when there is already a pending MST");
+            Log.e("AmexPayProvider", "Error: prepareMstPay must never happen when there is already a pending MST");
             return false;
         }
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "startMstPay: input config " + Arrays.toString((byte[])arrby));
+        Log.d("AmexPayProvider", "startMstPay: input config " + Arrays.toString((byte[])arrby));
         try {
             boolean bl2;
             bl = bl2 = this.pg.a(n2, arrby);
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("AmexPayProvider", exception.getMessage(), exception);
+            Log.c("AmexPayProvider", exception.getMessage(), exception);
             bl = false;
         }
         if (!bl) {
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "failure to do startMstPay");
+            Log.e("AmexPayProvider", "failure to do startMstPay");
         }
         return true;
     }
 
     @Override
     protected void stopMstPay(boolean bl) {
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "stopMstPay: stop amex mst pay");
+        Log.d("AmexPayProvider", "stopMstPay: stop amex mst pay");
         this.cr();
         this.po = false;
     }
@@ -1653,9 +1644,9 @@ lbl25: // 4 sources:
     @Override
     protected Bundle stopNfcPay(int n2) {
         short s2;
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "stopNfcPay");
+        Log.d("AmexPayProvider", "stopNfcPay");
         if (!this.pn) {
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "Stop NFC Pay called when payment is not in progress");
+            Log.d("AmexPayProvider", "Stop NFC Pay called when payment is not in progress");
             this.pr = false;
             Bundle bundle = new Bundle();
             bundle.putShort("nfcApduErrorCode", (short)1);
@@ -1673,7 +1664,7 @@ lbl25: // 4 sources:
             s2 = 2;
         }
         boolean bl = this.cr();
-        com.samsung.android.spayfw.b.c.d("AmexPayProvider", "stopNfcPay: spayfw reason : " + n2 + " sdk iso ret = " + bl);
+        Log.d("AmexPayProvider", "stopNfcPay: spayfw reason : " + n2 + " sdk iso ret = " + bl);
         this.pr = false;
         Bundle bundle = new Bundle();
         bundle.putShort("nfcApduErrorCode", s2);
@@ -1683,7 +1674,7 @@ lbl25: // 4 sources:
     @Override
     protected void unloadTA() {
         this.pg.unloadTA();
-        com.samsung.android.spayfw.b.c.i("AmexPayProvider", "unload real TA");
+        Log.i("AmexPayProvider", "unload real TA");
     }
 
     /*
@@ -1693,14 +1684,14 @@ lbl25: // 4 sources:
     public void updateRequestStatus(d d2) {
         block7 : {
             block6 : {
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "updateRequestStatus : " + d2.getRequestType() + " " + d2.ci());
+                Log.d("AmexPayProvider", "updateRequestStatus : " + d2.getRequestType() + " " + d2.ci());
                 if (d2.ck() != null) {
-                    com.samsung.android.spayfw.b.c.d("AmexPayProvider", "updateRequestStatus : " + d2.ck().cn());
+                    Log.d("AmexPayProvider", "updateRequestStatus : " + d2.ck().cn());
                 }
                 if (d2.getRequestType() == 23) break block6;
                 switch (d2.ci()) {
                     default: {
-                        com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Error in updating status");
+                        Log.e("AmexPayProvider", "Error in updating status");
                         return;
                     }
                     case -1: {
@@ -1747,38 +1738,38 @@ lbl25: // 4 sources:
         JsonObject jsonObject2 = new JsonObject();
         if (tokenStatusResponse != null && tokenStatusResponse.getTokenStatus() != null) {
             TokenDataStatus tokenDataStatus;
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "AmexTokenDataManager token status : " + tokenStatusResponse.getTokenStatus());
-            com.samsung.android.spayfw.b.c.d("AmexPayProvider", "AmexTokenDataManager status " + tokenStatusResponse.getTokenDataStatus().getReasonCode() + " : " + tokenStatusResponse.getTokenDataStatus().getDetailCode());
+            Log.d("AmexPayProvider", "AmexTokenDataManager token status : " + tokenStatusResponse.getTokenStatus());
+            Log.d("AmexPayProvider", "AmexTokenDataManager status " + tokenStatusResponse.getTokenDataStatus().getReasonCode() + " : " + tokenStatusResponse.getTokenDataStatus().getDetailCode());
             if (tokenStatus.getCode().equals((Object)"ACTIVE") && tokenStatusResponse.getTokenStatus().equals((Object)"03")) {
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "Activating Token");
+                Log.d("AmexPayProvider", "Activating Token");
                 tokenDataStatus = this.pi.activateToken(string);
                 this.av(string);
             } else if (tokenStatus.getCode().equals((Object)"ACTIVE")) {
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "Resuming Token");
+                Log.d("AmexPayProvider", "Resuming Token");
                 try {
                     TokenDataStatus tokenDataStatus2;
                     tokenDataStatus = tokenDataStatus2 = this.pi.resumeToken(string);
                 }
                 catch (Exception exception) {
-                    com.samsung.android.spayfw.b.c.e("AmexPayProvider", exception.getMessage());
+                    Log.e("AmexPayProvider", exception.getMessage());
                     tokenDataStatus = null;
                 }
                 this.av(string);
             } else if (tokenStatus.getCode().equals((Object)"SUSPENDED")) {
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "Suspending Token");
+                Log.d("AmexPayProvider", "Suspending Token");
                 tokenDataStatus = this.pi.suspendToken(string);
                 h.a(this.mContext, this.mProviderTokenKey);
             } else if (tokenStatus.getCode().equals((Object)"DISPOSED")) {
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "Deleting Token");
+                Log.d("AmexPayProvider", "Deleting Token");
                 tokenDataStatus = this.pi.deleteToken(string);
                 this.pp.edit().remove(string + "_keys").remove(string + "_transaction_json_data").remove(string + "_replenish_retry").apply();
                 h.a(this.mContext, this.mProviderTokenKey);
             } else {
-                com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Unknown Token Status : " + tokenStatus.getCode());
+                Log.e("AmexPayProvider", "Unknown Token Status : " + tokenStatus.getCode());
                 tokenDataStatus = null;
             }
             if (tokenDataStatus != null) {
-                com.samsung.android.spayfw.b.c.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
+                Log.d("AmexPayProvider", "AmexTokenDataManager status " + tokenDataStatus.getReasonCode() + " : " + tokenDataStatus.getDetailCode());
                 jsonObject2.addProperty("responseCode", tokenDataStatus.getReasonCode());
                 if (!tokenDataStatus.getReasonCode().equals((Object)"00")) {
                     e2.setErrorCode(-2);
@@ -1786,10 +1777,10 @@ lbl25: // 4 sources:
             }
         } else if (tokenStatus.getCode().equals((Object)"ACTIVE") || tokenStatus.getCode().equals((Object)"SUSPENDED")) {
             e2.setErrorCode(-5);
-            com.samsung.android.spayfw.b.c.e("AmexPayProvider", "Unknown Token : " + string);
+            Log.e("AmexPayProvider", "Unknown Token : " + string);
         } else {
             jsonObject2.addProperty("responseCode", "00");
-            com.samsung.android.spayfw.b.c.i("AmexPayProvider", "Token Already Deleted");
+            Log.i("AmexPayProvider", "Token Already Deleted");
         }
         e2.b(jsonObject2);
         return e2;

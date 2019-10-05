@@ -10,11 +10,9 @@
  */
 package com.samsung.android.spayfw.payprovider.discover.payment.a;
 
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.discover.payment.a.a;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.ByteBuffer;
 import java.text.ParseException;
-import java.util.List;
 
 /*
  * Illegal identifiers - consider using --renameillegalidents true
@@ -163,30 +161,30 @@ extends a {
         com.samsung.android.spayfw.payprovider.discover.payment.utils.b b2;
         int n2 = this.getData().getSize();
         if (n2 == 0) {
-            c.e("DCSDK_", "PDOL is empty...");
+            Log.e("DCSDK_", "PDOL is empty...");
             throw new ParseException("PDOL is empty", 0);
         }
         if (n2 < 3) {
-            c.e("DCSDK_", "PDOL length is less than 3");
+            Log.e("DCSDK_", "PDOL length is less than 3");
             throw new ParseException("PDOL length is less than 3", 0);
         }
-        c.d("DCSDK_", "PDOL length = " + n2);
+        Log.d("DCSDK_", "PDOL length = " + n2);
         try {
             b2 = com.samsung.android.spayfw.payprovider.discover.payment.utils.a.c(this.getData().getBytes(), 0, n2);
             if (b2 == null) return;
             if (n2 == 3) {
-                c.d("DCSDK_", "Parse UN...");
+                Log.d("DCSDK_", "Parse UN...");
                 ByteBuffer byteBuffer = b2.O(131) != null ? (ByteBuffer)b2.O(131).get(0) : null;
                 this.k(byteBuffer);
-                c.d("DCSDK_", "UN " + this.dt());
+                Log.d("DCSDK_", "UN " + this.dt());
                 if (this.dt() == null) return;
                 {
-                    c.d("DCSDK_", "UN str" + this.dt().toHexString());
+                    Log.d("DCSDK_", "UN str" + this.dt().toHexString());
                     return;
                 }
             }
             if (n2 < 28) {
-                c.e("DCSDK_", "Wrong PDOL lenth, less than mandatory value " + n2);
+                Log.e("DCSDK_", "Wrong PDOL lenth, less than mandatory value " + n2);
                 throw new ParseException("Wrong PDOL lenth, less than mandatory value " + n2, 0);
             }
         }
@@ -196,7 +194,7 @@ extends a {
         }
         ByteBuffer byteBuffer = b2.O(131) != null ? (ByteBuffer)b2.O(131).get(0) : null;
         if (byteBuffer == null) {
-            c.e("DCSDK_", "Cannot parse PDOL data");
+            Log.e("DCSDK_", "Cannot parse PDOL data");
             throw new ParseException("Cannot parse PDOL data", 0);
         }
         this.q(byteBuffer);

@@ -8,11 +8,9 @@
  */
 package com.samsung.android.spayfw.remoteservice.tokenrequester;
 
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Client;
 import com.samsung.android.spayfw.remoteservice.c;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.IdvOptionsData;
 
 public class h
@@ -31,7 +29,7 @@ extends m<String, IdvOptionsData, c<IdvOptionsData>, h> {
 
     @Override
     protected String cG() {
-        com.samsung.android.spayfw.b.c.d("RefreshIdvRequest", this.mTokenId);
+        Log.d("RefreshIdvRequest", this.mTokenId);
         return "/tokens/" + this.mTokenId.toString();
     }
 

@@ -24,6 +24,7 @@ import com.samsung.android.spayfw.appinterface.BillingInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardInfo;
 import com.samsung.android.spayfw.appinterface.ProvisionTokenInfo;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.c;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
@@ -31,8 +32,6 @@ import com.samsung.android.spayfw.payprovider.mastercard.card.McCardMaster;
 import com.samsung.android.spayfw.payprovider.mastercard.dao.McCardMasterDaoImpl;
 import com.samsung.android.spayfw.payprovider.mastercard.payload.datamodels.GetTokenResponse;
 import com.samsung.android.spayfw.payprovider.mastercard.tds.McTdsManager;
-import com.samsung.android.spayfw.payprovider.mastercard.tokenmanagement.McDecisioningData;
-import com.samsung.android.spayfw.payprovider.mastercard.tokenmanagement.McTokenProvisioningHandler;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
 
 public class McTokenManager {
@@ -54,7 +53,7 @@ public class McTokenManager {
         }
         GetTokenResponse getTokenResponse = GetTokenResponse.parseJson(jsonObject);
         if (getTokenResponse == null) {
-            com.samsung.android.spayfw.b.c.e(TDS_TAG_ERROR, "extractTds:McTds Parsing error");
+            Log.e(TDS_TAG_ERROR, "extractTds:McTds Parsing error");
             return -2;
         }
         String string = getTokenResponse.getTdsRegistrationUrl();
@@ -71,7 +70,7 @@ public class McTokenManager {
     }
 
     private void unRegisterTds(long l2) {
-        com.samsung.android.spayfw.b.c.i(TDS_TAG_INFO, "unRegisterTds:McTds Unregistering tds : " + l2);
+        Log.i(TDS_TAG_INFO, "unRegisterTds:McTds Unregistering tds : " + l2);
         McTdsManager.getInstance(l2).unRegister();
     }
 
@@ -85,36 +84,36 @@ public class McTokenManager {
     public void deleteToken(f var1_1) {
         if (var1_1 != null) ** GOTO lbl8
         try {
-            com.samsung.android.spayfw.b.c.i("McTokenManager", "deleteToken: Delete called .. Remove leftover data");
+            Log.i("McTokenManager", "deleteToken: Delete called .. Remove leftover data");
             var4_2 = this.mMcTokenProvisioningHandler.getDbReference();
             if (this.mMcTokenProvisioningHandler.cleanupDbReference(var4_2, this.mCardMasterDaoImpl) != false) return;
-            com.samsung.android.spayfw.b.c.e("McTokenManager", "deleteToken: Delete operation failed for dbReference: " + var4_2);
+            Log.e("McTokenManager", "deleteToken: Delete operation failed for dbReference: " + var4_2);
             return;
 lbl8: // 1 sources:
             if ((McCardMaster)this.mCardMasterDaoImpl.getData(var1_1.cm()) == null) return;
-            com.samsung.android.spayfw.b.c.d("McTokenManager", "deleteToken: Delete tokenId: " + var1_1.cm());
+            Log.d("McTokenManager", "deleteToken: Delete tokenId: " + var1_1.cm());
             if (this.mCardMasterDaoImpl.deleteData(var1_1.cm()) != false) return;
-            com.samsung.android.spayfw.b.c.e("McTokenManager", "deleteToken: MC Token delete failed : " + var1_1.cm());
+            Log.e("McTokenManager", "deleteToken: MC Token delete failed : " + var1_1.cm());
             return;
         }
         catch (NullPointerException var3_3) {
             var3_3.printStackTrace();
-            com.samsung.android.spayfw.b.c.e("McTokenManager", "deleteToken: Null Exception during MC Token delete : " + var3_3.getMessage());
+            Log.e("McTokenManager", "deleteToken: Null Exception during MC Token delete : " + var3_3.getMessage());
             return;
         }
         catch (Exception var2_4) {
             var2_4.printStackTrace();
-            com.samsung.android.spayfw.b.c.e("McTokenManager", "deleteToken: Exception during MC Token delete : " + var2_4.getMessage());
+            Log.e("McTokenManager", "deleteToken: Exception during MC Token delete : " + var2_4.getMessage());
         }
     }
 
     public c getEnrollmentMcData(EnrollCardInfo enrollCardInfo, BillingInfo billingInfo) {
         c c2 = this.mMcTokenProvisioningHandler.getEnrollmentMcData(enrollCardInfo, billingInfo);
         if (c2.getErrorCode() != 0) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Failed to create Enrollment Request" + c2.getErrorCode());
+            Log.e(TAG, "Failed to create Enrollment Request" + c2.getErrorCode());
             return c2;
         }
-        com.samsung.android.spayfw.b.c.d(TAG, "Generated Mc Json : " + c2.ch().toString());
+        Log.d(TAG, "Generated Mc Json : " + c2.ch().toString());
         return c2;
     }
 
@@ -144,18 +143,18 @@ lbl8: // 1 sources:
      */
     public boolean updateMcCerts(CertificateInfo[] arrcertificateInfo) {
         byte[] arrby = null;
-        com.samsung.android.spayfw.b.c.d(TAG, "updateMcCerts called: ");
+        Log.d(TAG, "updateMcCerts called: ");
         if (arrcertificateInfo == null || arrcertificateInfo.length != 2) {
-            com.samsung.android.spayfw.b.c.e(TAG, "updateMcCerts called with invalid number of  certifcates: ");
+            Log.e(TAG, "updateMcCerts called with invalid number of  certifcates: ");
             if (arrcertificateInfo != null) {
-                com.samsung.android.spayfw.b.c.e(TAG, "invalid certificates length :" + arrcertificateInfo.length);
+                Log.e(TAG, "invalid certificates length :" + arrcertificateInfo.length);
             }
             return false;
         }
         byte[] arrby2 = null;
         for (int i2 = 0; i2 < 2; ++i2) {
             if (arrcertificateInfo[i2] == null || TextUtils.isEmpty((CharSequence)arrcertificateInfo[i2].getAlias())) {
-                com.samsung.android.spayfw.b.c.e(TAG, "Empty certificate recevied");
+                Log.e(TAG, "Empty certificate recevied");
                 return false;
             }
             try {
@@ -164,7 +163,7 @@ lbl8: // 1 sources:
             }
             catch (NullPointerException nullPointerException) {
                 nullPointerException.printStackTrace();
-                com.samsung.android.spayfw.b.c.e(TAG, "NPE Err in certificate recevied:" + nullPointerException.getMessage());
+                Log.e(TAG, "NPE Err in certificate recevied:" + nullPointerException.getMessage());
                 return false;
             }
             if (arrcertificateInfo[i2].getAlias().equalsIgnoreCase(CertName.RGK.getName())) {
@@ -176,10 +175,10 @@ lbl8: // 1 sources:
         }
         if (arrby2 != null && arrby != null) {
             this.mMcTokenProvisioningHandler.setMcCerts(arrby2, arrby);
-            com.samsung.android.spayfw.b.c.d(TAG, "updateMcCerts: successful");
+            Log.d(TAG, "updateMcCerts: successful");
             return true;
         }
-        com.samsung.android.spayfw.b.c.e(TAG, "updateMcCerts: failed");
+        Log.e(TAG, "updateMcCerts: failed");
         return false;
     }
 
@@ -193,11 +192,11 @@ lbl8: // 1 sources:
                 block19 : {
                     var4_4 = new e();
                     if (!var3_3.getCode().equalsIgnoreCase("DISPOSED")) break block18;
-                    com.samsung.android.spayfw.b.c.i("i__McTokenManager", "updateTokenData: DISPOSED");
+                    Log.i("i__McTokenManager", "updateTokenData: DISPOSED");
                     this.unRegisterTds(var1_1.cm());
                     var6_6 = var11_5 = this.mCardMasterDaoImpl.deleteData(var1_1.cm());
                     if (var6_6) break block19;
-                    com.samsung.android.spayfw.b.c.e("McTokenManager", "updateTokenData: failed to delete token in Card DB: ");
+                    Log.e("McTokenManager", "updateTokenData: failed to delete token in Card DB: ");
                 }
                 if (var6_6) {
                     var4_4.setErrorCode(0);
@@ -211,16 +210,16 @@ lbl13: // 2 sources:
                 ** while (true)
             }
             if (var3_3.getCode().equalsIgnoreCase("SUSPENDED")) {
-                com.samsung.android.spayfw.b.c.i("i__McTokenManager", "updateTokenData: SUSPENDED");
+                Log.i("i__McTokenManager", "updateTokenData: SUSPENDED");
                 this.unRegisterTds(var1_1.cm());
             }
             var8_7 = (McCardMaster)this.mCardMasterDaoImpl.getData(var1_1.cm());
             var8_7.setStatus(var3_3.getCode());
             var6_6 = var9_8 = this.mCardMasterDaoImpl.updateData(var8_7, var1_1.cm());
             try {
-                com.samsung.android.spayfw.b.c.d("McTokenManager", "DB Row Id: " + var1_1.cm() + ", Status: " + var3_3.getCode() + ", DB Update result: " + var6_6);
+                Log.d("McTokenManager", "DB Row Id: " + var1_1.cm() + ", Status: " + var3_3.getCode() + ", DB Update result: " + var6_6);
                 if (var3_3.getCode().equalsIgnoreCase("ACTIVE")) {
-                    com.samsung.android.spayfw.b.c.i("i__McTokenManager", "updateTokenData: ACTIVE");
+                    Log.i("i__McTokenManager", "updateTokenData: ACTIVE");
                     this.checkTds(var2_2, var1_1.cm());
                 }
                 if (!var6_6) break block20;
@@ -243,7 +242,7 @@ lbl39: // 2 sources:
             do {
                 block21 : {
                     var7_10.printStackTrace();
-                    com.samsung.android.spayfw.b.c.e("McTokenManager", "updateTokenData: exception occured: " + var7_10.getMessage());
+                    Log.e("McTokenManager", "updateTokenData: exception occured: " + var7_10.getMessage());
                     if (!var6_6) break block21;
                     var4_4.setErrorCode(0);
                     ** GOTO lbl32

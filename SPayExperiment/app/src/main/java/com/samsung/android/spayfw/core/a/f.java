@@ -14,7 +14,6 @@
 package com.samsung.android.spayfw.core.a;
 
 import android.content.Context;
-import android.os.Message;
 import android.os.RemoteException;
 import com.samsung.android.spayfw.appinterface.ExtractGiftCardDetailRequest;
 import com.samsung.android.spayfw.appinterface.GiftCardDetail;
@@ -25,17 +24,14 @@ import com.samsung.android.spayfw.appinterface.IGiftCardRegisterCallback;
 import com.samsung.android.spayfw.appinterface.IPayCallback;
 import com.samsung.android.spayfw.appinterface.PayConfig;
 import com.samsung.android.spayfw.appinterface.SecuredObject;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.a;
-import com.samsung.android.spayfw.core.a.n;
-import com.samsung.android.spayfw.core.a.o;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.e;
 import com.samsung.android.spayfw.core.i;
 import com.samsung.android.spayfw.core.j;
 import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
-import com.samsung.android.spayfw.storage.TokenRecordStorage;
 import com.samsung.android.spayfw.storage.models.PaymentDetailsRecord;
 import com.samsung.android.spaytzsvc.api.TAException;
 
@@ -51,11 +47,11 @@ extends o {
     private void d(PaymentDetailsRecord paymentDetailsRecord) {
         i i2 = PaymentFrameworkApp.az();
         if (i2 != null) {
-            com.samsung.android.spayfw.b.c.d("GiftCardProcessor", "Post PAYFW_OPT_ANALYTICS_REPORT request");
+            Log.d("GiftCardProcessor", "Post PAYFW_OPT_ANALYTICS_REPORT request");
             i2.sendMessage(j.a(21, paymentDetailsRecord, null));
             return;
         }
-        com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "HANDLER IS NOT INITIAILIZED");
+        Log.e("GiftCardProcessor", "HANDLER IS NOT INITIAILIZED");
     }
 
     /*
@@ -71,7 +67,7 @@ extends o {
                 return le;
             }
             catch (TAException tAException) {
-                com.samsung.android.spayfw.b.c.c("GiftCardProcessor", tAException.getMessage(), (Throwable)((Object)tAException));
+                Log.c("GiftCardProcessor", tAException.getMessage(), (Throwable)((Object)tAException));
                 return null;
             }
         }
@@ -87,11 +83,11 @@ extends o {
     protected c M(String var1_1) {
         var2_2 = null;
         if (this.iJ == null) {
-            com.samsung.android.spayfw.b.c.d("GiftCardProcessor", "Initializing Samsung Account - userId = " + var1_1);
+            Log.d("GiftCardProcessor", "Initializing Samsung Account - userId = " + var1_1);
             this.iJ = a.a(this.mContext, var1_1);
         }
         if (this.iJ == null) {
-            com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "unable to create account");
+            Log.e("GiftCardProcessor", "unable to create account");
             return null;
         }
         var5_3 = this.iJ.r("GIFT");
@@ -106,7 +102,7 @@ extends o {
             var2_2.a(var6_4);
             this.iJ.a(var2_2);
             if (var2_2.ad() != null) {
-                com.samsung.android.spayfw.b.c.d("GiftCardProcessor", "Set Provider Token Key for Gift Card");
+                Log.d("GiftCardProcessor", "Set Provider Token Key for Gift Card");
                 var2_2.ad().setProviderTokenKey(var7_5);
             }
             var9_6 = new com.samsung.android.spayfw.storage.models.a("GIFT");
@@ -129,7 +125,7 @@ extends o {
         }
 lbl-1000: // 2 sources:
         {
-            com.samsung.android.spayfw.b.c.c("GiftCardProcessor", var3_10.getMessage(), var3_10);
+            Log.c("GiftCardProcessor", var3_10.getMessage(), var3_10);
             return var2_2;
         }
         catch (TAException var11_12) {
@@ -138,7 +134,7 @@ lbl-1000: // 2 sources:
         }
 lbl-1000: // 2 sources:
         {
-            com.samsung.android.spayfw.b.c.c("GiftCardProcessor", var4_8.getMessage(), (Throwable)var4_8);
+            Log.c("GiftCardProcessor", var4_8.getMessage(), (Throwable)var4_8);
             return var2_2;
         }
     }
@@ -158,7 +154,7 @@ lbl-1000: // 2 sources:
                 block14 : {
                     string = null;
                     try {
-                        com.samsung.android.spayfw.b.c.d("GiftCardProcessor", "extractGiftCardDetail()");
+                        Log.d("GiftCardProcessor", "extractGiftCardDetail()");
                         if (extractGiftCardDetailRequest != null) {
                             arrby = extractGiftCardDetailRequest.getTzEncData();
                             arrby2 = extractGiftCardDetailRequest.getCardRefID();
@@ -173,23 +169,23 @@ lbl-1000: // 2 sources:
                         if (iGiftCardExtractDetailCallback != null) {
                             iGiftCardExtractDetailCallback.onFail(-5);
                         } else {
-                            com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "pay callback is null");
+                            Log.e("GiftCardProcessor", "pay callback is null");
                         }
                         if (arrby == null) {
-                            com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "extractGiftCardDetail- invalid inputs: giftCardTzEncData is null");
+                            Log.e("GiftCardProcessor", "extractGiftCardDetail- invalid inputs: giftCardTzEncData is null");
                             break block13;
                         }
                         if (securedObject != null) break block14;
-                        com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "extractGiftCardDetail- invalid inputs: secObj is null");
+                        Log.e("GiftCardProcessor", "extractGiftCardDetail- invalid inputs: secObj is null");
                         break block13;
                     }
                     catch (RemoteException remoteException) {
-                        com.samsung.android.spayfw.b.c.c("GiftCardProcessor", remoteException.getMessage(), remoteException);
+                        Log.c("GiftCardProcessor", remoteException.getMessage(), remoteException);
                         com.samsung.android.spayfw.core.f.j(this.mContext).ap();
                         return;
                     }
                 }
-                com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "extractGiftCardDetail- invalid inputs: callback is null");
+                Log.e("GiftCardProcessor", "extractGiftCardDetail- invalid inputs: callback is null");
             }
             com.samsung.android.spayfw.core.f.j(this.mContext).ap();
             return;
@@ -197,7 +193,7 @@ lbl-1000: // 2 sources:
         c c2 = this.M(null);
         if (c2 == null || c2.ad() == null) {
             iGiftCardExtractDetailCallback.onFail(-1);
-            com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "extractGiftCardDetail - unable to get card Object");
+            Log.e("GiftCardProcessor", "extractGiftCardDetail - unable to get card Object");
             com.samsung.android.spayfw.core.f.j(this.mContext).ap();
             return;
         }
@@ -228,43 +224,43 @@ lbl-1000: // 2 sources:
         c c2;
         GiftCardRegisterResponseData giftCardRegisterResponseData = new GiftCardRegisterResponseData();
         try {
-            com.samsung.android.spayfw.b.c.d("GiftCardProcessor", "getGiftCardRegisterData()");
+            Log.d("GiftCardProcessor", "getGiftCardRegisterData()");
             if (giftCardRegisterRequestData == null || iGiftCardRegisterCallback == null) {
                 if (iGiftCardRegisterCallback != null) {
-                    com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "getGiftCardRegisterData- invalid inputs: data is null");
+                    Log.e("GiftCardProcessor", "getGiftCardRegisterData- invalid inputs: data is null");
                     iGiftCardRegisterCallback.onFail(-5, giftCardRegisterResponseData);
                     return;
                 }
-                com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "getGiftCardRegisterData- invalid inputs: callback is null");
+                Log.e("GiftCardProcessor", "getGiftCardRegisterData- invalid inputs: callback is null");
                 return;
             }
             if (giftCardRegisterRequestData.getGiftCardData() == null || giftCardRegisterRequestData.getServerCaCert() == null || giftCardRegisterRequestData.getServerEncCert() == null || giftCardRegisterRequestData.getServerVerCert() == null || giftCardRegisterRequestData.getUserId() == null || giftCardRegisterRequestData.getWalletId() == null) {
-                com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "getGiftCardRegisterData- invalid data");
+                Log.e("GiftCardProcessor", "getGiftCardRegisterData- invalid data");
                 iGiftCardRegisterCallback.onFail(-5, giftCardRegisterResponseData);
                 return;
             }
         }
         catch (RemoteException remoteException) {
-            com.samsung.android.spayfw.b.c.c("GiftCardProcessor", remoteException.getMessage(), remoteException);
+            Log.c("GiftCardProcessor", remoteException.getMessage(), remoteException);
             return;
         }
-        com.samsung.android.spayfw.b.c.d("GiftCardProcessor", "Wallet ID =  " + giftCardRegisterRequestData.getWalletId());
+        Log.d("GiftCardProcessor", "Wallet ID =  " + giftCardRegisterRequestData.getWalletId());
         String string = e.h(this.mContext).getConfig("CONFIG_WALLET_ID");
         if (string == null) {
             int n2 = e.h(this.mContext).setConfig("CONFIG_WALLET_ID", giftCardRegisterRequestData.getWalletId());
-            com.samsung.android.spayfw.b.c.i("GiftCardProcessor", "Wallet ID Set: " + n2);
+            Log.i("GiftCardProcessor", "Wallet ID Set: " + n2);
             if (n2 != 0) {
                 iGiftCardRegisterCallback.onFail(-5, null);
                 return;
             }
         } else if (!string.equals((Object)giftCardRegisterRequestData.getWalletId())) {
-            com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "Wallet ID Mismatched");
+            Log.e("GiftCardProcessor", "Wallet ID Mismatched");
             iGiftCardRegisterCallback.onFail(-208, null);
             return;
         }
         if ((c2 = this.M(giftCardRegisterRequestData.getUserId())) == null || c2.ad() == null) {
             iGiftCardRegisterCallback.onFail(-1, giftCardRegisterResponseData);
-            com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "getGiftCardRegisterData- unable to get card Object");
+            Log.e("GiftCardProcessor", "getGiftCardRegisterData- unable to get card Object");
             return;
         }
         GiftCardRegisterResponseData giftCardRegisterResponseData2 = c2.ad().getGiftCardRegisterDataTA(giftCardRegisterRequestData);
@@ -282,26 +278,26 @@ lbl-1000: // 2 sources:
      */
     public void a(byte[] arrby, byte[] arrby2, SecuredObject securedObject, PayConfig payConfig, IPayCallback iPayCallback) {
         try {
-            com.samsung.android.spayfw.b.c.d("GiftCardProcessor", "startGiftCardPay()");
+            Log.d("GiftCardProcessor", "startGiftCardPay()");
             if (arrby2 == null || iPayCallback == null || securedObject == null) {
                 if (iPayCallback != null) {
-                    com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "startGiftCardPay- invalid inputs: data is null");
+                    Log.e("GiftCardProcessor", "startGiftCardPay- invalid inputs: data is null");
                     iPayCallback.onFail("GIFT", -5);
                 }
                 if (arrby2 == null) {
-                    com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "startGiftCardPay- invalid inputs: giftCardTzEncData is null");
+                    Log.e("GiftCardProcessor", "startGiftCardPay- invalid inputs: giftCardTzEncData is null");
                     return;
                 }
                 if (securedObject == null) {
-                    com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "startGiftCardPay- invalid inputs: secObj is null");
+                    Log.e("GiftCardProcessor", "startGiftCardPay- invalid inputs: secObj is null");
                     return;
                 }
-                com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "startGiftCardPay- invalid inputs: callback is null");
+                Log.e("GiftCardProcessor", "startGiftCardPay- invalid inputs: callback is null");
                 return;
             }
         }
         catch (RemoteException remoteException) {
-            com.samsung.android.spayfw.b.c.c("GiftCardProcessor", remoteException.getMessage(), remoteException);
+            Log.c("GiftCardProcessor", remoteException.getMessage(), remoteException);
             return;
         }
         c c2 = this.M(null);
@@ -309,14 +305,14 @@ lbl-1000: // 2 sources:
             if (iPayCallback != null) {
                 iPayCallback.onFail("GIFT", -1);
             }
-            com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "startGiftCardPay - unable to get card Object");
+            Log.e("GiftCardProcessor", "startGiftCardPay - unable to get card Object");
             return;
         }
         GiftCardDetail giftCardDetail = c2.ad().extractGiftCardDetailTA(arrby, arrby2, securedObject, true);
         if (giftCardDetail.getErrorCode() == 0) {
-            com.samsung.android.spayfw.b.c.d("GiftCardProcessor", "startGiftCardPay - extract giftCardDetail success");
+            Log.d("GiftCardProcessor", "startGiftCardPay - extract giftCardDetail success");
         }
-        com.samsung.android.spayfw.b.c.d("GiftCardProcessor", "startGiftCardPay - invoking onExtractGiftCardDetail cb");
+        Log.d("GiftCardProcessor", "startGiftCardPay - invoking onExtractGiftCardDetail cb");
         iPayCallback.onExtractGiftCardDetail(giftCardDetail);
         c2.ad().setCardTzEncData(arrby2);
         if (n.q(this.mContext) != null) {
@@ -332,30 +328,30 @@ lbl-1000: // 2 sources:
     public void b(GiftCardRegisterRequestData giftCardRegisterRequestData, IGiftCardRegisterCallback iGiftCardRegisterCallback) {
         GiftCardRegisterResponseData giftCardRegisterResponseData = new GiftCardRegisterResponseData();
         try {
-            com.samsung.android.spayfw.b.c.d("GiftCardProcessor", "getGiftCardTzEncData()");
+            Log.d("GiftCardProcessor", "getGiftCardTzEncData()");
             if (giftCardRegisterRequestData == null || iGiftCardRegisterCallback == null) {
                 if (iGiftCardRegisterCallback != null) {
-                    com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "getGiftCardTzEncData- invalid inputs: data is null");
+                    Log.e("GiftCardProcessor", "getGiftCardTzEncData- invalid inputs: data is null");
                     iGiftCardRegisterCallback.onFail(-5, giftCardRegisterResponseData);
                     return;
                 }
-                com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "getGiftCardTzEncData- invalid inputs: callback is null");
+                Log.e("GiftCardProcessor", "getGiftCardTzEncData- invalid inputs: callback is null");
                 return;
             }
             if (giftCardRegisterRequestData.getGiftCardData() == null || giftCardRegisterRequestData.getServerCaCert() == null || giftCardRegisterRequestData.getServerEncCert() == null || giftCardRegisterRequestData.getServerVerCert() == null) {
-                com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "getGiftCardTzEncData- invalid data");
+                Log.e("GiftCardProcessor", "getGiftCardTzEncData- invalid data");
                 iGiftCardRegisterCallback.onFail(-5, giftCardRegisterResponseData);
                 return;
             }
         }
         catch (RemoteException remoteException) {
-            com.samsung.android.spayfw.b.c.c("GiftCardProcessor", remoteException.getMessage(), remoteException);
+            Log.c("GiftCardProcessor", remoteException.getMessage(), remoteException);
             return;
         }
         c c2 = this.M(null);
         if (c2 == null || c2.ad() == null) {
             iGiftCardRegisterCallback.onFail(-1, giftCardRegisterResponseData);
-            com.samsung.android.spayfw.b.c.e("GiftCardProcessor", "getGiftCardTzEncData- unable to get card Object");
+            Log.e("GiftCardProcessor", "getGiftCardTzEncData- unable to get card Object");
             return;
         }
         GiftCardRegisterResponseData giftCardRegisterResponseData2 = c2.ad().getGiftCardTzEncDataTA(giftCardRegisterRequestData);

@@ -25,10 +25,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.SDAException;
 import com.samsung.sensorframework.sda.b.a;
 import com.samsung.sensorframework.sda.b.a.m;
-import com.samsung.sensorframework.sda.d.a.b;
 import com.samsung.sensorframework.sda.d.c;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ extends b {
         this.Jp = (SensorManager)context.getSystemService("sensor");
         int n3 = this.aq(n2);
         if (this.Jp.getDefaultSensor(n3) == null) {
-            com.samsung.android.spayfw.b.c.d(this.he(), "no sensor hardware available");
+            Log.d(this.he(), "no sensor hardware available");
             throw new SDAException(8015, "sensor hardware not available on the phone");
         }
         this.Jo = new SensorEventListener(){

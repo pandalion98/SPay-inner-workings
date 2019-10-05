@@ -10,14 +10,11 @@
 package com.samsung.android.spayfw.payprovider.mastercard.pce.context;
 
 import android.os.Bundle;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.context.SimplePayContextImpl;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.context.TapNGoContextImpl;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.context.filtercriteria.MCFilterCriteria;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionCompleteResult;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionCredentials;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionResult;
-import java.util.List;
 
 public class SimplePayContextWithFeedbackImpl
 extends SimplePayContextImpl {
@@ -25,7 +22,7 @@ extends SimplePayContextImpl {
 
     public SimplePayContextWithFeedbackImpl(MCTransactionCredentials mCTransactionCredentials) {
         super(mCTransactionCredentials);
-        c.i(TAG, "SimplePay detected");
+        Log.i(TAG, "SimplePay detected");
     }
 
     private boolean isTerminalTapNGoCapable() {
@@ -59,7 +56,7 @@ extends SimplePayContextImpl {
         if (bundle == null || !this.getTransactionResult().isTerminalTapNGo()) {
             return;
         }
-        c.i(TAG, "SimplePayContext: Terminal is tap&Go capable!!!");
+        Log.i(TAG, "SimplePayContext: Terminal is tap&Go capable!!!");
         bundle.putInt("tapNGotransactionErrorCode", 0);
     }
 
@@ -69,7 +66,7 @@ extends SimplePayContextImpl {
         this.setNfcError(bundle);
         this.setTransitError(bundle);
         this.setMerchantNameLocation(bundle);
-        c.d(TAG, "stopNfc bundle:" + bundle.toString());
+        Log.d(TAG, "stopNfc bundle:" + bundle.toString());
         return bundle;
     }
 }

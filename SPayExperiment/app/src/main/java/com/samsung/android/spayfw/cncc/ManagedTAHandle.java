@@ -10,7 +10,7 @@
  */
 package com.samsung.android.spayfw.cncc;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.TAController;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -34,7 +34,7 @@ public class ManagedTAHandle {
     }
 
     private void unloadTA() {
-        c.d(TAG, "Inside unloadTA");
+        Log.d(TAG, "Inside unloadTA");
         this.mTAController.unloadTA();
         this.mTimer.cancel();
         this.mTimer = null;
@@ -43,10 +43,10 @@ public class ManagedTAHandle {
     }
 
     public void loadTA() {
-        c.d(TAG, "Inside loadTA");
+        Log.d(TAG, "Inside loadTA");
         try {
             if (!this.mTALoaded) {
-                c.d(TAG, "Do Load TA");
+                Log.d(TAG, "Do Load TA");
                 this.mTAController.loadTA();
                 this.mTimer = new Timer();
                 this.mTAUnLoadTimerTask = new TAUnLoadTimerTask();
@@ -54,7 +54,7 @@ public class ManagedTAHandle {
                 this.mTALoaded = true;
                 return;
             }
-            c.d(TAG, "Just reset unload timer. TA is already loaded");
+            Log.d(TAG, "Just reset unload timer. TA is already loaded");
             this.mTimer.cancel();
             this.mTimer = new Timer();
             this.mTAUnLoadTimerTask = new TAUnLoadTimerTask();
@@ -77,7 +77,7 @@ public class ManagedTAHandle {
         }
 
         public void run() {
-            c.d(ManagedTAHandle.TAG, "TimerExpired::run: unloading TA");
+            Log.d(ManagedTAHandle.TAG, "TimerExpired::run: unloading TA");
             ManagedTAHandle.this.unloadTA();
         }
     }

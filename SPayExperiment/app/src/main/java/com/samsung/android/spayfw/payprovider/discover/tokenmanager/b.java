@@ -33,12 +33,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.samsung.android.spayfw.appinterface.BillingInfo;
-import com.samsung.android.spayfw.appinterface.EnrollCardPanInfo;
-import com.samsung.android.spayfw.appinterface.EnrollCardReferenceInfo;
-import com.samsung.android.spayfw.appinterface.ProvisionTokenInfo;
-import com.samsung.android.spayfw.appinterface.TokenStatus;
-import com.samsung.android.spayfw.payprovider.RiskDataParam;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.c;
 import com.samsung.android.spayfw.payprovider.discover.db.DcDbException;
 import com.samsung.android.spayfw.payprovider.discover.db.DcStorageManager;
@@ -51,13 +46,10 @@ import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.Disc
 import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverIssuerOptions;
 import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverPaymentCard;
 import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverPaymentProfile;
-import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverRecord;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.ByteBuffer;
-import com.samsung.android.spayfw.payprovider.discover.tokenmanager.a;
 import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.AccountEligibilityRequestData;
 import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.AccountProvisionRequestData;
 import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.ClearCardInfo;
-import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.ClearProfileData;
 import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.ClearProvisionData;
 import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.ClearRefreshCredentialsRequestData;
 import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.DevicePublicKeyContext;
@@ -65,14 +57,11 @@ import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.Provi
 import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.RefreshCredentialsRequestData;
 import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.RefreshCredentialsResponseData;
 import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.SecureContext;
-import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.TransactionProfile;
-import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.TransactionProfilesContainer;
-import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.ZIP_MS_TransactionProfile;
 import com.samsung.android.spayfw.payprovider.discover.tzsvc.DcTACommands;
 import com.samsung.android.spayfw.payprovider.discover.tzsvc.DcTAException;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
-import java.io.Serializable;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -124,12 +113,12 @@ public class b {
                     var6_5.setFciDebitAid(ByteBuffer.fromHexString(var11_9));
                 }
                 var6_5.setFciMainAid(ByteBuffer.fromHexString(var4_3.getDPAS_AID_FCI()));
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Start parsing PPSE FCI");
+                Log.d("DCSDK_DcTokenManager", "Start parsing PPSE FCI");
                 var78_10 = com.samsung.android.spayfw.payprovider.discover.payment.utils.a.G(ByteBuffer.fromHexString(var4_3.getPPSE_FCI()));
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Parsing PPSE FCI completed.");
+                Log.d("DCSDK_DcTokenManager", "Parsing PPSE FCI completed.");
                 if (var78_10 == null) break block42;
                 for (ByteBuffer var80_12 : var78_10) {
-                    com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "AID: " + var80_12.toHexString());
+                    Log.d("DCSDK_DcTokenManager", "AID: " + var80_12.toHexString());
                 }
                 var6_5.setAliasList(var78_10);
                 ** GOTO lbl51
@@ -138,23 +127,23 @@ public class b {
 lbl37: // 1 sources:
         }
         catch (NullPointerException var8_56) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "NPE while processing Profile Data: " + var8_56.getMessage());
+            Log.e("DCSDK_DcTokenManager", "NPE while processing Profile Data: " + var8_56.getMessage());
             var8_56.printStackTrace();
             return null;
         }
         {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "Alias list cannot be parsed, returned null.");
+            Log.e("DCSDK_DcTokenManager", "Alias list cannot be parsed, returned null.");
             ** GOTO lbl51
         }
 lbl44: // 2 sources:
         catch (ParseException var77_13) {
             block43 : {
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "ParseException while parsing PPSE FCI: " + var77_13.toString());
+                Log.e("DCSDK_DcTokenManager", "ParseException while parsing PPSE FCI: " + var77_13.toString());
                 var77_13.printStackTrace();
                 break block43;
 lbl48: // 2 sources:
                 catch (Exception var12_55) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "Unexpected exception while parsing PPSE FCI: " + var12_55.toString());
+                    Log.e("DCSDK_DcTokenManager", "Unexpected exception while parsing PPSE FCI: " + var12_55.toString());
                     var12_55.printStackTrace();
                 }
             }
@@ -174,7 +163,7 @@ lbl48: // 2 sources:
                     var15_16.add((Object)new DiscoverIDDTag(var16_17, DiscoverIDDTag.IDDT_DF01));
                 }
                 catch (ParseException var75_57) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "ParseException has been thrown...");
+                    Log.e("DCSDK_DcTokenManager", "ParseException has been thrown...");
                     var75_57.printStackTrace();
                 }
             }
@@ -183,7 +172,7 @@ lbl48: // 2 sources:
                     var15_16.add((Object)new DiscoverIDDTag(var17_18, DiscoverIDDTag.IDDT_DF02));
                 }
                 catch (ParseException var73_58) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "ParseException has been thrown...");
+                    Log.e("DCSDK_DcTokenManager", "ParseException has been thrown...");
                     var73_58.printStackTrace();
                 }
             }
@@ -192,12 +181,12 @@ lbl48: // 2 sources:
                     var15_16.add((Object)new DiscoverIDDTag(var18_19, DiscoverIDDTag.IDDT_DF03));
                 }
                 catch (ParseException var71_59) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "ParseException has been thrown...");
+                    Log.e("DCSDK_DcTokenManager", "ParseException has been thrown...");
                     var71_59.printStackTrace();
                 }
             }
             if (!var15_16.isEmpty()) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Add IDD tags to the payment data.");
+                Log.d("DCSDK_DcTokenManager", "Add IDD tags to the payment data.");
                 var13_14.setIDDTags((List<DiscoverIDDTag>)var15_16);
             }
             var6_5.setIssuerApplicationData(var13_14);
@@ -213,116 +202,116 @@ lbl48: // 2 sources:
             var6_5.setServiceCode(var4_3.getService_Code());
             var6_5.setPth(ByteBuffer.fromHexString("0000"));
             if (var4_3.getPDOL_Profile_check() != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "PDOL profile check not null: " + var4_3.getPDOL_Profile_check());
+                Log.d("DCSDK_DcTokenManager", "PDOL profile check not null: " + var4_3.getPDOL_Profile_check());
                 var6_5.setPDOLProfileCheckTable(ByteBuffer.fromHexString(var4_3.getPDOL_Profile_check()));
                 try {
                     var6_5.setPdolProfileEntries(PDOLCheckEntry.parsePdolEntries(ByteBuffer.fromHexString(var4_3.getPDOL_Profile_check())));
                 }
                 catch (ParseException var70_60) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "TransactionProfilesContainerJSON: ParseException in parsing PDOL_profile_check.");
+                    Log.e("DCSDK_DcTokenManager", "TransactionProfilesContainerJSON: ParseException in parsing PDOL_profile_check.");
                     var70_60.printStackTrace();
                 }
             }
             var20_21 = var4_3.getProfiles();
-            com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "TransactionProfilesContainerJSON: " + b.mGson.toJson((Object)var20_21));
+            Log.d("DCSDK_DcTokenManager", "TransactionProfilesContainerJSON: " + b.mGson.toJson((Object)var20_21));
             var21_22 = new HashMap();
             var22_23 = var20_21.getBF50();
             if (var22_23 != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - BF50: " + b.mGson.toJson((Object)var22_23));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - BF50: " + b.mGson.toJson((Object)var22_23));
                 var23_24 = b.a(var22_23, 0);
                 var21_22.put((Object)0, (Object)var23_24);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 0);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "TokenManager cvm counter: " + var23_24.getCVM().getCvmCounter());
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 0);
+                Log.d("DCSDK_DcTokenManager", "TokenManager cvm counter: " + var23_24.getCVM().getCvmCounter());
             }
             if ((var25_25 = var20_21.getDF21()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF21: " + b.mGson.toJson((Object)var25_25));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF21: " + b.mGson.toJson((Object)var25_25));
                 var26_26 = b.a(var25_25, 1);
                 var21_22.put((Object)1, (Object)var26_26);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 1);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 1);
             }
             if ((var28_27 = var20_21.getDF22()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF22: " + b.mGson.toJson((Object)var28_27));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF22: " + b.mGson.toJson((Object)var28_27));
                 var29_28 = b.a(var28_27, 2);
                 var21_22.put((Object)2, (Object)var29_28);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 2);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 2);
             }
             if ((var31_29 = var20_21.getDF23()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF23: " + b.mGson.toJson((Object)var31_29));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF23: " + b.mGson.toJson((Object)var31_29));
                 var32_30 = b.a(var31_29, 3);
                 var21_22.put((Object)3, (Object)var32_30);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 3);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 3);
             }
             if ((var34_31 = var20_21.getDF24()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF24: " + b.mGson.toJson((Object)var34_31));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF24: " + b.mGson.toJson((Object)var34_31));
                 var35_32 = b.a(var34_31, 4);
                 var21_22.put((Object)4, (Object)var35_32);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 4);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 4);
             }
             if ((var37_33 = var20_21.getDF25()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF25: " + b.mGson.toJson((Object)var37_33));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF25: " + b.mGson.toJson((Object)var37_33));
                 var38_34 = b.a(var37_33, 5);
                 var21_22.put((Object)5, (Object)var38_34);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 5);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 5);
             }
             if ((var40_35 = var20_21.getDF26()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF26: " + b.mGson.toJson((Object)var40_35));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF26: " + b.mGson.toJson((Object)var40_35));
                 var41_36 = b.a(var40_35, 6);
                 var21_22.put((Object)6, (Object)var41_36);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 6);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 6);
             }
             if ((var43_37 = var20_21.getDF27()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF27: " + b.mGson.toJson((Object)var43_37));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF27: " + b.mGson.toJson((Object)var43_37));
                 var44_38 = b.a(var43_37, 7);
                 var21_22.put((Object)7, (Object)var44_38);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 7);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 7);
             }
             if ((var46_39 = var20_21.getDF28()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF28: " + b.mGson.toJson((Object)var46_39));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF28: " + b.mGson.toJson((Object)var46_39));
                 var47_40 = b.a(var46_39, 8);
                 var21_22.put((Object)8, (Object)var47_40);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 8);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 8);
             }
             if ((var49_41 = var20_21.getDF29()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF29: " + b.mGson.toJson((Object)var49_41));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF29: " + b.mGson.toJson((Object)var49_41));
                 var50_42 = b.a(var49_41, 9);
                 var21_22.put((Object)9, (Object)var50_42);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 9);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 9);
             }
             if ((var52_43 = var20_21.getDF2A()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2A: " + b.mGson.toJson((Object)var52_43));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2A: " + b.mGson.toJson((Object)var52_43));
                 var53_44 = b.a(var52_43, 10);
                 var21_22.put((Object)10, (Object)var53_44);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 10);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 10);
             }
             if ((var55_45 = var20_21.getDF2B()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2B: " + b.mGson.toJson((Object)var55_45));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2B: " + b.mGson.toJson((Object)var55_45));
                 var56_46 = b.a(var55_45, 11);
                 var21_22.put((Object)11, (Object)var56_46);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 11);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 11);
             }
             if ((var58_47 = var20_21.getDF2C()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2C: " + b.mGson.toJson((Object)var58_47));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2C: " + b.mGson.toJson((Object)var58_47));
                 var59_48 = b.a(var58_47, 12);
                 var21_22.put((Object)12, (Object)var59_48);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 12);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 12);
             }
             if ((var61_49 = var20_21.getDF2D()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2D: " + b.mGson.toJson((Object)var61_49));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2D: " + b.mGson.toJson((Object)var61_49));
                 var62_50 = b.a(var61_49, 13);
                 var21_22.put((Object)13, (Object)var62_50);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 13);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 13);
             }
             if ((var64_51 = var20_21.getDF2E()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2E: " + b.mGson.toJson((Object)var64_51));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2E: " + b.mGson.toJson((Object)var64_51));
                 var65_52 = b.a(var64_51, 14);
                 var21_22.put((Object)14, (Object)var65_52);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 14);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 14);
             }
             if ((var67_53 = var20_21.getDF2F()) != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2F: " + b.mGson.toJson((Object)var67_53));
+                Log.d("DCSDK_DcTokenManager", "transactionProfileJSON - DF2F: " + b.mGson.toJson((Object)var67_53));
                 var68_54 = b.a(var67_53, 15);
                 var21_22.put((Object)15, (Object)var68_54);
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 15);
+                Log.d("DCSDK_DcTokenManager", "Created DiscoverPaymentProfile with Id: " + 15);
             }
             var6_5.setPaymentProfiles((HashMap<Integer, DiscoverPaymentProfile>)var21_22);
             var6_5.setTrack1DataZipMsMode(ByteBuffer.fromHexString(var4_3.getTrack_1_Data_for_ZIPMode()));
@@ -413,7 +402,7 @@ lbl48: // 2 sources:
     private DcTACommands.CardCtxEncryption.Response.a a(ClearCardInfo clearCardInfo, List<byte[]> list) {
         byte[] arrby = mGson.toJson((Object)clearCardInfo).getBytes();
         if (arrby.length == 0) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "createSecureCardContext: CardContext serialization failed");
+            Log.e("DCSDK_DcTokenManager", "createSecureCardContext: CardContext serialization failed");
             return null;
         }
         try {
@@ -424,14 +413,14 @@ lbl48: // 2 sources:
             if (dcTAException.getErrorCode() == DcTAException.Code.xU.getCode()) {
                 String string = com.samsung.android.spayfw.payprovider.discover.util.b.byteArrayToHex((byte[])list.get(1));
                 int n2 = string.length();
-                com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "createSecureCardContext: Cert(1) - " + string.substring(0, 30) + " ... " + string.substring(n2 - 20, n2));
+                Log.i("DCSDK_DcTokenManager", "createSecureCardContext: Cert(1) - " + string.substring(0, 30) + " ... " + string.substring(n2 - 20, n2));
             }
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "createSecureCardContext: TA Exception - " + dcTAException.toString());
+            Log.e("DCSDK_DcTokenManager", "createSecureCardContext: TA Exception - " + dcTAException.toString());
             dcTAException.printStackTrace();
             return null;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "createSecureCardContext: Exception - " + exception.getMessage());
+            Log.e("DCSDK_DcTokenManager", "createSecureCardContext: Exception - " + exception.getMessage());
             exception.printStackTrace();
             return null;
         }
@@ -448,24 +437,24 @@ lbl48: // 2 sources:
         while (n3 < n2) {
             String string = arrstring[n3];
             if (string == null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "parseAltAids, alt fci is null, check next.");
+                Log.d("DCSDK_DcTokenManager", "parseAltAids, alt fci is null, check next.");
             } else {
                 try {
-                    com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "clearProvisionDataJSON, parse alt fci: " + string);
+                    Log.i("DCSDK_DcTokenManager", "clearProvisionDataJSON, parse alt fci: " + string);
                     com.samsung.android.spayfw.payprovider.discover.payment.utils.b b2 = com.samsung.android.spayfw.payprovider.discover.payment.utils.a.F(ByteBuffer.fromHexString(string));
                     if (b2 == null) {
-                        com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "parseAltAids, parsed aid is null.");
+                        Log.e("DCSDK_DcTokenManager", "parseAltAids, parsed aid is null.");
                         return;
                     }
                     ByteBuffer byteBuffer = b2.O(com.samsung.android.spayfw.payprovider.discover.payment.data.c.vP.getInt()) != null ? (ByteBuffer)b2.O(com.samsung.android.spayfw.payprovider.discover.payment.data.c.vP.getInt()).get(0) : null;
                     if (byteBuffer != null) {
-                        com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "clearProvisionDataJSON, parse alt aid: " + byteBuffer.toHexString());
+                        Log.d("DCSDK_DcTokenManager", "clearProvisionDataJSON, parse alt aid: " + byteBuffer.toHexString());
                         hashMap.put((Object)byteBuffer.toHexString(), (Object)ByteBuffer.fromHexString(string));
                     }
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "clearProvisionDataJSON, parse alt aid is null.");
+                    Log.e("DCSDK_DcTokenManager", "clearProvisionDataJSON, parse alt aid is null.");
                 }
                 catch (ParseException parseException) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "clearProvisionDataJSON, parse exception observed while alt aid parsing.");
+                    Log.e("DCSDK_DcTokenManager", "clearProvisionDataJSON, parse exception observed while alt aid parsing.");
                     parseException.printStackTrace();
                 }
             }
@@ -485,16 +474,16 @@ lbl48: // 2 sources:
 
     private boolean b(EnrollCardPanInfo enrollCardPanInfo) {
         if (enrollCardPanInfo.getPAN().trim().length() != 16) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "validateCardInfo: PAN");
+            Log.e("DCSDK_DcTokenManager", "validateCardInfo: PAN");
             return false;
         }
         int n2 = enrollCardPanInfo.getCVV().trim().length();
         if (n2 < 3 || n2 > 4) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "validateCardInfo: CVV");
+            Log.e("DCSDK_DcTokenManager", "validateCardInfo: CVV");
             return false;
         }
         if (enrollCardPanInfo.getName().trim().isEmpty()) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "validateCardInfo: Name");
+            Log.e("DCSDK_DcTokenManager", "validateCardInfo: Name");
             return false;
         }
         return true;
@@ -506,7 +495,7 @@ lbl48: // 2 sources:
      */
     private DevicePublicKeyContext eh() {
         DcTACommands.DevicePublicKeyCtxEncryption.Response.a a2;
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "getDevicePubKeyContext");
+        Log.d("DCSDK_DcTokenManager", "getDevicePubKeyContext");
         try {
             DcTACommands.DevicePublicKeyCtxEncryption.Response.a a3;
             a2 = a3 = com.samsung.android.spayfw.payprovider.discover.tzsvc.b.eu().ev();
@@ -515,18 +504,18 @@ lbl48: // 2 sources:
             }
         }
         catch (DcTAException dcTAException) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "getDevicePubKeyContext: TA Exception - " + dcTAException.toString());
+            Log.e("DCSDK_DcTokenManager", "getDevicePubKeyContext: TA Exception - " + dcTAException.toString());
             dcTAException.printStackTrace();
             return null;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "getDevicePubKeyContext: Exception - " + exception.getMessage());
+            Log.e("DCSDK_DcTokenManager", "getDevicePubKeyContext: Exception - " + exception.getMessage());
             exception.printStackTrace();
             return null;
         }
         String string = new String(a2.getEncryptedData());
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "certChain = ");
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", string);
+        Log.d("DCSDK_DcTokenManager", "certChain = ");
+        Log.d("DCSDK_DcTokenManager", string);
         DevicePublicKeyContext devicePublicKeyContext = new DevicePublicKeyContext();
         devicePublicKeyContext.setPublicKeyCertificateChain(string);
         return devicePublicKeyContext;
@@ -534,49 +523,49 @@ lbl48: // 2 sources:
 
     private JsonObject h(Object object) {
         String string = mGson.toJson(object);
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "createJsonObj: " + string);
+        Log.d("DCSDK_DcTokenManager", "createJsonObj: " + string);
         return new JsonParser().parse(string).getAsJsonObject();
     }
 
     public c a(EnrollCardPanInfo enrollCardPanInfo, BillingInfo billingInfo, List<byte[]> list) {
         c c2 = new c();
         c2.setErrorCode(0);
-        com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "getEnrollmentData");
+        Log.i("DCSDK_DcTokenManager", "getEnrollmentData");
         if (!this.b(enrollCardPanInfo)) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "getEnrollmentData: validateCardInfo failed");
+            Log.e("DCSDK_DcTokenManager", "getEnrollmentData: validateCardInfo failed");
             c2.setErrorCode(-4);
             return c2;
         }
         if (!this.a(billingInfo)) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "getEnrollmentData: validateBillingInfo failed");
+            Log.e("DCSDK_DcTokenManager", "getEnrollmentData: validateBillingInfo failed");
             c2.setErrorCode(-4);
             return c2;
         }
         if (list == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "getEnrollmentData: serverCertChain is null");
+            Log.e("DCSDK_DcTokenManager", "getEnrollmentData: serverCertChain is null");
             c2.setErrorCode(-4);
             return c2;
         }
         DcTACommands.CardCtxEncryption.Response.a a2 = this.a(ClearCardInfo.getEnrollmentPayload(enrollCardPanInfo, billingInfo), list);
         if (a2 == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "createSecureCardContext(Enrollment) Failed");
+            Log.e("DCSDK_DcTokenManager", "createSecureCardContext(Enrollment) Failed");
             c2.setErrorCode(-6);
             return c2;
         }
         DcTACommands.CardCtxEncryption.Response.a a3 = this.a(ClearCardInfo.getProvisionPayload(enrollCardPanInfo), list);
         if (a3 == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "createSecureCardContext(Provision) Failed");
+            Log.e("DCSDK_DcTokenManager", "createSecureCardContext(Provision) Failed");
             c2.setErrorCode(-6);
             return c2;
         }
         AccountEligibilityRequestData accountEligibilityRequestData = new AccountEligibilityRequestData();
         SecureContext secureContext = new SecureContext();
         secureContext.setEncryptedPayload(new String(a2.getEncryptedData()));
-        com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "Length of Encrypted Data: " + a2.getEncryptedData().length);
+        Log.i("DCSDK_DcTokenManager", "Length of Encrypted Data: " + a2.getEncryptedData().length);
         accountEligibilityRequestData.setSecureCardContext(secureContext);
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("accountEligibilityRequest", (JsonElement)this.h(accountEligibilityRequestData));
-        com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "Eligibility Req Data: " + jsonObject.toString());
+        Log.i("DCSDK_DcTokenManager", "Eligibility Req Data: " + jsonObject.toString());
         c2.a(jsonObject);
         Bundle bundle = new Bundle();
         bundle.putString("emailHash", this.aP(enrollCardPanInfo.getUserEmail()));
@@ -593,11 +582,11 @@ lbl48: // 2 sources:
     public c a(f f2, List<byte[]> list) {
         DcTACommands.ReplenishContextEncryption.Response.a a2;
         DcCardMaster dcCardMaster;
-        com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "generateReplenishRequest");
+        Log.i("DCSDK_DcTokenManager", "generateReplenishRequest");
         c c2 = new c();
         RefreshCredentialsRequestData refreshCredentialsRequestData = new RefreshCredentialsRequestData();
         if (list == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "generateReplenishRequest: serverCertChain is null");
+            Log.e("DCSDK_DcTokenManager", "generateReplenishRequest: serverCertChain is null");
             c2.setErrorCode(-4);
             return c2;
         }
@@ -611,35 +600,35 @@ lbl48: // 2 sources:
             dcCardMaster = null;
         }
         if (dcCardMaster == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "generateReplenishRequest: Failed to load CardMaster record for id: " + f2.cm());
+            Log.e("DCSDK_DcTokenManager", "generateReplenishRequest: Failed to load CardMaster record for id: " + f2.cm());
             c2.setErrorCode(-2);
             return c2;
         }
         ClearRefreshCredentialsRequestData clearRefreshCredentialsRequestData = new ClearRefreshCredentialsRequestData(dcCardMaster.getTokenId());
         String string = mGson.toJson((Object)clearRefreshCredentialsRequestData);
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Replenish Request Payload: " + string);
+        Log.d("DCSDK_DcTokenManager", "Replenish Request Payload: " + string);
         try {
             DcTACommands.ReplenishContextEncryption.Response.a a3;
             a2 = a3 = com.samsung.android.spayfw.payprovider.discover.tzsvc.b.eu().a(arrby, list, string);
         }
         catch (DcTAException dcTAException) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "generateReplenishRequest: TA Exception - " + dcTAException.toString());
+            Log.e("DCSDK_DcTokenManager", "generateReplenishRequest: TA Exception - " + dcTAException.toString());
             dcTAException.printStackTrace();
             a2 = null;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "generateReplenishRequest: Exception - " + exception.getMessage());
+            Log.e("DCSDK_DcTokenManager", "generateReplenishRequest: Exception - " + exception.getMessage());
             exception.printStackTrace();
             a2 = null;
         }
         if (a2 == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "TA Failed");
+            Log.e("DCSDK_DcTokenManager", "TA Failed");
             c2.setErrorCode(-6);
             return c2;
         }
         DevicePublicKeyContext devicePublicKeyContext = this.eh();
         if (devicePublicKeyContext == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "Failed to get DevicePublicKeyContext");
+            Log.e("DCSDK_DcTokenManager", "Failed to get DevicePublicKeyContext");
             c2.setErrorCode(-9);
             return c2;
         }
@@ -656,9 +645,9 @@ lbl48: // 2 sources:
     public e a(f f2, JsonObject jsonObject, TokenStatus tokenStatus) {
         e e2;
         block5 : {
-            com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "updateToken:Status - " + tokenStatus.getCode());
+            Log.i("DCSDK_DcTokenManager", "updateToken:Status - " + tokenStatus.getCode());
             if (jsonObject != null) {
-                com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "responseData: " + jsonObject.getAsString());
+                Log.d("DCSDK_DcTokenManager", "responseData: " + jsonObject.getAsString());
             }
             e2 = new e();
             e2.setErrorCode(0);
@@ -668,7 +657,7 @@ lbl48: // 2 sources:
         }
         try {
             if (f2.getTrTokenId() == null) {
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "updateToken: getTrTokenId is null");
+                Log.e("DCSDK_DcTokenManager", "updateToken: getTrTokenId is null");
                 e2.setErrorCode(-4);
                 return e2;
             }
@@ -689,16 +678,16 @@ lbl48: // 2 sources:
         int n3;
         DcStorageManager.ResultCode resultCode;
         DcTACommands.ProcessCardProfile.Response.a a2;
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "processToken " + jsonObject.toString());
+        Log.d("DCSDK_DcTokenManager", "processToken " + jsonObject.toString());
         e e2 = new e();
         ProvisionCredentialsData provisionCredentialsData = (ProvisionCredentialsData)mGson.fromJson((JsonElement)jsonObject.getAsJsonObject("provisionCredentialsContext"), ProvisionCredentialsData.class);
         if (provisionCredentialsData == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processToken: Failed to parse responseData");
+            Log.e("DCSDK_DcTokenManager", "processToken: Failed to parse responseData");
             e2.setErrorCode(-4);
             return e2;
         }
         if (list == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processToken: serverCertChain is null");
+            Log.e("DCSDK_DcTokenManager", "processToken: serverCertChain is null");
             e2.setErrorCode(-4);
             return e2;
         }
@@ -708,17 +697,17 @@ lbl48: // 2 sources:
             a2 = a3 = com.samsung.android.spayfw.payprovider.discover.tzsvc.b.eu().a(arrby, list, true);
         }
         catch (DcTAException dcTAException) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processToken: TA Exception" + dcTAException.toString());
+            Log.e("DCSDK_DcTokenManager", "processToken: TA Exception" + dcTAException.toString());
             dcTAException.printStackTrace();
             a2 = null;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processToken: Exception " + exception.getMessage());
+            Log.e("DCSDK_DcTokenManager", "processToken: Exception " + exception.getMessage());
             exception.printStackTrace();
             a2 = null;
         }
         if (a2 == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processToken: Failed to process card profile");
+            Log.e("DCSDK_DcTokenManager", "processToken: Failed to process card profile");
             e2.setErrorCode(-6);
             return e2;
         }
@@ -734,18 +723,18 @@ lbl48: // 2 sources:
             l2 = l3 = c2.saveData(dcCardMaster);
         }
         catch (DcDbException dcDbException) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processToken: DcDbException " + dcDbException.getMessage());
+            Log.e("DCSDK_DcTokenManager", "processToken: DcDbException " + dcDbException.getMessage());
             dcDbException.printStackTrace();
         }
         if (l2 == -1L) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processToken: Failed to process card profile");
+            Log.e("DCSDK_DcTokenManager", "processToken: Failed to process card profile");
             e2.setErrorCode(-2);
             return e2;
         }
         this.ww = true;
         DiscoverPaymentCard discoverPaymentCard = b.a(l2, a2);
         if (discoverPaymentCard == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processToken: Failed to convert2DiscoverPaymentCard");
+            Log.e("DCSDK_DcTokenManager", "processToken: Failed to convert2DiscoverPaymentCard");
             e2.setErrorCode(-2);
             return e2;
         }
@@ -758,7 +747,7 @@ lbl48: // 2 sources:
             n3 = n4 = ((ClearProvisionData)mGson.fromJson(string2, ClearProvisionData.class)).getProfileData().getConstraints().getLowCredentialsThreshold();
         }
         catch (NullPointerException nullPointerException) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processToken: Failed to get Replenishment Threshold value - " + nullPointerException.getMessage() + ". Using default value - " + 5);
+            Log.e("DCSDK_DcTokenManager", "processToken: Failed to get Replenishment Threshold value - " + nullPointerException.getMessage() + ". Using default value - " + 5);
             nullPointerException.printStackTrace();
             n3 = 5;
         }
@@ -781,7 +770,7 @@ lbl48: // 2 sources:
             e2.setErrorCode(0);
             return e2;
         }
-        com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processToken: Failed to save Discover Payment Card object " + resultCode.getErrorMessage());
+        Log.e("DCSDK_DcTokenManager", "processToken: Failed to save Discover Payment Card object " + resultCode.getErrorMessage());
         e2.setErrorCode(-2);
         try {
             this.wu.deleteData(l2);
@@ -800,16 +789,16 @@ lbl48: // 2 sources:
      */
     public e a(String string, f f2, JsonObject jsonObject, TokenStatus tokenStatus, List<byte[]> list) {
         DcTACommands.ProcessReplenishmentData.Response.a a2;
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "processOTPK " + jsonObject.toString());
+        Log.d("DCSDK_DcTokenManager", "processOTPK " + jsonObject.toString());
         e e2 = new e();
         RefreshCredentialsResponseData refreshCredentialsResponseData = (RefreshCredentialsResponseData)mGson.fromJson((JsonElement)jsonObject.getAsJsonObject("refreshCredentialsResponse"), RefreshCredentialsResponseData.class);
         if (refreshCredentialsResponseData == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processOTPK: Failed to parse responseData");
+            Log.e("DCSDK_DcTokenManager", "processOTPK: Failed to parse responseData");
             e2.setErrorCode(-4);
             return e2;
         }
         if (list == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processOTPK: serverCertChain is null");
+            Log.e("DCSDK_DcTokenManager", "processOTPK: serverCertChain is null");
             e2.setErrorCode(-4);
             return e2;
         }
@@ -819,28 +808,28 @@ lbl48: // 2 sources:
             a2 = a3 = com.samsung.android.spayfw.payprovider.discover.tzsvc.b.eu().b(arrby, DcStorageManager.h(f2.cm()), list, true);
         }
         catch (DcTAException dcTAException) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processOTPK: TA Exception - " + dcTAException.toString());
+            Log.e("DCSDK_DcTokenManager", "processOTPK: TA Exception - " + dcTAException.toString());
             dcTAException.printStackTrace();
             a2 = null;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processOTPK: Exception - " + exception.getMessage());
+            Log.e("DCSDK_DcTokenManager", "processOTPK: Exception - " + exception.getMessage());
             exception.printStackTrace();
             a2 = null;
         }
         if (a2 == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processOTPK: Failed to process OTPK in TA");
+            Log.e("DCSDK_DcTokenManager", "processOTPK: Failed to process OTPK in TA");
             e2.setErrorCode(-6);
             return e2;
         }
         DcStorageManager.ResultCode resultCode = DcStorageManager.c(f2.cm(), a2.eq());
         if (resultCode == DcStorageManager.ResultCode.sw) {
-            com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "saveOTPKData Success");
+            Log.d("DCSDK_DcTokenManager", "saveOTPKData Success");
             int n2 = a2.es();
             resultCode = DcStorageManager.a(f2.cm(), (long)n2);
         }
         if (resultCode != DcStorageManager.ResultCode.sw) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "processOTPK: Failed to store data in DB");
+            Log.e("DCSDK_DcTokenManager", "processOTPK: Failed to store data in DB");
             e2.setErrorCode(-2);
             return e2;
         }
@@ -862,12 +851,12 @@ lbl48: // 2 sources:
             return com.samsung.android.spayfw.payprovider.discover.tzsvc.b.eu().a(arrby, DcTACommands.ProcessDataOperationType.xy);
         }
         catch (DcTAException dcTAException) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "decryptSignatureData: " + dcTAException.toString());
+            Log.e("DCSDK_DcTokenManager", "decryptSignatureData: " + dcTAException.toString());
             dcTAException.printStackTrace();
         }
         return null;
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "decryptSignatureData: Exception Occured - " + exception.getMessage());
+            Log.e("DCSDK_DcTokenManager", "decryptSignatureData: Exception Occured - " + exception.getMessage());
             exception.printStackTrace();
             return null;
         }
@@ -876,16 +865,16 @@ lbl48: // 2 sources:
     public c b(EnrollCardReferenceInfo enrollCardReferenceInfo) {
         c c2 = new c();
         c2.setErrorCode(0);
-        com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "getPushEnrollementData");
+        Log.i("DCSDK_DcTokenManager", "getPushEnrollementData");
         AccountEligibilityRequestData accountEligibilityRequestData = new AccountEligibilityRequestData();
         SecureContext secureContext = new SecureContext();
         String string = new String(enrollCardReferenceInfo.getExtraEnrollData().getByteArray("enrollPayload"));
         secureContext.setEncryptedPayload(string);
-        com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "Length of Encrypted Data: " + string.length() + ", Data: " + string.substring(0, 50));
+        Log.i("DCSDK_DcTokenManager", "Length of Encrypted Data: " + string.length() + ", Data: " + string.substring(0, 50));
         accountEligibilityRequestData.setSecureCardContext(secureContext);
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("accountEligibilityRequest", (JsonElement)this.h(accountEligibilityRequestData));
-        com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "Eligibility Req Data: " + jsonObject.toString());
+        Log.i("DCSDK_DcTokenManager", "Eligibility Req Data: " + jsonObject.toString());
         c2.a(jsonObject);
         Bundle bundle = new Bundle();
         bundle.putString("emailHash", this.aP(enrollCardReferenceInfo.getUserEmail()));
@@ -895,14 +884,14 @@ lbl48: // 2 sources:
     }
 
     public c c(ProvisionTokenInfo provisionTokenInfo) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "getProvisionData");
+        Log.i("DCSDK_DcTokenManager", "getProvisionData");
         c c2 = new c();
         AccountProvisionRequestData accountProvisionRequestData = new AccountProvisionRequestData();
         DevicePublicKeyContext devicePublicKeyContext = this.eh();
         if (devicePublicKeyContext != null) {
             accountProvisionRequestData.setSecureCardContext(new SecureContext(this.wv.getEncryptedPayload()));
             accountProvisionRequestData.setDevicePublicKeyContext(devicePublicKeyContext);
-            com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "2.0 Prov Request: ");
+            Log.d("DCSDK_DcTokenManager", "2.0 Prov Request: ");
             c2.a(this.h(accountProvisionRequestData));
             Bundle bundle = new Bundle();
             bundle.putSerializable("riskData", a.eg().b(provisionTokenInfo));
@@ -910,7 +899,7 @@ lbl48: // 2 sources:
             c2.setErrorCode(0);
             return c2;
         }
-        com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "getProvisionData: TA Response Null");
+        Log.e("DCSDK_DcTokenManager", "getProvisionData: TA Response Null");
         c2.setErrorCode(-2);
         return c2;
     }
@@ -921,26 +910,26 @@ lbl48: // 2 sources:
      * Enabled aggressive exception aggregation
      */
     public void d(f f2) {
-        com.samsung.android.spayfw.b.c.i("DCSDK_DcTokenManager", "delete");
+        Log.i("DCSDK_DcTokenManager", "delete");
         if (f2 == null) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "Token Id is null");
+            Log.e("DCSDK_DcTokenManager", "Token Id is null");
             return;
         }
         try {
             if (f2.cn() != null) {
                 if (DcStorageManager.k(f2.cm()) != DcStorageManager.ResultCode.sw) {
-                    com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "Failed to delete token");
+                    Log.e("DCSDK_DcTokenManager", "Failed to delete token");
                     return;
                 }
             } else if (f2.getTrTokenId() == null) {
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "updateToken: getTrTokenId is null");
+                Log.e("DCSDK_DcTokenManager", "updateToken: getTrTokenId is null");
                 return;
             }
         }
         catch (NumberFormatException numberFormatException) {
             numberFormatException.printStackTrace();
             if (this.ww) {
-                com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "delete: mProcessTokenComplete - true but failed to get token key from tokenId");
+                Log.e("DCSDK_DcTokenManager", "delete: mProcessTokenComplete - true but failed to get token key from tokenId");
             }
             DcStorageManager.cH();
             return;
@@ -950,7 +939,7 @@ lbl48: // 2 sources:
             DcStorageManager.cH();
             return;
         }
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcTokenManager", "Successfully deleted Token rowId: " + f2.cn() + ", TR Id: " + f2.getTrTokenId());
+        Log.d("DCSDK_DcTokenManager", "Successfully deleted Token rowId: " + f2.cn() + ", TR Id: " + f2.getTrTokenId());
     }
 
     public boolean isReplenishDataAvailable(JsonObject jsonObject) {
@@ -971,12 +960,12 @@ lbl48: // 2 sources:
             if (arrby2 == null) return string;
         }
         catch (DcTAException dcTAException) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "encryptSignatureData: " + dcTAException.toString());
+            Log.e("DCSDK_DcTokenManager", "encryptSignatureData: " + dcTAException.toString());
             dcTAException.printStackTrace();
             return null;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("DCSDK_DcTokenManager", "encryptSignatureData: Exception Occured - " + exception.getMessage());
+            Log.e("DCSDK_DcTokenManager", "encryptSignatureData: Exception Occured - " + exception.getMessage());
             exception.printStackTrace();
             return null;
         }

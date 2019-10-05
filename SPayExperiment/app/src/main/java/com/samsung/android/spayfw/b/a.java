@@ -39,9 +39,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
-import android.util.Log;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.b.d;
+
 import com.samsung.android.spayfw.utils.IOExceptionHandler;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -83,7 +81,7 @@ extends d {
         a a2 = this;
         synchronized (a2) {
             File[] arrfile;
-            Log.d((String)"BufferedFileLogger", (String)"cleanupLogs");
+            android.util.Log.d((String)"BufferedFileLogger", (String)"cleanupLogs");
             File file = new File(this.oC);
             boolean bl = file.exists();
             if (bl && (arrfile = file.listFiles(new FilenameFilter(){
@@ -113,10 +111,10 @@ extends d {
         if (this.isLoggable(n2)) {
             StringBuilder stringBuilder = new StringBuilder();
             if (string2.length() > 100001) {
-                Log.w((String)"BufferedFileLoggerAVOIDOOM", (String)"trimming msg to avoid OOM");
+                android.util.Log.w((String)"BufferedFileLoggerAVOIDOOM", (String)"trimming msg to avoid OOM");
                 string2 = string2.substring(0, 100000);
             }
-            stringBuilder.append(oB).append(Process.myPid()).append(oB).append(Process.myTid()).append(oB).append(c.I(n2)).append(oB).append("SpayFw_" + string).append(oB).append(string2);
+            stringBuilder.append(oB).append(Process.myPid()).append(oB).append(Process.myTid()).append(oB).append(Log.I(n2)).append(oB).append("SpayFw_" + string).append(oB).append(string2);
             this.oD.obtainMessage(1, (Object)stringBuilder).sendToTarget();
         }
     }
@@ -197,7 +195,7 @@ extends d {
      */
     @Override
     public void flush() {
-        Log.i((String)"BufferedFileLogger", (String)"flush start");
+        android.util.Log.i((String)"BufferedFileLogger", (String)"flush start");
         this.bX();
         CountDownLatch countDownLatch = new CountDownLatch(1);
         Message message = this.oD.obtainMessage(2, (Object)countDownLatch);
@@ -208,7 +206,7 @@ extends d {
         catch (InterruptedException interruptedException) {
             interruptedException.printStackTrace();
         }
-        Log.i((String)"BufferedFileLogger", (String)"flush complete");
+        android.util.Log.i((String)"BufferedFileLogger", (String)"flush complete");
     }
 
     private class a
@@ -232,7 +230,7 @@ extends d {
         public void handleMessage(Message message) {
             switch (message.what) {
                 default: {
-                    Log.e((String)"BufferedFileLogger", (String)("Invalid File Log Handler Message Type" + message.what));
+                    android.util.Log.e((String)"BufferedFileLogger", (String)("Invalid File Log Handler Message Type" + message.what));
                     return;
                 }
                 case 1: {
@@ -248,7 +246,7 @@ extends d {
                     String string2 = a.this.oC + "/" + a.c(date.getTime());
                     if (this.oI == null || !this.oI.equals((Object)string2)) {
                         if (this.oH != null) {
-                            Log.d((String)"BufferedFileLogger", (String)"Close File");
+                            android.util.Log.d((String)"BufferedFileLogger", (String)"Close File");
                             try {
                                 this.oH.close();
                             }
@@ -256,7 +254,7 @@ extends d {
                                 iOException.printStackTrace();
                             }
                         }
-                        Log.d((String)"BufferedFileLogger", (String)"Create File");
+                        android.util.Log.d((String)"BufferedFileLogger", (String)"Create File");
                         this.oI = string2;
                         File file = new File(this.oI);
                         if (!file.exists() && file.getParentFile() != null) {
@@ -281,7 +279,7 @@ extends d {
                 }
                 case 2: 
             }
-            Log.d((String)"BufferedFileLogger", (String)"Flush File");
+            android.util.Log.d((String)"BufferedFileLogger", (String)"Flush File");
             if (this.oH != null) {
                 try {
                     this.oH.flush();

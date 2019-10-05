@@ -9,7 +9,7 @@
 package com.samsung.sensorframework.sdi.e;
 
 import android.content.Context;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sdi.exception.SDIException;
 
 public class a {
@@ -27,7 +27,7 @@ public class a {
             throw new SDIException(9001, "persistentStorage can not be null.");
         }
         this.cu(null);
-        c.d("EnergyQuota", "instance created.");
+        Log.d("EnergyQuota", "instance created.");
     }
 
     /*
@@ -60,11 +60,11 @@ public class a {
     public void cu(String string) {
         a a2 = this;
         synchronized (a2) {
-            c.d("EnergyQuota", "resetQuota()");
+            Log.d("EnergyQuota", "resetQuota()");
             int n2 = com.samsung.sensorframework.sdi.b.a.e(string, 50);
             String string2 = this.ic();
             this.LE = this.Lw.contains(string2) ? this.Lw.get(string2, n2) : n2;
-            c.d("EnergyQuota", "resetQuota() remainingQuota: " + this.LE);
+            Log.d("EnergyQuota", "resetQuota() remainingQuota: " + this.LE);
             return;
         }
     }
@@ -79,7 +79,7 @@ public class a {
         synchronized (a2) {
             this.LE = this.LE > 0 ? -1 + this.LE : 0;
             this.Lw.set(this.ic(), this.LE);
-            c.d("EnergyQuota", "Remaining quota: " + this.LE);
+            Log.d("EnergyQuota", "Remaining quota: " + this.LE);
             return;
         }
     }
@@ -93,10 +93,10 @@ public class a {
         synchronized (a2) {
             block4 : {
                 if (this.LE > 0) break block4;
-                c.d("EnergyQuota", "isQuotaEmpty() returning true");
+                Log.d("EnergyQuota", "isQuotaEmpty() returning true");
                 return true;
             }
-            c.d("EnergyQuota", "isQuotaEmpty() returning false");
+            Log.d("EnergyQuota", "isQuotaEmpty() returning false");
             return false;
         }
     }

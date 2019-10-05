@@ -18,22 +18,12 @@
 package com.samsung.android.spayfw.cncc;
 
 import android.content.Context;
-import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.cncc.CNCCCommands;
-import com.samsung.android.spayfw.cncc.CNCCDeviceCert;
-import com.samsung.android.spayfw.cncc.CNCCTAException;
-import com.samsung.android.spayfw.cncc.CNCCTAInfo;
-import com.samsung.android.spayfw.cncc.ManagedTAHandle;
-import com.samsung.android.spayfw.cncc.SpayDRKManager;
-import com.samsung.android.spayfw.cncc.Utils;
-import com.samsung.android.spaytzsvc.api.Blob;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.TAController;
-import com.samsung.android.spaytzsvc.api.TAInfo;
-import java.io.PrintStream;
+
 import java.util.List;
-import javolution.io.Struct;
 
 public class CNCCTAController
 extends TAController {
@@ -59,16 +49,16 @@ extends TAController {
         boolean bl = true;
         Class<CNCCTAController> class_ = CNCCTAController.class;
         synchronized (CNCCTAController.class) {
-            c.d(TAG, "CNCC Bringup - Start");
+            Log.d(TAG, "CNCC Bringup - Start");
             if (!CNCCTAController.isSupported(context)) {
-                c.d(TAG, "CNCC can not be supported in this binary");
+                Log.d(TAG, "CNCC can not be supported in this binary");
             } else {
                 try {
                     if (!CNCCTAController.createOnlyInstance(context).initializeSecuritySetup()) {
-                        c.e(TAG, "initializeSecuritySetup failed");
+                        Log.e(TAG, "initializeSecuritySetup failed");
                         return false;
                     }
-                    c.d(TAG, "CNCC Bringup - End");
+                    Log.d(TAG, "CNCC Bringup - End");
                 }
                 catch (Exception exception) {
                     exception.printStackTrace();
@@ -112,15 +102,15 @@ extends TAController {
                 this.mManagedTAHandle.loadTA();
                 if (!this.isSecuritySetupInitialized()) {
                     if (DEBUG) {
-                        c.d(TAG, "Calling initializeSecuritySetup");
+                        Log.d(TAG, "Calling initializeSecuritySetup");
                     }
                     if (!this.isTALoaded()) {
-                        c.e(TAG, "initializeSecuritySetup: Error: TA is not loaded, please call loadTA() API first!");
+                        Log.e(TAG, "initializeSecuritySetup: Error: TA is not loaded, please call loadTA() API first!");
                         return false;
                     }
                     this.initTA();
                     if (!this.mSpayDCMSSLDeviceCert.load()) {
-                        c.e(TAG, "Error: CNCC Device Certs Load failed");
+                        Log.e(TAG, "Error: CNCC Device Certs Load failed");
                         return false;
                     }
                     byte[] arrby = this.mSpayDCMSSLDeviceCert.getSPayDCMDevicePrivateSignCert();
@@ -128,7 +118,7 @@ extends TAController {
                     try {
                         TACommandResponse tACommandResponse = this.executeNoLoad(new CNCCCommands.LoadCerts.Request(arrby, arrby2));
                         if (tACommandResponse == null || tACommandResponse.mResponseCode != 0) {
-                            c.e(TAG, "loadAllCerts: Error: executeNoLoad failed");
+                            Log.e(TAG, "loadAllCerts: Error: executeNoLoad failed");
                             throw new CNCCTAException("TZ Communication Error", 983040);
                         }
                         CNCCCommands.LoadCerts.Response response = new CNCCCommands.LoadCerts.Response(tACommandResponse);
@@ -146,7 +136,7 @@ extends TAController {
             }
             return true;
         }
-        c.d(TAG, "initializeSecuritySetup called Successfully");
+        Log.d(TAG, "initializeSecuritySetup called Successfully");
         System.out.println("DRK Cert= \n" + this.mDevicePublicCerts.deviceCertificate);
         System.out.println("Signing Cert = \n" + this.mDevicePublicCerts.deviceSigningCertificate);
         return true;
@@ -155,7 +145,7 @@ extends TAController {
     private boolean isSecuritySetupInitialized() {
         if (this.mDevicePublicCerts != null) {
             if (DEBUG) {
-                c.d(TAG, "Device Certs already loaded)");
+                Log.d(TAG, "Device Certs already loaded)");
             }
             return true;
         }
@@ -183,7 +173,7 @@ extends TAController {
         CNCCTAController cNCCTAController = this;
         synchronized (cNCCTAController) {
             if (this.initializeSecuritySetup()) return this.mDevicePublicCerts;
-            c.e(TAG, "initializeSecuritySetup failed");
+            Log.e(TAG, "initializeSecuritySetup failed");
             throw new CNCCTAException("TZ Communication Error", 983040);
         }
     }
@@ -197,21 +187,21 @@ extends TAController {
         TACommandResponse tACommandResponse;
         byte[] arrby;
         if (DEBUG) {
-            c.d(TAG, "Calling getNonce");
+            Log.d(TAG, "Calling getNonce");
         }
         if (!this.initializeSecuritySetup()) {
-            c.e(TAG, "initializeSecuritySetup failed");
+            Log.e(TAG, "initializeSecuritySetup failed");
             throw new CNCCTAException("TZ Communication Error", 983040);
         }
         CNCCCommands.GetNonce.Request request = new CNCCCommands.GetNonce.Request(n2);
         try {
             tACommandResponse = this.executeNoLoad(request);
             if (tACommandResponse == null) {
-                c.e(TAG, "getNonce: Error: executeNoLoad failed");
+                Log.e(TAG, "getNonce: Error: executeNoLoad failed");
                 throw new CNCCTAException("TZ Communication Error", 983040);
             }
             if (tACommandResponse.mResponseCode != 0) {
-                c.e(TAG, "getNonce: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+                Log.e(TAG, "getNonce: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
                 throw new CNCCTAException("TA command returned error", 4);
             }
         }
@@ -225,17 +215,17 @@ extends TAController {
         CNCCCommands.GetNonce.Response response = new CNCCCommands.GetNonce.Response(tACommandResponse);
         int n3 = (int)response.mRetVal.return_code.get();
         if (n3 != 0) {
-            c.e(TAG, "Error processing GetNonce");
+            Log.e(TAG, "Error processing GetNonce");
             throw new CNCCTAException("Error processing GetNonce", n3);
         }
         int n4 = (int)response.mRetVal.return_code.get();
         String string = new String(Utils.getByteArray(response.mRetVal.error_msg));
         if (n4 != 0) {
-            c.e(TAG, "ProcessData Call Failed");
+            Log.e(TAG, "ProcessData Call Failed");
             throw new CNCCTAException(string, n4);
         }
         if (DEBUG) {
-            c.d(TAG, "processData called Successfully");
+            Log.d(TAG, "processData called Successfully");
         }
         if ((arrby = response.mRetVal.out_data.getData()) == null || !DEBUG) return arrby;
         {
@@ -247,7 +237,7 @@ extends TAController {
     @Override
     protected boolean init() {
         if (!super.init()) {
-            c.e(TAG, "Error: init failed");
+            Log.e(TAG, "Error: init failed");
             return false;
         }
         this.mSpayDCMSSLDeviceCert = new CNCCDeviceCert(this);
@@ -273,10 +263,10 @@ extends TAController {
         synchronized (cNCCTAController) {
             CNCCCommands.ProcessData.Response response;
             if (DEBUG) {
-                c.d(TAG, "Calling processData");
+                Log.d(TAG, "Calling processData");
             }
             if (!this.initializeSecuritySetup()) {
-                c.e(TAG, "initializeSecuritySetup failed");
+                Log.e(TAG, "initializeSecuritySetup failed");
                 throw new CNCCTAException("TZ Communication Error", 983040);
             }
             try {
@@ -289,14 +279,14 @@ extends TAController {
                     arrby3 = string2.getBytes();
                 }
                 if ((tACommandResponse = this.executeNoLoad(new CNCCCommands.ProcessData.Request(list, arrby, n2, n3, arrby2, arrby3))) == null || tACommandResponse.mResponseCode != 0) {
-                    c.e(TAG, "processData: Error: executeNoLoad failed");
+                    Log.e(TAG, "processData: Error: executeNoLoad failed");
                     throw new CNCCTAException("TZ Communication Error", 983040);
                 }
                 response = new CNCCCommands.ProcessData.Response(tACommandResponse);
                 int n4 = (int)response.mRetVal.return_code.get();
                 String string3 = new String(Utils.getByteArray(response.mRetVal.error_msg));
                 if (n4 != 0) {
-                    c.e(TAG, "ProcessData Call Failed");
+                    Log.e(TAG, "ProcessData Call Failed");
                     throw new CNCCTAException(string3, n4);
                 }
             }
@@ -305,7 +295,7 @@ extends TAController {
                 throw new CNCCTAException("TZ Communication Error", 983040);
             }
             if (!DEBUG) return response.mRetVal.data.getData();
-            c.d(TAG, "processData called Successfully");
+            Log.d(TAG, "processData called Successfully");
             return response.mRetVal.data.getData();
         }
     }

@@ -10,11 +10,10 @@
 package com.samsung.sensorframework.sda.e;
 
 import android.util.SparseArray;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.SDAException;
-import com.samsung.sensorframework.sda.b;
-import com.samsung.sensorframework.sda.e.a;
-import com.samsung.sensorframework.sda.e.d;
+
 import java.util.Random;
 
 public class e {
@@ -46,12 +45,12 @@ public class e {
             block7 : {
                 d2 = (d)this.KS.get(n2);
                 if (d2 != null) break block7;
-                c.d(TAG, "removeSubscription() invalid subscription id: " + n2);
+                Log.d(TAG, "removeSubscription() invalid subscription id: " + n2);
                 return null;
             }
-            c.d(TAG, "removeSubscription() deleting subscription created for task: " + d2.hF().getSensorType() + " listener: " + d2.hG());
+            Log.d(TAG, "removeSubscription() deleting subscription created for task: " + d2.hF().getSensorType() + " listener: " + d2.hG());
             this.KS.delete(n2);
-            c.d(TAG, "Subscription list size is: " + this.KS.size());
+            Log.d(TAG, "Subscription list size is: " + this.KS.size());
             return d2;
         }
     }
@@ -65,7 +64,7 @@ public class e {
         e e2 = this;
         synchronized (e2) {
             if (!d2.hH()) {
-                c.d(TAG, "registerSubscription() subscription already exists for task: " + d2.hF().getSensorType() + " listener: " + d2.hG());
+                Log.d(TAG, "registerSubscription() subscription already exists for task: " + d2.hF().getSensorType() + " listener: " + d2.hG());
                 int n2 = 0;
                 do {
                     boolean bl;
@@ -82,8 +81,8 @@ public class e {
             }
             int n4 = this.hI();
             this.KS.append(n4, (Object)d2);
-            c.d(TAG, "registerSubscription() new subscription created for task: " + d2.hF().getSensorType() + " listener: " + d2.hG());
-            c.d(TAG, "Subscription list size is: " + this.KS.size());
+            Log.d(TAG, "registerSubscription() new subscription created for task: " + d2.hF().getSensorType() + " listener: " + d2.hG());
+            Log.d(TAG, "Subscription list size is: " + this.KS.size());
             return n4;
         }
     }

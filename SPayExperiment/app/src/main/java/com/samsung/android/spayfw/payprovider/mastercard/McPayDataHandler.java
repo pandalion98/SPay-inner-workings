@@ -19,10 +19,9 @@ package com.samsung.android.spayfw.payprovider.mastercard;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.mastercard.mobile_api.utils.Date;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.PaymentProviderException;
-import com.samsung.android.spayfw.payprovider.mastercard.McProvider;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.CryptogramType;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.DSRPInputData;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.DSRPOutputData;
@@ -64,7 +63,7 @@ public class McPayDataHandler {
                 }
                 catch (Exception exception) {
                     exception.printStackTrace();
-                    c.e(TAG, "Invalid Transaction CurrencyCode");
+                    Log.e(TAG, "Invalid Transaction CurrencyCode");
                     throw new PaymentProviderException(-36);
                 }
                 String string2 = inAppDetailedTransactionInfo.getAmount();
@@ -78,27 +77,27 @@ public class McPayDataHandler {
                     calendar.setTimeInMillis(h.am(McProvider.getContext()));
                     Date date = new Date(calendar.get(1), 1 + calendar.get(2), calendar.get(5));
                     dSRPInputData.setTransactionDate(date);
-                    c.d(TAG, "transaction date :" + date.toString());
+                    Log.d(TAG, "transaction date :" + date.toString());
                     dSRPInputData.setUnpredictableNumber(0L);
                     return dSRPInputData;
                 }
                 break block6;
             }
-            c.e(TAG, "Transaction CurrencyCode is null");
+            Log.e(TAG, "Transaction CurrencyCode is null");
             throw new PaymentProviderException(-36);
             catch (NumberFormatException numberFormatException) {
                 numberFormatException.printStackTrace();
-                c.e(TAG, "Invalid Amount format");
+                Log.e(TAG, "Invalid Amount format");
                 throw new PaymentProviderException(-36);
             }
         }
-        c.e(TAG, "Transaction amount is null");
+        Log.e(TAG, "Transaction amount is null");
         throw new PaymentProviderException(-36);
     }
 
     public DSRPInputData convertToDsrpInput(PaymentNetworkProvider.InAppDetailedTransactionInfo inAppDetailedTransactionInfo) {
         if (inAppDetailedTransactionInfo == null) {
-            c.e(TAG, "transactionInfo is null");
+            Log.e(TAG, "transactionInfo is null");
             throw new PaymentProviderException(-36);
         }
         return this.populateDSRPInputData(inAppDetailedTransactionInfo);
@@ -111,40 +110,40 @@ public class McPayDataHandler {
         byte[] arrby2;
         Gson gson = new Gson();
         String string2 = this.convertToFDRDate(dSRPOutputData.getExpiryDate());
-        c.d(TAG, "Exp" + string2);
-        c.d(TAG, "DSRPOutputData:" + gson.toJson((Object)dSRPOutputData));
+        Log.d(TAG, "Exp" + string2);
+        Log.d(TAG, "DSRPOutputData:" + gson.toJson((Object)dSRPOutputData));
         McInAppPaymentInfoData mcInAppPaymentInfoData = McInAppPaymentInfoData.McInAppPaymentInfoDataBuilder.getInstance().setAmount(String.valueOf((long)dSRPOutputData.getTransactionAmount())).setCurrency_code(Iso4217CurrencyCode.getStringCurrencyCode(dSRPOutputData.getCurrencyCode())).setUtc(McUtils.getRealTime(McProvider.getContext())).setEci_indicator(dSRPOutputData.getEciValue()).setCryptogram(new String(dSRPOutputData.getTransactionCryptogramData())).setTokenPAN(dSRPOutputData.getPan()).setTokenPanExpiry(string2).build();
-        c.d(TAG, "InApp Output convertToPaymentGatewayFormat: " + gson.toJson((Object)mcInAppPaymentInfoData));
+        Log.d(TAG, "InApp Output convertToPaymentGatewayFormat: " + gson.toJson((Object)mcInAppPaymentInfoData));
         JSONObject jSONObject = mcInAppPaymentInfoData.getJSONObject();
         if (jSONObject == null) {
-            c.e(TAG, "DSRP: paymentInfoJSONObject is null");
+            Log.e(TAG, "DSRP: paymentInfoJSONObject is null");
             throw new PaymentProviderException(-36);
         }
-        c.d(TAG, "InApp Output : get dsrp data");
+        Log.d(TAG, "InApp Output : get dsrp data");
         McTAController mcTAController = McTAController.getInstance();
         if (!TextUtils.isEmpty((CharSequence)string)) {
             List<byte[]> list = h.bE(string);
             if (list == null || list.size() < 2) {
-                c.e(TAG, "inApp Cert parse error");
+                Log.e(TAG, "inApp Cert parse error");
                 if (list != null) {
-                    c.e(TAG, "inApp Cert parse error size : " + list.size());
+                    Log.e(TAG, "inApp Cert parse error size : " + list.size());
                 }
                 throw new PaymentProviderException(-36);
             }
             arrby2 = mcTAController.getDsrpJweData(jSONObject.toString().getBytes(), (byte[])list.get(0), (byte[])list.get(1));
         } else {
             if (arrby == null) {
-                c.e(TAG, " InApp Nonce is null");
+                Log.e(TAG, " InApp Nonce is null");
                 throw new PaymentProviderException(-36);
             }
             arrby2 = mcTAController.getDsrpCnccData(jSONObject.toString().getBytes(), arrby);
         }
-        c.d(TAG, "UCAF is generated");
+        Log.d(TAG, "UCAF is generated");
         if (arrby2 != null) {
-            c.d(TAG, " jwePayload : " + McUtils.byteArrayToHex(arrby2));
+            Log.d(TAG, " jwePayload : " + McUtils.byteArrayToHex(arrby2));
             return arrby2;
         }
-        c.e(TAG, "JWE encoding failed, JWE is null");
+        Log.e(TAG, "JWE encoding failed, JWE is null");
         return arrby2;
     }
 }

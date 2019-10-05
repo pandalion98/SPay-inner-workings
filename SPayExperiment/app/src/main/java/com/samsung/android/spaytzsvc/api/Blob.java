@@ -10,9 +10,8 @@
  */
 package com.samsung.android.spaytzsvc.api;
 
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spaytzsvc.api.TAStruct;
-import java.nio.Buffer;
+import com.samsung.android.spayfw.b.Log;
+
 import java.nio.ByteBuffer;
 import javolution.io.Struct;
 
@@ -39,7 +38,7 @@ extends TAStruct {
                     return;
                 }
                 if ((int)this.len.get() + arrby.length > this.buf.length) {
-                    c.w(TAG, "setData: Input size is greater than the maximum allocated ... returning! b.len = " + arrby.length);
+                    Log.w(TAG, "setData: Input size is greater than the maximum allocated ... returning! b.len = " + arrby.length);
                     return;
                 }
                 this.buf.add(arrby);
@@ -47,7 +46,7 @@ extends TAStruct {
                 return;
             }
             catch (Exception exception) {
-                c.e(TAG, "addData exception!");
+                Log.e(TAG, "addData exception!");
                 exception.printStackTrace();
                 return;
             }
@@ -66,11 +65,11 @@ extends TAStruct {
                 return null;
             }
             if (n2 <= this.buf.length) return this.buf.get(n2);
-            c.w(TAG, "getData: expected length (" + n2 + ") > buffer length (" + this.buf.length + ")");
+            Log.w(TAG, "getData: expected length (" + n2 + ") > buffer length (" + this.buf.length + ")");
             throw new IllegalArgumentException("Blob:getData - size is larger than the real buffer length");
         }
         catch (Exception exception) {
-            c.e(TAG, "getData exception!");
+            Log.e(TAG, "getData exception!");
             exception.printStackTrace();
             return null;
         }
@@ -93,7 +92,7 @@ lbl4: // 2 sources:
                 return;
             }
             if (var1_1.length > this.buf.length) {
-                c.w("Blob", "setData: Input size is greater than the maximum allocated ... returning! b.len = " + var1_1.length);
+                Log.w("Blob", "setData: Input size is greater than the maximum allocated ... returning! b.len = " + var1_1.length);
                 this.len.set(0L);
                 throw new IllegalArgumentException("Blob:setData - Input size greater than max allowed");
             }
@@ -102,7 +101,7 @@ lbl4: // 2 sources:
             return;
         }
         catch (Exception var2_2) {
-            c.e("Blob", "setData exception!");
+            Log.e("Blob", "setData exception!");
             var2_2.printStackTrace();
             return;
         }

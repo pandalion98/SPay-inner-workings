@@ -24,7 +24,7 @@ import android.os.Message;
 import android.os.Parcelable;
 import com.samsung.android.spayfw.appinterface.ITransactionDetailsCallback;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.j;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
@@ -53,7 +53,7 @@ public class e {
     private void T(String string) {
         e e2 = this;
         // MONITORENTER : e2
-        c.d("TransactionDetailsRetryRequester", "retry: adding token in queue = " + string);
+        Log.d("TransactionDetailsRetryRequester", "retry: adding token in queue = " + string);
         if (this.mX != null) {
             long l2 = ((a)((Object)this.mX.get((Object)string))).time;
             a a2 = new a(string, 0L);
@@ -68,10 +68,10 @@ public class e {
                 this.mX.put((Object)string, (Object)a2);
             } else if (l2 == 240000L) {
                 this.mX.remove((Object)string);
-                c.d("TransactionDetailsRetryRequester", "Retry Limit Reached. Stop Retry.");
+                Log.d("TransactionDetailsRetryRequester", "Retry Limit Reached. Stop Retry.");
                 return;
             }
-            c.i("TransactionDetailsRetryRequester", "retry time = " + a2.time);
+            Log.i("TransactionDetailsRetryRequester", "retry time = " + a2.time);
             this.mTimer.schedule((TimerTask)a2, a2.time);
         }
         // MONITOREXIT : e2
@@ -97,17 +97,17 @@ public class e {
     public void add(String string) {
         e e2 = this;
         synchronized (e2) {
-            c.d("TransactionDetailsRetryRequester", "add :  " + string);
+            Log.d("TransactionDetailsRetryRequester", "add :  " + string);
             if (this.mY == null) {
-                c.e("TransactionDetailsRetryRequester", "Token Storage is null");
+                Log.e("TransactionDetailsRetryRequester", "Token Storage is null");
             } else {
                 com.samsung.android.spayfw.storage.models.a a2 = this.mY.bq(string);
                 if (a2 == null) {
-                    c.e("TransactionDetailsRetryRequester", "Token Record is null");
+                    Log.e("TransactionDetailsRetryRequester", "Token Record is null");
                 } else if (!a2.fw()) {
-                    c.i("TransactionDetailsRetryRequester", "Transaction Retry NOT Allowed");
+                    Log.i("TransactionDetailsRetryRequester", "Transaction Retry NOT Allowed");
                 } else {
-                    c.i("TransactionDetailsRetryRequester", "Transaction Retry Allowed");
+                    Log.i("TransactionDetailsRetryRequester", "Transaction Retry Allowed");
                     a a3 = (a)((Object)this.mX.get((Object)string));
                     if (a3 == null) {
                         this.mX.put((Object)string, (Object)new a(string, 0L));
@@ -131,7 +131,7 @@ public class e {
     public void remove(String string) {
         e e2 = this;
         synchronized (e2) {
-            c.d("TransactionDetailsRetryRequester", "remove :  " + string);
+            Log.d("TransactionDetailsRetryRequester", "remove :  " + string);
             a a2 = (a)((Object)this.mX.get((Object)string));
             if (a2 != null) {
                 a2.cancel();
@@ -159,12 +159,12 @@ public class e {
          */
         public void run() {
             e e2;
-            c.i("TransactionDetailsRetryRequester", "run : RetryTimerTask");
-            c.d("TransactionDetailsRetryRequester", "run : RetryTimerTask : " + this.tokenId);
+            Log.i("TransactionDetailsRetryRequester", "run : RetryTimerTask");
+            Log.d("TransactionDetailsRetryRequester", "run : RetryTimerTask : " + this.tokenId);
             e e3 = e2 = e.this;
             synchronized (e3) {
                 if ((a)((Object)e.this.mX.get((Object)this.tokenId)) == null) {
-                    c.i("TransactionDetailsRetryRequester", "No Need to Run.");
+                    Log.i("TransactionDetailsRetryRequester", "No Need to Run.");
                     return;
                 }
             }
@@ -176,7 +176,7 @@ public class e {
 
                 @Override
                 public void onFail(String string, int n2) {
-                    c.e("TransactionDetailsRetryRequester", "onFail : " + n2);
+                    Log.e("TransactionDetailsRetryRequester", "onFail : " + n2);
                     if (n2 == -3) {
                         e.this.remove(string);
                         return;
@@ -186,8 +186,8 @@ public class e {
 
                 @Override
                 public void onTransactionUpdate(String string, TransactionDetails transactionDetails) {
-                    c.d("TransactionDetailsRetryRequester", "onTransactionUpdate : tokenId " + string);
-                    c.d("TransactionDetailsRetryRequester", "onTransactionUpdate : transactionDetails " + transactionDetails);
+                    Log.d("TransactionDetailsRetryRequester", "onTransactionUpdate : tokenId " + string);
+                    Log.d("TransactionDetailsRetryRequester", "onTransactionUpdate : transactionDetails " + transactionDetails);
                     Intent intent = new Intent("com.samsung.android.spayfw.action.notification");
                     intent.putExtra("notiType", "transactionDetailsReceived");
                     intent.putExtra("tokenId", string);

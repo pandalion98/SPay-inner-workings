@@ -19,12 +19,11 @@
  */
 package com.samsung.android.spayfw.payprovider.mastercard.tokenmanagement;
 
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import com.samsung.android.spayfw.appinterface.ProvisionTokenInfo;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.fraud.b;
-import com.samsung.android.spayfw.fraud.d;
 import com.samsung.android.spayfw.payprovider.RiskDataParam;
 import com.samsung.android.spayfw.payprovider.c;
 import com.samsung.android.spayfw.payprovider.mastercard.McProvider;
@@ -142,7 +141,7 @@ public class McDecisioningData {
         if (string5 == null) {
             string5 = String.valueOf((int)((int)this.mfdp.D(30)));
         }
-        com.samsung.android.spayfw.b.c.d(this.TAG, "deviceScore: " + string4 + ", accountScore: " + string5);
+        Log.d(this.TAG, "deviceScore: " + string4 + ", accountScore: " + string5);
         if (this.isStringValid(string4)) {
             arrayList.add((Object)new RiskDataParam("deviceScore", string4));
         }
@@ -176,7 +175,7 @@ public class McDecisioningData {
         this.mfdp = new b(McProvider.getContext());
         for (AddAuthRecommendations addAuthRecommendations : AddAuthRecommendations.values()) {
             String string = addAuthRecommendations.getRiskDataName();
-            com.samsung.android.spayfw.b.c.d(this.TAG, " AddAuthRecommendations name : " + addAuthRecommendations.name() + ", is " + "equal : " + addAuthRecommendations.name().equals((Object)string));
+            Log.d(this.TAG, " AddAuthRecommendations name : " + addAuthRecommendations.name() + ", is " + "equal : " + addAuthRecommendations.name().equals((Object)string));
             if (addAuthRecommendations.name().equals((Object)string)) {
                 this.mAddAuthDataMap.put((Object)string, (Object)FRAUD_DATA_PROVIDER_VALUE);
                 continue;
@@ -185,13 +184,13 @@ public class McDecisioningData {
             if (this.isStringValid(string2)) {
                 this.mAddAuthDataMap.put((Object)string, (Object)string2);
             }
-            com.samsung.android.spayfw.b.c.d(this.TAG, " AddAuth Data, riskName : " + string + " , data : " + string2);
+            Log.d(this.TAG, " AddAuth Data, riskName : " + string + " , data : " + string2);
         }
         this.mDeviceCountryCode = (String)provisionTokenInfo.getActivationParams().get((Object)"deviceCountry");
         if (this.mDeviceCountryCode == null) {
             this.mDeviceCountryCode = DeviceInfo.getDeviceCountry().toLowerCase();
         }
-        com.samsung.android.spayfw.b.c.d(this.TAG, " mDeviceCountryCode : " + this.mDeviceCountryCode);
+        Log.d(this.TAG, " mDeviceCountryCode : " + this.mDeviceCountryCode);
         return this;
     }
 

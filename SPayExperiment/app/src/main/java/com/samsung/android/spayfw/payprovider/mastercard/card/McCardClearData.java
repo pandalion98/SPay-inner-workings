@@ -26,13 +26,11 @@ import com.mastercard.mcbp.core.mcbpcards.profile.ContactlessPaymentData;
 import com.mastercard.mcbp.core.mcbpcards.profile.DC_CP;
 import com.mastercard.mcbp.core.mcbpcards.profile.DC_CP_BL;
 import com.mastercard.mcbp.core.mcbpcards.profile.DC_CP_MPP;
-import com.mastercard.mcbp.core.mcbpcards.profile.MChipCVM_IssuerOptions;
-import com.mastercard.mcbp.core.mcbpcards.profile.MagstripeCVM_IssuerOptions;
 import com.mastercard.mcbp.core.mcbpcards.profile.Records;
 import com.mastercard.mcbp.core.mcbpcards.profile.RemotePaymentData;
 import com.mastercard.mobile_api.bytes.ByteArray;
 import com.mastercard.mobile_api.bytes.ByteArrayFactory;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.TlvParserUtil;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCFCITemplate;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCProfilesTable;
@@ -174,12 +172,12 @@ public class McCardClearData {
             System.arraycopy((Object)arrby3, (int)0, (Object)arrby, (int)7, (int)1);
             System.arraycopy((Object)byteArray2.getBytes(), (int)0, (Object)arrby, (int)GPO_MASK.length, (int)byteArray2.getLength());
             ByteArray byteArray3 = McCardClearData.toByteArray(arrby);
-            c.d(TAG, "constructGPOResponse: " + byteArray3.getHexString());
+            Log.d(TAG, "constructGPOResponse: " + byteArray3.getHexString());
             return byteArray3;
         }
         StringBuilder stringBuilder = new StringBuilder().append("constructGPOResponse: wrong input data: ");
         String string = byteArray == null ? "aip" : "afl";
-        c.e(TAG, stringBuilder.append(string).append(" is null").toString());
+        Log.e(TAG, stringBuilder.append(string).append(" is null").toString());
         return null;
     }
 
@@ -189,61 +187,61 @@ public class McCardClearData {
     public static boolean fillAlternateProfile(ContactlessPaymentData contactlessPaymentData) {
         AlternateContactlessPaymentData alternateContactlessPaymentData;
         if (contactlessPaymentData == null) {
-            c.e(TAG, "fillAlternateProfile: contactless payment data is null.");
+            Log.e(TAG, "fillAlternateProfile: contactless payment data is null.");
             return false;
         }
         AlternateContactlessPaymentData alternateContactlessPaymentData2 = contactlessPaymentData.getAlternateContactlessPaymentData();
         ByteArray byteArray = contactlessPaymentData.getPPSE_FCI();
         if (byteArray == null) {
-            c.e(TAG, "fillAlternateProfile: fciPPSE is null.");
+            Log.e(TAG, "fillAlternateProfile: fciPPSE is null.");
             return false;
         }
         MCFCITemplate mCFCITemplate = new MCFCITemplate(byteArray);
         mCFCITemplate.parseFCI_PPSE();
         if (mCFCITemplate.getSecondaryAid() == null) {
-            c.e(TAG, "fillAlternateProfile: secondary AID is not supported.");
+            Log.e(TAG, "fillAlternateProfile: secondary AID is not supported.");
             return false;
         }
         if (alternateContactlessPaymentData2 == null) {
-            c.d(TAG, "fillAlternateProfile: create alternate payment data.");
+            Log.d(TAG, "fillAlternateProfile: create alternate payment data.");
             alternateContactlessPaymentData = new AlternateContactlessPaymentData();
         } else {
             alternateContactlessPaymentData = alternateContactlessPaymentData2;
         }
         McCardClearData.logAltData(alternateContactlessPaymentData);
-        c.d(TAG, "fillAlternateProfile: create alternate payment data.:" + mAltProfileMap.size());
+        Log.d(TAG, "fillAlternateProfile: create alternate payment data.:" + mAltProfileMap.size());
         AlternateProfileData alternateProfileData = (AlternateProfileData)((Object)mAltProfileMap.get((Object)mCFCITemplate.getSecondaryAid().getHexString()));
         if (alternateProfileData == null) {
-            c.e(TAG, "fillAlternateProfile: cannot find alt profile for AID " + mCFCITemplate.getSecondaryAid().getHexString());
+            Log.e(TAG, "fillAlternateProfile: cannot find alt profile for AID " + mCFCITemplate.getSecondaryAid().getHexString());
             return false;
         }
         if (alternateContactlessPaymentData.getAID() == null) {
-            c.d(TAG, "fillAlternateProfile: secondary aid: " + mCFCITemplate.getSecondaryAid().getHexString());
+            Log.d(TAG, "fillAlternateProfile: secondary aid: " + mCFCITemplate.getSecondaryAid().getHexString());
             alternateContactlessPaymentData.setAID(alternateProfileData.getAID());
         }
         if (alternateContactlessPaymentData.getGPO_Response() == null) {
             alternateContactlessPaymentData.setGPO_Response(McCardClearData.constructGPOResponse(alternateProfileData.getAIP(), alternateProfileData.getAFL()));
         }
         if (alternateContactlessPaymentData.getPaymentFCI() == null) {
-            c.d(TAG, "fillAlternateProfile: alt fci is null, restore...");
+            Log.d(TAG, "fillAlternateProfile: alt fci is null, restore...");
             ByteArray byteArray2 = MCFCITemplate.restoreAlternateFCI(contactlessPaymentData.getPaymentFCI(), alternateProfileData.getAID(), alternateProfileData.getAppLabel(), alternateProfileData.getPDOL());
             if (byteArray2 == null) {
-                c.d(TAG, "fillAlternateProfile: alt fci: alt fci is not restored.");
+                Log.d(TAG, "fillAlternateProfile: alt fci: alt fci is not restored.");
                 return false;
             }
-            c.d(TAG, "fillAlternateProfile: alt fci: alt fci " + byteArray2.getHexString());
+            Log.d(TAG, "fillAlternateProfile: alt fci: alt fci " + byteArray2.getHexString());
             alternateContactlessPaymentData.setPaymentFCI(byteArray2);
         }
         if (alternateContactlessPaymentData.getCIAC_Decline() == null && alternateProfileData.getCIACDecline() != null) {
             alternateContactlessPaymentData.setCIAC_Decline(alternateProfileData.getCIACDecline().clone());
-            c.d(TAG, "fillAlternateProfile: CIAC Decline: " + alternateContactlessPaymentData.getCIAC_Decline());
+            Log.d(TAG, "fillAlternateProfile: CIAC Decline: " + alternateContactlessPaymentData.getCIAC_Decline());
         }
         if (alternateContactlessPaymentData.getCVR_MaskAnd() == null && alternateProfileData.getCVRMaskAnd() != null) {
             alternateContactlessPaymentData.setCVR_MaskAnd(alternateProfileData.getCVRMaskAnd().clone());
-            c.d(TAG, "fillAlternateProfile: CVR_MaskAnd: " + alternateContactlessPaymentData.getCVR_MaskAnd());
+            Log.d(TAG, "fillAlternateProfile: CVR_MaskAnd: " + alternateContactlessPaymentData.getCVR_MaskAnd());
         }
         if (alternateContactlessPaymentData.getIssuerApplicationData() == null && contactlessPaymentData.getIssuerApplicationData() != null) {
-            c.d(TAG, "fillAlternateProfile: set issuer application data ");
+            Log.d(TAG, "fillAlternateProfile: set issuer application data ");
             alternateContactlessPaymentData.setIssuerApplicationData(contactlessPaymentData.getIssuerApplicationData().clone());
         }
         contactlessPaymentData.setAlternateContactlessPaymentData(alternateContactlessPaymentData);
@@ -254,15 +252,15 @@ public class McCardClearData {
     public static void fillRemotePaymentData(RemotePaymentData remotePaymentData, ByteArray byteArray) {
         ByteArrayFactory byteArrayFactory = ByteArrayFactory.getInstance();
         if (remotePaymentData.getAIP() == null) {
-            c.d(TAG, "Fill AIP value...");
+            Log.d(TAG, "Fill AIP value...");
             remotePaymentData.setAIP(byteArrayFactory.getByteArray(new byte[]{2, -128}, 2));
         }
         if (remotePaymentData.getCIAC_Decline() == null) {
-            c.d(TAG, "Fill getCIAC_Decline value...");
+            Log.d(TAG, "Fill getCIAC_Decline value...");
             remotePaymentData.setCIAC_Decline(byteArrayFactory.getByteArray(new byte[]{0, 0, 0}, 3));
         }
         if (remotePaymentData.getCVR_MaskAnd() == null) {
-            c.d(TAG, "Fill CVR_MaskAnd value...");
+            Log.d(TAG, "Fill CVR_MaskAnd value...");
             remotePaymentData.setCVR_MASK_AND(byteArrayFactory.getByteArray(new byte[]{-1, 0, 0, 0, 0, 0}, 6));
         }
         byte[] arrby = new byte[26];
@@ -273,7 +271,7 @@ public class McCardClearData {
         remotePaymentData.setIssuerApplicationData(byteArrayFactory.getByteArray(arrby, arrby.length));
         DPANData dPANData = McCardClearData.parseSDF2Record1(byteArray);
         if (dPANData != null) {
-            c.d(TAG, "Fill CVR_MaskAnd value...");
+            Log.d(TAG, "Fill CVR_MaskAnd value...");
             remotePaymentData.setApplicationExpiryDate(dPANData.getExpirationDate());
             remotePaymentData.setPAN(dPANData.getPan());
             byte[] arrby2 = new byte[]{dPANData.getPanSn()};
@@ -284,7 +282,7 @@ public class McCardClearData {
     private byte[] generateClearDataElement(int n2, byte[] arrby, int n3) {
         byte[] arrby2 = new byte[n2];
         System.arraycopy((Object)arrby, (int)n3, (Object)arrby2, (int)0, (int)n2);
-        c.d(TAG, "Parsed DGI : " + McCardClearData.byteArrayToHex(arrby2));
+        Log.d(TAG, "Parsed DGI : " + McCardClearData.byteArrayToHex(arrby2));
         return arrby2;
     }
 
@@ -293,31 +291,31 @@ public class McCardClearData {
      */
     private static void logAltData(AlternateContactlessPaymentData alternateContactlessPaymentData) {
         if (alternateContactlessPaymentData == null) {
-            c.d(TAG, "alternateData is null");
+            Log.d(TAG, "alternateData is null");
             return;
         }
         StringBuilder stringBuilder = new StringBuilder().append("alternateData: aid ");
         String string = alternateContactlessPaymentData.getAID() != null ? alternateContactlessPaymentData.getAID().getHexString() : null;
-        c.d(TAG, stringBuilder.append(string).toString());
+        Log.d(TAG, stringBuilder.append(string).toString());
         StringBuilder stringBuilder2 = new StringBuilder().append("alternateData: fci aid ");
         String string2 = alternateContactlessPaymentData.getPaymentFCI() != null ? alternateContactlessPaymentData.getPaymentFCI().getHexString() : null;
-        c.d(TAG, stringBuilder2.append(string2).toString());
+        Log.d(TAG, stringBuilder2.append(string2).toString());
         StringBuilder stringBuilder3 = new StringBuilder().append("alternateData: cvr mask and ");
         String string3 = alternateContactlessPaymentData.getCVR_MaskAnd() != null ? alternateContactlessPaymentData.getCVR_MaskAnd().getHexString() : null;
-        c.d(TAG, stringBuilder3.append(string3).toString());
+        Log.d(TAG, stringBuilder3.append(string3).toString());
         StringBuilder stringBuilder4 = new StringBuilder().append("alternateData: getCIAC_Decline ");
         String string4 = alternateContactlessPaymentData.getCIAC_Decline() != null ? alternateContactlessPaymentData.getCIAC_Decline().getHexString() : null;
-        c.d(TAG, stringBuilder4.append(string4).toString());
+        Log.d(TAG, stringBuilder4.append(string4).toString());
         StringBuilder stringBuilder5 = new StringBuilder().append("alternateData: getGPO_Response ");
         String string5 = alternateContactlessPaymentData.getGPO_Response() != null ? alternateContactlessPaymentData.getGPO_Response().getHexString() : null;
-        c.d(TAG, stringBuilder5.append(string5).toString());
+        Log.d(TAG, stringBuilder5.append(string5).toString());
         StringBuilder stringBuilder6 = new StringBuilder().append("alternateData: iad ");
         ByteArray byteArray = alternateContactlessPaymentData.getIssuerApplicationData();
         String string6 = null;
         if (byteArray != null) {
             string6 = alternateContactlessPaymentData.getIssuerApplicationData().getHexString();
         }
-        c.d(TAG, stringBuilder6.append(string6).toString());
+        Log.d(TAG, stringBuilder6.append(string6).toString());
     }
 
     /*
@@ -380,33 +378,33 @@ public class McCardClearData {
         }
         StringBuilder stringBuilder = new StringBuilder().append("alt aid: ");
         String string = alternateContactlessPaymentData.getAID() != null ? alternateContactlessPaymentData.getAID().getHexString() : null;
-        c.d(TAG, stringBuilder.append(string).toString());
+        Log.d(TAG, stringBuilder.append(string).toString());
         if (this.fciAlternateAIDA104 != null && this.fciAlternateAIDA104.length > 0) {
             alternateContactlessPaymentData.setPaymentFCI(McCardClearData.toByteArray(this.fciAlternateAIDA104));
         }
         StringBuilder stringBuilder2 = new StringBuilder().append("fci aid: ");
         String string2 = alternateContactlessPaymentData.getPaymentFCI() != null ? alternateContactlessPaymentData.getPaymentFCI().getHexString() : null;
-        c.d(TAG, stringBuilder2.append(string2).toString());
+        Log.d(TAG, stringBuilder2.append(string2).toString());
         if (this.a604CardVerificationResultsMask == null) {
             if (this.cvResultMaskA601 != null) {
                 alternateContactlessPaymentData.setCVR_MaskAnd(McCardClearData.toByteArray(this.cvResultMaskA601));
-                c.d(TAG, "CVR cvResultMaskA601 mask: " + alternateContactlessPaymentData.getCVR_MaskAnd().getHexString());
+                Log.d(TAG, "CVR cvResultMaskA601 mask: " + alternateContactlessPaymentData.getCVR_MaskAnd().getHexString());
             } else {
                 this.a604CardVerificationResultsMask = new byte[6];
                 Arrays.fill((byte[])this.a604CardVerificationResultsMask, (byte)-1);
                 alternateContactlessPaymentData.setCVR_MaskAnd(McCardClearData.toByteArray(this.a604CardVerificationResultsMask));
-                c.d(TAG, "CVR a604CardVerificationResultsMask: " + alternateContactlessPaymentData.getCVR_MaskAnd().getHexString());
+                Log.d(TAG, "CVR a604CardVerificationResultsMask: " + alternateContactlessPaymentData.getCVR_MaskAnd().getHexString());
             }
         } else {
             alternateContactlessPaymentData.setCVR_MaskAnd(McCardClearData.toByteArray(this.a604CardVerificationResultsMask));
-            c.d(TAG, "CVR mask: " + alternateContactlessPaymentData.getCVR_MaskAnd().getHexString());
+            Log.d(TAG, "CVR mask: " + alternateContactlessPaymentData.getCVR_MaskAnd().getHexString());
         }
         if (this.a404CardIssuerActionCodeARQC != null) {
             alternateContactlessPaymentData.setCIAC_Decline(McCardClearData.toByteArray(this.a404CardIssuerActionCodeARQC));
-            c.d(TAG, "a404CardIssuerActionCodeARQC: " + alternateContactlessPaymentData.getCIAC_Decline().getHexString());
+            Log.d(TAG, "a404CardIssuerActionCodeARQC: " + alternateContactlessPaymentData.getCIAC_Decline().getHexString());
         } else if (this.ciacDeclineArqc != null) {
             alternateContactlessPaymentData.setCIAC_Decline(McCardClearData.toByteArray(this.ciacDeclineArqc));
-            c.d(TAG, "alt: ciacDeclineArqc: " + alternateContactlessPaymentData.getCIAC_Decline().getHexString());
+            Log.d(TAG, "alt: ciacDeclineArqc: " + alternateContactlessPaymentData.getCIAC_Decline().getHexString());
         }
         if (this.b009ApplicationInterchangeProfile != null && this.b009ApplicationFileLocator != null) {
             byte[] arrby = new byte[GPO_MASK.length + this.b009ApplicationFileLocator.length];
@@ -419,7 +417,7 @@ public class McCardClearData {
             System.arraycopy((Object)arrby3, (int)0, (Object)arrby, (int)7, (int)1);
             System.arraycopy((Object)this.b009ApplicationFileLocator, (int)0, (Object)arrby, (int)GPO_MASK.length, (int)this.b009ApplicationFileLocator.length);
             alternateContactlessPaymentData.setGPO_Response(McCardClearData.toByteArray(arrby));
-            c.d(TAG, "alternate GPO response: " + McCardClearData.toByteArray(arrby).getHexString());
+            Log.d(TAG, "alternate GPO response: " + McCardClearData.toByteArray(arrby).getHexString());
         }
         byte[] arrby = new byte[26];
         arrby[1] = 21;
@@ -431,7 +429,7 @@ public class McCardClearData {
         if (arrby4 != null) {
             string3 = baf.getByteArray(this.a504AltKeyDerivationIndex, this.a504AltKeyDerivationIndex.length).getHexString();
         }
-        c.d(TAG, stringBuilder3.append(string3).toString());
+        Log.d(TAG, stringBuilder3.append(string3).toString());
         if (this.a504AltKeyDerivationIndex != null) {
             System.arraycopy((Object)this.a504AltKeyDerivationIndex, (int)0, (Object)arrby, (int)0, (int)1);
             alternateContactlessPaymentData.setIssuerApplicationData(McCardClearData.toByteArray(arrby));
@@ -474,7 +472,7 @@ public class McCardClearData {
             System.arraycopy((Object)arrby7, (int)0, (Object)arrby5, (int)7, (int)1);
             System.arraycopy((Object)this.aflB005, (int)0, (Object)arrby5, (int)GPO_MASK.length, (int)this.aflB005.length);
             contactlessPaymentData.setGPO_Response(McCardClearData.toByteArray(arrby5));
-            c.d(TAG, "GPO response: " + McCardClearData.toByteArray(arrby5).getHexString());
+            Log.d(TAG, "GPO response: " + McCardClearData.toByteArray(arrby5).getHexString());
         }
         if (this.icc_key_a_array != null) {
             contactlessPaymentData.setICC_privateKey_a(McCardClearData.toByteArray(this.icc_key_a_array));
@@ -500,7 +498,7 @@ public class McCardClearData {
             contactlessPaymentData.setIssuerApplicationData(McCardClearData.toByteArray(arrby8));
         }
         if (byteArray != null) {
-            c.d(TAG, "Primary AID parsed: " + byteArray.getHexString());
+            Log.d(TAG, "Primary AID parsed: " + byteArray.getHexString());
             contactlessPaymentData.setAID(byteArray);
         } else {
             contactlessPaymentData.setAID(McCardClearData.toByteArray(this.strToByteArray(PRIMARY_AID)).clone());
@@ -513,11 +511,11 @@ public class McCardClearData {
             if (byteArray2 != null) {
                 contactlessPaymentData.setAID(byteArray2.clone());
             } else {
-                c.e(TAG, "Primary AID parsing issue : Using default value");
+                Log.e(TAG, "Primary AID parsing issue : Using default value");
             }
         }
         if (contactlessPaymentData.getAID() != null) {
-            c.d(TAG, "Primary AID parsed: " + contactlessPaymentData.getAID().getHexString());
+            Log.d(TAG, "Primary AID parsed: " + contactlessPaymentData.getAID().getHexString());
         }
         if (this.RecordDGIArr != null && this.RecordDGIArr.size() != 0) {
             Records[] arrrecords = new Records[this.RecordDGIArr.size()];
@@ -530,7 +528,7 @@ public class McCardClearData {
                 byte[] arrby10 = new byte[]{recordDGI.mType[1]};
                 records.setRecordNumber(McCardClearData.toByteArray(arrby10));
                 records.setRecordValue(McCardClearData.toByteArray(recordDGI.mData));
-                c.d(TAG, "Record: sfi=" + recordDGI.mType[0] + "; number=" + recordDGI.mType[1]);
+                Log.d(TAG, "Record: sfi=" + recordDGI.mType[0] + "; number=" + recordDGI.mType[1]);
                 arrrecords[i2] = records;
                 if (records.getRecordNumber() != 1 || records.getSFI() != 2) continue;
                 this.mDpanData = McCardClearData.parseSDF2Record1(records.getRecordValue());
@@ -538,7 +536,7 @@ public class McCardClearData {
                 if (list == null || list.isEmpty() || TextUtils.isEmpty((CharSequence)(string4 = (String)list.get(0)))) continue;
                 this.mPar = McUtils.convertStirngToByteArray(string4);
             }
-            c.d(TAG, "Records length: " + arrrecords.length);
+            Log.d(TAG, "Records length: " + arrrecords.length);
             contactlessPaymentData.setRecords(arrrecords);
         }
     }
@@ -588,7 +586,7 @@ public class McCardClearData {
 
     public MCUnusedDGIElements getMCUnusedDGIElements() {
         if (this.mUnusedDgiElementsMap == null) {
-            c.d(TAG, "UnusedDgiElements Map is null");
+            Log.d(TAG, "UnusedDgiElements Map is null");
             return null;
         }
         return new MCUnusedDGIElements(this.mUnusedDgiElementsMap);
@@ -619,7 +617,7 @@ public class McCardClearData {
             this.populateRemotePaymentData(remotePaymentData);
         }
         catch (Exception exception) {
-            c.e(TAG, "DSRP DATA Missing !!!!!" + exception.getMessage());
+            Log.e(TAG, "DSRP DATA Missing !!!!!" + exception.getMessage());
             exception.printStackTrace();
             dC_CP.setRP_Supported(false);
             remotePaymentData = null;
@@ -630,10 +628,10 @@ public class McCardClearData {
 
     public MCProfilesTable getProfilesTable() {
         if (this.c400Profiles == null) {
-            c.d(TAG, "getProfilesTable : c400Profiles is null");
+            Log.d(TAG, "getProfilesTable : c400Profiles is null");
             return null;
         }
-        c.d(TAG, "c400Profiles : " + McCardClearData.byteArrayToHex(this.c400Profiles));
+        Log.d(TAG, "c400Profiles : " + McCardClearData.byteArrayToHex(this.c400Profiles));
         return new MCProfilesTable(this.c400Profiles);
     }
 
@@ -670,15 +668,15 @@ public class McCardClearData {
      */
     public void populateRemotePaymentData(RemotePaymentData remotePaymentData) {
         if (this.mDpanData == null) {
-            c.d(TAG, "RP DPAN data is empty");
+            Log.d(TAG, "RP DPAN data is empty");
             return;
         } else {
             remotePaymentData.setAIP(McCardClearData.toByteArray(this.b007RemotePaymentAip));
-            c.d(TAG, "RP AIP:" + remotePaymentData.getAIP().getHexString());
+            Log.d(TAG, "RP AIP:" + remotePaymentData.getAIP().getHexString());
             remotePaymentData.setCIAC_Decline(McCardClearData.toByteArray(this.ciacDeclineArqcManagement));
-            c.d(TAG, "RP CIAC Decline:" + remotePaymentData.getCIAC_Decline().getHexString());
+            Log.d(TAG, "RP CIAC Decline:" + remotePaymentData.getCIAC_Decline().getHexString());
             remotePaymentData.setCVR_MASK_AND(McCardClearData.toByteArray(this.a602RemotePaymentCVRMask));
-            c.d(TAG, "RP CVR Mask:" + remotePaymentData.getCVR_MaskAnd().getHexString());
+            Log.d(TAG, "RP CVR Mask:" + remotePaymentData.getCVR_MaskAnd().getHexString());
             byte[] arrby = new byte[26];
             arrby[1] = 20;
             arrby[17] = -1;
@@ -686,18 +684,18 @@ public class McCardClearData {
             byte[] arrby2 = new byte[]{this.a502RemotePaymentKeyDerivationIndex};
             System.arraycopy((Object)arrby2, (int)0, (Object)arrby, (int)0, (int)1);
             remotePaymentData.setIssuerApplicationData(McCardClearData.toByteArray(arrby));
-            c.d(TAG, "RP IAD:" + remotePaymentData.getIssuerApplicationData().getHexString());
+            Log.d(TAG, "RP IAD:" + remotePaymentData.getIssuerApplicationData().getHexString());
             remotePaymentData.setPAN(this.mDpanData.getPan());
-            c.d(TAG, "RP PAN:" + remotePaymentData.getPAN().getHexString());
+            Log.d(TAG, "RP PAN:" + remotePaymentData.getPAN().getHexString());
             byte[] arrby3 = new byte[]{this.mDpanData.getPanSn()};
             remotePaymentData.setPANSequenceNumber(McCardClearData.toByteArray(arrby3));
-            c.d(TAG, "RP PAN SN:" + remotePaymentData.getPAN_SequenceNumber().getHexString());
+            Log.d(TAG, "RP PAN SN:" + remotePaymentData.getPAN_SequenceNumber().getHexString());
             remotePaymentData.setApplicationExpiryDate(this.mDpanData.getExpirationDate());
-            c.d(TAG, "RP exp date:" + remotePaymentData.getApplicationExpiryDate().getHexString());
+            Log.d(TAG, "RP exp date:" + remotePaymentData.getApplicationExpiryDate().getHexString());
             if (this.mPar == null || this.mPar.length == 0) return;
             {
                 remotePaymentData.setPaymentAccountReference(McCardClearData.toByteArray(this.mPar));
-                c.d(TAG, "PAR : " + remotePaymentData.getPaymentAccountReference().getHexString());
+                Log.d(TAG, "PAR : " + remotePaymentData.getPaymentAccountReference().getHexString());
                 return;
             }
         }
@@ -834,7 +832,7 @@ public class McCardClearData {
                 return DGIRECODRS;
             }
             String string = McUtils.byteToHex(by) + McUtils.byteToHex(by2);
-            c.d("ClearDataDGI", "DGI Type : " + string);
+            Log.d("ClearDataDGI", "DGI Type : " + string);
             return (ClearDataDGI)((Object)mClearDgiMap.get((Object)string));
         }
 

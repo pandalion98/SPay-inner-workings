@@ -17,7 +17,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.a.n;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +43,9 @@ extends Handler {
         i i2 = this;
         synchronized (i2) {
             if (this.jO != null && !this.jO.isEmpty()) {
-                c.d("PaymentFrameworkHandler", " clearMessageOnNonPaymentMode : ");
+                Log.d("PaymentFrameworkHandler", " clearMessageOnNonPaymentMode : ");
                 for (int i3 = 0; i3 < this.jO.size(); ++i3) {
-                    c.d("PaymentFrameworkHandler", " clearMessageOnNonPaymentMode : post msg" + ((Message)this.jO.get((int)i3)).what);
+                    Log.d("PaymentFrameworkHandler", " clearMessageOnNonPaymentMode : post msg" + ((Message)this.jO.get((int)i3)).what);
                     this.sendMessage((Message)this.jO.get(i3));
                 }
                 this.jO.clear();
@@ -76,24 +77,24 @@ extends Handler {
     public void a(Message message) {
         i i2 = this;
         // MONITORENTER : i2
-        c.d("PaymentFrameworkHandler", " sendMessage: PaymentMode : " + this.jN);
+        Log.d("PaymentFrameworkHandler", " sendMessage: PaymentMode : " + this.jN);
         if (this.jN) {
             if (this.jO == null) {
                 this.jO = new ArrayList();
             }
             if (!i.m(message.what)) {
-                c.d("PaymentFrameworkHandler", " PaymentMode not allowed and put in pending queue: operation: " + message.what);
+                Log.d("PaymentFrameworkHandler", " PaymentMode not allowed and put in pending queue: operation: " + message.what);
                 this.jO.add((Object)message);
                 return;
             }
-            c.d("PaymentFrameworkHandler", " PaymentMode allowed operation: " + message.what);
+            Log.d("PaymentFrameworkHandler", " PaymentMode allowed operation: " + message.what);
         }
         this.sendMessage(message);
         // MONITOREXIT : i2
     }
 
     public boolean aK() {
-        c.d("PaymentFrameworkHandler", " getPaymentMode:  " + this.jN);
+        Log.d("PaymentFrameworkHandler", " getPaymentMode:  " + this.jN);
         return this.jN;
     }
 
@@ -103,7 +104,7 @@ extends Handler {
      * Enabled aggressive exception aggregation
      */
     public void aL() {
-        c.d("PaymentFrameworkHandler", " clearMessageOnAppDead : ");
+        Log.d("PaymentFrameworkHandler", " clearMessageOnAppDead : ");
         Class<i> class_ = i.class;
         synchronized (i.class) {
             this.removeMessages(1);
@@ -146,7 +147,7 @@ extends Handler {
                     Message message = (Message)this.jO.get(i2);
                     switch (message.what) {
                         default: {
-                            c.i("PaymentFrameworkHandler", " clearMessageOnAppDead : remove msg" + message.what);
+                            Log.i("PaymentFrameworkHandler", " clearMessageOnAppDead : remove msg" + message.what);
                             this.jO.remove(i2);
                             continue block6;
                         }
@@ -157,7 +158,7 @@ extends Handler {
                         case 21: 
                         case 23: 
                     }
-                    c.i("PaymentFrameworkHandler", " clearMessageOnAppDead : not removed msg" + message.what);
+                    Log.i("PaymentFrameworkHandler", " clearMessageOnAppDead : not removed msg" + message.what);
                 }
                 this.jO.clear();
             }
@@ -168,7 +169,7 @@ extends Handler {
     }
 
     public void c(boolean bl) {
-        c.d("PaymentFrameworkHandler", " setPaymentMode:  " + bl);
+        Log.d("PaymentFrameworkHandler", " setPaymentMode:  " + bl);
         this.jN = bl;
         if (!bl) {
             this.aM();

@@ -12,11 +12,9 @@
 package com.samsung.android.spayfw.payprovider.mastercard.tds.network;
 
 import android.text.TextUtils;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.tds.network.McTdsRequestBuilder;
-import com.samsung.android.spayfw.payprovider.mastercard.tds.network.McTdsSniSocketfactory;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.utils.a;
-import javax.net.ssl.SSLSocketFactory;
 
 public class McTdsRequestor {
     private static final int DEFAULT_CONNECTION_TIMEOUT = 10000;
@@ -29,13 +27,13 @@ public class McTdsRequestor {
         }
         catch (Exception exception) {
             exception.printStackTrace();
-            c.e(TAG, "Exception : " + exception.getMessage());
+            Log.e(TAG, "Exception : " + exception.getMessage());
             return false;
         }
         String string = tdsRequest.getUrl();
         byte[] arrby = tdsRequest.getDataBytes();
-        c.d(TAG, "request: url = " + string);
-        c.d(TAG, "request: Data = " + new String(arrby));
+        Log.d(TAG, "request: url = " + string);
+        Log.d(TAG, "request: Data = " + new String(arrby));
         a a2 = new a();
         McTdsSniSocketfactory mcTdsSniSocketfactory = McTdsSniSocketfactory.getInstance();
         if (mcTdsSniSocketfactory == null) {

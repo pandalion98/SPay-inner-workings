@@ -12,8 +12,8 @@ package com.samsung.android.spayfw.core.a;
 import android.content.Context;
 import com.samsung.android.spayfw.appinterface.CardAttributes;
 import com.samsung.android.spayfw.appinterface.ICardAttributeCallback;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.BinAttribute;
-import com.samsung.android.spayfw.core.a.o;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.DeviceInfo;
 import com.samsung.android.spayfw.utils.h;
 
@@ -67,7 +67,7 @@ extends o {
             return;
         }
         if (this.kL == null || this.kL.isEmpty() || this.kL.length() < 6) {
-            com.samsung.android.spayfw.b.c.e("CardAttributeRetriever", "PAN is invalid");
+            Log.e("CardAttributeRetriever", "PAN is invalid");
             this.kK.onFail(-5);
             return;
         }
@@ -75,13 +75,13 @@ extends o {
         CardAttributes cardAttributes = new CardAttributes();
         BinAttribute binAttribute = BinAttribute.getBinAttribute(this.kL);
         if (binAttribute == null) {
-            com.samsung.android.spayfw.b.c.e("CardAttributeRetriever", "PAN not supported: Bin Attr null.");
+            Log.e("CardAttributeRetriever", "PAN not supported: Bin Attr null.");
             this.kK.onFail(-10);
             return;
         }
         if (this.kM) {
             if (!this.J(this.kL)) {
-                com.samsung.android.spayfw.b.c.e("CardAttributeRetriever", "PAN not supported: Luhn Check Failed.");
+                Log.e("CardAttributeRetriever", "PAN not supported: Luhn Check Failed.");
                 this.kK.onFail(-10);
                 return;
             }
@@ -90,7 +90,7 @@ extends o {
             cardAttributes.setPanValidated(false);
         }
         if (!(binAttribute.isCvvRequired() || binAttribute.isBillingInfoRequired() || binAttribute.isZipRequired() || binAttribute.isExpiryRequired())) {
-            com.samsung.android.spayfw.b.c.e("CardAttributeRetriever", "PAN not supported : Token Request to TSP is blocked");
+            Log.e("CardAttributeRetriever", "PAN not supported : Token Request to TSP is blocked");
             this.kK.onFail(-207);
             return;
         }
@@ -99,7 +99,7 @@ extends o {
         cardAttributes.setExpiryRequired(binAttribute.isExpiryRequired());
         cardAttributes.setZipRequired(binAttribute.isZipRequired());
         cardAttributes.setBillingInfoRequired(binAttribute.isBillingInfoRequired());
-        com.samsung.android.spayfw.b.c.d("CardAttributeRetriever", "CardAttributeRetriever : " + cardAttributes.toString());
+        Log.d("CardAttributeRetriever", "CardAttributeRetriever : " + cardAttributes.toString());
         this.kK.onSuccess(this.kL, cardAttributes);
         h.clearMemory(this.kL);
     }

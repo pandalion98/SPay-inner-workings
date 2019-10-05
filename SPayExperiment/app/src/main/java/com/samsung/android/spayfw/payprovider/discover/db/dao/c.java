@@ -15,7 +15,8 @@ package com.samsung.android.spayfw.payprovider.discover.db.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import com.samsung.android.spayfw.payprovider.discover.db.dao.b;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.db.models.DcCardMaster;
 
 public class c
@@ -48,7 +49,7 @@ extends b<DcCardMaster> {
 
     @Override
     protected void d(Cursor cursor) {
-        com.samsung.android.spayfw.b.c.d("DCSDK_DcCardMasterDaoImpl", "Rec: " + cursor.getString(cursor.getColumnIndex("tokenId")) + ", " + cursor.getString(cursor.getColumnIndex("status")) + ", " + cursor.getString(cursor.getColumnIndex("dpanSuffix")) + ", " + cursor.getString(cursor.getColumnIndex("tokenProvisionStatus")));
+        Log.d("DCSDK_DcCardMasterDaoImpl", "Rec: " + cursor.getString(cursor.getColumnIndex("tokenId")) + ", " + cursor.getString(cursor.getColumnIndex("status")) + ", " + cursor.getString(cursor.getColumnIndex("dpanSuffix")) + ", " + cursor.getString(cursor.getColumnIndex("tokenProvisionStatus")));
     }
 
     protected DcCardMaster e(Cursor cursor) {

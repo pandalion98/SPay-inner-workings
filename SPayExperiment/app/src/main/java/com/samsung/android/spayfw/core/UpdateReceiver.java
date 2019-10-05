@@ -20,11 +20,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import com.samsung.android.spayfw.core.PaymentFrameworkApp;
-import com.samsung.android.spayfw.core.a;
-import com.samsung.android.spayfw.core.c;
-import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
+
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -33,7 +31,7 @@ public class UpdateReceiver
 extends BroadcastReceiver {
     public static final void enable() {
         PaymentFrameworkApp.b(UpdateReceiver.class);
-        com.samsung.android.spayfw.b.c.d("UpdateReceiver", "UpdateReceiver is enabled");
+        Log.d("UpdateReceiver", "UpdateReceiver is enabled");
     }
 
     /*
@@ -49,9 +47,9 @@ extends BroadcastReceiver {
                 block4 : {
                     block5 : {
                         String string = intent.getAction();
-                        com.samsung.android.spayfw.b.c.d("UpdateReceiver", "onReceive " + string);
+                        Log.d("UpdateReceiver", "onReceive " + string);
                         if (!string.equals((Object)"android.intent.action.MY_PACKAGE_REPLACED")) return;
-                        com.samsung.android.spayfw.b.c.d("UpdateReceiver", " Initiate DSRP Check ");
+                        Log.d("UpdateReceiver", " Initiate DSRP Check ");
                         a a2 = a.a(context, null);
                         if (a2 == null) break block4;
                         List<c> list = a2.W();
@@ -59,10 +57,10 @@ extends BroadcastReceiver {
                         iterator = list.iterator();
                         break block6;
                     }
-                    com.samsung.android.spayfw.b.c.i("UpdateReceiver", "Cards are null");
+                    Log.i("UpdateReceiver", "Cards are null");
                     break block7;
                 }
-                com.samsung.android.spayfw.b.c.i("UpdateReceiver", "Account is null");
+                Log.i("UpdateReceiver", "Account is null");
                 break block7;
             }
             while (iterator.hasNext()) {
@@ -71,7 +69,7 @@ extends BroadcastReceiver {
                     c2.ad().reconstructMissingDsrpBlob();
                     continue;
                 }
-                com.samsung.android.spayfw.b.c.i("UpdateReceiver", "Token is null");
+                Log.i("UpdateReceiver", "Token is null");
             }
         }
         try {
@@ -79,11 +77,11 @@ extends BroadcastReceiver {
             SharedPreferences.Editor editor = context.getSharedPreferences("context_settings", 0).edit();
             editor.putLong("randomtime", l2);
             editor.commit();
-            com.samsung.android.spayfw.b.c.d("UpdateReceiver", "set random start time to " + l2 / 60000L + " mins");
+            Log.d("UpdateReceiver", "set random start time to " + l2 / 60000L + " mins");
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.d("UpdateReceiver", "cannot set random value");
+            Log.d("UpdateReceiver", "cannot set random value");
             return;
         }
     }

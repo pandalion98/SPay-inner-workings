@@ -9,8 +9,7 @@
 package com.samsung.android.spayfw.payprovider.discover.tokenmanager.models;
 
 import com.google.gson.annotations.SerializedName;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.discover.tokenmanager.models.TransactionProfilesContainer;
+import com.samsung.android.spayfw.b.Log;
 
 public class ClearProfileData {
     private static final String TAG = "DCSDK_ClearProfileData";
@@ -75,7 +74,7 @@ public class ClearProfileData {
 
     private byte[] toBytes(String string) {
         if (string != null) {
-            c.d(TAG, "toBytes: " + string);
+            Log.d(TAG, "toBytes: " + string);
             return string.getBytes();
         }
         return null;

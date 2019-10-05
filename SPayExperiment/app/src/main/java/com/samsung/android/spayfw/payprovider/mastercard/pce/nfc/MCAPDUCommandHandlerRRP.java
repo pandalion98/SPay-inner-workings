@@ -3,15 +3,9 @@
  */
 package com.samsung.android.spayfw.payprovider.mastercard.pce.nfc;
 
-import com.mastercard.mcbp.core.mcbpcards.profile.ContactlessPaymentData;
-import com.mastercard.mcbp.core.mcbpcards.profile.DC_CP_MPP;
 import com.mastercard.mobile_api.bytes.ByteArray;
 import com.mastercard.mobile_api.bytes.ByteArrayFactory;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.context.MTBPTransactionContext;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionCredentials;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.nfc.MCCAPDUBaseCommandHandler;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.nfc.MCCommandResult;
+import com.samsung.android.spayfw.b.Log;
 
 public class MCAPDUCommandHandlerRRP
 extends MCCAPDUBaseCommandHandler {
@@ -33,7 +27,7 @@ extends MCCAPDUBaseCommandHandler {
     @Override
     protected MCCommandResult generateResponseAPDU() {
         if (this.mResponseRRE == null) {
-            c.e("mcpce_MCCAPDUBaseCommandHandler", "processCommand RELAY_RESISTANCE, RRP response is null.");
+            Log.e("mcpce_MCCAPDUBaseCommandHandler", "processCommand RELAY_RESISTANCE, RRP response is null.");
             return this.completeCommand(27013);
         }
         return this.completeCommand(this.mResponseRRE.clone().append(ByteArrayFactory.getInstance().getFromWord(-28672)));
@@ -43,11 +37,11 @@ extends MCCAPDUBaseCommandHandler {
     protected MCCommandResult processCommand(ByteArray byteArray) {
         int n2 = 255 & byteArray.getByte(4);
         if (n2 != 4) {
-            c.e("mcpce_MCCAPDUBaseCommandHandler", "processCommand RELAY_RESISTANCE, wrong apdu length, lc = " + n2 + ", epected length = " + 4);
+            Log.e("mcpce_MCCAPDUBaseCommandHandler", "processCommand RELAY_RESISTANCE, wrong apdu length, lc = " + n2 + ", epected length = " + 4);
             return this.completeCommand(26368);
         }
         if (this.getTransactionContext().getRRPCounter() >= 3) {
-            c.e("mcpce_MCCAPDUBaseCommandHandler", "processCommand RELAY_RESISTANCE, RRP counter exceed max, RRP counter 3, max 3");
+            Log.e("mcpce_MCCAPDUBaseCommandHandler", "processCommand RELAY_RESISTANCE, RRP counter exceed max, RRP counter 3, max 3");
             return this.completeCommand(27013);
         }
         ByteArray byteArray2 = byteArray.copyOfRange(5, 1 + (n2 + 4));

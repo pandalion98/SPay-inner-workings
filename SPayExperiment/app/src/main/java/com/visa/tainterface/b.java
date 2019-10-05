@@ -16,19 +16,18 @@
  */
 package com.visa.tainterface;
 
-import android.content.Context;
 import android.spay.CertInfo;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.cncc.SpayDRKManager;
 import com.samsung.android.spaytzsvc.api.TAController;
 import com.samsung.android.spaytzsvc.api.Utils;
-import com.visa.tainterface.VisaTAController;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class b {
     SpayDRKManager certloader = new SpayDRKManager();
@@ -38,7 +37,7 @@ public class b {
     TAController mTAController;
 
     b(TAController tAController) {
-        c.d("VisaDeviceCerts", "VisaDeviceCerts");
+        Log.d("VisaDeviceCerts", "VisaDeviceCerts");
         this.mTAController = tAController;
         this.isDRKServiceExist = SpayDRKManager.isSupported(this.mTAController.getContext());
         ArrayList arrayList = new ArrayList();
@@ -54,10 +53,10 @@ public class b {
     }
 
     private void loadCertsFromDRKService() {
-        c.d("VisaDeviceCerts", "loadCertsFromDRKService");
+        Log.d("VisaDeviceCerts", "loadCertsFromDRKService");
         this.mDevicePrivateCerts = this.certloader.getCertInfo();
         this.isDRKServiceUsed = true;
-        c.e("VisaDeviceCerts", "Device Certicates loaded using DRK Service");
+        Log.e("VisaDeviceCerts", "Device Certicates loaded using DRK Service");
     }
 
     public byte[] getDevicePrivateEncryptionCert() {
@@ -79,17 +78,17 @@ public class b {
     }
 
     public boolean load() {
-        c.d("VisaDeviceCerts", "load Device Certificates Start");
+        Log.d("VisaDeviceCerts", "load Device Certificates Start");
         this.loadInternal();
         if (this.mDevicePrivateCerts != null) {
-            c.d("VisaDeviceCerts", "load cert done size: " + this.mDevicePrivateCerts.mCerts.size());
+            Log.d("VisaDeviceCerts", "load cert done size: " + this.mDevicePrivateCerts.mCerts.size());
         }
         if (!this.isLoaded()) {
-            c.e("VisaDeviceCerts", "loadAllCerts: Error: get Wrapped Certificate Data from file system failed");
+            Log.e("VisaDeviceCerts", "loadAllCerts: Error: get Wrapped Certificate Data from file system failed");
             this.mDevicePrivateCerts = null;
             return false;
         }
-        c.d("VisaDeviceCerts", "load Device Certificates Success");
+        Log.d("VisaDeviceCerts", "load Device Certificates Success");
         return true;
     }
 
@@ -103,22 +102,22 @@ public class b {
                 block5 : {
                     block6 : {
                         if (!this.isDRKServiceExist) {
-                            c.d("VisaDeviceCerts", "DRK Service Not Exist - Should be L Binary - Use Payment Service to load Certs");
+                            Log.d("VisaDeviceCerts", "DRK Service Not Exist - Should be L Binary - Use Payment Service to load Certs");
                             this.mDevicePrivateCerts = this.mTAController.getCertInfo();
                             return;
                         }
-                        c.d("VisaDeviceCerts", "DRK Service Exist");
+                        Log.d("VisaDeviceCerts", "DRK Service Exist");
                         if (TAController.isChipSetQC()) {
-                            c.d("VisaDeviceCerts", "Device is Qualcomm - Directly Use DRK Service as PaymentService approach would anyway not work");
+                            Log.d("VisaDeviceCerts", "Device is Qualcomm - Directly Use DRK Service as PaymentService approach would anyway not work");
                             this.loadCertsFromDRKService();
                             return;
                         }
-                        c.d("VisaDeviceCerts", "Device is not Qualcomm");
+                        Log.d("VisaDeviceCerts", "Device is not Qualcomm");
                         if (!this.mTAController.isDeviceCertificateMigratable()) break block5;
-                        c.d("VisaDeviceCerts", "Device Certificates are migratable.");
+                        Log.d("VisaDeviceCerts", "Device Certificates are migratable.");
                         if (this.alreadyMigrated()) break block6;
-                        c.d("VisaDeviceCerts", "Device Certificates NOT already migrated.");
-                        c.d("VisaDeviceCerts", "Get CertData from EFS and copy to local folder.");
+                        Log.d("VisaDeviceCerts", "Device Certificates NOT already migrated.");
+                        Log.d("VisaDeviceCerts", "Get CertData from EFS and copy to local folder.");
                         ArrayList arrayList = new ArrayList();
                         arrayList.add((Object)"/efs/prov_data/pay/visa_pay_sign.dat");
                         arrayList.add((Object)"/efs/prov_data/pay/visa_pay_enc.dat");
@@ -127,15 +126,15 @@ public class b {
                         iterator = certInfo.mCerts.entrySet().iterator();
                         break block8;
                     }
-                    c.d("VisaDeviceCerts", "Device Certificates already migrated. So no action needed");
+                    Log.d("VisaDeviceCerts", "Device Certificates already migrated. So no action needed");
                     break block7;
                 }
-                c.d("VisaDeviceCerts", "Device Certificates not migratable. do best effort");
-                c.d("VisaDeviceCerts", "DRK Service Exist - Device Certificates are not migratable. Not Qualcomm chipset. Use Payment Service first to load Certs");
+                Log.d("VisaDeviceCerts", "Device Certificates not migratable. do best effort");
+                Log.d("VisaDeviceCerts", "DRK Service Exist - Device Certificates are not migratable. Not Qualcomm chipset. Use Payment Service first to load Certs");
                 this.mDevicePrivateCerts = this.mTAController.getCertInfo();
                 if (this.isLoaded()) return;
                 {
-                    c.e("VisaDeviceCerts", "Device Certicates not loaded using PaymentService. Try falling back to DRK Service");
+                    Log.e("VisaDeviceCerts", "Device Certicates not loaded using PaymentService. Try falling back to DRK Service");
                     this.loadCertsFromDRKService();
                     return;
                 }
@@ -149,7 +148,7 @@ public class b {
                 if (entry.getValue() == null || !((String)entry.getKey()).equalsIgnoreCase("/efs/prov_data/pay/visa_pay_enc.dat")) continue;
                 Utils.writeFile((byte[])entry.getValue(), this.certloader.getCertFilePath("visa_pay_enc.dat"));
             }
-            c.d("VisaDeviceCerts", "Delete the Device Certificates from EFS");
+            Log.d("VisaDeviceCerts", "Delete the Device Certificates from EFS");
             this.mTAController.clearDeviceCertificates("/efs/prov_data/pay/");
         }
         this.loadCertsFromDRKService();

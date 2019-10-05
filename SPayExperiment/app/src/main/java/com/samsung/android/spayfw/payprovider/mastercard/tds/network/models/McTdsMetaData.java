@@ -10,7 +10,8 @@
 package com.samsung.android.spayfw.payprovider.mastercard.tds.network.models;
 
 import android.text.TextUtils;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 
 public class McTdsMetaData {
     private static final int MAX_LENGTH_AUTH_CODE = 64;
@@ -84,23 +85,23 @@ public class McTdsMetaData {
 
     public boolean validate() {
         if (!TextUtils.isEmpty((CharSequence)this.mTdsUrl) && this.mTdsUrl.length() > 128) {
-            c.d(TAG, "validate: invalid tdsUrl :" + this.mTdsUrl);
+            Log.d(TAG, "validate: invalid tdsUrl :" + this.mTdsUrl);
             return false;
         }
         if (!TextUtils.isEmpty((CharSequence)this.mTdsRegisterUrl) && this.mTdsRegisterUrl.length() > 128) {
-            c.d(TAG, "validate: invalid tdsRegistrationUrl :" + this.mTdsRegisterUrl);
+            Log.d(TAG, "validate: invalid tdsRegistrationUrl :" + this.mTdsRegisterUrl);
             return false;
         }
         if (this.mCardMasterId == -1L) {
-            c.d(TAG, "validate: invalid foreign key :" + this.mCardMasterId);
+            Log.d(TAG, "validate: invalid foreign key :" + this.mCardMasterId);
             return false;
         }
         if (!TextUtils.isEmpty((CharSequence)this.mAuthCode) && this.mAuthCode.length() > 64) {
-            c.d(TAG, "validate: invalid authCode :" + this.mAuthCode);
+            Log.d(TAG, "validate: invalid authCode :" + this.mAuthCode);
             return false;
         }
         if (!TextUtils.isEmpty((CharSequence)this.mLastUpdateTag) && this.mLastUpdateTag.length() > 128) {
-            c.d(TAG, "validate: invalid lastUpdateTag :" + this.mLastUpdateTag);
+            Log.d(TAG, "validate: invalid lastUpdateTag :" + this.mLastUpdateTag);
             return false;
         }
         return true;

@@ -15,25 +15,19 @@ package com.samsung.android.spayfw.core.a;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+
 import com.google.gson.JsonObject;
 import com.samsung.android.spayfw.appinterface.IProvisionTokenCallback;
 import com.samsung.android.spayfw.appinterface.ProvisionTokenInfo;
-import com.samsung.android.spayfw.appinterface.ProvisionTokenResult;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
-import com.samsung.android.spayfw.core.a.o;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.l;
 import com.samsung.android.spayfw.core.m;
-import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.d;
-import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.remoteservice.Request;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.CardInfo;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenRequestData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenResponseData;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
@@ -58,15 +52,15 @@ extends o {
         int n2 = -1;
         if (this.mEnrollmentId == null || this.mA == null || this.iJ == null) {
             if (this.mEnrollmentId == null) {
-                com.samsung.android.spayfw.b.c.e("TokenProvisioner", "Provision Token Failed - Enrollment Id is null");
+                Log.e("TokenProvisioner", "Provision Token Failed - Enrollment Id is null");
             }
             if (this.iJ == null) {
-                com.samsung.android.spayfw.b.c.e("TokenProvisioner", "Provision Token Failed - Failed to initialize account");
+                Log.e("TokenProvisioner", "Provision Token Failed - Failed to initialize account");
             } else {
                 n2 = -5;
             }
             if (this.mA == null) {
-                com.samsung.android.spayfw.b.c.e("TokenProvisioner", "Provision Token Failed - Provision Callback is null");
+                Log.e("TokenProvisioner", "Provision Token Failed - Provision Callback is null");
                 return;
             }
             this.mA.onFail(this.mEnrollmentId, n2, null);
@@ -76,21 +70,21 @@ extends o {
             if (c2 == null || c2.ac() == null) {
                 if (c2 == null) {
                     n2 = -6;
-                    com.samsung.android.spayfw.b.c.e("TokenProvisioner", "Provision Token Failed - unable to get card object");
+                    Log.e("TokenProvisioner", "Provision Token Failed - unable to get card object");
                 } else {
-                    com.samsung.android.spayfw.b.c.e("TokenProvisioner", "Provision Token Failed - token is null");
+                    Log.e("TokenProvisioner", "Provision Token Failed - token is null");
                 }
                 this.mA.onFail(this.mEnrollmentId, n2, null);
                 return;
             }
             if (c2.ac().getTokenId() != null || !"ENROLLED".equals((Object)c2.ac().getTokenStatus())) {
-                com.samsung.android.spayfw.b.c.w("TokenProvisioner", "Provision Token Failed - alrerady provisioned");
+                Log.w("TokenProvisioner", "Provision Token Failed - alrerady provisioned");
                 this.mA.onFail(this.mEnrollmentId, -3, null);
                 return;
             }
             com.samsung.android.spayfw.storage.models.a a2 = this.jJ.bp(this.mEnrollmentId);
             if (a2 == null) {
-                com.samsung.android.spayfw.b.c.e("TokenProvisioner", "Provision Token Failed - unable to find record from db");
+                Log.e("TokenProvisioner", "Provision Token Failed - unable to find record from db");
                 this.iJ.s(this.mEnrollmentId);
                 this.mA.onFail(this.mEnrollmentId, -8, null);
                 return;
@@ -102,7 +96,7 @@ extends o {
                 if (a3 != null) {
                     a3.bs();
                 } else {
-                    com.samsung.android.spayfw.b.c.d("TokenProvisioner", "process: cannot get fraud data");
+                    Log.d("TokenProvisioner", "process: cannot get fraud data");
                 }
             }
             TokenRequestData tokenRequestData = l.a(l2, this.mEnrollmentId, this.mB, c3);
@@ -148,7 +142,7 @@ extends o {
                                                 block47 : {
                                                     block46 : {
                                                         var3_3 = null;
-                                                        com.samsung.android.spayfw.b.c.i("TokenProvisioner", "Provision Token  - onRequestComplete: " + var1_1);
+                                                        Log.i("TokenProvisioner", "Provision Token  - onRequestComplete: " + var1_1);
                                                         var4_4 = y.this.iJ.q(this.mEnrollmentId);
                                                         switch (var1_1) {
                                                             default: {
@@ -165,7 +159,7 @@ extends o {
                                                                     var23_14 = (TokenResponseData)var2_2.getResult();
                                                                     var24_15 = var23_14.getCard() != null ? var23_14.getCard().getBrand() : null;
                                                                 }
-                                                                com.samsung.android.spayfw.b.c.e("TokenProvisioner", "Provision Response is null");
+                                                                Log.e("TokenProvisioner", "Provision Response is null");
                                                                 var5_5 = -204;
                                                                 var6_7 = "PENDING";
                                                                 var7_6 = false;
@@ -252,7 +246,7 @@ extends o {
                                                                 break block45;
                                                             }
                                                         }
-                                                        com.samsung.android.spayfw.b.c.d("TokenProvisioner", "ProvisionCallback:onRequestComplete: Provision Data : " + (Object)var23_14.getData());
+                                                        Log.d("TokenProvisioner", "ProvisionCallback:onRequestComplete: Provision Data : " + (Object)var23_14.getData());
                                                         var25_16 = var23_14.getData();
                                                         var26_17 = false;
                                                         if (var25_16 != null) {
@@ -260,13 +254,13 @@ extends o {
                                                         }
                                                         var27_18 = y.this.jJ.bp(this.mEnrollmentId);
                                                         if (var4_4 != null && var27_18 != null) break block46;
-                                                        com.samsung.android.spayfw.b.c.e("TokenProvisioner", "unable to get card object from mAccount or db record is null ");
+                                                        Log.e("TokenProvisioner", "unable to get card object from mAccount or db record is null ");
                                                         if (var27_18 != null) {
-                                                            com.samsung.android.spayfw.b.c.i("TokenProvisioner", "delete record from db ");
+                                                            Log.i("TokenProvisioner", "delete record from db ");
                                                             y.this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Cn, this.mEnrollmentId);
                                                         }
                                                         if (var4_4 != null) {
-                                                            com.samsung.android.spayfw.b.c.i("TokenProvisioner", "delete card object");
+                                                            Log.i("TokenProvisioner", "delete card object");
                                                             y.this.iJ.s(this.mEnrollmentId);
                                                         }
                                                         var9_10 = var24_15;
@@ -296,7 +290,7 @@ extends o {
                                                     var36_24.setTokenStatus("PENDING_PROVISION");
                                                 }
                                                 if (!y.this.a(var36_24)) break block49;
-                                                com.samsung.android.spayfw.b.c.e("TokenProvisioner", "Duplicate Token Ref Id / Tr Token Id");
+                                                Log.e("TokenProvisioner", "Duplicate Token Ref Id / Tr Token Id");
                                                 var42_25 = new TokenStatus("DISPOSED", null);
                                                 var4_4.ad().updateTokenStatusTA(null, var42_25);
                                                 y.this.iJ.s(this.mEnrollmentId);
@@ -314,11 +308,11 @@ extends o {
                                                 break block45;
                                             }
                                             if (var32_21 == null) {
-                                                com.samsung.android.spayfw.b.c.e("TokenProvisioner", "PayProvider error: ProviderResponseData is null");
+                                                Log.e("TokenProvisioner", "PayProvider error: ProviderResponseData is null");
                                             } else if (var32_21.getErrorCode() != 0) {
-                                                com.samsung.android.spayfw.b.c.e("TokenProvisioner", "PayProvider error: pay provider return error: " + var32_21.getErrorCode());
+                                                Log.e("TokenProvisioner", "PayProvider error: pay provider return error: " + var32_21.getErrorCode());
                                             } else {
-                                                com.samsung.android.spayfw.b.c.e("TokenProvisioner", "PayProvider error: providerTokenKey is null");
+                                                Log.e("TokenProvisioner", "PayProvider error: providerTokenKey is null");
                                             }
                                             var5_5 = -1;
                                             var35_27 = var24_15;
@@ -353,7 +347,7 @@ extends o {
                                         if (var41_30 != null) {
                                             var41_30.l(var4_4.ac().getTokenId(), var40_29);
                                         } else {
-                                            com.samsung.android.spayfw.b.c.d("TokenProvisioner", "ProvisionCallback:onRequestComplete: cannot get fraud data");
+                                            Log.d("TokenProvisioner", "ProvisionCallback:onRequestComplete: cannot get fraud data");
                                         }
                                         var10_8 = var32_21;
                                         var3_3 = var39_28;
@@ -364,7 +358,7 @@ extends o {
                                         var5_5 = 0;
                                         break block45;
                                     }
-                                    com.samsung.android.spayfw.b.c.e("TokenProvisioner", "Card Brand is null");
+                                    Log.e("TokenProvisioner", "Card Brand is null");
                                     var10_8 = var32_21;
                                     var3_3 = var39_28;
                                     var8_9 = var33_22;
@@ -392,7 +386,7 @@ extends o {
                             var5_5 = 0;
                         }
                         if (var5_5 != 0) {
-                            com.samsung.android.spayfw.b.c.e("TokenProvisioner", "Provision Token Failed - Error Code = " + var5_5);
+                            Log.e("TokenProvisioner", "Provision Token Failed - Error Code = " + var5_5);
                             if (var4_4 != null) {
                                 var17_11 = new d(3, -1, null);
                                 var4_4.ad().updateRequestStatus(var17_11);
@@ -403,7 +397,7 @@ extends o {
                             if (var18_12 != null) {
                                 var18_12.bs();
                             }
-                            com.samsung.android.spayfw.b.c.d("TokenProvisioner", "ProvisionCallback:onRequestComplete: cannot get fraud data");
+                            Log.d("TokenProvisioner", "ProvisionCallback:onRequestComplete: cannot get fraud data");
                         }
                         if (var4_4 == null) break block53;
                         var11_35 = null;
@@ -416,7 +410,7 @@ extends o {
                         }
                         break block44;
                         catch (Exception var15_34) {
-                            com.samsung.android.spayfw.b.c.c("TokenProvisioner", var15_34.getMessage(), var15_34);
+                            Log.c("TokenProvisioner", var15_34.getMessage(), var15_34);
                         }
                         break block54;
                     }
@@ -438,11 +432,11 @@ extends o {
                 var14_13 = var4_4.ac().getTokenId();
             }
             if (var8_9) {
-                com.samsung.android.spayfw.b.c.i("TokenProvisioner", "processProvision:Send success report to TR server");
+                Log.i("TokenProvisioner", "processProvision:Send success report to TR server");
                 y.this.a(null, var14_13, var6_7, "PROVISION", c.y(var9_10), var10_8, false);
                 return;
             }
-            com.samsung.android.spayfw.b.c.i("TokenProvisioner", "processProvision:Send error report to TR server");
+            Log.i("TokenProvisioner", "processProvision:Send error report to TR server");
             y.this.b(null, var14_13, var6_7, "PROVISION", c.y(var9_10), var10_8, false);
         }
     }

@@ -12,16 +12,14 @@
  */
 package com.samsung.android.spayfw.utils;
 
-import com.samsung.android.spayfw.b.c;
-import com.squareup.okhttp.Call;
+import com.samsung.android.spayfw.b.Log;
 import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +31,7 @@ public class a {
     private Request.Builder AS = new Request.Builder();
 
     public void a(String string, byte[] arrby, String string2, final a a2) {
-        c.m("AsyncNetworkHttpClient", "requestDataString : " + arrby);
+        Log.m("AsyncNetworkHttpClient", "requestDataString : " + arrby);
         Request request = this.AS.url(string).post(RequestBody.create(MediaType.parse(string2), arrby)).build();
         this.AR.newCall(request).enqueue(new Callback(){
 

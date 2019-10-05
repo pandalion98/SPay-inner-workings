@@ -9,9 +9,8 @@
 package com.samsung.android.spayfw.payprovider.amexv2.tzsvc;
 
 import android.os.Build;
-import com.samsung.android.spayfw.payprovider.amexv2.tzsvc.AmexCommands;
-import com.samsung.android.spayfw.payprovider.amexv2.tzsvc.c;
-import com.samsung.android.spaytzsvc.api.TACommands;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.TAInfo;
 
 public class e
@@ -34,11 +33,11 @@ extends TAInfo {
     public String getPinRandomFileName() {
         if (bQC) {
             String string = "aexp_pay" + PINRANDOMFILE_POSTFIX;
-            com.samsung.android.spayfw.b.c.d("AmexTAInfo", "File name for QC is " + string);
+            Log.d("AmexTAInfo", "File name for QC is " + string);
             return string;
         }
         String string = "ffffffff000000000000000000000026".substring(-2 + "ffffffff000000000000000000000026".length(), "ffffffff000000000000000000000026".length()) + PINRANDOMFILE_POSTFIX;
-        com.samsung.android.spayfw.b.c.d("AmexTAInfo", "File name for Tbase is " + string);
+        Log.d("AmexTAInfo", "File name for Tbase is " + string);
         return string;
     }
 }

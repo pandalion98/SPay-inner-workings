@@ -12,7 +12,7 @@
 package com.samsung.android.spayfw.payprovider.mastercard.tds.network;
 
 import com.google.gson.JsonObject;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.i;
 import com.samsung.android.spayfw.payprovider.mastercard.tds.network.models.McTdsMetaData;
 import com.samsung.android.spayfw.utils.a;
@@ -142,7 +142,7 @@ public class McTdsRequestBuilder {
             }
             catch (UnsupportedEncodingException unsupportedEncodingException) {
                 unsupportedEncodingException.printStackTrace();
-                c.e(McTdsRequestBuilder.TAG, "UnsupportedEncodingException..");
+                Log.e(McTdsRequestBuilder.TAG, "UnsupportedEncodingException..");
                 return null;
             }
         }

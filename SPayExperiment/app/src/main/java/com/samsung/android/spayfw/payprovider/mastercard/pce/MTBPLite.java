@@ -14,8 +14,7 @@
 package com.samsung.android.spayfw.payprovider.mastercard.pce;
 
 import android.os.Bundle;
-import com.mastercard.mcbp.core.mcbpcards.profile.CardRiskManagementData;
-import com.mastercard.mcbp.core.mcbpcards.profile.ContactlessPaymentData;
+
 import com.mastercard.mcbp.core.mcbpcards.profile.DC_CP;
 import com.mastercard.mcbp.core.mcbpcards.profile.DC_CP_MPP;
 import com.mastercard.mcbp.core.mcbpcards.profile.RemotePaymentData;
@@ -25,23 +24,17 @@ import com.mastercard.mobile_api.bytes.ByteArrayFactory;
 import com.mastercard.mobile_api.utils.Date;
 import com.mastercard.mobile_api.utils.TLV;
 import com.mastercard.mobile_api.utils.Utils;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.McProvider;
 import com.samsung.android.spayfw.payprovider.mastercard.dao.McCardProfileDaoImpl;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.MCBaseCardProfile;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.MCTransactionException;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.MTBPTransactionListener;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.context.MTBPContextFactory;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.context.MTBPTransactionContext;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.CryptogramInput;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.CryptogramType;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.DSRPInputData;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.DSRPOutputData;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCCVMResult;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCCryptoOutput;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCProfilesTable;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionCredentials;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionInformation;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionResult;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.RemoteCryptogramResult;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.ReturnCode;
@@ -53,7 +46,7 @@ import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McTACommands;
 import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McTAController;
 import com.samsung.android.spayfw.payprovider.mastercard.utils.McUtils;
 import com.samsung.android.spayfw.utils.h;
-import com.samsung.android.spaytzsvc.api.Blob;
+
 import java.util.EnumSet;
 import java.util.HashMap;
 
@@ -132,7 +125,7 @@ public class MTBPLite {
         } else {
             byteArray.append(cryptogramInput.getUnpredictableNumber());
         }
-        c.d(TAG, "UN Generated CDOL : " + byteArray.getHexString());
+        Log.d(TAG, "UN Generated CDOL : " + byteArray.getHexString());
         return byteArray;
     }
 
@@ -180,9 +173,9 @@ public class MTBPLite {
         byteArray.append(transactionOutput.getAIP());
         byteArray.appendByte(transactionOutput.getCryptoGram().getIssuerApplicationData().getByte(0));
         byteArray.appendByte(transactionOutput.getCryptoGram().getIssuerApplicationData().getByte(1));
-        c.d(TAG, "UCAF input: " + byteArray.getHexString());
+        Log.d(TAG, "UCAF input: " + byteArray.getHexString());
         String string = byteArrayFactory.hexStringToBase64(byteArray.getHexString());
-        c.d(TAG, "UCAF encoded: " + string);
+        Log.d(TAG, "UCAF encoded: " + string);
         return byteArrayFactory.getByteArray(string.getBytes(), string.length());
     }
 
@@ -201,7 +194,7 @@ public class MTBPLite {
         if (this.mPaymentProfile.getDigitalizedCardContainer() instanceof DC_CP) {
             dC_CP_MPP = ((DC_CP)this.mPaymentProfile.getDigitalizedCardContainer()).getDC_CP_MPP();
             if (dC_CP_MPP == null) {
-                c.e(TAG, "DSRP: internall error, can't get provisioned card profile, null.");
+                Log.e(TAG, "DSRP: internall error, can't get provisioned card profile, null.");
                 return new RemoteCryptogramResult(ReturnCode.ERROR_INCOMPATIBLE_PROFILE, null);
             }
             remotePaymentData = dC_CP_MPP.getRemotePaymentData();
@@ -210,17 +203,17 @@ public class MTBPLite {
             remotePaymentData = null;
         }
         if (dC_CP_MPP == null) {
-            c.e(TAG, "DSRP: internall error, provisioned card profile is null.");
+            Log.e(TAG, "DSRP: internall error, provisioned card profile is null.");
             return new RemoteCryptogramResult(ReturnCode.ERROR_INCOMPATIBLE_PROFILE, null);
         }
         if (remotePaymentData == null) {
-            c.e(TAG, "DSRP: internall error, Remote Payment data is null.");
+            Log.e(TAG, "DSRP: internall error, Remote Payment data is null.");
             return new RemoteCryptogramResult(ReturnCode.ERROR_INCOMPATIBLE_PROFILE, null);
         }
         ByteArrayFactory byteArrayFactory = ByteArrayFactory.getInstance();
         TransactionOutput transactionOutput = this.initializeCryptoOutput(remotePaymentData);
         ByteArray byteArray = remotePaymentData.getCVR_MaskAnd().clone();
-        c.d(TAG, "CVR mask: " + byteArray.getHexString());
+        Log.d(TAG, "CVR mask: " + byteArray.getHexString());
         byte by = byteArray.getByte(3);
         if (cryptogramInput.getTerminalCountryCode() == null || !cryptogramInput.getTerminalCountryCode().isEqual(dC_CP_MPP.getCardRiskManagementData().getCRM_CountryCode())) {
             byteArray.setByte(3, (byte)(by | 4));
@@ -233,7 +226,7 @@ public class MTBPLite {
         if (this.mTransactionContext.getTransactionCredentials().getCVMResult().getResultCode() == 0L) {
             byteArray.setByte(0, (byte)(5 | byteArray.getByte(0)));
         }
-        c.d(TAG, "CVR: " + byteArray.getHexString());
+        Log.d(TAG, "CVR: " + byteArray.getHexString());
         byteArray.setByte(3, (byte)(64 | byteArray.getByte(3)));
         if (!Utils.isZero(remotePaymentData.getCIAC_Decline().bitWiseAnd(byteArray.copyOfRange(3, 6)))) {
             byteArray.setByte(0, (byte)(-128 | byteArray.getByte(0)));
@@ -242,7 +235,7 @@ public class MTBPLite {
             byteArray.setByte(0, (byte)(-96 | byteArray.getByte(0)));
             transactionOutput.getCryptoGram().setCid((byte)-128);
         }
-        c.d(TAG, "Mask: " + remotePaymentData.getCVR_MaskAnd().getHexString());
+        Log.d(TAG, "Mask: " + remotePaymentData.getCVR_MaskAnd().getHexString());
         ByteArray byteArray2 = byteArray.bitWiseAnd(remotePaymentData.getCVR_MaskAnd());
         ByteArray byteArray3 = this.buildCDOL(cryptogramInput);
         try {
@@ -251,11 +244,11 @@ public class MTBPLite {
         }
         catch (Exception exception) {
             exception.printStackTrace();
-            c.e(TAG, "GPO processCommand: cannot initiate MC TA. Unexpected TA exception.");
+            Log.e(TAG, "GPO processCommand: cannot initiate MC TA. Unexpected TA exception.");
             mcTAController = null;
         }
         if (mcTAController == null) {
-            c.e(TAG, "DSRP: internall error, MC TA isn't loaded.");
+            Log.e(TAG, "DSRP: internall error, MC TA isn't loaded.");
             return new RemoteCryptogramResult(ReturnCode.ERROR_INCOMPATIBLE_PROFILE, null);
         }
         McTACommands.TASetContext.TASetContextResponse.SetContextOut setContextOut = mcTAController.setContext(this.mTransactionContext.getTransactionCredentials().getTAProfilesTable().getTAProfileReference(MCProfilesTable.TAProfile.PROFILE_DSRP_TA_GPO));
@@ -267,28 +260,28 @@ public class MTBPLite {
         }
         byte[] arrby = setContextOut._atc.getData();
         if (arrby == null || arrby.length != 2) {
-            c.e(TAG, "DSRP: wrong ATC length.");
+            Log.e(TAG, "DSRP: wrong ATC length.");
             return new RemoteCryptogramResult(ReturnCode.ERROR_INCOMPATIBLE_PROFILE, null);
         }
         byte[] arrby2 = setContextOut._wrapped_atc_obj.getData();
         if (arrby2 == null) {
-            c.e(TAG, "DSRP: Wrong TA profile returned from MC TA.");
+            Log.e(TAG, "DSRP: Wrong TA profile returned from MC TA.");
             return new RemoteCryptogramResult(ReturnCode.ERROR_INCOMPATIBLE_PROFILE, null);
         }
         transactionOutput.getCryptoGram().setATC(byteArrayFactory.getByteArray(arrby, arrby.length));
         this.mTransactionContext.getTransactionCredentials().setmWrappedAtcObject(arrby2);
-        c.i(TAG, "ATC=" + transactionOutput.getCryptoGram().getATC().getHexString());
+        Log.i(TAG, "ATC=" + transactionOutput.getCryptoGram().getATC().getHexString());
         byte by2 = this.mTransactionContext.getTransactionCredentials().getTAProfilesTable().getTAProfileReference(MCProfilesTable.TAProfile.PROFILE_DSRP_TA_GAC_ONLINE_CVM);
         ByteArray byteArray4 = byteArray3.copyOfRange(0, 29);
         ByteArray byteArray5 = byteArray2.copyOfRange(1, byteArray2.getLength());
-        c.d(TAG, "Input Data1: " + byteArray4.getHexString());
-        c.d(TAG, "Input Data2: " + byteArray5.getHexString());
+        Log.d(TAG, "Input Data1: " + byteArray4.getHexString());
+        Log.d(TAG, "Input Data2: " + byteArray5.getHexString());
         byte[] arrby3 = mcTAController.generateMAC(by2, byteArray4.getBytes(), byteArray5.getBytes(), cryptogramInput.getUnpredictableNumber().getBytes());
         if (arrby3 == null || arrby3.length != 8) {
-            c.e(TAG, "DSRP: wrong cryptogram.");
+            Log.e(TAG, "DSRP: wrong cryptogram.");
             return new RemoteCryptogramResult(ReturnCode.ERROR_INCOMPATIBLE_PROFILE, null);
         }
-        c.i(TAG, "Cryptogram: generated cryptogram...");
+        Log.i(TAG, "Cryptogram: generated cryptogram...");
         transactionOutput.getCryptoGram().setCryptoOutput(arrby3);
         transactionOutput.getCryptoGram().setCid((byte)-128);
         ByteArray byteArray6 = remotePaymentData.getIssuerApplicationData().clone();
@@ -298,13 +291,13 @@ public class MTBPLite {
         transactionOutput.setExpiryDate(remotePaymentData.getApplicationExpiryDate());
         transactionOutput.setPAN(remotePaymentData.getPAN());
         transactionOutput.setPANSequenceNumber(remotePaymentData.getPAN_SequenceNumber());
-        c.d(TAG, "PAR setting here : " + remotePaymentData.getPaymentAccountReference());
+        Log.d(TAG, "PAR setting here : " + remotePaymentData.getPaymentAccountReference());
         transactionOutput.setPar(remotePaymentData.getPaymentAccountReference());
         try {
             this.cancelPayment(MCTransactionResult.TRANSACTION_COMPLETED, true);
         }
         catch (MCTransactionException mCTransactionException) {
-            c.c(TAG, "Unexpected exception during inapp update: " + mCTransactionException.toString(), (Throwable)((Object)mCTransactionException));
+            Log.c(TAG, "Unexpected exception during inapp update: " + mCTransactionException.toString(), (Throwable)((Object)mCTransactionException));
             return new RemoteCryptogramResult(ReturnCode.OK, transactionOutput);
         }
         return new RemoteCryptogramResult(ReturnCode.OK, transactionOutput);
@@ -330,7 +323,7 @@ public class MTBPLite {
     private ByteArray getDsrpUn(McTAController mcTAController) {
         byte[] arrby = mcTAController.generateUN();
         if (arrby == null || arrby.length != 4) {
-            c.e(TAG, "DSRP: internall error, MC TA returns incorrect un.");
+            Log.e(TAG, "DSRP: internall error, MC TA returns incorrect un.");
             return null;
         }
         return ByteArrayFactory.getInstance().getByteArray(arrby, arrby.length);
@@ -343,57 +336,57 @@ public class MTBPLite {
     private TransactionOutput initializeCryptoOutput(RemotePaymentData remotePaymentData) {
         TransactionOutput transactionOutput = new TransactionOutput();
         transactionOutput.setPAN(remotePaymentData.getPAN().clone());
-        c.d(TAG, "PAN: " + remotePaymentData.getPAN().getHexString());
+        Log.d(TAG, "PAN: " + remotePaymentData.getPAN().getHexString());
         transactionOutput.setPANSequenceNumber(remotePaymentData.getPAN_SequenceNumber().clone());
-        c.d(TAG, "PAN SN: " + remotePaymentData.getPAN_SequenceNumber().getHexString());
+        Log.d(TAG, "PAN SN: " + remotePaymentData.getPAN_SequenceNumber().getHexString());
         transactionOutput.setCVMEntered(true);
         transactionOutput.getCryptoGram().setIssuerApplicationData(remotePaymentData.getIssuerApplicationData().clone());
-        c.d(TAG, "IAD: " + remotePaymentData.getIssuerApplicationData().getHexString());
+        Log.d(TAG, "IAD: " + remotePaymentData.getIssuerApplicationData().getHexString());
         transactionOutput.setAIP(remotePaymentData.getAIP());
-        c.d(TAG, "getCVR_MaskAnd: " + remotePaymentData.getCVR_MaskAnd().getHexString());
-        c.d(TAG, "getIssuerApplicationData: " + remotePaymentData.getIssuerApplicationData().getHexString());
-        c.d(TAG, "getApplicationExpiryDate: " + remotePaymentData.getApplicationExpiryDate().getHexString());
-        c.d(TAG, "getCIAC_Decline: " + remotePaymentData.getCIAC_Decline().getHexString());
+        Log.d(TAG, "getCVR_MaskAnd: " + remotePaymentData.getCVR_MaskAnd().getHexString());
+        Log.d(TAG, "getIssuerApplicationData: " + remotePaymentData.getIssuerApplicationData().getHexString());
+        Log.d(TAG, "getApplicationExpiryDate: " + remotePaymentData.getApplicationExpiryDate().getHexString());
+        Log.d(TAG, "getCIAC_Decline: " + remotePaymentData.getCIAC_Decline().getHexString());
         return transactionOutput;
     }
 
     private boolean isDsrpInputValid(DSRPInputData dSRPInputData) {
         long l2 = dSRPInputData.getTransactionAmount();
         if (l2 < 0L || l2 > 999999999999L) {
-            c.e(TAG, "DSRP: wrong transaction amount input : " + l2);
+            Log.e(TAG, "DSRP: wrong transaction amount input : " + l2);
             return false;
         }
         long l3 = dSRPInputData.getOtherAmount();
         if (l3 < 0L || l3 > 999999999999L) {
-            c.e(TAG, "DSRP: wrong other amount input : " + l3);
+            Log.e(TAG, "DSRP: wrong other amount input : " + l3);
             return false;
         }
         long l4 = dSRPInputData.getCurrencyCode();
         if (l4 < 0L || l4 > 999L) {
-            c.e(TAG, "DSRP: wrong currency code input : " + l4);
+            Log.e(TAG, "DSRP: wrong currency code input : " + l4);
             return false;
         }
         byte by = dSRPInputData.getTransactionType();
         if (by < 0 || by > 99) {
-            c.e(TAG, "DSRP: wrong transaction type : " + by);
+            Log.e(TAG, "DSRP: wrong transaction type : " + by);
             return false;
         }
         int n2 = dSRPInputData.getCountryCode();
         if (n2 < 0 || n2 > 999) {
-            c.e(TAG, "DSRP: wrong transaction country code : " + n2);
+            Log.e(TAG, "DSRP: wrong transaction country code : " + n2);
             return false;
         }
         Date date = dSRPInputData.getTransactionDate();
         if (date == null) {
-            c.e(TAG, "DSRP: transacion date is null");
+            Log.e(TAG, "DSRP: transacion date is null");
             return false;
         }
         if (date.getDay() < 1 || date.getDay() > 31 || date.getMonth() < 1 || date.getMonth() > 12 || date.getYear() < 2000) {
-            c.e(TAG, "DSRP: wrong transacion date : " + date.toString());
+            Log.e(TAG, "DSRP: wrong transacion date : " + date.toString());
             return false;
         }
         if (dSRPInputData.getCryptogramType() != CryptogramType.DE55 && dSRPInputData.getCryptogramType() != CryptogramType.UCAF) {
-            c.e(TAG, "DSRP: Unknown cryptogram type: " + (Object)((Object)dSRPInputData.getCryptogramType()));
+            Log.e(TAG, "DSRP: Unknown cryptogram type: " + (Object)((Object)dSRPInputData.getCryptogramType()));
             return false;
         }
         return true;
@@ -408,7 +401,7 @@ public class MTBPLite {
             }
             return;
         }
-        c.e(TAG, "setState: wrong state requested, current state = " + this.mCurrentState.name() + ", requested state = " + mTBPState.name());
+        Log.e(TAG, "setState: wrong state requested, current state = " + this.mCurrentState.name() + ", requested state = " + mTBPState.name());
         throw new MCTransactionException(this.generateErrorResponse());
     }
 
@@ -425,19 +418,19 @@ public class MTBPLite {
             this.setState(MTBPState.READY);
         }
         if (!bl) {
-            c.i(TAG, "cancelPayment: skip update data");
+            Log.i(TAG, "cancelPayment: skip update data");
             return;
         } else {
             if (this.mTransactionContext.getTransactionCredentials().getmWrappedAtcObject() == null) {
-                c.e(TAG, "cancelPayment: update atc null!!!!");
+                Log.e(TAG, "cancelPayment: update atc null!!!!");
                 return;
             }
             if (this.mDao == null || this.mPaymentProfile.getUniqueTokenReferenceId() < 0L) return;
             {
-                c.i(TAG, "cancelPayment: update atc object :");
+                Log.i(TAG, "cancelPayment: update atc object :");
                 if (this.mDao.updateWrappedAtcData(this.mTransactionContext.getTransactionCredentials().getmWrappedAtcObject(), this.mPaymentProfile.getUniqueTokenReferenceId())) return;
                 {
-                    c.e(TAG, "cancelPayment: update atc object failed !!!!");
+                    Log.e(TAG, "cancelPayment: update atc object failed !!!!");
                     return;
                 }
             }
@@ -477,7 +470,7 @@ public class MTBPLite {
             mcTAController = null;
         }
         if (mcTAController == null) {
-            c.e(TAG, "DSRP: internall error, MC TA isn't loaded.");
+            Log.e(TAG, "DSRP: internall error, MC TA isn't loaded.");
             return null;
         }
         cryptogramInput.setOnlineAllowed(true);
@@ -495,27 +488,27 @@ public class MTBPLite {
         byteArray2.setByte(0, dSRPInputData.getTransactionType());
         cryptogramInput.setTrxType(byteArray2);
         long l5 = dSRPInputData.getUnpredictableNumber();
-        c.d(TAG, "Unpredictable number: " + l5);
+        Log.d(TAG, "Unpredictable number: " + l5);
         if (l5 == 0L) {
             cryptogramInput.setUnpredictableNumber(this.getDsrpUn(mcTAController));
         }
-        c.d(TAG, "UN before createRemote Cryptogram : " + cryptogramInput.getUnpredictableNumber().getHexString());
+        Log.d(TAG, "UN before createRemote Cryptogram : " + cryptogramInput.getUnpredictableNumber().getHexString());
         RemoteCryptogramResult remoteCryptogramResult = this.createRemoteCryptogram(cryptogramInput);
         if (remoteCryptogramResult.getCode() != ReturnCode.OK) {
-            c.e(TAG, "DSRP: createRemoteCryptogram failure cause : " + (Object)((Object)remoteCryptogramResult.getCode()));
+            Log.e(TAG, "DSRP: createRemoteCryptogram failure cause : " + (Object)((Object)remoteCryptogramResult.getCode()));
             return null;
         }
         TransactionOutput transactionOutput = remoteCryptogramResult.getOutput();
         if (transactionOutput == null) {
-            c.e(TAG, "DSRP: TransactionOupt is null ");
+            Log.e(TAG, "DSRP: TransactionOupt is null ");
             return null;
         }
         if (transactionOutput.getCryptoGram().getCid() != -128) {
-            c.e(TAG, "DSRP: A wrong cid in DsrpOutput, cid = " + transactionOutput.getCryptoGram().getCid());
+            Log.e(TAG, "DSRP: A wrong cid in DsrpOutput, cid = " + transactionOutput.getCryptoGram().getCid());
             return null;
         }
         if (dSRPInputData.getCryptogramType() == CryptogramType.UCAF && transactionOutput.getPANSequenceNumber().getByte(0) > 9) {
-            c.e(TAG, "DSRP:  A wrong PANSN for UCAF ");
+            Log.e(TAG, "DSRP:  A wrong PANSN for UCAF ");
             return null;
         }
         DSRPOutputData dSRPOutputData = new DSRPOutputData();
@@ -537,7 +530,7 @@ public class MTBPLite {
         }
         if (transactionOutput.getPar() == null) return dSRPOutputData;
         if (transactionOutput.getPar().getBytes() == null) return dSRPOutputData;
-        c.d(TAG, "par in dsrpout data :" + transactionOutput.getPar().getHexString());
+        Log.d(TAG, "par in dsrpout data :" + transactionOutput.getPar().getHexString());
         dSRPOutputData.setPar(transactionOutput.getPar().getBytes());
         return dSRPOutputData;
     }
@@ -552,7 +545,7 @@ public class MTBPLite {
         }
         this.mPaymentProfile = mCBaseCardProfile;
         this.setState(MTBPState.READY);
-        c.i(TAG, "Get current state: " + (Object)((Object)this.getState()));
+        Log.i(TAG, "Get current state: " + (Object)((Object)this.getState()));
     }
 
     /*
@@ -562,15 +555,15 @@ public class MTBPLite {
      */
     public long initializeMST() {
         if (!MTBPState.READY.equals((Object)this.getState())) {
-            c.e(TAG, "Wrong state on MST transaction init, required state: " + (Object)((Object)MTBPState.READY) + ", current state: " + (Object)((Object)this.getState()));
+            Log.e(TAG, "Wrong state on MST transaction init, required state: " + (Object)((Object)MTBPState.READY) + ", current state: " + (Object)((Object)this.getState()));
             return 1L;
         }
         if (this.mPaymentProfile == null || this.mPaymentProfile.getTADataContainer() == null) {
-            c.e(TAG, "MC Card profile doesn't support MST transaction.");
+            Log.e(TAG, "MC Card profile doesn't support MST transaction.");
             return 2L;
         }
         if (this.mTransactionContext == null || this.mTransactionContext.getTransactionCredentials() == null) {
-            c.e(TAG, "MC transaction context is not initialized for MST transaction.");
+            Log.e(TAG, "MC transaction context is not initialized for MST transaction.");
             return 1L;
         }
         try {
@@ -578,43 +571,43 @@ public class MTBPLite {
             McTAController mcTAController = McTAController.getInstance();
             McTACommands.TASetContext.TASetContextResponse.SetContextOut setContextOut = mcTAController.setContext(this.mTransactionContext.getTransactionCredentials().getTAProfilesTable().getTAProfileReference(MCProfilesTable.TAProfile.PROFILE_MST_TA_GPO));
             if (setContextOut == null || setContextOut._atc == null || setContextOut._wrapped_atc_obj == null) {
-                c.e(TAG, "Wrong MC TA response on  for MST transaction.");
+                Log.e(TAG, "Wrong MC TA response on  for MST transaction.");
                 return 2L;
             }
             byte[] arrby = setContextOut._atc.getData();
             if (arrby == null) {
-                c.e(TAG, "Wrong ATC value returned from MC TA.");
+                Log.e(TAG, "Wrong ATC value returned from MC TA.");
                 return 2L;
             }
-            c.i(TAG, "ATC=" + McUtils.byteArrayToHex(arrby));
+            Log.i(TAG, "ATC=" + McUtils.byteArrayToHex(arrby));
             byte[] arrby2 = setContextOut._wrapped_atc_obj.getData();
             if (arrby2 == null) {
-                c.e(TAG, "Wrong TA profile returned from MC TA.");
+                Log.e(TAG, "Wrong TA profile returned from MC TA.");
                 return 2L;
             }
             this.mTransactionContext.getTransactionCredentials().setATC(arrby);
             this.mTransactionContext.getTransactionCredentials().setmWrappedAtcObject(arrby2);
             this.mPaymentProfile.setTaAtcContainer(arrby2);
             if (this.mDao != null && this.mPaymentProfile.getUniqueTokenReferenceId() > 0L) {
-                c.i(TAG, "initializeMST(): update profile");
+                Log.i(TAG, "initializeMST(): update profile");
                 if (!this.mDao.updateWrappedAtcData(this.mTransactionContext.getTransactionCredentials().getmWrappedAtcObject(), this.mPaymentProfile.getUniqueTokenReferenceId())) {
-                    c.e(TAG, "initializeMST: failed update ta object in the db.");
+                    Log.e(TAG, "initializeMST: failed update ta object in the db.");
                     return 1L;
                 }
             }
             if ((l2 = mcTAController.prepareMSTtracks(h.am(McProvider.getContext()) / 60000L % 100000L)) == (long)McTACommands.MC_TA_ERRORS.NO_ERROR.ordinal()) return 0L;
             {
-                c.e(TAG, "prepare MST tracks failed in MC TA, return code " + l2);
+                Log.e(TAG, "prepare MST tracks failed in MC TA, return code " + l2);
                 return 1L;
             }
         }
         catch (Exception exception) {
-            c.e(TAG, "Failed to call MC TA for MST init, transit state to " + (Object)((Object)MTBPState.STOPPED));
+            Log.e(TAG, "Failed to call MC TA for MST init, transit state to " + (Object)((Object)MTBPState.STOPPED));
             try {
                 this.setState(MTBPState.STOPPED);
             }
             catch (MCTransactionException mCTransactionException) {
-                c.e(TAG, "Failed to transit to the STOPPED state.");
+                Log.e(TAG, "Failed to transit to the STOPPED state.");
                 this.mCurrentState = MTBPState.STOPPED;
                 mCTransactionException.printStackTrace();
             }
@@ -636,17 +629,17 @@ public class MTBPLite {
         ByteArrayFactory byteArrayFactory = ByteArrayFactory.getInstance();
         byte by = byteArray.getByte(1);
         byte by2 = byteArray.getByte(0);
-        c.i(TAG, "processAPDU: ins: " + McUtils.byteToHex(by) + " cla = " + McUtils.byteToHex(by2) + " : " + MCAPDUHandler.getApduName(by));
+        Log.i(TAG, "processAPDU: ins: " + McUtils.byteToHex(by) + " cla = " + McUtils.byteToHex(by2) + " : " + MCAPDUHandler.getApduName(by));
         MCAPDUHandler.APDUCommand aPDUCommand = this.mAPDUcommandHandlerFactory.getCommandHandlerByInstruction(by);
         if (aPDUCommand == null) {
-            c.e(TAG, "APDU command not found, apdu = " + by);
+            Log.e(TAG, "APDU command not found, apdu = " + by);
             return byteArrayFactory.getFromWord(27904);
         }
         if (aPDUCommand.validateState(this.getState())) {
             try {
                 MCCAPDUBaseCommandHandler mCCAPDUBaseCommandHandler = aPDUCommand.getAPDUHandler();
                 if (!mCCAPDUBaseCommandHandler.checkCLA(by2)) {
-                    c.e(TAG, "CLA is not supported for ins = " + by + ", cla = " + by2);
+                    Log.e(TAG, "CLA is not supported for ins = " + by + ", cla = " + by2);
                     return byteArrayFactory.getFromWord(28160);
                 }
                 mCCAPDUBaseCommandHandler.setTransactionContext((DC_CP)this.mPaymentProfile.getDigitalizedCardContainer(), this.mTransactionContext);
@@ -660,12 +653,12 @@ public class MTBPLite {
                 return mCCommandResult.getResponseAPDU();
             }
             catch (MCTransactionException mCTransactionException) {
-                c.e(TAG, "processAPDU: Unexpected MCTransactionException.");
+                Log.e(TAG, "processAPDU: Unexpected MCTransactionException.");
                 try {
                     this.cancelPayment(MCCommandResult.iso7816ToResponseCode(27013), false);
                 }
                 catch (MCTransactionException mCTransactionException2) {
-                    c.e(TAG, "processAPDU: error on cancel transaction.");
+                    Log.e(TAG, "processAPDU: error on cancel transaction.");
                     this.mCurrentState = MTBPState.STOPPED;
                     mCTransactionException2.printStackTrace();
                 }
@@ -673,7 +666,7 @@ public class MTBPLite {
                 return byteArrayFactory.getFromWord(27013);
             }
         }
-        c.e(TAG, "Invalid state for the apdu: " + by + ", state " + (Object)((Object)this.getState()));
+        Log.e(TAG, "Invalid state for the apdu: " + by + ", state " + (Object)((Object)this.getState()));
         if (by == -88) {
             if (MTBPState.NFC_INITIATED.equals((Object)this.getState())) return byteArrayFactory.getFromWord(27013);
         }
@@ -681,7 +674,7 @@ public class MTBPLite {
             this.cancelPayment(MCTransactionResult.ERROR_NFC_COMMAND_INTERNAL_ERROR, false);
         }
         catch (MCTransactionException mCTransactionException) {
-            c.e(TAG, "processAPDU: error on cancel transaction.");
+            Log.e(TAG, "processAPDU: error on cancel transaction.");
             this.mCurrentState = MTBPState.READY;
             mCTransactionException.printStackTrace();
             return byteArrayFactory.getFromWord(27013);
@@ -690,32 +683,32 @@ public class MTBPLite {
     }
 
     public void setTransactionContext(MCTransactionCredentials mCTransactionCredentials, MTBPTransactionListener mTBPTransactionListener) {
-        c.i(TAG, "Init factory state: " + (Object)((Object)this.getState()));
+        Log.i(TAG, "Init factory state: " + (Object)((Object)this.getState()));
         if (this.getState() == MTBPState.READY) {
-            c.i("mcpce_MCTransactionService", "State MCPCEInitializedState, startContactLessPayment");
+            Log.i("mcpce_MCTransactionService", "State MCPCEInitializedState, startContactLessPayment");
             if (this.mPaymentProfile.getDigitalizedCardContainer() instanceof DC_CP) {
                 if (((DC_CP)this.mPaymentProfile.getDigitalizedCardContainer()).getDC_CP_MPP().getContactlessPaymentData() == null) {
-                    c.e(TAG, "NFC payment profile is not found.");
+                    Log.e(TAG, "NFC payment profile is not found.");
                     throw new MCTransactionException(this.generateErrorResponse());
                 }
             } else {
-                c.e(TAG, "Unknown payment profile.");
+                Log.e(TAG, "Unknown payment profile.");
                 throw new MCTransactionException(this.generateErrorResponse());
             }
             if (mCTransactionCredentials == null || mCTransactionCredentials.getSecureObject() == null) {
-                c.e(TAG, "Credentials is null: " + mCTransactionCredentials);
+                Log.e(TAG, "Credentials is null: " + mCTransactionCredentials);
                 throw new MCTransactionException(this.generateErrorResponse());
             }
             this.mTransactionContext = MTBPContextFactory.getContext(mCTransactionCredentials);
             if (this.mTransactionContext.getTransactionInformation() == null) {
-                c.e(TAG, "Transaction information is null");
+                Log.e(TAG, "Transaction information is null");
                 throw new MCTransactionException(this.generateErrorResponse());
             }
             this.mTransactionContext.setTransactionListener(mTBPTransactionListener);
             this.mAPDUcommandHandlerFactory = new MCAPDUHandler();
             return;
         }
-        c.e(TAG, "Wrong state for state transaction context, state: " + (Object)((Object)this.getState()) + "; expected state: " + (Object)((Object)MTBPState.READY));
+        Log.e(TAG, "Wrong state for state transaction context, state: " + (Object)((Object)this.getState()) + "; expected state: " + (Object)((Object)MTBPState.READY));
         throw new MCTransactionException(this.generateErrorResponse());
     }
 

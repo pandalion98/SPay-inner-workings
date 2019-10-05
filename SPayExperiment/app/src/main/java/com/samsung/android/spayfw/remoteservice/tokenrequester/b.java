@@ -8,10 +8,9 @@
  */
 package com.samsung.android.spayfw.remoteservice.tokenrequester;
 
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Client;
 import com.samsung.android.spayfw.remoteservice.c;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.Data;
 
 public class b
@@ -31,7 +30,7 @@ extends m<Data, String, c<String>, b> {
 
     @Override
     protected String cG() {
-        com.samsung.android.spayfw.b.c.i("DeleteTokenRequest", this.tokenId);
+        Log.i("DeleteTokenRequest", this.tokenId);
         return (Object)zX + "/" + this.tokenId.toString();
     }
 

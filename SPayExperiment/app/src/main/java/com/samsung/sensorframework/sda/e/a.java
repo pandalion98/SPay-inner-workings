@@ -12,7 +12,7 @@
  */
 package com.samsung.sensorframework.sda.e;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.SDAException;
 import com.samsung.sensorframework.sda.b;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ extends Thread {
      * Enabled aggressive exception aggregation
      */
     private void hD() {
-        c.d(this.he(), "stopTask(), state: " + this.state);
+        Log.d(this.he(), "stopTask(), state: " + this.state);
         if (this.state == 6123) {
             Object object;
             Object object2 = object = this.KN;
@@ -51,7 +51,7 @@ extends Thread {
             this.state = 6124;
         }
         this.hE();
-        c.d(this.he(), "stopTask(), finished");
+        Log.d(this.he(), "stopTask(), finished");
     }
 
     /*
@@ -59,13 +59,13 @@ extends Thread {
      * Lifted jumps to return sites
      */
     private void hE() {
-        c.d(this.he(), "waitUntilThreadTerminates()");
+        Log.d(this.he(), "waitUntilThreadTerminates()");
         int n2 = 1;
         while (n2 <= 120) {
             try {
                 Thread.sleep((long)1000L);
                 if (this.getState() == Thread.State.TERMINATED) {
-                    c.d(this.he(), "waitUntilThreadTerminates() thread terminated");
+                    Log.d(this.he(), "waitUntilThreadTerminates() thread terminated");
                     return;
                 }
             }
@@ -92,7 +92,7 @@ extends Thread {
                     b2.a(a2);
                     continue;
                 }
-                c.d(this.he(), "sensorData is null");
+                Log.d(this.he(), "sensorData is null");
             }
             return;
         }
@@ -105,7 +105,7 @@ extends Thread {
      */
     public boolean c(b b2) {
         ArrayList<b> arrayList;
-        c.d(this.he(), "registerSensorDataListener() listener: " + b2);
+        Log.d(this.he(), "registerSensorDataListener() listener: " + b2);
         ArrayList<b> arrayList2 = arrayList = this.KO;
         synchronized (arrayList2) {
             int n2 = 0;

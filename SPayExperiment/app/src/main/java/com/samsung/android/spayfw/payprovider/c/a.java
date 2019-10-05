@@ -54,9 +54,9 @@ import com.samsung.android.spayfw.appinterface.ProvisionTokenInfo;
 import com.samsung.android.spayfw.appinterface.SecuredObject;
 import com.samsung.android.spayfw.appinterface.SelectCardResult;
 import com.samsung.android.spayfw.appinterface.Token;
-import com.samsung.android.spayfw.appinterface.TokenMetaData;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.c;
 import com.samsung.android.spayfw.payprovider.e;
@@ -68,8 +68,7 @@ import com.samsung.android.spayfw.payprovider.plcc.tzsvc.PlccTAException;
 import com.samsung.android.spayfw.payprovider.plcc.util.Util;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
 import com.samsung.android.spayfw.utils.h;
-import com.samsung.android.spaytzsvc.api.TAController;
-import com.samsung.android.spaytzsvc.api.TAInfo;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -115,31 +114,31 @@ extends PaymentNetworkProvider {
      */
     private JsonObject b(EnrollCardLoyaltyInfo enrollCardLoyaltyInfo) {
         String string;
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered buildJsonFromCard");
+        Log.d("LoyaltyCardPayProvider", "Entered buildJsonFromCard");
         String string2 = enrollCardLoyaltyInfo.getLoyaltyInfo();
         List<EncryptedImage> list = enrollCardLoyaltyInfo.getEncryptedImages();
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "loyaltyCardInfo = " + string2);
+        Log.d("LoyaltyCardPayProvider", "loyaltyCardInfo = " + string2);
         JsonObject jsonObject = new JsonObject();
         try {
             String string3;
             byte[] arrby = string2.getBytes();
             long l2 = h.am(this.mContext);
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Network Time = " + l2);
+            Log.d("LoyaltyCardPayProvider", "Network Time = " + l2);
             PlccTAController plccTAController = zg;
             string = string3 = Base64.encodeToString((byte[])plccTAController.utility_enc4Server_Transport("LOYALTY", arrby, l2), (int)2);
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
+            Log.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
             string = null;
         }
         if (string == null || string.equals((Object)"")) {
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "encrypted data is either null or empty = " + string);
+            Log.d("LoyaltyCardPayProvider", "encrypted data is either null or empty = " + string);
             return null;
         }
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "encrypted data  = " + string);
+        Log.d("LoyaltyCardPayProvider", "encrypted data  = " + string);
         jsonObject.addProperty("encryptedData", string);
         if (list == null) {
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Encrypted images null");
+            Log.d("LoyaltyCardPayProvider", "Encrypted images null");
             return jsonObject;
         }
         JsonArray jsonArray = new JsonArray();
@@ -150,12 +149,12 @@ extends PaymentNetworkProvider {
                 return jsonObject;
             }
             EncryptedImage encryptedImage = (EncryptedImage)iterator.next();
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "encrypted image = " + encryptedImage);
+            Log.d("LoyaltyCardPayProvider", "encrypted image = " + encryptedImage);
             if (encryptedImage == null) continue;
             JsonObject jsonObject2 = new JsonObject();
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "encrypted image: Usage = " + encryptedImage.getUsage());
+            Log.d("LoyaltyCardPayProvider", "encrypted image: Usage = " + encryptedImage.getUsage());
             jsonObject2.addProperty("usage", encryptedImage.getUsage());
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "encrypted image: Content = " + encryptedImage.getContent());
+            Log.d("LoyaltyCardPayProvider", "encrypted image: Content = " + encryptedImage.getContent());
             jsonObject2.addProperty("content", encryptedImage.getContent());
             jsonArray.add((JsonElement)jsonObject2);
         } while (true);
@@ -169,17 +168,17 @@ extends PaymentNetworkProvider {
 
     private String getEmailAddressHash(String string) {
         try {
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered getEmailAddressHash");
+            Log.d("LoyaltyCardPayProvider", "Entered getEmailAddressHash");
             MessageDigest messageDigest = MessageDigest.getInstance((String)"SHA-256");
             messageDigest.update(string.getBytes());
             byte[] arrby = messageDigest.digest();
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "getEmailAddressHash: digest " + Arrays.toString((byte[])arrby));
+            Log.d("LoyaltyCardPayProvider", "getEmailAddressHash: digest " + Arrays.toString((byte[])arrby));
             String string2 = Base64.encodeToString((byte[])arrby, (int)11);
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "getEmailAddressHash: emailAddress " + string + " Hash: " + string2);
+            Log.d("LoyaltyCardPayProvider", "getEmailAddressHash: emailAddress " + string + " Hash: " + string2);
             return string2;
         }
         catch (NoSuchAlgorithmException noSuchAlgorithmException) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
+            Log.c("LoyaltyCardPayProvider", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
             return null;
         }
     }
@@ -192,9 +191,9 @@ extends PaymentNetworkProvider {
      * Lifted jumps to return sites
      */
     protected String aT(String var1_1) {
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "writeStringToFile");
+        Log.d("LoyaltyCardPayProvider", "writeStringToFile");
         var2_2 = this.eC();
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "File = " + (Object)var2_2);
+        Log.d("LoyaltyCardPayProvider", "File = " + (Object)var2_2);
         var3_3 = new BufferedWriter((Writer)new FileWriter(var2_2));
         var3_3.write(var1_1);
         var7_5 = var11_4 = var2_2.getAbsolutePath();
@@ -250,7 +249,7 @@ lbl41: // 1 sources:
         }
 lbl-1000: // 2 sources:
         {
-            com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "Exception when writing string to file");
+            Log.e("LoyaltyCardPayProvider", "Exception when writing string to file");
             return var7_5;
         }
     }
@@ -261,25 +260,25 @@ lbl-1000: // 2 sources:
 
     @Override
     protected boolean authenticateTransaction(SecuredObject securedObject) {
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered authenticateTransaction");
+        Log.d("LoyaltyCardPayProvider", "Entered authenticateTransaction");
         if (zg == null) {
-            com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "TAController is null");
+            Log.e("LoyaltyCardPayProvider", "TAController is null");
             return false;
         }
         try {
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Calling Plcc TA Controller Authenticate Transaction");
+            Log.d("LoyaltyCardPayProvider", "Calling Plcc TA Controller Authenticate Transaction");
             boolean bl = zg.authenticateTransaction(securedObject.getSecureObjectData());
             return bl;
         }
         catch (PlccTAException plccTAException) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c("LoyaltyCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return false;
         }
     }
 
     @Override
     protected void clearCard() {
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered clearCard");
+        Log.d("LoyaltyCardPayProvider", "Entered clearCard");
         this.zD = null;
     }
 
@@ -295,26 +294,26 @@ lbl-1000: // 2 sources:
             Bundle bundle;
             block10 : {
                 block9 : {
-                    com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered createToken()");
+                    Log.d("LoyaltyCardPayProvider", "Entered createToken()");
                     JsonObject jsonObject = c2.ch();
                     e2 = new e();
                     e2.setErrorCode(-7);
                     try {
                         e2.setProviderTokenKey(new f(string));
                         if (jsonObject == null) break block8;
-                        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Response Data = " + jsonObject.toString());
+                        Log.d("LoyaltyCardPayProvider", "Response Data = " + jsonObject.toString());
                         JsonElement jsonElement = jsonObject.get("encrypted");
                         if (jsonElement == null) break block8;
                         String string2 = jsonElement.getAsString();
-                        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "ac = " + string2.toString());
+                        Log.d("LoyaltyCardPayProvider", "ac = " + string2.toString());
                         byte[] arrby = Base64.decode((String)string2, (int)0);
                         PlccTAController plccTAController = zg;
                         byte[] arrby2 = plccTAController.addCard("LOYALTY", arrby);
                         String string3 = Base64.encodeToString((byte[])arrby2, (int)2);
-                        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "tzEnc = " + string3.toString());
+                        Log.d("LoyaltyCardPayProvider", "tzEnc = " + string3.toString());
                         jsonObject.addProperty("encrypted", string3);
                         String string4 = this.mGson.toJson((JsonElement)jsonObject);
-                        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Response Data String = " + string4);
+                        Log.d("LoyaltyCardPayProvider", "Response Data String = " + string4);
                         bundle = new Bundle();
                         String string5 = this.aT(string4);
                         bundle.putString("loyaltyResponseDataFilePath", string5);
@@ -325,23 +324,23 @@ lbl-1000: // 2 sources:
                         if (extractCardDetailResult != null) {
                             if (extractCardDetailResult.getExtraContent() != null && !extractCardDetailResult.getExtraContent().isEmpty()) {
                                 bundle.putString("acTokenExtra", extractCardDetailResult.getExtraContent());
-                                com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "added extra as part of Provision Response:" + extractCardDetailResult.getExtraContent());
+                                Log.d("LoyaltyCardPayProvider", "added extra as part of Provision Response:" + extractCardDetailResult.getExtraContent());
                             } else if (extractCardDetailResult.getImgSessionKey() != null && !extractCardDetailResult.getImgSessionKey().isEmpty()) {
                                 bundle.putString("imgSessionKey", extractCardDetailResult.getImgSessionKey());
-                                com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "added ImgSessionKey as part of Provision Response:" + extractCardDetailResult.getImgSessionKey());
+                                Log.d("LoyaltyCardPayProvider", "added ImgSessionKey as part of Provision Response:" + extractCardDetailResult.getImgSessionKey());
                             }
                         } else {
-                            com.samsung.android.spayfw.b.c.i("LoyaltyCardPayProvider", " ImgSessionKey not added part of Provision Response");
+                            Log.i("LoyaltyCardPayProvider", " ImgSessionKey not added part of Provision Response");
                         }
                         break block10;
                     }
                     catch (Exception exception) {
-                        com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
+                        Log.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
                         e2.setErrorCode(-2);
                         return e2;
                     }
                 }
-                com.samsung.android.spayfw.b.c.i("LoyaltyCardPayProvider", " CardRefId not part of request");
+                Log.i("LoyaltyCardPayProvider", " CardRefId not part of request");
             }
             e2.e(bundle);
             e2.setErrorCode(0);
@@ -356,9 +355,9 @@ lbl-1000: // 2 sources:
 
     @Override
     protected ExtractCardDetailResult extractLoyaltyCardDetail(ExtractLoyaltyCardDetailRequest extractLoyaltyCardDetailRequest) {
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered extractLoyaltyCardDetail");
+        Log.d("LoyaltyCardPayProvider", "Entered extractLoyaltyCardDetail");
         if (zg == null || extractLoyaltyCardDetailRequest == null) {
-            com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "Error: mPlccTAC = " + zg + "request = " + extractLoyaltyCardDetailRequest);
+            Log.e("LoyaltyCardPayProvider", "Error: mPlccTAC = " + zg + "request = " + extractLoyaltyCardDetailRequest);
             return null;
         }
         try {
@@ -366,11 +365,11 @@ lbl-1000: // 2 sources:
             return extractCardDetailResult;
         }
         catch (InterruptedException interruptedException) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", interruptedException.getMessage(), interruptedException);
+            Log.c("LoyaltyCardPayProvider", interruptedException.getMessage(), interruptedException);
             return null;
         }
         catch (PlccTAException plccTAException) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c("LoyaltyCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return null;
         }
     }
@@ -387,7 +386,7 @@ lbl-1000: // 2 sources:
         if (bundle != null && bundle.getString("deleteCardData") != null) {
             String string = bundle.getString("deleteCardData");
             c2.a((JsonObject)new Gson().fromJson(string, JsonObject.class));
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "getDeleteRequestData: " + string);
+            Log.d("LoyaltyCardPayProvider", "getDeleteRequestData: " + string);
         }
         return c2;
     }
@@ -400,12 +399,12 @@ lbl-1000: // 2 sources:
     @Override
     protected CertificateInfo[] getDeviceCertificates() {
         CertificateInfo[] arrcertificateInfo = new CertificateInfo[3];
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "getDeviceCertificates");
+        Log.d("LoyaltyCardPayProvider", "getDeviceCertificates");
         try {
             PlccTAController plccTAController = zg;
             PlccTAController.TACerts tACerts = plccTAController.getAllCerts("LOYALTY");
             if (tACerts == null || tACerts.encryptcert == null || tACerts.encryptcert.length <= 0 || tACerts.drk == null || tACerts.drk.length <= 0 || tACerts.signcert == null || tACerts.signcert.length <= 0) {
-                com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "getAllCerts failed for Loyalty card");
+                Log.e("LoyaltyCardPayProvider", "getAllCerts failed for Loyalty card");
                 return null;
             }
             HashMap hashMap = new HashMap();
@@ -431,14 +430,14 @@ lbl-1000: // 2 sources:
                 certificateInfo3.setContent(string3);
                 certificateInfo3.setUsage("CA");
                 arrcertificateInfo[2] = certificateInfo3;
-                com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "getDeviceCertificates: success");
+                Log.d("LoyaltyCardPayProvider", "getDeviceCertificates: success");
                 return arrcertificateInfo;
             }
-            com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "getDeviceCertificates failed");
+            Log.e("LoyaltyCardPayProvider", "getDeviceCertificates failed");
             return null;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
+            Log.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
             return arrcertificateInfo;
         }
     }
@@ -448,11 +447,11 @@ lbl-1000: // 2 sources:
         c c2;
         block6 : {
             block5 : {
-                com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered getEnrollmentRequestData");
+                Log.d("LoyaltyCardPayProvider", "Entered getEnrollmentRequestData");
                 c2 = new c();
                 c2.setErrorCode(0);
                 if (enrollCardInfo == null) {
-                    com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", " getEnrollmentRequestData: Invalid input");
+                    Log.e("LoyaltyCardPayProvider", " getEnrollmentRequestData: Invalid input");
                     c2.setErrorCode(-4);
                     return c2;
                 }
@@ -460,7 +459,7 @@ lbl-1000: // 2 sources:
                 JsonObject jsonObject = this.b((EnrollCardLoyaltyInfo)enrollCardInfo);
                 if (jsonObject == null) break block6;
                 c2.a(jsonObject);
-                com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Set Encrypted result data");
+                Log.d("LoyaltyCardPayProvider", "Set Encrypted result data");
             }
             Bundle bundle = new Bundle();
             if (enrollCardInfo.getUserEmail() != null) {
@@ -470,7 +469,7 @@ lbl-1000: // 2 sources:
             return c2;
         }
         c2.setErrorCode(-2);
-        com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", " getEnrollmentRequestData: PAYFW_ERROR_PAY_PROVIDER");
+        Log.e("LoyaltyCardPayProvider", " getEnrollmentRequestData: PAYFW_ERROR_PAY_PROVIDER");
         return c2;
     }
 
@@ -510,7 +509,7 @@ lbl-1000: // 2 sources:
     @Override
     protected void loadTA() {
         zg.loadTA();
-        com.samsung.android.spayfw.b.c.i("LoyaltyCardPayProvider", "load real TA");
+        Log.i("LoyaltyCardPayProvider", "load real TA");
     }
 
     /*
@@ -521,28 +520,28 @@ lbl-1000: // 2 sources:
     @Override
     protected String prepareLoyaltyDataForServer(String string) {
         String string2;
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered prepareLoyaltyDataForServer");
+        Log.d("LoyaltyCardPayProvider", "Entered prepareLoyaltyDataForServer");
         if (zg == null || string == null) {
-            com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "prepareLoyaltyDataForServer: Error: mPlccTAC = " + zg + "lData = " + string);
+            Log.e("LoyaltyCardPayProvider", "prepareLoyaltyDataForServer: Error: mPlccTAC = " + zg + "lData = " + string);
             return null;
         }
         try {
             String string3;
             byte[] arrby = string.getBytes();
             long l2 = h.am(this.mContext);
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Network Time = " + l2);
+            Log.d("LoyaltyCardPayProvider", "Network Time = " + l2);
             PlccTAController plccTAController = zg;
             string2 = string3 = Base64.encodeToString((byte[])plccTAController.utility_enc4Server_Transport("LOYALTY", arrby, l2), (int)2);
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
+            Log.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
             string2 = null;
         }
         if (string2 == null) {
-            com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "prepareLoyaltyDataForServer : encData is null");
+            Log.e("LoyaltyCardPayProvider", "prepareLoyaltyDataForServer : encData is null");
             return null;
         }
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "prepareLoyaltyDataForServer: encrypted data  = " + string2);
+        Log.d("LoyaltyCardPayProvider", "prepareLoyaltyDataForServer: encrypted data  = " + string2);
         return string2;
     }
 
@@ -572,23 +571,23 @@ lbl-1000: // 2 sources:
      */
     @Override
     public SelectCardResult selectCard() {
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered selectCard");
+        Log.d("LoyaltyCardPayProvider", "Entered selectCard");
         if (zg == null) {
-            com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "TAController is null");
+            Log.e("LoyaltyCardPayProvider", "TAController is null");
             return null;
         }
         try {
             return new SelectCardResult(PlccTAController.getInstance().getTAInfo().getTAId(), zg.getNonce(32));
         }
         catch (PlccTAException plccTAException) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c("LoyaltyCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return null;
         }
     }
 
     @Override
     public void setCardTzEncData(byte[] arrby) {
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered setCardTzEncData");
+        Log.d("LoyaltyCardPayProvider", "Entered setCardTzEncData");
         this.zD = arrby;
     }
 
@@ -598,9 +597,9 @@ lbl-1000: // 2 sources:
     @Override
     public boolean setServerCertificates(CertificateInfo[] arrcertificateInfo) {
         byte[] arrby = null;
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered setServerCertificates");
+        Log.d("LoyaltyCardPayProvider", "Entered setServerCertificates");
         if (arrcertificateInfo == null || arrcertificateInfo.length == 0) {
-            com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "setServerCertificates : invalid input");
+            Log.e("LoyaltyCardPayProvider", "setServerCertificates : invalid input");
             return false;
         }
         int n2 = arrcertificateInfo.length;
@@ -630,9 +629,9 @@ lbl-1000: // 2 sources:
 
     @Override
     public boolean startMstPay(int n2, byte[] arrby) {
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered startMstPay");
+        Log.d("LoyaltyCardPayProvider", "Entered startMstPay");
         if (zg == null) {
-            com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "TAController is null");
+            Log.e("LoyaltyCardPayProvider", "TAController is null");
             return false;
         }
         try {
@@ -640,11 +639,11 @@ lbl-1000: // 2 sources:
             return bl;
         }
         catch (InterruptedException interruptedException) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", interruptedException.getMessage(), interruptedException);
+            Log.c("LoyaltyCardPayProvider", interruptedException.getMessage(), interruptedException);
             return false;
         }
         catch (PlccTAException plccTAException) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c("LoyaltyCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
             return false;
         }
     }
@@ -656,18 +655,18 @@ lbl-1000: // 2 sources:
      */
     @Override
     protected void stopMstPay(boolean bl) {
-        com.samsung.android.spayfw.b.c.i("LoyaltyCardPayProvider", "stopMstPay: start ");
+        Log.i("LoyaltyCardPayProvider", "stopMstPay: start ");
         if (zg == null) {
-            com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "TAController is null");
+            Log.e("LoyaltyCardPayProvider", "TAController is null");
             return;
         }
         try {
             zg.clearMstData();
         }
         catch (PlccTAException plccTAException) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
+            Log.c("LoyaltyCardPayProvider", plccTAException.getMessage(), (Throwable)((Object)plccTAException));
         }
-        com.samsung.android.spayfw.b.c.i("LoyaltyCardPayProvider", "stopMstPay: end ");
+        Log.i("LoyaltyCardPayProvider", "stopMstPay: end ");
     }
 
     @Override
@@ -678,7 +677,7 @@ lbl-1000: // 2 sources:
     @Override
     protected void unloadTA() {
         zg.unloadTA();
-        com.samsung.android.spayfw.b.c.i("LoyaltyCardPayProvider", "unload real TA");
+        Log.i("LoyaltyCardPayProvider", "unload real TA");
     }
 
     /*
@@ -688,31 +687,31 @@ lbl-1000: // 2 sources:
     @Override
     protected String updateLoyaltyCard(JsonObject jsonObject) {
         JsonElement jsonElement;
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Entered updateLoyaltyCard");
+        Log.d("LoyaltyCardPayProvider", "Entered updateLoyaltyCard");
         String string = null;
         if (zg == null || jsonObject == null) {
-            com.samsung.android.spayfw.b.c.e("LoyaltyCardPayProvider", "Error: mPlccTAC = " + zg + "; responseData = " + (Object)jsonObject);
+            Log.e("LoyaltyCardPayProvider", "Error: mPlccTAC = " + zg + "; responseData = " + (Object)jsonObject);
             return null;
         }
         try {
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "updateLoyaltyCard: Response Data = " + jsonObject.toString());
+            Log.d("LoyaltyCardPayProvider", "updateLoyaltyCard: Response Data = " + jsonObject.toString());
             jsonElement = jsonObject.get("encrypted");
             string = null;
             if (jsonElement == null) return null;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
+            Log.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
             return string;
         }
         String string2 = jsonElement.getAsString();
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "updateLoyaltyCard: ac = " + string2);
+        Log.d("LoyaltyCardPayProvider", "updateLoyaltyCard: ac = " + string2);
         byte[] arrby = Base64.decode((String)string2, (int)0);
         PlccTAController plccTAController = zg;
         String string3 = Base64.encodeToString((byte[])plccTAController.addCard("LOYALTY", arrby), (int)2);
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "updateLoyaltyCard: tzEnc = " + string3);
+        Log.d("LoyaltyCardPayProvider", "updateLoyaltyCard: tzEnc = " + string3);
         jsonObject.addProperty("encrypted", string3);
         string = this.mGson.toJson((JsonElement)jsonObject);
-        com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "updateLoyaltyCard: Response Data String = " + string);
+        Log.d("LoyaltyCardPayProvider", "updateLoyaltyCard: Response Data String = " + string);
         return string;
     }
 
@@ -724,22 +723,22 @@ lbl-1000: // 2 sources:
     @Override
     protected void updateTokenMetaData(JsonObject jsonObject, Token token) {
         block10 : {
-            com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "updateTokenMetaData");
+            Log.d("LoyaltyCardPayProvider", "updateTokenMetaData");
             if (jsonObject != null) {
                 try {
-                    com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "updateTokenMetaData:Response Data = " + jsonObject.toString());
+                    Log.d("LoyaltyCardPayProvider", "updateTokenMetaData:Response Data = " + jsonObject.toString());
                     JsonElement jsonElement = jsonObject.get("encrypted");
                     if (jsonElement == null) break block10;
                     String string = jsonElement.getAsString();
-                    com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "ac = " + string.toString());
+                    Log.d("LoyaltyCardPayProvider", "ac = " + string.toString());
                     byte[] arrby = Base64.decode((String)string, (int)0);
                     PlccTAController plccTAController = zg;
                     byte[] arrby2 = plccTAController.addCard("LOYALTY", arrby);
                     String string2 = Base64.encodeToString((byte[])arrby2, (int)2);
-                    com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "tzEnc = " + string2.toString());
+                    Log.d("LoyaltyCardPayProvider", "tzEnc = " + string2.toString());
                     jsonObject.addProperty("encrypted", string2);
                     String string3 = this.mGson.toJson((JsonElement)jsonObject);
-                    com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "Response Data String = " + string3);
+                    Log.d("LoyaltyCardPayProvider", "Response Data String = " + string3);
                     Bundle bundle = new Bundle();
                     String string4 = this.aT(string3);
                     bundle.putString("extraMetaDataFilePath", string4);
@@ -750,23 +749,23 @@ lbl-1000: // 2 sources:
                         if (extractCardDetailResult != null) {
                             if (extractCardDetailResult.getExtraContent() != null && !extractCardDetailResult.getExtraContent().isEmpty()) {
                                 bundle.putString("acTokenExtra", extractCardDetailResult.getExtraContent());
-                                com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "added extra as part of Provision Response:" + extractCardDetailResult.getExtraContent());
+                                Log.d("LoyaltyCardPayProvider", "added extra as part of Provision Response:" + extractCardDetailResult.getExtraContent());
                             } else if (extractCardDetailResult.getImgSessionKey() != null && !extractCardDetailResult.getImgSessionKey().isEmpty()) {
                                 bundle.putString("imgSessionKey", extractCardDetailResult.getImgSessionKey());
-                                com.samsung.android.spayfw.b.c.d("LoyaltyCardPayProvider", "added ImgSessionKey as part of Provision Response:" + extractCardDetailResult.getImgSessionKey());
+                                Log.d("LoyaltyCardPayProvider", "added ImgSessionKey as part of Provision Response:" + extractCardDetailResult.getImgSessionKey());
                             }
                         } else {
-                            com.samsung.android.spayfw.b.c.i("LoyaltyCardPayProvider", " ImgSessionKey not added part of Provision Response");
+                            Log.i("LoyaltyCardPayProvider", " ImgSessionKey not added part of Provision Response");
                         }
                         token.getMetadata().setExtraMetaData(bundle);
                         return;
                     }
                 }
                 catch (Exception exception) {
-                    com.samsung.android.spayfw.b.c.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
+                    Log.c("LoyaltyCardPayProvider", exception.getMessage(), exception);
                     return;
                 }
-                com.samsung.android.spayfw.b.c.i("LoyaltyCardPayProvider", " CardRefId not part of request");
+                Log.i("LoyaltyCardPayProvider", " CardRefId not part of request");
             }
         }
     }

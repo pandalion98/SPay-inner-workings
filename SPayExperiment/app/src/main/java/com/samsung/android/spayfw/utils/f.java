@@ -26,22 +26,19 @@
 package com.samsung.android.spayfw.utils;
 
 import android.graphics.Bitmap;
-import android.widget.ImageView;
+
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.a.h;
 import com.android.volley.a.j;
 import com.android.volley.g;
 import com.android.volley.i;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.utils.e;
+import com.samsung.android.spayfw.b.Log;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import java.io.File;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class f {
     private OkHttpClient AR = new OkHttpClient();
@@ -112,17 +109,17 @@ public class f {
      * Lifted jumps to return sites
      */
     public boolean b(String string, File file) {
-        c.d("SyncFileDownloaderClient", "getImage: absoluteUrl = " + string);
+        Log.d("SyncFileDownloaderClient", "getImage: absoluteUrl = " + string);
         j j2 = j.B();
         h h2 = new h(string, (i.b)j2, 0, 0, null, null, null);
         e.fK().e((Request)h2);
         try {
             Bitmap bitmap = (Bitmap)j2.get(3L, TimeUnit.SECONDS);
-            c.d("SyncFileDownloaderClient", "getImage: response = " + (Object)bitmap);
+            Log.d("SyncFileDownloaderClient", "getImage: response = " + (Object)bitmap);
             boolean bl = false;
             if (bitmap == null) return bl;
             boolean bl2 = f.a(bitmap, file);
-            c.d("SyncFileDownloaderClient", "getImage - result = " + bl2);
+            Log.d("SyncFileDownloaderClient", "getImage - result = " + bl2);
             return bl2;
         }
         catch (InterruptedException interruptedException) {
@@ -131,7 +128,7 @@ public class f {
                 throwable = interruptedException;
                 break block5;
                 catch (TimeoutException timeoutException) {
-                    c.e("SyncFileDownloaderClient", "getImage: timeout error");
+                    Log.e("SyncFileDownloaderClient", "getImage: timeout error");
                     timeoutException.printStackTrace();
                     return false;
                 }
@@ -141,7 +138,7 @@ public class f {
             }
             if (throwable.getCause() instanceof VolleyError) {
                 g g2 = ((VolleyError)throwable.getCause()).networkResponse;
-                c.e("SyncFileDownloaderClient", "getImage: server error = " + (Object)g2);
+                Log.e("SyncFileDownloaderClient", "getImage: server error = " + (Object)g2);
             }
             throwable.printStackTrace();
             return false;

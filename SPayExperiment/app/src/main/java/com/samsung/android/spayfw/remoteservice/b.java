@@ -11,12 +11,8 @@
 package com.samsung.android.spayfw.remoteservice;
 
 import android.os.Bundle;
-import com.samsung.android.spayfw.remoteservice.Client;
-import com.samsung.android.spayfw.remoteservice.Request;
-import com.samsung.android.spayfw.remoteservice.a;
-import com.samsung.android.spayfw.remoteservice.c;
-import com.samsung.android.spayfw.remoteservice.d;
-import java.util.Set;
+
+import com.samsung.android.spayfw.b.Log;
 
 public class b
 extends Request<String, String, d, b> {
@@ -53,8 +49,8 @@ extends Request<String, String, d, b> {
     protected d c(int n2, String string) {
         String string2 = null;
         if (string != null) {
-            com.samsung.android.spayfw.b.c.d("GenericServerRequest", "Response Bytes = " + string.getBytes());
-            com.samsung.android.spayfw.b.c.d("GenericServerRequest", "Response Bytes Length= " + string.getBytes().length);
+            Log.d("GenericServerRequest", "Response Bytes = " + string.getBytes());
+            Log.d("GenericServerRequest", "Response Bytes Length= " + string.getBytes().length);
             int n3 = string.getBytes().length;
             string2 = null;
             if (n3 > 200000) {
@@ -89,11 +85,11 @@ extends Request<String, String, d, b> {
             for (String string : this.headers.keySet()) {
                 Object object = this.headers.get(string);
                 if (object != null && object instanceof String) {
-                    com.samsung.android.spayfw.b.c.d("GenericServerRequest", "add header : " + string + ", value: " + (String)object);
+                    Log.d("GenericServerRequest", "add header : " + string + ", value: " + (String)object);
                     this.addHeader(string, (String)object);
                     continue;
                 }
-                com.samsung.android.spayfw.b.c.w("GenericServerRequest", "Cannot add header : " + string);
+                Log.w("GenericServerRequest", "Cannot add header : " + string);
             }
         }
     }
@@ -106,15 +102,15 @@ extends Request<String, String, d, b> {
     @Override
     protected String j(Object object) {
         String string;
-        com.samsung.android.spayfw.b.c.d("GenericServerRequest", "Entered getRequestDataString: ");
+        Log.d("GenericServerRequest", "Entered getRequestDataString: ");
         try {
             string = (String)object;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("GenericServerRequest", exception.getMessage(), exception);
+            Log.c("GenericServerRequest", exception.getMessage(), exception);
             string = null;
         }
-        com.samsung.android.spayfw.b.c.d("GenericServerRequest", "requestDataString = " + string);
+        Log.d("GenericServerRequest", "requestDataString = " + string);
         return string;
     }
 }

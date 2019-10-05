@@ -8,11 +8,9 @@
  */
 package com.samsung.android.spayfw.remoteservice.tokenrequester;
 
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Client;
 import com.samsung.android.spayfw.remoteservice.c;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.MstConfigurationRequestData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.MstConfigurationResponseData;
 
@@ -25,7 +23,7 @@ extends m<MstConfigurationRequestData, MstConfigurationResponseData, c<MstConfig
     @Override
     protected c<MstConfigurationResponseData> b(int n2, String string) {
         MstConfigurationResponseData mstConfigurationResponseData = this.Al.fromJson(string, MstConfigurationResponseData.class);
-        com.samsung.android.spayfw.b.c.d("MstConfigurationRequest", "MstConfigurationResponseData : " + mstConfigurationResponseData);
+        Log.d("MstConfigurationRequest", "MstConfigurationResponseData : " + mstConfigurationResponseData);
         return new c<MstConfigurationResponseData>(null, mstConfigurationResponseData, n2);
     }
 

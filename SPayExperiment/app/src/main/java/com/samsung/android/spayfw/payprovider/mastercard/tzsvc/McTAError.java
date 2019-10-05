@@ -11,7 +11,8 @@
  */
 package com.samsung.android.spayfw.payprovider.mastercard.tzsvc;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -137,7 +138,7 @@ extends Enum<McTAError> {
     }
 
     public static McTAError getMcTAError(long l2) {
-        c.d("McTAError", "input value : " + Long.toHexString((long)l2));
+        Log.d("McTAError", "input value : " + Long.toHexString((long)l2));
         return (McTAError)((Object)mMcTAErrorMap.get((Object)l2));
     }
 

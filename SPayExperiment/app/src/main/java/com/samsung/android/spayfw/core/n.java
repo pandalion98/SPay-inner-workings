@@ -16,8 +16,8 @@ package com.samsung.android.spayfw.core;
 
 import android.content.Intent;
 import android.os.Process;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.core.PaymentFrameworkApp;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.retry.RetryRequestData;
 import com.samsung.android.spayfw.core.retry.d;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.ErrorReport;
@@ -29,14 +29,14 @@ implements Thread.UncaughtExceptionHandler {
         ErrorReport errorReport = new ErrorReport();
         errorReport.setSeverity("FATAL");
         errorReport.setCode("ERROR-30000");
-        errorReport.setDescription(c.getStackTraceString(throwable));
+        errorReport.setDescription(Log.getStackTraceString(throwable));
         ReportData reportData = new ReportData(errorReport);
         d.a(reportData, new RetryRequestData(reportData, "credit/vi"));
     }
 
     public void uncaughtException(Thread thread, Throwable throwable) {
-        c.e("SpayUncaughtExceptionHandler", "uncaughtException: classs = " + (Object)throwable.getClass() + ", uncaughtException = " + (Object)((Object)throwable));
-        c.c("SpayUncaughtExceptionHandler", "StackTrace : ", throwable);
+        Log.e("SpayUncaughtExceptionHandler", "uncaughtException: classs = " + (Object)throwable.getClass() + ", uncaughtException = " + (Object)((Object)throwable));
+        Log.c("SpayUncaughtExceptionHandler", "StackTrace : ", throwable);
         Intent intent = new Intent("com.samsung.android.spayfw.action.notification");
         intent.putExtra("notiType", "payFwCrashed");
         PaymentFrameworkApp.a(intent);

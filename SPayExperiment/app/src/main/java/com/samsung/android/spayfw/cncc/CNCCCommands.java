@@ -14,7 +14,7 @@ package com.samsung.android.spayfw.cncc;
 
 import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.Blob;
 import com.samsung.android.spaytzsvc.api.TACommands;
 import com.samsung.android.spaytzsvc.api.TAStruct;
@@ -98,7 +98,7 @@ extends TACommands {
          */
         public void setData(List<byte[]> list) {
             if (list != null && list.size() > this.certs.length) {
-                c.e(CNCCCommands.TAG, "Error: Can set Cert Chain more than the size of the destination Cert Chain");
+                Log.e(CNCCCommands.TAG, "Error: Can set Cert Chain more than the size of the destination Cert Chain");
                 return;
             } else {
                 if (list != null && list.size() > 0) {

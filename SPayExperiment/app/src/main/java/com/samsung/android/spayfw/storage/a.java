@@ -31,7 +31,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import com.samsung.android.analytics.sdk.AnalyticContext;
 import com.samsung.android.analytics.sdk.AnalyticEvent;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Request;
 import java.io.File;
 import java.io.FileFilter;
@@ -86,7 +86,7 @@ public class a {
         timer.schedule(new TimerTask(){
 
             public void run() {
-                c.d("AnalyticsReportCache", "Timer triggered");
+                Log.d("AnalyticsReportCache", "Timer triggered");
                 a.this.fp();
             }
         }, (long)((int)(1000.0 * (900.0 * random.nextDouble()))), 900000L);
@@ -102,13 +102,13 @@ public class a {
         File file2 = new File(file, string);
         try {
             if (!file2.createNewFile()) {
-                c.e("AnalyticsReportCache", "Overwriting upload files");
+                Log.e("AnalyticsReportCache", "Overwriting upload files");
             }
             return file2;
         }
         catch (IOException iOException) {
             iOException.printStackTrace();
-            c.e("AnalyticsReportCache", "createFile failed");
+            Log.e("AnalyticsReportCache", "createFile failed");
             return file2;
         }
     }
@@ -169,7 +169,7 @@ public class a {
             }
             catch (IOException var10_5) {
                 var10_5.printStackTrace();
-                c.e("AnalyticsReportCache", "Cannot close upload files");
+                Log.e("AnalyticsReportCache", "Cannot close upload files");
                 return var9_4;
             }
         }
@@ -180,14 +180,14 @@ lbl18: // 2 sources:
             do {
                 block19 : {
                     var4_7.printStackTrace();
-                    c.e("AnalyticsReportCache", "Could not read upload files");
+                    Log.e("AnalyticsReportCache", "Could not read upload files");
                     if (var3_3 == null) break block19;
                     try {
                         var3_3.close();
                     }
                     catch (IOException var7_9) {
                         var7_9.printStackTrace();
-                        c.e("AnalyticsReportCache", "Cannot close upload files");
+                        Log.e("AnalyticsReportCache", "Cannot close upload files");
                         ** continue;
                     }
                 }
@@ -213,7 +213,7 @@ lbl38: // 4 sources:
                 } while (true);
                 catch (IOException var6_13) {
                     var6_13.printStackTrace();
-                    c.e("AnalyticsReportCache", "Cannot close upload files");
+                    Log.e("AnalyticsReportCache", "Cannot close upload files");
                     ** continue;
                 }
                 break;
@@ -244,7 +244,7 @@ lbl38: // 4 sources:
             }
             catch (IOException var10_5) {
                 var10_5.printStackTrace();
-                c.e("AnalyticsReportCache", "Cannot close analytics cache file");
+                Log.e("AnalyticsReportCache", "Cannot close analytics cache file");
                 ** continue;
             }
         }
@@ -265,7 +265,7 @@ lbl10: // 2 sources:
 lbl22: // 2 sources:
             do {
                 var5_7.printStackTrace();
-                c.e("AnalyticsReportCache", "Cannot create analytics cache fileoutputstream");
+                Log.e("AnalyticsReportCache", "Cannot create analytics cache fileoutputstream");
                 var3_3 = false;
                 if (var4_4 == null) ** continue;
                 try {
@@ -274,7 +274,7 @@ lbl22: // 2 sources:
                 }
                 catch (IOException var8_9) {
                     var8_9.printStackTrace();
-                    c.e("AnalyticsReportCache", "Cannot close analytics cache file");
+                    Log.e("AnalyticsReportCache", "Cannot close analytics cache file");
                     return false;
                 }
                 break;
@@ -294,7 +294,7 @@ lbl41: // 4 sources:
                 } while (true);
                 catch (IOException var7_13) {
                     var7_13.printStackTrace();
-                    c.e("AnalyticsReportCache", "Cannot close analytics cache file");
+                    Log.e("AnalyticsReportCache", "Cannot close analytics cache file");
                     ** continue;
                 }
                 break;
@@ -314,11 +314,11 @@ lbl41: // 4 sources:
         for (File file : arrfile) {
             this.BN -= file.length();
             if (!file.delete()) {
-                c.e("AnalyticsReportCache", "Could not delete analytics cache files");
+                Log.e("AnalyticsReportCache", "Could not delete analytics cache files");
                 return false;
             }
             this.BN += file.length();
-            c.d("AnalyticsReportCache", file.getName() + " deleted");
+            Log.d("AnalyticsReportCache", file.getName() + " deleted");
         }
         return true;
     }
@@ -332,7 +332,7 @@ lbl41: // 4 sources:
         }
         this.BN = 0L;
         if (arrfile.length + arrfile2.length > 0) {
-            c.d("AnalyticsReportCache", "Cache directory is not empty when AnalyticsReportCache is instantiated. " + arrfile.length + arrfile2.length + " files exist.");
+            Log.d("AnalyticsReportCache", "Cache directory is not empty when AnalyticsReportCache is instantiated. " + arrfile.length + arrfile2.length + " files exist.");
             for (File file : arrfile) {
                 this.BN += file.length();
             }
@@ -368,36 +368,36 @@ lbl41: // 4 sources:
     private void fp() {
         this.BI = 900 + this.BI;
         this.BL = Math.max((int)(-900 + this.BL), (int)0);
-        c.d("AnalyticsReportCache", "Upload info: lastuploadTime = " + this.BI + ", retryTime = " + this.BL);
+        Log.d("AnalyticsReportCache", "Upload info: lastuploadTime = " + this.BI + ", retryTime = " + this.BL);
         if (this.BL > 0) {
-            c.d("AnalyticsReportCache", "Upload not allowed until " + this.BL + " seconds");
+            Log.d("AnalyticsReportCache", "Upload not allowed until " + this.BL + " seconds");
             return;
         }
         NetworkInfo networkInfo = this.BP.getActiveNetworkInfo();
         if (networkInfo == null) {
-            c.d("AnalyticsReportCache", "No active network");
+            Log.d("AnalyticsReportCache", "No active network");
             return;
         }
-        c.d("AnalyticsReportCache", "Network connected: " + networkInfo.isConnected() + ". Network type: " + networkInfo.getType() + ". Last upload time = " + this.BI + ". Event count = " + this.BM);
+        Log.d("AnalyticsReportCache", "Network connected: " + networkInfo.isConnected() + ". Network type: " + networkInfo.getType() + ". Last upload time = " + this.BI + ". Event count = " + this.BM);
         if (!networkInfo.isConnected()) {
-            c.d("AnalyticsReportCache", "Cannot upload as there is no network");
+            Log.d("AnalyticsReportCache", "Cannot upload as there is no network");
             return;
         }
         if (networkInfo.getType() == 0 && (this.BM > 10 && this.BI < 28800 || this.BM < 10 && this.BI > 3600 && this.BI < 28800)) {
-            c.d("AnalyticsReportCache", "Cannot upload on mobile connection");
+            Log.d("AnalyticsReportCache", "Cannot upload on mobile connection");
             return;
         }
         if (networkInfo.getType() == 1 && this.BM < 10 && this.BI < 3600) {
-            c.d("AnalyticsReportCache", "Cannot upload as event count < MIN_UPLOAD_EVENTS and last upload time < MIN_LAST_UPLOAD_TIME on wifi connection");
+            Log.d("AnalyticsReportCache", "Cannot upload as event count < MIN_UPLOAD_EVENTS and last upload time < MIN_LAST_UPLOAD_TIME on wifi connection");
             return;
         }
         this.fo();
         File[] arrfile = this.BK.listFiles(this.BO);
         if (arrfile == null || arrfile.length == 0) {
-            c.e("AnalyticsReportCache", "Cache is empty");
+            Log.e("AnalyticsReportCache", "Cache is empty");
             return;
         }
-        c.d("AnalyticsReportCache", "Request upload called");
+        Log.d("AnalyticsReportCache", "Request upload called");
         int n2 = arrfile.length;
         int n3 = 0;
         while (n3 < n2) {
@@ -407,7 +407,7 @@ lbl41: // 4 sources:
                 new JSONObject(string);
             }
             catch (JSONException jSONException) {
-                c.e("AnalyticsReportCache", "Invalid JSON. Deleting request file.");
+                Log.e("AnalyticsReportCache", "Invalid JSON. Deleting request file.");
                 jSONException.printStackTrace();
                 this.b(new File[]{file});
                 this.BI = 0;
@@ -416,9 +416,9 @@ lbl41: // 4 sources:
 
                 @Override
                 public void a(int n2, com.samsung.android.spayfw.remoteservice.c<String> c2) {
-                    c.d("AnalyticsReportCache", "Report Sent : " + n2);
+                    Log.d("AnalyticsReportCache", "Report Sent : " + n2);
                     if (n2 == 201) {
-                        c.d("AnalyticsReportCache", "Upload successful");
+                        Log.d("AnalyticsReportCache", "Upload successful");
                         a a2 = a.this;
                         File[] arrfile = new File[]{file};
                         a2.b(arrfile);
@@ -426,19 +426,19 @@ lbl41: // 4 sources:
                         return;
                     }
                     if (n2 == 400) {
-                        c.e("AnalyticsReportCache", "Upload failed due to bad request. Deleting the payload");
+                        Log.e("AnalyticsReportCache", "Upload failed due to bad request. Deleting the payload");
                         a a3 = a.this;
                         File[] arrfile = new File[]{file};
                         a3.b(arrfile);
                         a.this.BI = 0;
                         return;
                     }
-                    c.e("AnalyticsReportCache", "Upload failed");
+                    Log.e("AnalyticsReportCache", "Upload failed");
                 }
 
                 @Override
                 public void f(int n2, String string) {
-                    c.e("AnalyticsReportCache", "Report Sent : onServiceNotAvailable : " + n2 + "; retry-after = " + string);
+                    Log.e("AnalyticsReportCache", "Report Sent : onServiceNotAvailable : " + n2 + "; retry-after = " + string);
                     if (n2 == 503) {
                         a.this.BL = Integer.parseInt((String)string);
                     }
@@ -457,14 +457,14 @@ lbl41: // 4 sources:
         long l2 = 0L;
         File file = null;
         if (arrfile == null) {
-            c.e("AnalyticsReportCache", "Upload directory may not exist");
+            Log.e("AnalyticsReportCache", "Upload directory may not exist");
             return false;
         }
         int n2 = arrfile.length;
         int n3 = 0;
         do {
             if (n3 >= n2) {
-                c.d("AnalyticsReportCache", "Oldest file " + file.getName() + " deleted as storage limit is crossed.");
+                Log.d("AnalyticsReportCache", "Oldest file " + file.getName() + " deleted as storage limit is crossed.");
                 return this.b(new File[]{file});
             }
             File file2 = arrfile[n3];
@@ -488,7 +488,7 @@ lbl41: // 4 sources:
         synchronized (a2) {
             String string = analyticContext.C().toString() + "\n";
             String string2 = analyticEvent.C().toString() + "\n";
-            c.d("AnalyticsReportCache", "addEvent called with Context: " + string + " and event: " + string2);
+            Log.d("AnalyticsReportCache", "addEvent called with Context: " + string + " and event: " + string2);
             int n2 = string.hashCode();
             File file = new File(this.BJ, Integer.toHexString((int)n2));
             boolean bl = file.exists();
@@ -498,7 +498,7 @@ lbl41: // 4 sources:
                 }
                 catch (IOException iOException) {
                     iOException.printStackTrace();
-                    c.e("AnalyticsReportCache", "Cannot create cache file");
+                    Log.e("AnalyticsReportCache", "Cannot create cache file");
                 }
                 this.b(file, string);
             }

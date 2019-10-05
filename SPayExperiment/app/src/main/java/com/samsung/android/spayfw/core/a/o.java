@@ -17,15 +17,13 @@ package com.samsung.android.spayfw.core.a;
 
 import android.content.Context;
 import com.google.gson.JsonObject;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.a;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.p;
-import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
 import com.samsung.android.spayfw.remoteservice.models.ServerCertificates;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.j;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.ErrorReport;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenReport;
@@ -56,8 +54,8 @@ public abstract class o {
             this.jJ = TokenRecordStorage.ae(this.mContext);
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("Processor", exception.getMessage(), exception);
-            com.samsung.android.spayfw.b.c.e("Processor", "Exception when initializing Dao");
+            Log.c("Processor", exception.getMessage(), exception);
+            Log.e("Processor", "Exception when initializing Dao");
             this.jJ = null;
         }
         this.lQ = l.Q(this.mContext);
@@ -92,7 +90,7 @@ public abstract class o {
      */
     protected final String P(String string) {
         if (this.lh == null) {
-            com.samsung.android.spayfw.b.c.e("Processor", "Server Certs Db obj is null!");
+            Log.e("Processor", "Server Certs Db obj is null!");
             return "";
         }
         String string2 = this.a(this.lh.a(ServerCertsStorage.ServerCertsDb.ServerCertsColumn.Cg, string));
@@ -102,45 +100,45 @@ public abstract class o {
 
     protected int a(boolean bl, String string, String string2, boolean bl2) {
         if (this.mContext == null) {
-            com.samsung.android.spayfw.b.c.e("Processor", "Context is null");
+            Log.e("Processor", "Context is null");
             return -1;
         }
         if (this.lQ == null) {
-            com.samsung.android.spayfw.b.c.e("Processor", "Token Requester Client is null");
+            Log.e("Processor", "Token Requester Client is null");
             return -1;
         }
         if (this.jJ == null) {
-            com.samsung.android.spayfw.b.c.e("Processor", "Pay Storage is null");
+            Log.e("Processor", "Pay Storage is null");
             return -1;
         }
         if (this.lh == null) {
-            com.samsung.android.spayfw.b.c.e("Processor", "Server Certs Storage is null");
+            Log.e("Processor", "Server Certs Storage is null");
             return -1;
         }
         if (bl) {
             if (this.iJ == null) {
-                com.samsung.android.spayfw.b.c.e("Processor", "Account is null");
+                Log.e("Processor", "Account is null");
                 return -1;
             }
             if (string != null && !string.isEmpty()) {
                 c c2 = this.iJ.q(string);
                 if (c2 == null) {
-                    com.samsung.android.spayfw.b.c.e("Processor", "Card by Enrollment ID is null");
+                    Log.e("Processor", "Card by Enrollment ID is null");
                     return -6;
                 }
                 if (bl2 && c2.ac() == null) {
-                    com.samsung.android.spayfw.b.c.e("Processor", "Card Token by Enrollment ID is null");
+                    Log.e("Processor", "Card Token by Enrollment ID is null");
                     return -6;
                 }
             }
             if (string2 != null && !string2.isEmpty()) {
                 c c3 = this.iJ.r(string2);
                 if (c3 == null) {
-                    com.samsung.android.spayfw.b.c.e("Processor", "Card by Token ID is null");
+                    Log.e("Processor", "Card by Token ID is null");
                     return -6;
                 }
                 if (bl2 && c3.ac() == null) {
-                    com.samsung.android.spayfw.b.c.e("Processor", "Card Token by Token ID is null");
+                    Log.e("Processor", "Card Token by Token ID is null");
                     return -6;
                 }
             }
@@ -165,15 +163,15 @@ public abstract class o {
 
     protected boolean a(c c2, String string) {
         if (c2 == null) {
-            com.samsung.android.spayfw.b.c.e("Processor", "Card is null");
+            Log.e("Processor", "Card is null");
             return false;
         }
         if (c2.ac() == null) {
-            com.samsung.android.spayfw.b.c.e("Processor", "Card Token is null");
+            Log.e("Processor", "Card Token is null");
             return false;
         }
         if (c2.ac().getTokenStatus() == null || !c2.ac().getTokenStatus().equals((Object)string)) {
-            com.samsung.android.spayfw.b.c.e("Processor", "Card Token Status does not match. Expected(" + string + ") Actual(" + c2.ac().getTokenStatus() + ")");
+            Log.e("Processor", "Card Token Status does not match. Expected(" + string + ") Actual(" + c2.ac().getTokenStatus() + ")");
             return false;
         }
         return true;
@@ -181,25 +179,25 @@ public abstract class o {
 
     protected boolean a(com.samsung.android.spayfw.storage.models.a a2) {
         if (a2 == null) {
-            com.samsung.android.spayfw.b.c.e("Processor", "Record is null");
+            Log.e("Processor", "Record is null");
             return false;
         }
         String string = a2.getTrTokenId();
-        com.samsung.android.spayfw.b.c.d("Processor", "TR Token Id : " + string);
+        Log.d("Processor", "TR Token Id : " + string);
         if (string == null) {
-            com.samsung.android.spayfw.b.c.e("Processor", "TR Token ID is null");
+            Log.e("Processor", "TR Token ID is null");
             return false;
         }
         String string2 = a2.getTokenRefId();
-        com.samsung.android.spayfw.b.c.d("Processor", "Token Ref Id : " + string2);
+        Log.d("Processor", "Token Ref Id : " + string2);
         if (string2 == null) {
-            com.samsung.android.spayfw.b.c.i("Processor", "No Record with Token Ref Id");
+            Log.i("Processor", "No Record with Token Ref Id");
             return false;
         }
         String string3 = a2.getCardBrand();
-        com.samsung.android.spayfw.b.c.d("Processor", "Card Brand : " + string3);
+        Log.d("Processor", "Card Brand : " + string3);
         if (string3 == null) {
-            com.samsung.android.spayfw.b.c.i("Processor", "No Record with Card Brand");
+            Log.i("Processor", "No Record with Card Brand");
             return false;
         }
         List<com.samsung.android.spayfw.storage.models.a> list = this.jJ.c(TokenRecordStorage.TokenGroup.TokenColumn.Cu, string3);
@@ -207,11 +205,11 @@ public abstract class o {
             Iterator iterator = list.iterator();
             while (iterator.hasNext()) {
                 if (!string2.equals((Object)((com.samsung.android.spayfw.storage.models.a)iterator.next()).getTokenRefId())) continue;
-                com.samsung.android.spayfw.b.c.i("Processor", "Existing Record with Token Ref Id");
+                Log.i("Processor", "Existing Record with Token Ref Id");
                 return true;
             }
         }
-        com.samsung.android.spayfw.b.c.i("Processor", "No Existing Record");
+        Log.i("Processor", "No Existing Record");
         return false;
     }
 
@@ -220,14 +218,14 @@ public abstract class o {
      */
     protected final boolean a(String string, c c2, ServerCertificates serverCertificates) {
         int n2 = 0;
-        com.samsung.android.spayfw.b.c.d("Processor", "processReceivedCerts: enrollmentId:" + string);
+        Log.d("Processor", "processReceivedCerts: enrollmentId:" + string);
         if (c2 == null || serverCertificates == null || serverCertificates.getCertificates() == null || serverCertificates.getCertificates().length <= 0 || c2.ad() == null) {
-            com.samsung.android.spayfw.b.c.e("Processor", "processReceivedCerts: invalid input");
+            Log.e("Processor", "processReceivedCerts: invalid input");
             return false;
         }
         boolean bl = c2.ad().setServerCertificates(serverCertificates.getCertificates());
         if (!bl) {
-            com.samsung.android.spayfw.b.c.w("Processor", "getPayNetworkProvider setServerCertificates fail");
+            Log.w("Processor", "getPayNetworkProvider setServerCertificates fail");
             return bl;
         }
         CertificateInfo[] arrcertificateInfo = serverCertificates.getCertificates();
@@ -236,14 +234,14 @@ public abstract class o {
             CertificateInfo certificateInfo = arrcertificateInfo[n2];
             c c3 = this.iJ.q(string);
             if (c3 == null) {
-                com.samsung.android.spayfw.b.c.w("Processor", "getCardByEnrollmentId null");
+                Log.w("Processor", "getCardByEnrollmentId null");
                 return bl;
             }
             String string2 = c3.getCardBrand();
             if (this.lh != null) {
                 this.lh.a(string2, certificateInfo);
             } else {
-                com.samsung.android.spayfw.b.c.w("Processor", "mServerCertsDb null, cant add server certs to Db");
+                Log.w("Processor", "mServerCertsDb null, cant add server certs to Db");
             }
             ++n2;
         }

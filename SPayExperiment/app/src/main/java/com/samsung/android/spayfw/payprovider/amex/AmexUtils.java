@@ -17,7 +17,9 @@
 package com.samsung.android.spayfw.payprovider.amex;
 
 import android.text.TextUtils;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
+
 import java.security.MessageDigest;
 import org.bouncycastle.util.encoders.Base64;
 
@@ -35,28 +37,28 @@ public class AmexUtils {
     public static LupcMetaData aA(String string) {
         int n2;
         if (TextUtils.isEmpty((CharSequence)string)) {
-            c.e("AmexUtils", "metaDataBlob is empty!");
+            Log.e("AmexUtils", "metaDataBlob is empty!");
             return null;
         }
         if (!string.startsWith("E6")) {
-            c.e("AmexUtils", "LUPC MetaData Tag not found");
+            Log.e("AmexUtils", "LUPC MetaData Tag not found");
             return null;
         }
         int n3 = (-4 + string.length()) / 2;
         if (n3 != (n2 = Integer.parseInt((String)string.substring(2, 4), (int)16))) {
-            c.e("AmexUtils", "Length of data " + n3 + " does not match extracted length " + n2);
+            Log.e("AmexUtils", "Length of data " + n3 + " does not match extracted length " + n2);
             return null;
         }
         LupcMetaData lupcMetaData = new LupcMetaData();
         if (!string.substring(4, 6).equals((Object)"16")) {
-            c.e("AmexUtils", "NFC LUPC Count Tag not found");
+            Log.e("AmexUtils", "NFC LUPC Count Tag not found");
             return null;
         }
         int n4 = 2 * Integer.parseInt((String)string.substring(6, 8), (int)16);
         lupcMetaData.nfcLupcCount = Integer.parseInt((String)string.substring(8, n4 + 8));
         int n5 = n4 + 8;
         if (!string.substring(n5, n5 + 2).equals((Object)"17")) {
-            c.e("AmexUtils", "NFC LUPC Expiry Tag not found");
+            Log.e("AmexUtils", "NFC LUPC Expiry Tag not found");
             return null;
         }
         int n6 = n5 + 2;
@@ -68,7 +70,7 @@ public class AmexUtils {
             return lupcMetaData;
         }
         if (!string.substring(n9, n9 + 2).equals((Object)"53")) {
-            c.e("AmexUtils", "Other LUPC Count Tag not found");
+            Log.e("AmexUtils", "Other LUPC Count Tag not found");
             return null;
         }
         int n10 = n9 + 2;
@@ -77,7 +79,7 @@ public class AmexUtils {
         lupcMetaData.otherLupcCount = Integer.parseInt((String)string.substring(n12, n12 + n11));
         int n13 = n12 + n11;
         if (!string.substring(n13, n13 + 2).equals((Object)"54")) {
-            c.e("AmexUtils", "Other LUPC Expiry Tag not found");
+            Log.e("AmexUtils", "Other LUPC Expiry Tag not found");
             return null;
         }
         int n14 = n13 + 2;
@@ -186,7 +188,7 @@ public class AmexUtils {
             return string3;
         }
         catch (Exception exception) {
-            c.c("AmexUtils", exception.getMessage(), exception);
+            Log.c("AmexUtils", exception.getMessage(), exception);
             return null;
         }
     }

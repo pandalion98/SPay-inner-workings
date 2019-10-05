@@ -15,14 +15,11 @@
 package com.samsung.android.spayfw.core.a;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import com.samsung.android.spayfw.appinterface.IServerResponseCallback;
 import com.samsung.android.spayfw.appinterface.ServerRequest;
 import com.samsung.android.spayfw.appinterface.ServerResponseData;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.core.a.o;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.commerce.b;
 import com.samsung.android.spayfw.remoteservice.d;
@@ -44,18 +41,18 @@ extends o {
      * Enabled aggressive exception aggregation
      */
     private void a(ServerResponseData serverResponseData, File file) {
-        c.d("ServerRequestProcessor", "cleanServerResponse");
+        Log.d("ServerRequestProcessor", "cleanServerResponse");
         if (serverResponseData != null && serverResponseData.getFd() != null) {
             try {
                 serverResponseData.getFd().close();
-                c.d("ServerRequestProcessor", "closing serverResponse fd");
+                Log.d("ServerRequestProcessor", "closing serverResponse fd");
             }
             catch (IOException iOException) {
-                c.c("ServerRequestProcessor", iOException.getMessage(), iOException);
+                Log.c("ServerRequestProcessor", iOException.getMessage(), iOException);
             }
             if (file != null) {
                 file.delete();
-                c.d("ServerRequestProcessor", "Delete file");
+                Log.d("ServerRequestProcessor", "Delete file");
             }
         }
     }
@@ -79,7 +76,7 @@ extends o {
     private com.samsung.android.spayfw.remoteservice.a v(int n2) {
         switch (n2) {
             default: {
-                c.e("ServerRequestProcessor", "Client not found " + n2);
+                Log.e("ServerRequestProcessor", "Client not found " + n2);
                 return null;
             }
             case 0: {
@@ -110,7 +107,7 @@ extends o {
      * Lifted jumps to return sites
      */
     public void a(ServerRequest var1_1, IServerResponseCallback var2_2) {
-        c.d("ServerRequestProcessor", "process() called!");
+        Log.d("ServerRequestProcessor", "process() called!");
         if (var1_1 == null || var2_2 == null) ** GOTO lbl5
         try {
             block8 : {
@@ -119,23 +116,23 @@ lbl5: // 2 sources:
                 if (var2_2 != null) {
                     var2_2.onFail(-5);
                 }
-                c.e("ServerRequestProcessor", "process: inputs are invalid! request = " + var1_1 + "; cb = " + var2_2);
+                Log.e("ServerRequestProcessor", "process: inputs are invalid! request = " + var1_1 + "; cb = " + var2_2);
                 if (var1_1 == null) return;
-                c.e("ServerRequestProcessor", "process: request.toString = " + var1_1.toString());
+                Log.e("ServerRequestProcessor", "process: request.toString = " + var1_1.toString());
                 return;
             }
             var4_3 = this.v(var1_1.getServiceType());
             if (var4_3 == null) {
-                c.e("ServerRequestProcessor", "Error not able to get client");
+                Log.e("ServerRequestProcessor", "Error not able to get client");
                 var2_2.onFail(-5);
                 return;
             }
             var4_3.a(var1_1.getRequestMethod(), var1_1.getRelativeUrl(), var1_1.getHeaders(), var1_1.getBody()).a(new a(var2_2));
-            c.i("ServerRequestProcessor", "ServerRequestProcessor: generic request made: " + var1_1.getRequestMethod() + " " + var1_1.getRelativeUrl());
+            Log.i("ServerRequestProcessor", "ServerRequestProcessor: generic request made: " + var1_1.getRequestMethod() + " " + var1_1.getRelativeUrl());
             return;
         }
         catch (RemoteException var3_4) {
-            c.c("ServerRequestProcessor", var3_4.getMessage(), var3_4);
+            Log.c("ServerRequestProcessor", var3_4.getMessage(), var3_4);
             var2_2.onFail(-5);
             return;
         }

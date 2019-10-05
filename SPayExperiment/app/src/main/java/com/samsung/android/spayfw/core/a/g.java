@@ -32,14 +32,12 @@ import com.samsung.android.spayfw.appinterface.IGlobalMembershipCardRegisterCall
 import com.samsung.android.spayfw.appinterface.IPayCallback;
 import com.samsung.android.spayfw.appinterface.PayConfig;
 import com.samsung.android.spayfw.appinterface.SecuredObject;
-import com.samsung.android.spayfw.core.a.o;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
 import com.samsung.android.spayfw.storage.ServerCertsStorage;
-import com.samsung.android.spayfw.storage.TokenRecordStorage;
 import com.samsung.android.spayfw.utils.h;
 import com.samsung.android.spaytzsvc.api.TAException;
 import java.util.Arrays;
@@ -75,17 +73,17 @@ extends o {
     private c N(String string) {
         c c2 = null;
         if (this.iJ == null) {
-            com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardObject. Initializing Samsung Account - null userId ");
+            Log.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardObject. Initializing Samsung Account - null userId ");
             this.iJ = com.samsung.android.spayfw.core.a.a(this.mContext, null);
         }
         if (this.iJ == null) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardObject. unable to create account");
+            Log.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardObject. unable to create account");
             return c2;
         } else {
             c2 = this.iJ.r(string);
             if (c2 != null) return c2;
             {
-                com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardObject. failed to find Card");
+                Log.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardObject. failed to find Card");
                 return c2;
             }
         }
@@ -98,10 +96,10 @@ extends o {
         List<CertificateInfo> list = this.lh.a(ServerCertsStorage.ServerCertsDb.ServerCertsColumn.Cg, string);
         if (list == null || list.size() <= 0) {
             if (DEBUG) {
-                com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getServerCerts : failed to get certificates [" + string + "]");
+                Log.e("GlobalMembershipCardProcessor", "getServerCerts : failed to get certificates [" + string + "]");
                 return null;
             }
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getServerCerts : failed to get certificates");
+            Log.e("GlobalMembershipCardProcessor", "getServerCerts : failed to get certificates");
             return null;
         }
         Iterator iterator = list.iterator();
@@ -146,7 +144,7 @@ extends o {
                     if (arrby3 != null && arrby2 != null && arrby != null) {
                         return new a(arrby, arrby3, arrby2);
                     }
-                    com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getServerCerts : failed to get certificates. cert value is null");
+                    Log.e("GlobalMembershipCardProcessor", "getServerCerts : failed to get certificates. cert value is null");
                     return null;
                 }
                 arrby6 = arrby;
@@ -166,11 +164,11 @@ extends o {
      */
     private void a(String string, String string2, String string3) {
         if (this.iJ == null) {
-            com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "Initializing Samsung Account - userId = " + string3);
+            Log.d("GlobalMembershipCardProcessor", "Initializing Samsung Account - userId = " + string3);
             this.iJ = com.samsung.android.spayfw.core.a.a(this.mContext, string3);
         }
         if (this.iJ == null) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "unable to create account");
+            Log.e("GlobalMembershipCardProcessor", "unable to create account");
             return;
         }
         try {
@@ -184,7 +182,7 @@ extends o {
             c2.setEnrollmentId(string);
             this.iJ.a(c2);
             if (c2.ad() != null) {
-                com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "Set Provider Token Key for Global Membership Card");
+                Log.d("GlobalMembershipCardProcessor", "Set Provider Token Key for Global Membership Card");
                 c2.ad().setProviderTokenKey(f2);
             }
             com.samsung.android.spayfw.storage.models.a a2 = new com.samsung.android.spayfw.storage.models.a(string);
@@ -196,7 +194,7 @@ extends o {
             a2.setTokenRefId(string2);
             this.jJ.c(a2);
             if (!DEBUG) return;
-            com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "addCardToken. add partnerId [" + string2 + "], tokenId[" + string + "]");
+            Log.d("GlobalMembershipCardProcessor", "addCardToken. add partnerId [" + string2 + "], tokenId[" + string + "]");
             return;
         }
         catch (Exception exception) {
@@ -233,7 +231,7 @@ extends o {
                 return lg;
             }
             catch (TAException tAException) {
-                com.samsung.android.spayfw.b.c.c("GlobalMembershipCardProcessor", tAException.getMessage(), (Throwable)((Object)tAException));
+                Log.c("GlobalMembershipCardProcessor", tAException.getMessage(), (Throwable)((Object)tAException));
                 return null;
             }
         }
@@ -251,28 +249,28 @@ extends o {
         if (var1_1 != null && var2_2 != null) ** GOTO lbl10
         if (var2_2 == null) ** GOTO lbl8
         try {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData: invalid inputs: data is null");
+            Log.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData: invalid inputs: data is null");
             var2_2.onFail(-5, var3_3);
             return;
 lbl8: // 1 sources:
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData: invalid inputs: callback is null");
+            Log.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData: invalid inputs: callback is null");
             return;
 lbl10: // 1 sources:
             if (!this.aZ()) {
                 var5_5 = new GlobalMembershipCardRegisterResponseData();
-                com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData() calls onFail. this country doesn't support GlobalMembership");
+                Log.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData() calls onFail. this country doesn't support GlobalMembership");
                 if (var2_2 == null) return;
                 var2_2.onFail(-207, var5_5);
                 return;
             }
         }
         catch (RemoteException var4_4) {
-            com.samsung.android.spayfw.b.c.c("GlobalMembershipCardProcessor", var4_4.getMessage(), var4_4);
+            Log.c("GlobalMembershipCardProcessor", var4_4.getMessage(), var4_4);
             return;
         }
-        com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData() [" + var1_1 + "]");
+        Log.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData() [" + var1_1 + "]");
         if (var1_1.getGlobalMembershipCardData() == null || TextUtils.isEmpty((CharSequence)var1_1.getUserId()) || TextUtils.isEmpty((CharSequence)var1_1.getPartnerId())) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData: invalid data");
+            Log.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData: invalid data");
             var2_2.onFail(-5, var3_3);
             return;
         }
@@ -281,7 +279,7 @@ lbl10: // 1 sources:
         } else {
             var6_7 = this.O(var1_1.getPartnerId());
             if (var6_7 == null) {
-                com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData: serverCerts are null and not stored.");
+                Log.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData: serverCerts are null and not stored.");
             } else {
                 var1_1.setServerCaCert(var6_7.lj);
                 var1_1.setServerEncCert(var6_7.lk);
@@ -290,7 +288,7 @@ lbl10: // 1 sources:
         }
         if ((var7_6 = this.aY()) == null || var7_6.ad() == null) {
             var2_2.onFail(-1, var3_3);
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData: unable to get card Object");
+            Log.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardRegisterData: unable to get card Object");
             return;
         }
         var8_8 = var7_6.ad().getGlobalMembershipCardRegisterDataTA(var1_1);
@@ -309,19 +307,19 @@ lbl10: // 1 sources:
     public void a(String string, byte[] arrby, SecuredObject securedObject, PayConfig payConfig, IPayCallback iPayCallback) {
         block6 : {
             try {
-                com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "startGlobalMembershipCardPay is not supported yet");
+                Log.d("GlobalMembershipCardProcessor", "startGlobalMembershipCardPay is not supported yet");
                 if (arrby == null || iPayCallback == null) {
                     if (iPayCallback != null) {
-                        com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "startGlobalMembershipCardPay: invalid inputs: data is null");
+                        Log.e("GlobalMembershipCardProcessor", "startGlobalMembershipCardPay: invalid inputs: data is null");
                         iPayCallback.onFail(string, -5);
                         return;
                     }
-                    com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "startGlobalMembershipCardPay: invalid inputs: callback is null");
+                    Log.e("GlobalMembershipCardProcessor", "startGlobalMembershipCardPay: invalid inputs: callback is null");
                     return;
                 }
                 if (this.aZ()) break block6;
                 new GlobalMembershipCardRegisterResponseData();
-                com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "startGlobalMembershipCardPay() calls onFail. this country doesn't support GlobalMembership");
+                Log.d("GlobalMembershipCardProcessor", "startGlobalMembershipCardPay() calls onFail. this country doesn't support GlobalMembership");
                 if (iPayCallback == null) return;
                 {
                     iPayCallback.onFail(string, -207);
@@ -351,21 +349,21 @@ lbl10: // 1 sources:
                 if (var1_1.size() > 0 && var2_2 != null) break block15;
 lbl4: // 2 sources:
                 if (var2_2 != null) {
-                    com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: invalid inputs: data is null");
+                    Log.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: invalid inputs: data is null");
                     var2_2.onFail(-5);
                     return;
                 }
-                com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: invalid inputs: callback is null");
+                Log.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: invalid inputs: callback is null");
                 return;
             }
             if (!this.aZ()) {
                 new GlobalMembershipCardRegisterResponseData();
-                com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail() calls onFail. this country doesn't support GlobalMembership");
+                Log.d("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail() calls onFail. this country doesn't support GlobalMembership");
                 if (var2_2 == null) return;
                 var2_2.onFail(-207);
                 return;
             }
-            com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail() " + var1_1);
+            Log.d("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail() " + var1_1);
             var5_4 = new String[var1_1.size()];
             var6_5 = new byte[var1_1.size()][];
             var7_6 = null;
@@ -373,20 +371,20 @@ lbl4: // 2 sources:
             var9_8 = 0;
         }
         catch (RemoteException var3_3) {
-            com.samsung.android.spayfw.b.c.c("GlobalMembershipCardProcessor", var3_3.getMessage(), var3_3);
+            Log.c("GlobalMembershipCardProcessor", var3_3.getMessage(), var3_3);
             return;
         }
         while (var8_7.hasNext()) {
             var13_9 = (ExtractGlobalMembershipCardDetailRequest)var8_7.next();
             if (TextUtils.isEmpty((CharSequence)var13_9.getTokenId()) || var13_9.getTzEncData() == null) {
-                com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: invalid inputs: data value is null");
+                Log.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: invalid inputs: data value is null");
                 var2_2.onFail(-5);
                 return;
             }
-            com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: tokenId [" + var13_9.getTokenId() + "] [" + Arrays.toString((byte[])var13_9.getTzEncData()) + "]");
+            Log.d("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: tokenId [" + var13_9.getTokenId() + "] [" + Arrays.toString((byte[])var13_9.getTzEncData()) + "]");
             var14_10 = this.N(var13_9.getTokenId());
             if (var14_10 == null || var14_10.ad() == null) {
-                com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: unable to get card Object");
+                Log.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: unable to get card Object");
                 var2_2.onFail(-1);
                 return;
             }
@@ -398,30 +396,30 @@ lbl4: // 2 sources:
         {
             var10_11 = var7_6.ad().extractGlobalMembershipCardDetailTA(var5_4, var6_5);
             if (var10_11 == null || var10_11.size() <= 0) {
-                com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: return data is null");
+                Log.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: return data is null");
                 var2_2.onFail(-1);
             }
             for (GlobalMembershipCardDetail var12_13 : var10_11) {
                 if (var12_13.getErrorCode() != 0) {
-                    com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: response error [" + var12_13.getErrorCode() + "]");
+                    Log.e("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail: response error [" + var12_13.getErrorCode() + "]");
                     var2_2.onFail(var12_13.getErrorCode());
                     return;
                 }
                 if (!g.DEBUG) continue;
-                com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail response[" + var12_13 + "]");
+                Log.d("GlobalMembershipCardProcessor", "extractGlobalMembershipCardDetail response[" + var12_13 + "]");
             }
             var2_2.onSuccess(var10_11);
         }
     }
 
     protected boolean a(String string, byte[] arrby, byte[] arrby2, byte[] arrby3) {
-        com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "saveReceivedCerts: partnerId:" + string);
+        Log.d("GlobalMembershipCardProcessor", "saveReceivedCerts: partnerId:" + string);
         if (TextUtils.isEmpty((CharSequence)string) || arrby == null || arrby2 == null || arrby3 == null) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "saveReceivedCerts: invalid input");
+            Log.e("GlobalMembershipCardProcessor", "saveReceivedCerts: invalid input");
             return false;
         }
         if (this.lh == null) {
-            com.samsung.android.spayfw.b.c.w("GlobalMembershipCardProcessor", "saveReceivedCerts: mServerCertsDb null, cant add server certs to Db");
+            Log.w("GlobalMembershipCardProcessor", "saveReceivedCerts: mServerCertsDb null, cant add server certs to Db");
             return false;
         }
         CertificateInfo certificateInfo = new CertificateInfo();
@@ -454,39 +452,39 @@ lbl4: // 2 sources:
         if (var1_1 != null && var2_2 != null) ** GOTO lbl10
         if (var2_2 == null) ** GOTO lbl8
         try {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: invalid inputs: data is null");
+            Log.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: invalid inputs: data is null");
             var2_2.onFail(-5, var3_3);
             return;
 lbl8: // 1 sources:
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: invalid inputs: callback is null");
+            Log.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: invalid inputs: callback is null");
             return;
 lbl10: // 1 sources:
             if (!this.aZ()) {
                 var5_5 = new GlobalMembershipCardRegisterResponseData();
-                com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData() calls onFail. this country doesn't support GlobalMembership");
+                Log.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData() calls onFail. this country doesn't support GlobalMembership");
                 if (var2_2 == null) return;
                 var2_2.onFail(-207, var5_5);
                 return;
             }
         }
         catch (RemoteException var4_4) {
-            com.samsung.android.spayfw.b.c.c("GlobalMembershipCardProcessor", var4_4.getMessage(), var4_4);
+            Log.c("GlobalMembershipCardProcessor", var4_4.getMessage(), var4_4);
             return;
         }
-        com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData() [" + var1_1 + "]");
+        Log.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData() [" + var1_1 + "]");
         if (var1_1.getGlobalMembershipCardData() == null) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: invalid data");
+            Log.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: invalid data");
             var2_2.onFail(-5, var3_3);
             return;
         }
         if (TextUtils.isEmpty((CharSequence)var1_1.getTokenId())) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: tokenId is empty");
+            Log.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: tokenId is empty");
             var2_2.onFail(-5, var3_3);
             return;
         }
         var6_6 = this.O(var1_1.getPartnerId());
         if (var6_6 == null) {
-            com.samsung.android.spayfw.b.c.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: serverCerts are null and not stored.");
+            Log.d("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: serverCerts are null and not stored.");
         } else {
             var1_1.setServerCaCert(var6_6.lj);
             var1_1.setServerEncCert(var6_6.lk);
@@ -494,7 +492,7 @@ lbl10: // 1 sources:
         }
         if ((var7_7 = this.aY()) == null || var7_7.ad() == null) {
             var2_2.onFail(-1, var3_3);
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: unable to get card Object");
+            Log.e("GlobalMembershipCardProcessor", "getGlobalMembershipCardTzEncData: unable to get card Object");
             return;
         }
         var8_8 = var7_7.ad().getGlobalMembershipCardTzEncDataTA(var1_1);

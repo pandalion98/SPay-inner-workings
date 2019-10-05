@@ -16,7 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.samsung.android.spayfw.appinterface.BillingInfo;
 import com.samsung.android.spayfw.appinterface.InAppTransactionInfo;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
 
 public class InAppPayload {
@@ -40,12 +40,12 @@ public class InAppPayload {
      * Enabled aggressive exception aggregation
      */
     public InAppPayload(InAppTransactionInfo inAppTransactionInfo, byte[] arrby, CertificateInfo[] arrcertificateInfo) {
-        c.d(TAG, "Entered In App Payload");
+        Log.d(TAG, "Entered In App Payload");
         if (inAppTransactionInfo == null || arrby == null || arrby.length <= 0) {
-            c.e(TAG, "Invalid input");
+            Log.e(TAG, "Invalid input");
             return;
         }
-        c.d(TAG, "Inputs not null");
+        Log.d(TAG, "Inputs not null");
         try {
             this.method = METHOD_3DS;
             this.card_last4digits = inAppTransactionInfo.getFPANLast4Digits();
@@ -59,7 +59,7 @@ public class InAppPayload {
                 this.billing_address.street = billingInfo.getStreet1();
                 this.billing_address.zip_postal_code = billingInfo.getZip();
                 this.billing_address.state_province = billingInfo.getState();
-                c.d(TAG, "Billing Address Set");
+                Log.d(TAG, "Billing Address Set");
             }
             this.ds = new Algorithm3DS();
             this.ds.type = TYPE;
@@ -70,7 +70,7 @@ public class InAppPayload {
             return;
         }
         catch (Exception exception) {
-            c.d(TAG, "Exception when forming InAppPayload object");
+            Log.d(TAG, "Exception when forming InAppPayload object");
             exception.printStackTrace();
             return;
         }

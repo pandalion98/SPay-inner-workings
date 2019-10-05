@@ -8,10 +8,8 @@
  */
 package com.samsung.android.spayfw.payprovider.mastercard.pce.context.filtercriteria;
 
-import android.util.Log;
 import com.mastercard.mobile_api.bytes.ByteArray;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.pce.context.filtercriteria.MCFilterCriteria;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCFilter;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionInformation;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.MCTransactionResult;
@@ -37,16 +35,16 @@ implements MCFilterCriteria {
                     boolean bl2 = byteArray2 != null && (this.mFilter.getBlCurrency() == null || this.mFilter.getBlCurrency().isEqual(byteArray2));
                     if (!bl2) {
                         if (byteArray2 != null) {
-                            c.d(TAG, "checkContext fail: 3.5 = " + byteArray2.getHexString());
+                            Log.d(TAG, "checkContext fail: 3.5 = " + byteArray2.getHexString());
                         }
                         return MCTransactionResult.CONTEXT_CONFLICT_CURRENCY;
                     }
                     ByteArray byteArray3 = mCTransactionInformation.getAmount();
                     boolean bl3 = !this.mFilter.isBlExactAmount() && McUtils.superior(this.mFilter.getBlAmount(), byteArray3) || this.mFilter.isBlExactAmount() && this.mFilter.getBlAmount().isEqual(byteArray3);
                     if (!bl3) {
-                        Log.e((String)TAG, (String)"checkContext: amount mismatched, so create aac ");
+                        android.util.Log.e((String)TAG, (String)"checkContext: amount mismatched, so create aac ");
                         if (byteArray3 != null) {
-                            c.d(TAG, "checkContext fail 3.6 = " + byteArray3.getHexString());
+                            Log.d(TAG, "checkContext fail 3.6 = " + byteArray3.getHexString());
                         }
                         return MCTransactionResult.CONTEXT_CONFLICT_AMOUNT;
                     }
@@ -63,7 +61,7 @@ implements MCFilterCriteria {
             return MCTransactionResult.CONTEXT_CONFLICT_PASS;
         }
         if (byteArray != null) {
-            Log.e((String)TAG, (String)("checkContext: mcc Category code failed = " + byteArray.getHexString()));
+            android.util.Log.e((String)TAG, (String)("checkContext: mcc Category code failed = " + byteArray.getHexString()));
         }
         return MCTransactionResult.CONTEXT_CONFLICT_MCC;
     }

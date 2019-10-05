@@ -7,7 +7,7 @@
  */
 package com.samsung.android.spayfw.core;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 
 public class o {
     private static final a jZ = new a();
@@ -52,10 +52,10 @@ public class o {
 
         private static void a(int n2, int n3, boolean bl) {
             if (bl) {
-                c.d("StateMachine", "state has changed from " + a.s(n2) + " to " + a.s(n3));
+                Log.d("StateMachine", "state has changed from " + a.s(n2) + " to " + a.s(n3));
                 return;
             }
-            c.d("StateMachine", "state cannot be changed from " + a.s(n2) + " to " + a.s(n3));
+            Log.d("StateMachine", "state cannot be changed from " + a.s(n2) + " to " + a.s(n3));
         }
 
         private static String s(int n2) {
@@ -123,13 +123,13 @@ public class o {
             a a2 = this;
             synchronized (a2) {
                 if (!o.o(n2)) {
-                    c.d("StateMachine", "the new state " + n2 + " is not valid");
+                    Log.d("StateMachine", "the new state " + n2 + " is not valid");
                 } else {
                     int n3 = ka;
                     if (!o.b(n3, n2)) {
                         switch (n3) {
                             default: {
-                                c.d("StateMachine", "wrong state " + n2);
+                                Log.d("StateMachine", "wrong state " + n2);
                                 return false;
                             }
                             case 1: {
@@ -197,14 +197,14 @@ public class o {
                             }
                             a.a(n3, n2, bl2);
                         } else {
-                            c.d("StateMachine", "check state from " + a.s(n3) + " to " + a.s(n2));
+                            Log.d("StateMachine", "check state from " + a.s(n3) + " to " + a.s(n2));
                         }
                     } else {
                         if (bl) {
                             a.a(n3, n2, true);
                             return true;
                         } else {
-                            c.d("StateMachine", "check state from " + a.s(n3) + " to " + a.s(n2));
+                            Log.d("StateMachine", "check state from " + a.s(n3) + " to " + a.s(n2));
                         }
                         return true;
                     }

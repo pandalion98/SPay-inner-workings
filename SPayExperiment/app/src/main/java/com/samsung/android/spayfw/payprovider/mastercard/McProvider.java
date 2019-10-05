@@ -32,6 +32,7 @@ import com.samsung.android.spayfw.appinterface.SecuredObject;
 import com.samsung.android.spayfw.appinterface.SelectCardResult;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.PaymentProviderException;
@@ -41,7 +42,6 @@ import com.samsung.android.spayfw.payprovider.d;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.payprovider.i;
-import com.samsung.android.spayfw.payprovider.mastercard.McPayDataHandler;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.MCTransactionService;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.DSRPInputData;
 import com.samsung.android.spayfw.payprovider.mastercard.pce.data.DSRPOutputData;
@@ -50,7 +50,6 @@ import com.samsung.android.spayfw.payprovider.mastercard.tokenmanagement.McToken
 import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McTAController;
 import com.samsung.android.spayfw.payprovider.mastercard.utils.CryptoUtils;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
-import com.samsung.android.spaytzsvc.api.TAController;
 
 public class McProvider
 extends PaymentNetworkProvider {
@@ -106,10 +105,10 @@ extends PaymentNetworkProvider {
         Class<McProvider> class_ = McProvider.class;
         synchronized (McProvider.class) {
             if (!initCleanupDone) {
-                com.samsung.android.spayfw.b.c.i(TAG, "initCleanup: performing one time cleanup operations");
+                Log.i(TAG, "initCleanup: performing one time cleanup operations");
                 long l2 = McTokenManager.deleteStaleEnrollmentData(context);
                 if (l2 > 0L) {
-                    com.samsung.android.spayfw.b.c.i(TAG, "initCleanup: deleted entries: " + l2);
+                    Log.i(TAG, "initCleanup: deleted entries: " + l2);
                 }
                 initCleanupDone = true;
             }
@@ -123,7 +122,7 @@ extends PaymentNetworkProvider {
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e(TAG, "unloadMcTAController : McTAController is null");
+            Log.e(TAG, "unloadMcTAController : McTAController is null");
             return;
         }
     }
@@ -135,13 +134,13 @@ extends PaymentNetworkProvider {
 
     @Override
     public void beginPay(boolean bl, boolean bl2) {
-        com.samsung.android.spayfw.b.c.d(TAG, "beginPay authenticated " + bl);
+        Log.d(TAG, "beginPay authenticated " + bl);
         this.mTransactionService.initTransaction(bl);
     }
 
     @Override
     public void clearCard() {
-        com.samsung.android.spayfw.b.c.i(TAG, "clearCard");
+        Log.i(TAG, "clearCard");
         this.mTransactionService.clearCard();
     }
 
@@ -156,7 +155,7 @@ extends PaymentNetworkProvider {
     @Override
     public byte[] decryptUserSignature(String string) {
         if (string == null) {
-            com.samsung.android.spayfw.b.c.d(TAG, "decryptUserSignature : input data null");
+            Log.d(TAG, "decryptUserSignature : input data null");
             return null;
         } else {
             byte[] arrby = this.mMcTokenManager.processSignatureData(Base64.decode((String)string, (int)2), 2);
@@ -176,7 +175,7 @@ extends PaymentNetworkProvider {
     @Override
     public String encryptUserSignature(byte[] arrby) {
         if (arrby == null) {
-            com.samsung.android.spayfw.b.c.d(TAG, "encryptUserSignature : input data null");
+            Log.d(TAG, "encryptUserSignature : input data null");
             return null;
         } else {
             byte[] arrby2 = this.mMcTokenManager.processSignatureData(arrby, 1);
@@ -187,7 +186,7 @@ extends PaymentNetworkProvider {
 
     @Override
     public void endPay() {
-        com.samsung.android.spayfw.b.c.d(TAG, "endTransaction");
+        Log.d(TAG, "endTransaction");
     }
 
     @Override
@@ -196,7 +195,7 @@ extends PaymentNetworkProvider {
         DSRPInputData dSRPInputData = mcPayDataHandler.convertToDsrpInput(inAppDetailedTransactionInfo);
         DSRPOutputData dSRPOutputData = this.mTransactionService.getPayInfoData(dSRPInputData);
         if (dSRPOutputData == null) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Failed to create dsrpOutput !!!");
+            Log.e(TAG, "Failed to create dsrpOutput !!!");
             throw new PaymentProviderException(-36);
         }
         return mcPayDataHandler.convertToPaymentGatewayFormat(inAppDetailedTransactionInfo.cd(), inAppDetailedTransactionInfo.getNonce(), dSRPOutputData);
@@ -272,7 +271,7 @@ extends PaymentNetworkProvider {
     public c getEnrollmentRequestData(EnrollCardInfo enrollCardInfo, BillingInfo billingInfo) {
         c c2 = this.mMcTokenManager.getEnrollmentMcData(enrollCardInfo, billingInfo);
         if (c2.getErrorCode() != 0) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Failed to create Enrollment Request" + c2.getErrorCode());
+            Log.e(TAG, "Failed to create Enrollment Request" + c2.getErrorCode());
             return c2;
         }
         Bundle bundle = new Bundle();
@@ -304,19 +303,19 @@ extends PaymentNetworkProvider {
     public Bundle getTokenMetaData() {
         int n2 = this.mTransactionService.getIssuerCountryCode(this.mProviderTokenKey);
         if (n2 == -2) {
-            com.samsung.android.spayfw.b.c.e(TAG, "Error obtaining CRM Country !!!");
+            Log.e(TAG, "Error obtaining CRM Country !!!");
             return null;
         }
         Bundle bundle = new Bundle();
         bundle.putString("tokenMetadataIssuerCountryCode", Integer.toHexString((int)n2));
-        com.samsung.android.spayfw.b.c.d(TAG, "crmCountryCode = " + bundle.toString());
+        Log.d(TAG, "crmCountryCode = " + bundle.toString());
         return bundle;
     }
 
     @Override
     public int getTransactionData(Bundle bundle, i i2) {
         if (this.mProviderTokenKey == null) {
-            com.samsung.android.spayfw.b.c.e("mctds_", "providerTokenKey is null..");
+            Log.e("mctds_", "providerTokenKey is null..");
             return -2;
         }
         try {
@@ -324,7 +323,7 @@ extends PaymentNetworkProvider {
             return n2;
         }
         catch (NullPointerException nullPointerException) {
-            com.samsung.android.spayfw.b.c.e("mctds_", "getTransactionData: NPE occured: " + nullPointerException.getMessage());
+            Log.e("mctds_", "getTransactionData: NPE occured: " + nullPointerException.getMessage());
             nullPointerException.printStackTrace();
             return -2;
         }
@@ -341,7 +340,7 @@ extends PaymentNetworkProvider {
 
     @Override
     protected void interruptMstPay() {
-        com.samsung.android.spayfw.b.c.d(TAG, "MCProvider: interruptMstPay");
+        Log.d(TAG, "MCProvider: interruptMstPay");
         this.mTransactionService.interruptMstPay();
     }
 
@@ -351,7 +350,7 @@ extends PaymentNetworkProvider {
     @Override
     public boolean isDsrpBlobMissing() {
         boolean bl = !this.mTransactionService.isDSRPSupportedByProfile(this.mProviderTokenKey);
-        com.samsung.android.spayfw.b.c.d(TAG, "isDsrpBlobMissing: mcprovider: ret = " + bl);
+        Log.d(TAG, "isDsrpBlobMissing: mcprovider: ret = " + bl);
         return bl;
     }
 
@@ -387,7 +386,7 @@ extends PaymentNetworkProvider {
      */
     @Override
     public e processIdvOptionsData(IdvMethod idvMethod) {
-        com.samsung.android.spayfw.b.c.d(TAG, "processIdvOptionsData: ");
+        Log.d(TAG, "processIdvOptionsData: ");
         e e2 = new e();
         e2.setErrorCode(0);
         if (idvMethod != null && idvMethod.getData() != null && "APP".equals((Object)idvMethod.getType())) {
@@ -396,25 +395,25 @@ extends PaymentNetworkProvider {
             JsonObject jsonObject = new JsonParser().parse(idvMethod.getData()).getAsJsonObject();
             if (jsonObject.get(JSON_KEY_ACTION) != null) {
                 string = jsonObject.get(JSON_KEY_ACTION).getAsString();
-                com.samsung.android.spayfw.b.c.d(TAG, "intentAction : " + string);
+                Log.d(TAG, "intentAction : " + string);
             } else {
-                com.samsung.android.spayfw.b.c.w(TAG, "intentAction : is null ");
+                Log.w(TAG, "intentAction : is null ");
                 string = null;
             }
             if (jsonObject.get(JSON_KEY_PKGNAME) != null) {
                 string2 = jsonObject.get(JSON_KEY_PKGNAME).getAsString();
-                com.samsung.android.spayfw.b.c.d(TAG, "Package Name : " + string2);
+                Log.d(TAG, "Package Name : " + string2);
             } else {
-                com.samsung.android.spayfw.b.c.w(TAG, "intentAction : is null ");
+                Log.w(TAG, "intentAction : is null ");
                 string2 = null;
             }
             JsonElement jsonElement = jsonObject.get(JSON_KEY_EXTRA_TEXT);
             String string3 = null;
             if (jsonElement != null) {
                 String string4 = jsonObject.get(JSON_KEY_EXTRA_TEXT).getAsString();
-                com.samsung.android.spayfw.b.c.d(TAG, "Old Payload URL : " + string4);
+                Log.d(TAG, "Old Payload URL : " + string4);
                 string3 = Base64.encodeToString((byte[])Base64.decode((String)string4, (int)2), (int)2);
-                com.samsung.android.spayfw.b.c.d(TAG, "New Payload URL : " + string3);
+                Log.d(TAG, "New Payload URL : " + string3);
             }
             Bundle bundle = new Bundle();
             bundle.putString("intentAction", string);
@@ -427,19 +426,19 @@ extends PaymentNetworkProvider {
 
     @Override
     protected TransactionDetails processTransactionData(Object object) {
-        com.samsung.android.spayfw.b.c.i("mctds_", "processTransactionData: ");
+        Log.i("mctds_", "processTransactionData: ");
         if (object != null && object instanceof TransactionDetails) {
             return (TransactionDetails)object;
         }
-        com.samsung.android.spayfw.b.c.e("mctds_", "processTransactionData: Invalid data pased");
+        Log.e("mctds_", "processTransactionData: Invalid data pased");
         return null;
     }
 
     @Override
     public void reconstructMissingDsrpBlob() {
-        com.samsung.android.spayfw.b.c.d(TAG, "reconstructMissingDsrpBlob");
+        Log.d(TAG, "reconstructMissingDsrpBlob");
         this.mTransactionService.validateDSRPProfile(this.mProviderTokenKey);
-        com.samsung.android.spayfw.b.c.d(TAG, "reconstructAlternateProfile");
+        Log.d(TAG, "reconstructAlternateProfile");
         this.mTransactionService.validateAlternateProfile(this.mProviderTokenKey);
     }
 
@@ -495,7 +494,7 @@ extends PaymentNetworkProvider {
 
     @Override
     public Bundle stopNfcPay(int n2) {
-        com.samsung.android.spayfw.b.c.i(TAG, "stopNfcPay : " + n2);
+        Log.i(TAG, "stopNfcPay : " + n2);
         return this.mTransactionService.stopNfcPay(n2);
     }
 
@@ -507,14 +506,14 @@ extends PaymentNetworkProvider {
     @Override
     public void updateRequestStatus(d d2) {
         if (d2 != null) {
-            com.samsung.android.spayfw.b.c.i(TAG, "updateRequestStatus Status :" + d2.ci() + " Type:" + d2.getRequestType());
+            Log.i(TAG, "updateRequestStatus Status :" + d2.ci() + " Type:" + d2.getRequestType());
             if (d2.ci() == 0 && d2.getRequestType() == 3 && d2.ck() != null && d2.ck().cn() != null) {
-                com.samsung.android.spayfw.b.c.i(TAG, "updateRequestStatus Provision Complete");
+                Log.i(TAG, "updateRequestStatus Provision Complete");
                 this.mMcTokenManager.setUniqueTokenReference(d2.ck().cn());
             }
             return;
         }
-        com.samsung.android.spayfw.b.c.e(TAG, "ProviderRequestStatus is null");
+        Log.e(TAG, "ProviderRequestStatus is null");
     }
 
     @Override

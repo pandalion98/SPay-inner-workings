@@ -25,14 +25,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Parcelable;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.sensorframework.sda.b.a;
 import com.samsung.sensorframework.sda.b.a.r;
-import com.samsung.sensorframework.sda.d.a.b;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 public class d
 extends b {
@@ -53,7 +52,7 @@ extends b {
     private d(Context context) {
         super(context);
         if (this.Jv == null) {
-            c.d("BluetoothSensor", "Device does not support Bluetooth");
+            Log.d("BluetoothSensor", "Device does not support Bluetooth");
             return;
         }
         this.Ju = new HashMap();

@@ -27,17 +27,16 @@ import com.samsung.android.spayfw.appinterface.SecuredObject;
 import com.samsung.android.spayfw.appinterface.SelectCardResult;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.c;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.payprovider.globalmembership.tzsvc.GlobalMembershipTAException;
-import com.samsung.android.spayfw.payprovider.globalmembership.tzsvc.c;
 import com.samsung.android.spayfw.payprovider.i;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
 import com.samsung.android.spayfw.utils.h;
-import com.samsung.android.spaytzsvc.api.TAController;
-import com.samsung.android.spaytzsvc.api.TAInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +68,7 @@ extends PaymentNetworkProvider {
         globalMembershipCardDetail.setErrorCode(-1);
         globalMembershipCardDetail.setTokenId(string);
         if (zi == null) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipPayProvider", "TAController is null");
+            Log.e("GlobalMembershipPayProvider", "TAController is null");
             return globalMembershipCardDetail;
         }
         try {
@@ -85,11 +84,11 @@ extends PaymentNetworkProvider {
             return globalMembershipCardDetail;
         }
         catch (InterruptedException interruptedException) {
-            com.samsung.android.spayfw.b.c.c("GlobalMembershipPayProvider", interruptedException.getMessage(), interruptedException);
+            Log.c("GlobalMembershipPayProvider", interruptedException.getMessage(), interruptedException);
             return globalMembershipCardDetail;
         }
         catch (GlobalMembershipTAException globalMembershipTAException) {
-            com.samsung.android.spayfw.b.c.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
+            Log.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
             return globalMembershipCardDetail;
         }
     }
@@ -97,16 +96,16 @@ extends PaymentNetworkProvider {
     @Override
     protected boolean authenticateTransaction(SecuredObject securedObject) {
         if (zi == null) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipPayProvider", "TAController is null");
+            Log.e("GlobalMembershipPayProvider", "TAController is null");
             return false;
         }
         try {
-            com.samsung.android.spayfw.b.c.d("GlobalMembershipPayProvider", "Calling Global Membership TA Controller Authenticate Transaction");
+            Log.d("GlobalMembershipPayProvider", "Calling Global Membership TA Controller Authenticate Transaction");
             boolean bl = zi.authenticateTransaction(securedObject.getSecureObjectData());
             return bl;
         }
         catch (GlobalMembershipTAException globalMembershipTAException) {
-            com.samsung.android.spayfw.b.c.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
+            Log.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
             return false;
         }
     }
@@ -161,7 +160,7 @@ extends PaymentNetworkProvider {
             block8 : {
                 globalMembershipCardRegisterResponseData = new GlobalMembershipCardRegisterResponseData();
                 if (zi == null) {
-                    com.samsung.android.spayfw.b.c.e("GlobalMembershipPayProvider", "TAController is null");
+                    Log.e("GlobalMembershipPayProvider", "TAController is null");
                     globalMembershipCardRegisterResponseData.setErrorCode(-1);
                     return globalMembershipCardRegisterResponseData;
                 }
@@ -175,7 +174,7 @@ extends PaymentNetworkProvider {
                         globalMembershipCardRegisterResponseData.setDeviceEncryptCert(b2.encryptcert);
                         globalMembershipCardRegisterResponseData.setDeviceDrk(b2.drk);
                         long l2 = h.am(this.mContext);
-                        com.samsung.android.spayfw.b.c.d("GlobalMembershipPayProvider", "Network Time = " + l2);
+                        Log.d("GlobalMembershipPayProvider", "Network Time = " + l2);
                         if (!globalMembershipCardRegisterRequestData.allServerCertsNotNull()) break block7;
                         byte[] arrby = zi.utility_enc4Server_Transport(globalMembershipCardRegisterRequestData.getPartnerId(), globalMembershipCardRegisterRequestData.getGlobalMembershipCardData(), l2);
                         if (arrby != null) {
@@ -189,7 +188,7 @@ extends PaymentNetworkProvider {
                     return globalMembershipCardRegisterResponseData;
                 }
                 catch (GlobalMembershipTAException globalMembershipTAException) {
-                    com.samsung.android.spayfw.b.c.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
+                    Log.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
                     globalMembershipCardRegisterResponseData.setErrorCode(-1);
                     return globalMembershipCardRegisterResponseData;
                 }
@@ -210,7 +209,7 @@ extends PaymentNetworkProvider {
     public GlobalMembershipCardRegisterResponseData getGlobalMembershipCardTzEncData(GlobalMembershipCardRegisterRequestData globalMembershipCardRegisterRequestData) {
         GlobalMembershipCardRegisterResponseData globalMembershipCardRegisterResponseData = new GlobalMembershipCardRegisterResponseData();
         if (zi == null) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipPayProvider", "TAController is null");
+            Log.e("GlobalMembershipPayProvider", "TAController is null");
             globalMembershipCardRegisterResponseData.setErrorCode(-1);
             return globalMembershipCardRegisterResponseData;
         }
@@ -228,7 +227,7 @@ extends PaymentNetworkProvider {
             return globalMembershipCardRegisterResponseData;
         }
         catch (GlobalMembershipTAException globalMembershipTAException) {
-            com.samsung.android.spayfw.b.c.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
+            Log.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
             globalMembershipCardRegisterResponseData.setErrorCode(-1);
             return globalMembershipCardRegisterResponseData;
         }
@@ -274,7 +273,7 @@ extends PaymentNetworkProvider {
     @Override
     protected void loadTA() {
         zi.loadTA();
-        com.samsung.android.spayfw.b.c.i("GlobalMembershipPayProvider", "load real TA");
+        Log.i("GlobalMembershipPayProvider", "load real TA");
     }
 
     @Override
@@ -304,14 +303,14 @@ extends PaymentNetworkProvider {
     @Override
     public SelectCardResult selectCard() {
         if (zi == null) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipPayProvider", "TAController is null");
+            Log.e("GlobalMembershipPayProvider", "TAController is null");
             return null;
         }
         try {
             return new SelectCardResult(this.getTaid(), zi.getNonce(32));
         }
         catch (GlobalMembershipTAException globalMembershipTAException) {
-            com.samsung.android.spayfw.b.c.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
+            Log.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
             return null;
         }
     }
@@ -329,7 +328,7 @@ extends PaymentNetworkProvider {
     @Override
     public boolean startMstPay(int n2, byte[] arrby) {
         if (zi == null) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipPayProvider", "TAController is null");
+            Log.e("GlobalMembershipPayProvider", "TAController is null");
             return false;
         }
         try {
@@ -337,11 +336,11 @@ extends PaymentNetworkProvider {
             return bl;
         }
         catch (InterruptedException interruptedException) {
-            com.samsung.android.spayfw.b.c.c("GlobalMembershipPayProvider", interruptedException.getMessage(), interruptedException);
+            Log.c("GlobalMembershipPayProvider", interruptedException.getMessage(), interruptedException);
             return false;
         }
         catch (GlobalMembershipTAException globalMembershipTAException) {
-            com.samsung.android.spayfw.b.c.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
+            Log.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
             return false;
         }
     }
@@ -353,18 +352,18 @@ extends PaymentNetworkProvider {
      */
     @Override
     protected void stopMstPay(boolean bl) {
-        com.samsung.android.spayfw.b.c.i("GlobalMembershipPayProvider", "stopMstPay: start ");
+        Log.i("GlobalMembershipPayProvider", "stopMstPay: start ");
         if (zi == null) {
-            com.samsung.android.spayfw.b.c.e("GlobalMembershipPayProvider", "TAController is null");
+            Log.e("GlobalMembershipPayProvider", "TAController is null");
             return;
         }
         try {
             zi.clearMstData();
         }
         catch (GlobalMembershipTAException globalMembershipTAException) {
-            com.samsung.android.spayfw.b.c.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
+            Log.c("GlobalMembershipPayProvider", globalMembershipTAException.getMessage(), (Throwable)((Object)globalMembershipTAException));
         }
-        com.samsung.android.spayfw.b.c.i("GlobalMembershipPayProvider", "stopMstPay: end ");
+        Log.i("GlobalMembershipPayProvider", "stopMstPay: end ");
     }
 
     @Override
@@ -377,7 +376,7 @@ extends PaymentNetworkProvider {
     @Override
     protected void unloadTA() {
         zi.unloadTA();
-        com.samsung.android.spayfw.b.c.i("GlobalMembershipPayProvider", "unload real TA");
+        Log.i("GlobalMembershipPayProvider", "unload real TA");
     }
 
     @Override

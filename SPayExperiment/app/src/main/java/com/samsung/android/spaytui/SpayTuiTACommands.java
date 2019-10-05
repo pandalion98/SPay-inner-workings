@@ -14,7 +14,8 @@ package com.samsung.android.spaytui;
 import android.os.Build;
 import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.Blob;
 import com.samsung.android.spaytzsvc.api.TACommands;
 import com.samsung.android.spaytzsvc.api.TAController;
@@ -95,7 +96,7 @@ extends TACommands {
         this.addCommandInfo(590224, new TACommands.CommandInfo(StartSecureUI.getMaxRequestSize(), StartSecureUI.getMaxResponseSize()));
         this.addCommandInfo(327681, new TACommands.CommandInfo(CheckRetCode.getMaxRequestSize(), CheckRetCode.getMaxResponseSize()));
         if (TAController.DEBUG) {
-            c.d("SpayTuiTACommands", "GetAuthResult.getMaxRequestSize=" + GetAuthResult.getMaxRequestSize() + "  GetAuthResult.getMaxResponseSize=" + GetAuthResult.getMaxResponseSize());
+            Log.d("SpayTuiTACommands", "GetAuthResult.getMaxRequestSize=" + GetAuthResult.getMaxRequestSize() + "  GetAuthResult.getMaxResponseSize=" + GetAuthResult.getMaxResponseSize());
         }
         this.addCommandInfo(131088, new TACommands.CommandInfo(CloseTui.getMaxRequestSize(), CloseTui.getMaxResponseSize()));
         this.addCommandInfo(262146, new TACommands.CommandInfo(GetPinRandom.getMaxRequestSize(), GetPinRandom.getMaxResponseSize()));
@@ -319,13 +320,13 @@ extends TACommands {
                 if (this.mRetVal.retCode.get() == 0L) {
                     if (!TAController.DEBUG) return;
                     {
-                        c.d(TAG, "Generate PIN random Successful");
+                        Log.d(TAG, "Generate PIN random Successful");
                         return;
                     }
                 } else {
                     if (!TAController.DEBUG) return;
                     {
-                        c.d(TAG, "failed to generate PIN random, ret = " + this.mRetVal.retCode.get());
+                        Log.d(TAG, "failed to generate PIN random, ret = " + this.mRetVal.retCode.get());
                         return;
                     }
                 }
@@ -535,17 +536,17 @@ extends TACommands {
             public Response(TACommandResponse tACommandResponse) {
                 super(tACommandResponse.mResponseCode, tACommandResponse.mErrorMsg, tACommandResponse.mResponse);
                 this.mRetVal.deserialize(this.mResponse);
-                c.d(TAG, "PIN_SO_SIZE " + PIN_SO_SIZE);
+                Log.d(TAG, "PIN_SO_SIZE " + PIN_SO_SIZE);
                 if (this.mRetVal.retCode.get() == 0L) {
                     if (!TAController.DEBUG) return;
                     {
-                        c.d(TAG, "Get Pin So Successful");
+                        Log.d(TAG, "Get Pin So Successful");
                         return;
                     }
                 } else {
                     if (!TAController.DEBUG) return;
                     {
-                        c.d(TAG, "failed to get PIN SO, ret = " + this.mRetVal.retCode.get());
+                        Log.d(TAG, "failed to get PIN SO, ret = " + this.mRetVal.retCode.get());
                         return;
                     }
                 }
@@ -644,7 +645,7 @@ extends TACommands {
                     }
                     byte[] arrby8 = new byte[]{(byte)(255 & arrby.length >> 8), (byte)(255 & arrby.length), (byte)(255 & arrby2.length >> 8), (byte)(255 & arrby2.length), (byte)(255 & arrby3.length >> 8), (byte)(255 & arrby3.length), (byte)(255 & arrby4.length >> 8), (byte)(255 & arrby4.length), (byte)(255 & arrby5.length >> 8), (byte)(255 & arrby5.length), (byte)(255 & arrby6.length >> 16), (byte)(255 & arrby6.length >> 8), (byte)(255 & arrby6.length), (byte)(255 & arrby7.length >> 16), (byte)(255 & arrby7.length >> 8), (byte)(255 & arrby7.length)};
                     while (n2 < 16) {
-                        c.d("SpayTuiTACommands", "length[" + n2 + "]=" + arrby8[n2]);
+                        Log.d("SpayTuiTACommands", "length[" + n2 + "]=" + arrby8[n2]);
                         ++n2;
                     }
                     this.img.setData(arrby8);

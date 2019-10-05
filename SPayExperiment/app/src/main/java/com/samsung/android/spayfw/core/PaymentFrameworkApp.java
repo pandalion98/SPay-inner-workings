@@ -49,33 +49,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.os.Build;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.os.Process;
 import android.os.RemoteException;
 import android.service.tima.ITimaService;
 import com.samsung.android.spayfw.appinterface.ICommonCallback;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.cncc.CNCCTAController;
-import com.samsung.android.spayfw.core.BinAttribute;
-import com.samsung.android.spayfw.core.FactoryResetDetector;
-import com.samsung.android.spayfw.core.c;
-import com.samsung.android.spayfw.core.e;
-import com.samsung.android.spayfw.core.h;
-import com.samsung.android.spayfw.core.i;
-import com.samsung.android.spayfw.core.j;
-import com.samsung.android.spayfw.core.k;
-import com.samsung.android.spayfw.core.m;
-import com.samsung.android.spayfw.core.n;
-import com.samsung.android.spayfw.core.q;
 import com.samsung.android.spayfw.core.retry.b;
 import com.samsung.android.spayfw.core.retry.d;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.amex.tzsvc.AmexTAController;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McTAController;
@@ -91,7 +77,6 @@ import com.samsung.android.spaytzsvc.api.TAController;
 import com.samsung.android.spaytzsvc.api.TAException;
 import com.visa.tainterface.VisaTAController;
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -123,7 +108,7 @@ extends Application {
     public static void a(Intent intent) {
         if (intent != null) {
             jA.sendBroadcast(intent, "com.samsung.android.spayfw.permission.UPDATE_NOTIFICATION");
-            com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "sent broadcast: action: " + intent.getAction() + " type: " + intent.getStringExtra("notiType"));
+            Log.i("PaymentFrameworkApp", "sent broadcast: action: " + intent.getAction() + " type: " + intent.getStringExtra("notiType"));
         }
     }
 
@@ -181,11 +166,11 @@ extends Application {
                         catch (IOException iOException) {
                             iOException.printStackTrace();
                         }
-                        if ((a2 = (com.samsung.android.spayfw.b.a)com.samsung.android.spayfw.b.c.an("File-Logger")) != null) {
+                        if ((a2 = (com.samsung.android.spayfw.b.a) Log.an("File-Logger")) != null) {
                             a2.a((FileOutputStream)autoCloseOutputStream);
                             return;
                         }
-                        com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "No FILE LOGGER.");
+                        Log.e("PaymentFrameworkApp", "No FILE LOGGER.");
                     }
 
                     public ParcelFileDescriptor.AutoCloseOutputStream aI() {
@@ -233,7 +218,7 @@ extends Application {
                 }, true);
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.c("PaymentFrameworkApp", exception.getMessage(), exception);
+                Log.c("PaymentFrameworkApp", exception.getMessage(), exception);
                 if (iCommonCallback == null) break block6;
                 try {
                     iCommonCallback.onFail(null, -1);
@@ -249,7 +234,7 @@ extends Application {
             return;
         }
         catch (RemoteException remoteException) {
-            com.samsung.android.spayfw.b.c.c("PaymentFrameworkApp", remoteException.getMessage(), remoteException);
+            Log.c("PaymentFrameworkApp", remoteException.getMessage(), remoteException);
             return;
         }
     }
@@ -277,23 +262,23 @@ extends Application {
                 com.samsung.android.spayfw.fraud.a a2 = com.samsung.android.spayfw.fraud.a.x((Context)this);
                 if (a2 != null) {
                     if (PaymentFrameworkApp.c(FactoryResetDetector.class) != 0) {
-                        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "Fraud: add a framework reset record");
+                        Log.d("PaymentFrameworkApp", "Fraud: add a framework reset record");
                         a2.W("framework_reset");
                         return;
                     }
-                    com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "Fraud: add a factory reset record");
+                    Log.d("PaymentFrameworkApp", "Fraud: add a factory reset record");
                     a2.W("factory_reset");
                     return;
                 }
-                com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "FraudCollector: addFDeviceRecord cannot get data");
+                Log.d("PaymentFrameworkApp", "FraudCollector: addFDeviceRecord cannot get data");
                 return;
             }
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "cannot add factory reset record");
+            Log.e("PaymentFrameworkApp", "cannot add factory reset record");
             return;
         }
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "FraudCollector: DB Exists");
+        Log.d("PaymentFrameworkApp", "FraudCollector: DB Exists");
     }
 
     /*
@@ -307,9 +292,9 @@ extends Application {
         block5 : {
             block4 : {
                 String string2 = e.h((Context)jA).getConfig("CONFIG_PF_INSTANCE_ID");
-                com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "Instance ID : " + string2);
+                Log.d("PaymentFrameworkApp", "Instance ID : " + string2);
                 if (string2 != null && !string2.isEmpty()) break block4;
-                com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "Generating Instance ID");
+                Log.i("PaymentFrameworkApp", "Generating Instance ID");
                 decimalFormat = new DecimalFormat("000");
                 string = com.samsung.android.spayfw.remoteservice.e.c.N((Context)jA);
                 if (string != null) break block5;
@@ -320,32 +305,32 @@ extends Application {
         try {
             String string3;
             int n2 = b2.C(1000000);
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "resetCount : " + n2);
+            Log.d("PaymentFrameworkApp", "resetCount : " + n2);
             string = string3 = string + decimalFormat.format((long)n2);
         }
         catch (Exception exception) {
             exception.printStackTrace();
         }
         int n3 = Calendar.getInstance().get(6);
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "dayOfYear : " + n3);
+        Log.d("PaymentFrameworkApp", "dayOfYear : " + n3);
         String string4 = string + decimalFormat.format((long)n3);
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "Instance ID : " + string4);
+        Log.d("PaymentFrameworkApp", "Instance ID : " + string4);
         e.h((Context)jA).setConfig("CONFIG_PF_INSTANCE_ID", string4);
     }
 
     private void aF() {
         SharedPreferences sharedPreferences = this.getApplicationContext().getSharedPreferences("PFInitState", 0);
         if (sharedPreferences.getBoolean("PFInitState", false)) {
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "PF has already been initialized");
+            Log.d("PaymentFrameworkApp", "PF has already been initialized");
             return;
         }
-        com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "PF init state shared pref is false");
-        com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "DB File Exists?" + this.getDatabasePath("spayfw_enc.db").exists());
+        Log.i("PaymentFrameworkApp", "PF init state shared pref is false");
+        Log.i("PaymentFrameworkApp", "DB File Exists?" + this.getDatabasePath("spayfw_enc.db").exists());
         if (!this.getDatabasePath("spayfw_enc.db").exists()) {
-            com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "SPayfw db file does not exist. Delete Pin data");
+            Log.i("PaymentFrameworkApp", "SPayfw db file does not exist. Delete Pin data");
             SpayTuiTAController.getInstance().deletePin();
         }
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "PF init state shared pref set to true");
+        Log.d("PaymentFrameworkApp", "PF init state shared pref set to true");
         sharedPreferences.edit().putBoolean("PFInitState", true).apply();
     }
 
@@ -384,20 +369,20 @@ extends Application {
         int n2 = 0;
         List<String> list = this.jJ.fv();
         if (list == null || list.isEmpty()) {
-            com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "Ids are null");
+            Log.e("PaymentFrameworkApp", "Ids are null");
             return;
         }
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "prepare:  number of Enrollments: " + list.size());
+        Log.d("PaymentFrameworkApp", "prepare:  number of Enrollments: " + list.size());
         String string2 = e.h((Context)jA).getConfig("CONFIG_USER_ID");
         if (string2 == null && (a2 = this.jJ.bp((String)list.get(0))) != null && a2.getUserId() != null) {
             string = a2.getUserId();
-            com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "Migrate User Id");
+            Log.i("PaymentFrameworkApp", "Migrate User Id");
             e.h((Context)jA).setConfig("CONFIG_USER_ID", string);
         } else {
             string = string2;
         }
         if (string == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "user id is null");
+            Log.e("PaymentFrameworkApp", "user id is null");
             return;
         }
         com.samsung.android.spayfw.core.a a3 = com.samsung.android.spayfw.core.a.a((Context)jA, string);
@@ -409,7 +394,7 @@ extends Application {
                 c2 = c3 = m.a((Context)jA, a4);
             }
             catch (TAException tAException) {
-                com.samsung.android.spayfw.b.c.c("PaymentFrameworkApp", tAException.getMessage(), (Throwable)((Object)tAException));
+                Log.c("PaymentFrameworkApp", tAException.getMessage(), (Throwable)((Object)tAException));
                 if (tAException.getErrorCode() == 2) {
                     jG = -42;
                     c2 = null;
@@ -418,7 +403,7 @@ extends Application {
                 c2 = null;
             }
             if (c2 == null || c2.ad() == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "unable to create card " + (String)list.get(n2));
+                Log.e("PaymentFrameworkApp", "unable to create card " + (String)list.get(n2));
             } else {
                 c2.ad().setPaymentFrameworkRequester(new a());
                 c2.ad().setEnrollmentId(c2.getEnrollmentId());
@@ -434,10 +419,10 @@ extends Application {
                 ServerCertsStorage serverCertsStorage = ServerCertsStorage.ad((Context)jA);
                 List<CertificateInfo> list2 = serverCertsStorage != null ? serverCertsStorage.a(ServerCertsStorage.ServerCertsDb.ServerCertsColumn.Cg, c2.getCardBrand()) : null;
                 if (list2 != null && !list2.isEmpty()) {
-                    com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "setServerCertificates for : " + c2.getCardBrand());
+                    Log.d("PaymentFrameworkApp", "setServerCertificates for : " + c2.getCardBrand());
                     c2.ad().setServerCertificates((CertificateInfo[])list2.toArray((Object[])new CertificateInfo[list2.size()]));
                 } else {
-                    com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "No certs stored for current card");
+                    Log.e("PaymentFrameworkApp", "No certs stored for current card");
                 }
                 jB.post(new Runnable(){
 
@@ -445,7 +430,7 @@ extends Application {
                         c2.ad().setupReplenishAlarm(c2);
                     }
                 });
-                com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "prepare: card added");
+                Log.i("PaymentFrameworkApp", "prepare: card added");
             }
             ++n2;
         }
@@ -469,20 +454,20 @@ extends Application {
             var1_1 = true;
             var31_2 = this;
             // MONITORENTER : var31_2
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "initPF: PF state: " + PaymentFrameworkApp.jF);
+            Log.d("PaymentFrameworkApp", "initPF: PF state: " + PaymentFrameworkApp.jF);
             if (PaymentFrameworkApp.jF == PaymentFrameworkApp.jD) {
-                com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "PF init already done");
+                Log.i("PaymentFrameworkApp", "PF init already done");
                 // MONITOREXIT : var31_2
                 return var1_1;
             }
             var5_3 = com.samsung.android.spayfw.a.b.myUserId();
             if (var5_3 != com.samsung.android.spayfw.a.b.USER_OWNER) {
-                com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "initPF: application only allowed on USER_OWNER but current user id :" + var5_3);
+                Log.e("PaymentFrameworkApp", "initPF: application only allowed on USER_OWNER but current user id :" + var5_3);
                 return false;
             }
-            com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "Build CL: 3392039");
-            com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "Build Flavor: ");
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "Initializing TZ interface!");
+            Log.i("PaymentFrameworkApp", "Build CL: 3392039");
+            Log.i("PaymentFrameworkApp", "Build Flavor: ");
+            Log.d("PaymentFrameworkApp", "Initializing TZ interface!");
             var6_4 = PaymentTZServiceIF.getInstance();
             if (CNCCTAController.isSupported((Context)PaymentFrameworkApp.jA)) {
                 PaymentFrameworkApp.jz.add((Object)CNCCTAController.createOnlyInstance((Context)PaymentFrameworkApp.jA));
@@ -502,26 +487,26 @@ extends Application {
             if (!com.samsung.android.spayfw.utils.h.fR()) {
                 this.aF();
             }
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "initPF: Create efs directory based on UID = " + Process.myUid());
+            Log.d("PaymentFrameworkApp", "initPF: Create efs directory based on UID = " + Process.myUid());
             if (Process.myUid() == 1000) {
                 var27_5 = TAController.getEfsDirectory();
-                com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "initPF: path = " + var27_5);
+                Log.d("PaymentFrameworkApp", "initPF: path = " + var27_5);
                 var28_6 = new File(var27_5);
                 if (!var28_6.exists() && !var28_6.mkdir()) {
-                    com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "initPF: Error creating efs directory for PF!");
+                    Log.e("PaymentFrameworkApp", "initPF: Error creating efs directory for PF!");
                     return false;
                 }
                 if (!var28_6.canWrite() || !var28_6.canRead()) {
-                    com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "initPF: Cannot read or write to efs directory! No permissions!");
+                    Log.e("PaymentFrameworkApp", "initPF: Cannot read or write to efs directory! No permissions!");
                     return false;
                 }
             }
             if (!var6_4.init(PaymentFrameworkApp.jz)) {
-                com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "initPF:Payment Service Init failed");
+                Log.e("PaymentFrameworkApp", "initPF:Payment Service Init failed");
                 return false;
             }
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "initPF:Payment Service Version : " + var6_4.getVersion());
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "initPF: load/unload tui TA to create/write pin random if necessary");
+            Log.d("PaymentFrameworkApp", "initPF:Payment Service Version : " + var6_4.getVersion());
+            Log.d("PaymentFrameworkApp", "initPF: load/unload tui TA to create/write pin random if necessary");
             try {
                 var25_10 = SpayTuiTAController.createOnlyInstance(this.getApplicationContext());
                 if (var25_10 != null) {
@@ -530,52 +515,52 @@ extends Application {
                 }
             }
             catch (TAException var14_13) {
-                com.samsung.android.spayfw.b.c.c("PaymentFrameworkApp", var14_13.getMessage(), (Throwable)var14_13);
+                Log.c("PaymentFrameworkApp", var14_13.getMessage(), (Throwable)var14_13);
             }
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "initPF: Initializing tima keystore! needed to get db key ");
+            Log.d("PaymentFrameworkApp", "initPF: Initializing tima keystore! needed to get db key ");
             var15_11 = com.samsung.android.spayfw.utils.c.fF();
             if (var15_11 == null || !"3.0".equals((Object)var15_11.getTimaVersion())) ** GOTO lbl77
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "initPF: - Tima Version : 3.0");
+            Log.d("PaymentFrameworkApp", "initPF: - Tima Version : 3.0");
             var16_12 = var15_11.KeyStore3_init();
-            com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "initPF: timaStatus = " + var16_12);
+            Log.i("PaymentFrameworkApp", "initPF: timaStatus = " + var16_12);
             if (var16_12 == 0) {
-                com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "Device Integrity Verification success");
+                Log.i("PaymentFrameworkApp", "Device Integrity Verification success");
                 if (!com.samsung.android.spayfw.utils.h.fM()) {
                     PaymentFrameworkApp.jG = -42;
-                    com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "initPF:security patch update date verification failed");
+                    Log.e("PaymentFrameworkApp", "initPF:security patch update date verification failed");
                     return false;
                 }
             } else {
-                com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "Device Integrity Verification failed");
+                Log.e("PaymentFrameworkApp", "Device Integrity Verification failed");
                 if (var16_12 == 65548 || var16_12 == 65549 || var16_12 == 65550) {
-                    com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "Device Integrity Compromised");
+                    Log.e("PaymentFrameworkApp", "Device Integrity Compromised");
                     return false;
                 } else {
-                    com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "Unable to establish communication with TZ. Kill PF");
+                    Log.e("PaymentFrameworkApp", "Unable to establish communication with TZ. Kill PF");
                     Process.killProcess((int)Process.myPid());
                 }
                 return false;
 lbl77: // 1 sources:
-                com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "initPF:unable to get timaService instance");
+                Log.e("PaymentFrameworkApp", "initPF:unable to get timaService instance");
                 return false;
             }
             if (!CNCCTAController.bringup((Context)PaymentFrameworkApp.jA)) {
-                com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "initPF: Error - CNCC Bringup failed");
+                Log.e("PaymentFrameworkApp", "initPF: Error - CNCC Bringup failed");
                 return false;
             }
             this.aD();
             this.jJ = TokenRecordStorage.ae((Context)PaymentFrameworkApp.jA);
             if (this.jJ != null) {
-                com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "initPF:token count:" + this.jJ.fu());
+                Log.i("PaymentFrameworkApp", "initPF:token count:" + this.jJ.fu());
             }
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "initPF: Building ConfigurationManager config cache! ");
+            Log.d("PaymentFrameworkApp", "initPF: Building ConfigurationManager config cache! ");
             e.h((Context)PaymentFrameworkApp.jA).ae();
             var17_14 = new HandlerThread("PaymentFramework");
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "initPF:PF service worker thread is started");
+            Log.d("PaymentFrameworkApp", "initPF:PF service worker thread is started");
             var17_14.start();
             PaymentFrameworkApp.jB = new i((Context)PaymentFrameworkApp.jA, var17_14.getLooper());
             var18_15 = new HandlerThread("restoreHandler");
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "initPF:PF service worker thread for RESTORE_HANDLER is started");
+            Log.d("PaymentFrameworkApp", "initPF:PF service worker thread for RESTORE_HANDLER is started");
             var18_15.start();
             PaymentFrameworkApp.jC = new i((Context)PaymentFrameworkApp.jA, var18_15.getLooper());
             this.jH = SpayTuiTAController.getInstance().getScreenDensity();
@@ -594,13 +579,13 @@ lbl108: // 1 sources:
         ** GOTO lbl111
         {
             catch (Exception var19_18) {
-                com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", var19_18.getMessage());
+                Log.e("PaymentFrameworkApp", var19_18.getMessage());
             }
 lbl111: // 2 sources:
             var20_17 = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
             PaymentFrameworkApp.jA.registerReceiver((BroadcastReceiver)new b(), var20_17);
             d.e(true);
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "initPF: Prepare MST pay config data");
+            Log.d("PaymentFrameworkApp", "initPF: Prepare MST pay config data");
             h.k((Context)PaymentFrameworkApp.jA);
             BinAttribute.init((Context)PaymentFrameworkApp.jA);
             ** GOTO lbl122
@@ -621,43 +606,43 @@ lbl122: // 2 sources:
                         var22_16 = new Intent();
                         var22_16.setClassName((Context)PaymentFrameworkApp.jA, "com.samsung.contextservice.system.ContextService");
                         this.startService(var22_16);
-                        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "start CTX service");
+                        Log.d("PaymentFrameworkApp", "start CTX service");
                     } else {
-                        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "CTX service will not start");
+                        Log.d("PaymentFrameworkApp", "CTX service will not start");
                     }
                     com.samsung.android.spayfw.utils.e.a(this.getApplicationContext(), 10);
                     this.aE();
-                    com.samsung.android.spayfw.b.c.i("PaymentFrameworkApp", "initPF: success without any error");
+                    Log.i("PaymentFrameworkApp", "initPF: success without any error");
                     return var1_1;
                 }
                 catch (Exception var4_9) {}
             }
-            com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "initPF: failed with exception");
+            Log.e("PaymentFrameworkApp", "initPF: failed with exception");
             var4_8.printStackTrace();
             return var1_1;
         }
     }
 
     public boolean isReady() {
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "PFState: " + jF);
+        Log.d("PaymentFrameworkApp", "PFState: " + jF);
         return jF == jD;
     }
 
     public void onConfigurationChanged(Configuration configuration) {
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "onConfigurationChanged");
+        Log.d("PaymentFrameworkApp", "onConfigurationChanged");
         super.onConfigurationChanged(configuration);
         String string = SpayTuiTAController.getInstance().getScreenDensity();
         String string2 = SpayTuiTAController.getInstance().getLocale();
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "original screenDpi " + this.jH);
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "new screenDpi " + string);
+        Log.d("PaymentFrameworkApp", "original screenDpi " + this.jH);
+        Log.d("PaymentFrameworkApp", "new screenDpi " + string);
         if (!string.equals((Object)this.jH)) {
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "onConfigurationChanged. Screen DPI changed Killing PF! " + Process.myPid());
+            Log.d("PaymentFrameworkApp", "onConfigurationChanged. Screen DPI changed Killing PF! " + Process.myPid());
             Process.killProcess((int)Process.myPid());
         }
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "original Locale " + this.jI);
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "new Locale " + string2);
+        Log.d("PaymentFrameworkApp", "original Locale " + this.jI);
+        Log.d("PaymentFrameworkApp", "new Locale " + string2);
         if (!string2.equals((Object)this.jI)) {
-            com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "onConfigurationChanged. Locale changed Killing PF! " + Process.myPid());
+            Log.d("PaymentFrameworkApp", "onConfigurationChanged. Locale changed Killing PF! " + Process.myPid());
             Process.killProcess((int)Process.myPid());
         }
     }
@@ -665,13 +650,13 @@ lbl122: // 2 sources:
     public void onCreate() {
         super.onCreate();
         Thread.setDefaultUncaughtExceptionHandler((Thread.UncaughtExceptionHandler)new n());
-        com.samsung.android.spayfw.b.c.a(new com.samsung.android.spayfw.b.b("Console-Logger"));
-        com.samsung.android.spayfw.b.c.a(new com.samsung.android.spayfw.b.a(this.getApplicationContext(), "File-Logger"));
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "PaymentFrameworkApp: onCreate Start");
+        Log.a(new com.samsung.android.spayfw.b.b("Console-Logger"));
+        Log.a(new com.samsung.android.spayfw.b.a(this.getApplicationContext(), "File-Logger"));
+        Log.d("PaymentFrameworkApp", "PaymentFrameworkApp: onCreate Start");
         jA = this;
         com.samsung.android.spayfw.utils.c.setContext((Context)jA);
         this.init();
-        com.samsung.android.spayfw.b.c.d("PaymentFrameworkApp", "PaymentFrameworkApp : onCreate End");
+        Log.d("PaymentFrameworkApp", "PaymentFrameworkApp : onCreate End");
     }
 
     public static class a
@@ -683,7 +668,7 @@ lbl122: // 2 sources:
                 jB.a(message);
                 return;
             }
-            com.samsung.android.spayfw.b.c.e("PaymentFrameworkApp", "HANDLER IS NOT INITIAILIZED");
+            Log.e("PaymentFrameworkApp", "HANDLER IS NOT INITIAILIZED");
         }
 
         @Override

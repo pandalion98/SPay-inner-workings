@@ -22,27 +22,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.RemoteException;
 import com.google.gson.JsonObject;
 import com.samsung.android.spayfw.appinterface.IPushMessageCallback;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
-import com.samsung.android.spayfw.core.a.o;
-import com.samsung.android.spayfw.core.a.v;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.m;
-import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.payprovider.d;
-import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.remoteservice.Request;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
 import com.samsung.android.spayfw.remoteservice.models.ServerCertificates;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.g;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.i;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.ReplenishTokenRequestData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenResponseData;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
@@ -61,7 +54,7 @@ implements Runnable {
 
     static {
         HandlerThread handlerThread = new HandlerThread("PaymentFramework");
-        com.samsung.android.spayfw.b.c.d("TokenReplenisher", "TokenReplenisher Thread is Started");
+        Log.d("TokenReplenisher", "TokenReplenisher Thread is Started");
         handlerThread.start();
         mHandler = new Handler(handlerThread.getLooper());
     }
@@ -96,20 +89,20 @@ implements Runnable {
         synchronized (z.class) {
             v v2 = v.S(string);
             if (v2 != null && (long)v2.mr < 10L) {
-                com.samsung.android.spayfw.b.c.w("TokenReplenisher", "Token Change Checker Pending. Do not start replenish request.");
+                Log.w("TokenReplenisher", "Token Change Checker Pending. Do not start replenish request.");
                 return null;
             }
             if (v2 != null) {
-                com.samsung.android.spayfw.b.c.w("TokenReplenisher", "Removing Token Change Checker");
+                Log.w("TokenReplenisher", "Removing Token Change Checker");
                 v.remove(string);
             } else {
-                com.samsung.android.spayfw.b.c.w("TokenReplenisher", "No Token Change Checker");
+                Log.w("TokenReplenisher", "No Token Change Checker");
             }
             if ((z)mD.get((Object)string) != null) {
-                com.samsung.android.spayfw.b.c.i("TokenReplenisher", "Token Replenisher Pending. Do not start replenish request.");
+                Log.i("TokenReplenisher", "Token Replenisher Pending. Do not start replenish request.");
                 return null;
             }
-            com.samsung.android.spayfw.b.c.i("TokenReplenisher", "New Instance of Token Replenisher");
+            Log.i("TokenReplenisher", "New Instance of Token Replenisher");
             z z2 = new z(context, string);
             mD.put((Object)string, (Object)z2);
             // ** MonitorExit[var6_2] (shouldn't be in output)
@@ -127,18 +120,18 @@ implements Runnable {
         synchronized (z.class) {
             v v2 = v.S(string);
             if (v2 != null && (long)v2.mr < 10L) {
-                com.samsung.android.spayfw.b.c.w("TokenReplenisher", "Token Change Checker Pending. Do not start replenish request.");
+                Log.w("TokenReplenisher", "Token Change Checker Pending. Do not start replenish request.");
                 return null;
             }
-            com.samsung.android.spayfw.b.c.w("TokenReplenisher", "Removing Token Change Checker");
+            Log.w("TokenReplenisher", "Removing Token Change Checker");
             v.remove(string);
             z z2 = (z)mD.get((Object)string);
             if (z2 == null) {
-                com.samsung.android.spayfw.b.c.i("TokenReplenisher", "New Instance of Token Replenisher");
+                Log.i("TokenReplenisher", "New Instance of Token Replenisher");
                 z2 = new z(context, string, iPushMessageCallback, string2);
                 mD.put((Object)string, (Object)z2);
             } else {
-                com.samsung.android.spayfw.b.c.i("TokenReplenisher", "Update Instance of Token Replenisher");
+                Log.i("TokenReplenisher", "Update Instance of Token Replenisher");
                 z2.lU = string2;
                 z2.lS = iPushMessageCallback;
             }
@@ -151,16 +144,16 @@ implements Runnable {
      * Enabled aggressive block sorting
      */
     private boolean b(c c2) {
-        com.samsung.android.spayfw.b.c.i("TokenReplenisher", "startReplenishRequest");
+        Log.i("TokenReplenisher", "startReplenishRequest");
         f f2 = c2.ac().aQ();
         com.samsung.android.spayfw.payprovider.c c3 = c2.ad().getReplenishmentRequestDataTA();
         if (c3 != null && c3.getErrorCode() == 0) {
             ReplenishTokenRequestData replenishTokenRequestData = new ReplenishTokenRequestData(this.mTokenId);
             if (c3.ch() != null) {
                 replenishTokenRequestData.setData(c3.ch());
-                com.samsung.android.spayfw.b.c.d("TokenReplenisher", "replenishRequestData:" + c3.ch().toString());
+                Log.d("TokenReplenisher", "replenishRequestData:" + c3.ch().toString());
             } else {
-                com.samsung.android.spayfw.b.c.w("TokenReplenisher", "replenishRequestData:replenishRequstData is null ");
+                Log.w("TokenReplenisher", "replenishRequestData:replenishRequstData is null ");
             }
             i i2 = this.lQ.a(c.y(c2.getCardBrand()), c2.ac().getTokenId(), replenishTokenRequestData);
             i2.setCardBrand(c.y(c2.getCardBrand()));
@@ -168,14 +161,14 @@ implements Runnable {
             i2.b(new a(this.mTokenId, c2, f2));
             return true;
         }
-        com.samsung.android.spayfw.b.c.e("TokenReplenisher", " unable to get replenish data from pay provider");
+        Log.e("TokenReplenisher", " unable to get replenish data from pay provider");
         return false;
     }
 
     private void g(String string, c c2) {
-        com.samsung.android.spayfw.b.c.d("TokenReplenisher", "deleting token id = " + string);
+        Log.d("TokenReplenisher", "deleting token id = " + string);
         if (this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Co, string) < 1) {
-            com.samsung.android.spayfw.b.c.e("TokenReplenisher", "Not able to delete Token from DB");
+            Log.e("TokenReplenisher", "Not able to delete Token from DB");
         }
         this.iJ.s(c2.getEnrollmentId());
     }
@@ -187,7 +180,7 @@ implements Runnable {
     public static void remove(String string) {
         Class<z> class_ = z.class;
         synchronized (z.class) {
-            com.samsung.android.spayfw.b.c.i("TokenReplenisher", "Remove Instance of Token Replenisher");
+            Log.i("TokenReplenisher", "Remove Instance of Token Replenisher");
             z z2 = (z)mD.remove((Object)string);
             z.getHandler().removeCallbacks((Runnable)z2);
             // ** MonitorExit[var3_1] (shouldn't be in output)
@@ -204,11 +197,11 @@ implements Runnable {
     }
 
     public void run() {
-        com.samsung.android.spayfw.b.c.i("TokenReplenisher", "Entered replenish Request");
-        com.samsung.android.spayfw.b.c.d("TokenReplenisher", "Entered replenish Request: tokenId " + this.mTokenId);
+        Log.i("TokenReplenisher", "Entered replenish Request");
+        Log.d("TokenReplenisher", "Entered replenish Request: tokenId " + this.mTokenId);
         final c c2 = this.iJ.r(this.mTokenId);
         if (c2 == null) {
-            com.samsung.android.spayfw.b.c.e("TokenReplenisher", " unable to get card based on tokenId. ignore replenish request");
+            Log.e("TokenReplenisher", " unable to get card based on tokenId. ignore replenish request");
             return;
         }
         g g2 = this.lQ.x(c.y(c2.getCardBrand()), this.mTokenId);
@@ -227,15 +220,15 @@ implements Runnable {
             public void a(int var1_1, com.samsung.android.spayfw.remoteservice.c<TokenResponseData> var2_2) {
                 block41 : {
                     block40 : {
-                        com.samsung.android.spayfw.b.c.i("TokenReplenisher", "onRequestComplete: Token change: code " + var1_1);
+                        Log.i("TokenReplenisher", "onRequestComplete: Token change: code " + var1_1);
                         if (c2 == null) {
-                            com.samsung.android.spayfw.b.c.e("TokenReplenisher", "Abort Card is Null");
+                            Log.e("TokenReplenisher", "Abort Card is Null");
                             return;
                         }
                         var3_3 = null;
                         var4_4 = z.this.jJ.bq(z.this.mTokenId);
                         if (var4_4 == null) {
-                            com.samsung.android.spayfw.b.c.e("TokenReplenisher", "Abort Record is Null");
+                            Log.e("TokenReplenisher", "Abort Record is Null");
                             return;
                         }
                         var5_5 = c2.ac().getTokenStatus();
@@ -249,7 +242,7 @@ implements Runnable {
                             case 200: {
                                 var18_12 = var2_2.getResult();
                                 if (var18_12 != null && var18_12.getStatus() != null) ** GOTO lbl28
-                                com.samsung.android.spayfw.b.c.e("TokenReplenisher", "TokenResponseData or status is null");
+                                Log.e("TokenReplenisher", "TokenResponseData or status is null");
                                 var6_6 = true;
                                 var8_9 = var5_5;
                                 var9_10 = false;
@@ -260,10 +253,10 @@ implements Runnable {
 lbl28: // 1 sources:
                                 var19_13 = new TokenStatus(m.a(var18_12), var18_12.getStatus().getReason());
                                 if (var19_13.getCode().equals((Object)var5_5)) ** GOTO lbl-1000
-                                com.samsung.android.spayfw.b.c.i("TokenReplenisher", "Token Status Changed Before Replenishment");
+                                Log.i("TokenReplenisher", "Token Status Changed Before Replenishment");
                                 var3_3 = c2.ad().updateTokenStatusTA(var18_12.getData(), var18_12.getStatus());
                                 if (var3_3 == null || var3_3.getErrorCode() != 0) {
-                                    com.samsung.android.spayfw.b.c.e("TokenReplenisher", "updateTokenStatus failed on provider side");
+                                    Log.e("TokenReplenisher", "updateTokenStatus failed on provider side");
                                     var21_14 = false;
                                 } else {
                                     var21_14 = true;
@@ -279,11 +272,11 @@ lbl28: // 1 sources:
                                     if (var23_15 != null) {
                                         var23_15.k(var4_4.getTrTokenId(), var4_4.getTokenStatus());
                                     } else {
-                                        com.samsung.android.spayfw.b.c.d("TokenReplenisher", "FraudCollector: updateFTokenRecordStatus cannot get data");
+                                        Log.d("TokenReplenisher", "FraudCollector: updateFTokenRecordStatus cannot get data");
                                     }
                                 }
                                 if (var5_5.equals((Object)"SUSPENDED")) {
-                                    com.samsung.android.spayfw.b.c.e("TokenReplenisher", "TOKEN SUSPENDED");
+                                    Log.e("TokenReplenisher", "TOKEN SUSPENDED");
                                     var1_1 = -4;
                                     z.remove(z.this.mTokenId);
                                     var10_7 = var19_13;
@@ -293,7 +286,7 @@ lbl28: // 1 sources:
                                     var9_10 = false;
                                 } else lbl-1000: // 2 sources:
                                 {
-                                    com.samsung.android.spayfw.b.c.i("TokenReplenisher", "TOKEN ACTIVE ... Proceed with replenishment.");
+                                    Log.i("TokenReplenisher", "TOKEN ACTIVE ... Proceed with replenishment.");
                                     if (var18_12.getData() == null || !c2.ad().isReplenishDataAvailable(var18_12.getData())) {
                                         if (z.a(z.this, c2) != false) return;
                                         z.remove(z.this.mTokenId);
@@ -331,7 +324,7 @@ lbl28: // 1 sources:
                             }
                             case 404: 
                             case 410: {
-                                com.samsung.android.spayfw.b.c.w("TokenReplenisher", "unable to find the token on server. something wrong. deleting the token");
+                                Log.w("TokenReplenisher", "unable to find the token on server. something wrong. deleting the token");
                                 var17_16 = new TokenStatus("DISPOSED", null);
                                 var3_3 = c2.ad().updateTokenStatusTA(null, var17_16);
                                 z.a(z.this, z.this.mTokenId, c2);
@@ -395,7 +388,7 @@ lbl28: // 1 sources:
                     var9_10 = false;
                 }
                 if (var7_8 != 0) {
-                    com.samsung.android.spayfw.b.c.e("TokenReplenisher", "Replenish Token Failed - Error Code = " + var7_8);
+                    Log.e("TokenReplenisher", "Replenish Token Failed - Error Code = " + var7_8);
                     var16_11 = new d(23, -1, c2.ac().aQ());
                     c2.ad().updateRequestStatus(var16_11);
                 } else {
@@ -406,7 +399,7 @@ lbl28: // 1 sources:
                     if (var9_10) {
                         z.this.a(null, z.this.mTokenId, var8_9, "TOKEN_CHANGE", c.y(c2.getCardBrand()), var3_3, true);
                     } else {
-                        com.samsung.android.spayfw.b.c.e("TokenReplenisher", "processTokenChange:Send error report to TR server");
+                        Log.e("TokenReplenisher", "processTokenChange:Send error report to TR server");
                         z.this.b(null, z.this.mTokenId, var8_9, "TOKEN_CHANGE", c.y(c2.getCardBrand()), var3_3, true);
                     }
                 }
@@ -421,7 +414,7 @@ lbl28: // 1 sources:
                         z.this.lS.onTokenReplenishRequested(z.this.lU, z.this.mTokenId);
                     }
                     catch (RemoteException var15_18) {
-                        com.samsung.android.spayfw.b.c.c("TokenReplenisher", var15_18.getMessage(), var15_18);
+                        Log.c("TokenReplenisher", var15_18.getMessage(), var15_18);
                     }
                     z.this.lS = null;
                     return;
@@ -467,7 +460,7 @@ lbl28: // 1 sources:
                         block38 : {
                             block37 : {
                                 block34 : {
-                                    com.samsung.android.spayfw.b.c.i("TokenReplenisher", "onRequestComplete:Replenish Request: " + var1_1);
+                                    Log.i("TokenReplenisher", "onRequestComplete:Replenish Request: " + var1_1);
                                     var3_3 = z.this.iJ.r(z.this.mTokenId);
                                     var4_4 = false;
                                     var5_5 = this.mw.getCardBrand();
@@ -481,7 +474,7 @@ lbl28: // 1 sources:
                                         case 200: 
                                         case 202: {
                                             if (var2_2 != null) ** GOTO lbl21
-                                            com.samsung.android.spayfw.b.c.e("TokenReplenisher", "ReplenishTokenRequestData is null");
+                                            Log.e("TokenReplenisher", "ReplenishTokenRequestData is null");
                                             var10_9 = true;
                                             var4_4 = false;
                                             var11_11 = null;
@@ -493,7 +486,7 @@ lbl21: // 1 sources:
                                             var21_13 = var2_2.getResult();
                                             if (var21_13 != null && var21_13.getStatus() != null) ** GOTO lbl40
                                             if (var21_13 == null) {
-                                                com.samsung.android.spayfw.b.c.e("TokenReplenisher", "TokenResponseData is null");
+                                                Log.e("TokenReplenisher", "TokenResponseData is null");
                                                 var10_9 = true;
                                                 var4_4 = false;
                                                 var11_11 = null;
@@ -501,7 +494,7 @@ lbl21: // 1 sources:
                                                 var13_7 = null;
                                                 var9_8 = 0;
                                             } else {
-                                                com.samsung.android.spayfw.b.c.e("TokenReplenisher", "TokenResponseData token status is null");
+                                                Log.e("TokenReplenisher", "TokenResponseData token status is null");
                                                 var10_9 = true;
                                                 var4_4 = false;
                                                 var11_11 = null;
@@ -513,13 +506,13 @@ lbl21: // 1 sources:
 lbl40: // 1 sources:
                                             var22_14 = z.this.jJ.bq(z.this.mTokenId);
                                             if (var3_3 != null && var22_14 != null) ** GOTO lbl56
-                                            com.samsung.android.spayfw.b.c.e("TokenReplenisher", "unable to get card object ");
+                                            Log.e("TokenReplenisher", "unable to get card object ");
                                             if (var22_14 != null) {
-                                                com.samsung.android.spayfw.b.c.i("TokenReplenisher", "delete record from db ");
+                                                Log.i("TokenReplenisher", "delete record from db ");
                                                 z.this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Cn, var22_14.getEnrollmentId());
                                             }
                                             if (var3_3 != null) {
-                                                com.samsung.android.spayfw.b.c.e("TokenReplenisher", "delete card object");
+                                                Log.e("TokenReplenisher", "delete card object");
                                                 z.this.iJ.t(z.this.mTokenId);
                                             }
                                             var9_8 = -6;
@@ -601,7 +594,7 @@ lbl73: // 2 sources:
                                     }
                                     z.remove(z.this.mTokenId);
                                 }
-                                com.samsung.android.spayfw.b.c.i("TokenReplenisher", "DEFAULT CASE");
+                                Log.i("TokenReplenisher", "DEFAULT CASE");
                                 var13_7 = null;
                                 var9_8 = -1;
                                 var10_9 = false;
@@ -621,7 +614,7 @@ lbl73: // 2 sources:
                         var13_7 = null;
                     }
                     if (var9_8 != 0) {
-                        com.samsung.android.spayfw.b.c.e("TokenReplenisher", "Replenish Token Failed - Error Code = " + var9_8);
+                        Log.e("TokenReplenisher", "Replenish Token Failed - Error Code = " + var9_8);
                         if (var3_3 != null) {
                             var20_12 = new d(11, -1, this.mProviderTokenKey);
                             var20_12.ar(var6_6);
@@ -635,7 +628,7 @@ lbl73: // 2 sources:
                         if (var4_4) {
                             z.this.a(null, z.this.mTokenId, var11_11, "TOKEN_CHANGE", c.y(var5_5), var12_10, true);
                         } else {
-                            com.samsung.android.spayfw.b.c.e("TokenReplenisher", "processTokenChange:Send error report to TR server");
+                            Log.e("TokenReplenisher", "processTokenChange:Send error report to TR server");
                             z.this.b(null, z.this.mTokenId, var11_11, "TOKEN_CHANGE", c.y(var5_5), var12_10, true);
                         }
                     }
@@ -650,7 +643,7 @@ lbl73: // 2 sources:
                             z.this.lS.onTokenReplenishRequested(z.this.lU, z.this.mTokenId);
                         }
                         catch (RemoteException var19_24) {
-                            com.samsung.android.spayfw.b.c.c("TokenReplenisher", var19_24.getMessage(), var19_24);
+                            Log.c("TokenReplenisher", var19_24.getMessage(), var19_24);
                         }
                         z.this.lS = null;
                         return;
@@ -688,17 +681,17 @@ lbl73: // 2 sources:
         @Override
         public void a(int n2, ServerCertificates serverCertificates, i i2) {
             boolean bl = true;
-            com.samsung.android.spayfw.b.c.w("TokenReplenisher", "onCertsReceived: called for Replenish");
+            Log.w("TokenReplenisher", "onCertsReceived: called for Replenish");
             c c2 = z.this.iJ.r(this.mF);
             if (c2 == null) {
-                com.samsung.android.spayfw.b.c.e("TokenReplenisher", "TokenReplenisher : unable to get Card object :" + this.mF);
+                Log.e("TokenReplenisher", "TokenReplenisher : unable to get Card object :" + this.mF);
                 try {
                     if (z.this.lS != null) {
                         z.this.lS.onFail(z.this.lU, -6);
                     }
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("TokenReplenisher", remoteException.getMessage(), remoteException);
+                    Log.c("TokenReplenisher", remoteException.getMessage(), remoteException);
                 }
                 z.this.lS = null;
                 return;
@@ -709,13 +702,13 @@ lbl73: // 2 sources:
                     ((ReplenishTokenRequestData)i2.eT()).setData(c3.ch());
                     i2.bf(z.this.P(this.mw.getCardBrand()));
                     i2.a(this);
-                    com.samsung.android.spayfw.b.c.i("TokenReplenisher", "replenish request successfully sent after server cert update");
+                    Log.i("TokenReplenisher", "replenish request successfully sent after server cert update");
                     bl = false;
                 } else {
-                    com.samsung.android.spayfw.b.c.e("TokenReplenisher", " unable to get replenish data from pay provider");
+                    Log.e("TokenReplenisher", " unable to get replenish data from pay provider");
                 }
             } else {
-                com.samsung.android.spayfw.b.c.e("TokenReplenisher", "Server certificate update failed.Replenishment aborted");
+                Log.e("TokenReplenisher", "Server certificate update failed.Replenishment aborted");
             }
             if (!bl) return;
             if (z.this.lS == null) return;
@@ -723,7 +716,7 @@ lbl73: // 2 sources:
                 z.this.lS.onFail(z.this.lU, -1);
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("TokenReplenisher", remoteException.getMessage(), remoteException);
+                Log.c("TokenReplenisher", remoteException.getMessage(), remoteException);
             }
             z.this.lS = null;
         }

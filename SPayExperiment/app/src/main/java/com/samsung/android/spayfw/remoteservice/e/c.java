@@ -30,26 +30,21 @@
 package com.samsung.android.spayfw.remoteservice.e;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.service.tima.ITimaService;
 import com.android.org.conscrypt.TrustManagerImpl;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.cncc.SpayCNCCX509KeyManager;
 import com.samsung.android.spayfw.cncc.SpayDRKManager;
 import com.samsung.android.spayfw.e.b;
-import com.samsung.android.spayfw.remoteservice.e.a;
 import com.samsung.android.spayfw.utils.h;
-import java.io.InputStream;
+
 import java.lang.reflect.Method;
-import java.net.Socket;
 import java.security.KeyStore;
-import java.security.Principal;
-import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509KeyManager;
-import javax.security.auth.x500.X500Principal;
 
 public class c {
     private static final boolean Bb;
@@ -95,50 +90,50 @@ public class c {
             if (SpayDRKManager.isSupported(context)) {
                 String string = SpayDRKManager.getDeviceRootKeyUID(context);
                 if (string == null) {
-                    com.samsung.android.spayfw.b.c.e("SslUtils", "uid null");
+                    Log.e("SslUtils", "uid null");
                     return null;
                 }
-                com.samsung.android.spayfw.b.c.d("SslUtils", "uid = " + string);
+                Log.d("SslUtils", "uid = " + string);
                 String[] arrstring = string.split(":");
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append(arrstring[1]).append(arrstring[2]).append(arrstring[3]).append(arrstring[4]);
                 Bd = stringBuilder.substring(2);
-                com.samsung.android.spayfw.b.c.d("SslUtils", "mDrkUid = " + Bd);
+                Log.d("SslUtils", "mDrkUid = " + Bd);
                 return Bd;
             }
             if (Bb) {
                 com.samsung.android.spayfw.e.a.fg();
-                com.samsung.android.spayfw.b.c.d("SslUtils", "continue getDrkUid");
+                Log.d("SslUtils", "continue getDrkUid");
             }
             try {
                 X509KeyManager x509KeyManager = c.P(context);
                 if (x509KeyManager == null) {
-                    com.samsung.android.spayfw.b.c.e("SslUtils", "keyManager null");
+                    Log.e("SslUtils", "keyManager null");
                     return Bd;
                 }
                 String string = x509KeyManager.chooseClientAlias(null, null, null);
                 if (string == null) {
-                    com.samsung.android.spayfw.b.c.e("SslUtils", "alias null");
+                    Log.e("SslUtils", "alias null");
                     return Bd;
                 }
-                com.samsung.android.spayfw.b.c.d("SslUtils", "obtained certificate chain alias " + string);
+                Log.d("SslUtils", "obtained certificate chain alias " + string);
                 X509Certificate[] arrx509Certificate = x509KeyManager.getCertificateChain(string);
                 if (arrx509Certificate == null || arrx509Certificate.length == 0) {
-                    com.samsung.android.spayfw.b.c.e("SslUtils", "certificate chain returned null");
+                    Log.e("SslUtils", "certificate chain returned null");
                     return Bd;
                 }
                 String string2 = c.u(arrx509Certificate[0].getIssuerX500Principal().getName(), "UID");
-                com.samsung.android.spayfw.b.c.d("SslUtils", "uid = " + string2);
+                Log.d("SslUtils", "uid = " + string2);
                 String[] arrstring = string2.split(":");
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append(arrstring[1]).append(arrstring[2]).append(arrstring[3]).append(arrstring[4]);
                 Bd = stringBuilder.substring(2);
-                com.samsung.android.spayfw.b.c.d("SslUtils", "mDrkUid = " + Bd);
+                Log.d("SslUtils", "mDrkUid = " + Bd);
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.c("SslUtils", exception.getMessage(), exception);
+                Log.c("SslUtils", exception.getMessage(), exception);
             }
-            com.samsung.android.spayfw.b.c.d("SslUtils", "no catch exception");
+            Log.d("SslUtils", "no catch exception");
             return Bd;
         }
     }
@@ -171,7 +166,7 @@ public class c {
         }
         var5_8 = var17_7 = SSLContext.getInstance((String)"TLS");
         var5_8.init(var2_2, var16_6, null);
-        com.samsung.android.spayfw.b.c.d("SslUtils", "SSL Context initialization done!");
+        Log.d("SslUtils", "SSL Context initialization done!");
         if (var6_3 == null) return var5_8;
         if (!false) ** GOTO lbl30
         try {
@@ -239,9 +234,9 @@ lbl63: // 1 sources:
         }
 lbl-1000: // 3 sources:
         {
-            com.samsung.android.spayfw.b.c.c("SslUtils", var4_11.getMessage(), var4_11);
-            com.samsung.android.spayfw.b.c.e("SslUtils", "SSL Context initialization failure");
-            com.samsung.android.spayfw.b.c.e("SslUtils", "Shutting Down");
+            Log.c("SslUtils", var4_11.getMessage(), var4_11);
+            Log.e("SslUtils", "SSL Context initialization failure");
+            Log.e("SslUtils", "Shutting Down");
             System.exit((int)-1);
             return var5_8;
         }
@@ -250,19 +245,19 @@ lbl-1000: // 3 sources:
     private static X509KeyManager P(Context context) {
         boolean bl = SpayCNCCX509KeyManager.isSupported(context);
         if (com.samsung.android.spayfw.e.b.a.fT()) {
-            com.samsung.android.spayfw.b.c.e("SslUtils", "sem device -  useSPayCNCC = false");
+            Log.e("SslUtils", "sem device -  useSPayCNCC = false");
             bl = false;
         }
         if (bl) {
-            com.samsung.android.spayfw.b.c.d("SslUtils", "Using CNCC Flow for SSL Communication");
+            Log.d("SslUtils", "Using CNCC Flow for SSL Communication");
             return new SpayCNCCX509KeyManager(context);
         }
         if (Bb || !h.fO()) {
-            com.samsung.android.spayfw.b.c.e("SslUtils", "CcmKeyManager init ");
+            Log.e("SslUtils", "CcmKeyManager init ");
             com.samsung.android.spayfw.e.a.fg();
             return new a();
         }
-        com.samsung.android.spayfw.b.c.e("SslUtils", "DcmKeyManager init ");
+        Log.e("SslUtils", "DcmKeyManager init ");
         c.fb();
         return b.fh();
     }
@@ -273,14 +268,14 @@ lbl-1000: // 3 sources:
         int n2 = arrmethod.length;
         for (int i2 = 0; i2 < n2; ++i2) {
             Method method = arrmethod[i2];
-            com.samsung.android.spayfw.b.c.d("SslUtils", "Method : " + method.getName());
+            Log.d("SslUtils", "Method : " + method.getName());
         }
         try {
             iTimaService.getClass().getMethod("DCMSelfCheck", new Class[0]).invoke((Object)iTimaService, new Object[0]);
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("SslUtils", exception.getMessage(), exception);
+            Log.c("SslUtils", exception.getMessage(), exception);
             return;
         }
     }

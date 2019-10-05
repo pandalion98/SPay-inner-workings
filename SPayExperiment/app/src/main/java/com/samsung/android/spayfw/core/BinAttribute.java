@@ -20,7 +20,7 @@ package com.samsung.android.spayfw.core;
 import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.utils.h;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -66,9 +66,9 @@ public class BinAttribute {
     public static final BinAttribute getBinAttribute(String string) {
         for (BinAttribute binAttribute : BIN_SET) {
             if (!string.startsWith(binAttribute.getBin())) continue;
-            c.d(TAG, binAttribute.toString());
+            Log.d(TAG, binAttribute.toString());
             String string2 = h.fP();
-            c.d(TAG, "CC2 : " + string2);
+            Log.d(TAG, "CC2 : " + string2);
             BinAttribute binAttribute2 = new BinAttribute(binAttribute.bin, binAttribute.cardBrand, binAttribute.eczb);
             if (COUNTRY_MAP.get((Object)string2) != null) {
                 BinAttribute[] arrbinAttribute = (BinAttribute[])COUNTRY_MAP.get((Object)string2);

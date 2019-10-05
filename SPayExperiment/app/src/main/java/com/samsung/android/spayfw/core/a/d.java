@@ -20,7 +20,6 @@
 package com.samsung.android.spayfw.core.a;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Base64;
 import com.google.gson.JsonObject;
@@ -29,32 +28,24 @@ import com.samsung.android.spayfw.appinterface.EnrollCardInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardLoyaltyInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardPanInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardReferenceInfo;
-import com.samsung.android.spayfw.appinterface.EnrollCardResult;
 import com.samsung.android.spayfw.appinterface.IEnrollCardCallback;
-import com.samsung.android.spayfw.appinterface.TnC;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.FactoryResetDetector;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
-import com.samsung.android.spayfw.core.a.o;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.e;
-import com.samsung.android.spayfw.core.k;
 import com.samsung.android.spayfw.core.l;
 import com.samsung.android.spayfw.core.m;
 import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.models.CertificateInfo;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
 import com.samsung.android.spayfw.remoteservice.models.ServerCertificates;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.j;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.models.CardEnrollmentInfo;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.DeviceInfo;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.EnrollmentRequestData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.EnrollmentResponseData;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.ErrorReport;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.EventReport;
 import com.samsung.android.spayfw.storage.ServerCertsStorage;
-import com.samsung.android.spayfw.storage.TokenRecordStorage;
 import com.samsung.android.spayfw.utils.h;
 import com.samsung.android.spaytzsvc.api.TAController;
 import com.samsung.android.spaytzsvc.api.TAException;
@@ -92,7 +83,7 @@ extends o {
      */
     private String K(String string) {
         String string2;
-        com.samsung.android.spayfw.b.c.d("CardEnroller", "generateRiskDataHash : " + string);
+        Log.d("CardEnroller", "generateRiskDataHash : " + string);
         MessageDigest messageDigest = MessageDigest.getInstance((String)"SHA-256");
         byte[] arrby = string.getBytes("UTF-8");
         messageDigest.update(arrby);
@@ -112,7 +103,7 @@ extends o {
         catch (Exception exception) {
             return string5;
         }
-        com.samsung.android.spayfw.b.c.d("CardEnroller", "generateRiskDataHash : " + string2);
+        Log.d("CardEnroller", "generateRiskDataHash : " + string2);
         return string2;
         catch (Exception exception) {
             return null;
@@ -139,14 +130,14 @@ extends o {
                 try {
                     if (this.mBillingInfo != null && this.mBillingInfo.getZip() != null && !this.mBillingInfo.getZip().isEmpty()) {
                         String string6;
-                        com.samsung.android.spayfw.b.c.d("CardEnroller", "ZipCode : " + this.mBillingInfo.getZip());
+                        Log.d("CardEnroller", "ZipCode : " + this.mBillingInfo.getZip());
                         string5 = string6 = this.K(this.mBillingInfo.getZip());
                         break block12;
                     }
                     string5 = null;
                 }
                 catch (Exception exception) {
-                    com.samsung.android.spayfw.b.c.c("CardEnroller", exception.getMessage(), exception);
+                    Log.c("CardEnroller", exception.getMessage(), exception);
                     string = null;
                 }
             }
@@ -156,14 +147,14 @@ extends o {
                 EnrollCardPanInfo enrollCardPanInfo;
                 if (this.kQ instanceof EnrollCardPanInfo && (enrollCardPanInfo = (EnrollCardPanInfo)this.kQ).getName() != null && !enrollCardPanInfo.getName().isEmpty() && (arrstring = enrollCardPanInfo.getName().split(" ")) != null) {
                     String string7;
-                    com.samsung.android.spayfw.b.c.d("CardEnroller", "Last Name : " + arrstring[-1 + arrstring.length]);
+                    Log.d("CardEnroller", "Last Name : " + arrstring[-1 + arrstring.length]);
                     string4 = string7 = this.K(arrstring[-1 + arrstring.length]);
                     break block13;
                 }
                 string4 = null;
             }
             catch (Exception exception) {
-                com.samsung.android.spayfw.b.c.c("CardEnroller", exception.getMessage(), exception);
+                Log.c("CardEnroller", exception.getMessage(), exception);
                 string2 = null;
             }
         }
@@ -181,7 +172,7 @@ extends o {
                     if (!bl2) {
                         String string9 = enrollCardPanInfo.getPAN();
                         String string10 = string9.substring(-4 + string9.length());
-                        com.samsung.android.spayfw.b.c.d("CardEnroller", "Last 4 : " + string10);
+                        Log.d("CardEnroller", "Last 4 : " + string10);
                         string3 = null;
                         if (string10 != null) {
                             String string11;
@@ -192,7 +183,7 @@ extends o {
             }
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("CardEnroller", exception.getMessage(), exception);
+            Log.c("CardEnroller", exception.getMessage(), exception);
             string3 = null;
         }
         enrollmentRequestData.getCard().setRiskData(string, string2, string3);
@@ -203,16 +194,16 @@ extends o {
      */
     private boolean a(EnrollCardInfo enrollCardInfo, IEnrollCardCallback iEnrollCardCallback) {
         if (enrollCardInfo == null || iEnrollCardCallback == null) {
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "validateEnrollCardRequest: input is null !");
+            Log.e("CardEnroller", "validateEnrollCardRequest: input is null !");
             return false;
         } else {
             if (enrollCardInfo.getApplicationId() != null && enrollCardInfo.getUserId() != null && enrollCardInfo.getGcmId() != null && enrollCardInfo.getSppId() != null && enrollCardInfo.getWalletId() != null && enrollCardInfo.getUserEmail() != null) {
                 if (!d.isValidMode(CARD_ENTRY_MODES, enrollCardInfo.getCardEntryMode())) {
-                    com.samsung.android.spayfw.b.c.e("CardEnroller", "validateEnrollCardRequest: entry mode incorrect! = " + enrollCardInfo.getCardEntryMode());
+                    Log.e("CardEnroller", "validateEnrollCardRequest: entry mode incorrect! = " + enrollCardInfo.getCardEntryMode());
                     return false;
                 }
                 if (!d.isValidMode(CARD_PRESENTATION_MODES, enrollCardInfo.getCardPresentationMode())) {
-                    com.samsung.android.spayfw.b.c.e("CardEnroller", "validateEnrollCardRequest: presentation mode incorrect! = " + enrollCardInfo.getCardPresentationMode());
+                    Log.e("CardEnroller", "validateEnrollCardRequest: presentation mode incorrect! = " + enrollCardInfo.getCardPresentationMode());
                     return false;
                 }
                 if (enrollCardInfo instanceof EnrollCardPanInfo) {
@@ -224,12 +215,12 @@ extends o {
                 if (enrollCardInfo instanceof EnrollCardLoyaltyInfo) {
                     return this.a((EnrollCardLoyaltyInfo)enrollCardInfo);
                 }
-                com.samsung.android.spayfw.b.c.e("CardEnroller", "validateEnrollCardRequest: UNKNOWN ENROLL CARD CLASS");
+                Log.e("CardEnroller", "validateEnrollCardRequest: UNKNOWN ENROLL CARD CLASS");
                 return false;
             }
             if (this.mBillingInfo == null || this.mBillingInfo.getZip() == null || this.mBillingInfo.getZip().length() <= 16) return false;
             {
-                com.samsung.android.spayfw.b.c.e("CardEnroller", "validateEnrollCardRequest: zipcode invalid! too long = " + this.mBillingInfo.getZip());
+                Log.e("CardEnroller", "validateEnrollCardRequest: zipcode invalid! too long = " + this.mBillingInfo.getZip());
                 return false;
             }
         }
@@ -237,7 +228,7 @@ extends o {
 
     private boolean a(EnrollCardLoyaltyInfo enrollCardLoyaltyInfo) {
         if (enrollCardLoyaltyInfo.getLoyaltyInfo() == null || enrollCardLoyaltyInfo.getLoyaltyInfo().isEmpty()) {
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "Loyalty cardInfo is null or empty");
+            Log.e("CardEnroller", "Loyalty cardInfo is null or empty");
             return false;
         }
         return true;
@@ -245,15 +236,15 @@ extends o {
 
     private boolean a(EnrollCardPanInfo enrollCardPanInfo) {
         if (enrollCardPanInfo.getCVV() == null || enrollCardPanInfo.getCVV().isEmpty()) {
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "CVV is null or empty");
+            Log.e("CardEnroller", "CVV is null or empty");
             return false;
         }
         if (enrollCardPanInfo.getPAN() == null || enrollCardPanInfo.getPAN().isEmpty()) {
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "PAN is null or empty");
+            Log.e("CardEnroller", "PAN is null or empty");
             return false;
         }
         if (enrollCardPanInfo.getName() == null || enrollCardPanInfo.getName().isEmpty()) {
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "Name is null or empty");
+            Log.e("CardEnroller", "Name is null or empty");
             return false;
         }
         return true;
@@ -261,11 +252,11 @@ extends o {
 
     private boolean a(EnrollCardReferenceInfo enrollCardReferenceInfo) {
         if (!d.isValidMode(kO, enrollCardReferenceInfo.getReferenceType())) {
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "validateEnrollCardRequest: card Reference type incorrect! = " + enrollCardReferenceInfo.getReferenceType());
+            Log.e("CardEnroller", "validateEnrollCardRequest: card Reference type incorrect! = " + enrollCardReferenceInfo.getReferenceType());
             return false;
         }
         if (enrollCardReferenceInfo.getExtraEnrollData() == null) {
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "Extra Enroll Data is null or empty");
+            Log.e("CardEnroller", "Extra Enroll Data is null or empty");
             return false;
         }
         return true;
@@ -300,10 +291,10 @@ extends o {
             int n2;
             String string3;
             if (!(string3 = (n2 = random.nextInt(1000)) / 10 == 0 ? "00" + Integer.toString((int)n2) : (n2 / 100 == 0 ? "0" + Integer.toString((int)n2) : Integer.toString((int)n2))).equals((Object)string) && !string3.equals((Object)"000")) {
-                com.samsung.android.spayfw.b.c.i("CardEnroller", "Code Generated");
+                Log.i("CardEnroller", "Code Generated");
                 return string3;
             }
-            com.samsung.android.spayfw.b.c.w("CardEnroller", "Code equals Avoid Code or Invalid Code. Retry.");
+            Log.w("CardEnroller", "Code equals Avoid Code or Invalid Code. Retry.");
         } while (true);
     }
 
@@ -368,21 +359,21 @@ extends o {
                 this.kP.onFail(-5, null);
             }
             this.clearSensitiveData();
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "validateEnrollCardRequest failed");
+            Log.e("CardEnroller", "validateEnrollCardRequest failed");
             return;
         }
-        com.samsung.android.spayfw.b.c.d("CardEnroller", this.kQ.toString());
+        Log.d("CardEnroller", this.kQ.toString());
         if (this.iJ == null) {
             this.iJ = com.samsung.android.spayfw.core.a.a(this.mContext, this.kQ.getUserId());
         }
         if (this.iJ == null) {
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "unable to create account");
+            Log.e("CardEnroller", "unable to create account");
             this.kP.onFail(-1, null);
             this.clearSensitiveData();
             return;
         }
         if (!this.iJ.p(this.kQ.getUserId())) {
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "account ids are not same ");
+            Log.e("CardEnroller", "account ids are not same ");
             this.kP.onFail(-5, null);
             this.clearSensitiveData();
             return;
@@ -393,7 +384,7 @@ extends o {
             c3 = c4 = this.iJ.a(this.kQ);
         }
         catch (TAException tAException) {
-            com.samsung.android.spayfw.b.c.c("CardEnroller", tAException.getMessage(), (Throwable)((Object)tAException));
+            Log.c("CardEnroller", tAException.getMessage(), (Throwable)((Object)tAException));
             if (tAException.getErrorCode() == 2) {
                 this.kP.onFail(-42, null);
             } else {
@@ -407,20 +398,20 @@ extends o {
             c3 = null;
         }
         if (c3 == null) {
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "unable to add new card");
+            Log.e("CardEnroller", "unable to add new card");
             this.kP.onFail(-10, null);
             this.clearSensitiveData();
             return;
         }
         if (this.lh != null) {
-            com.samsung.android.spayfw.b.c.i("CardEnroller", "Server Certs DB not null");
-            com.samsung.android.spayfw.b.c.d("CardEnroller", "Card Brand = " + c3.getCardBrand());
+            Log.i("CardEnroller", "Server Certs DB not null");
+            Log.d("CardEnroller", "Card Brand = " + c3.getCardBrand());
             List<CertificateInfo> list = this.lh.a(ServerCertsStorage.ServerCertsDb.ServerCertsColumn.Cg, c3.getCardBrand());
             if (list != null && !list.isEmpty()) {
-                com.samsung.android.spayfw.b.c.i("CardEnroller", "Certificates exist for : " + c3.getCardBrand());
+                Log.i("CardEnroller", "Certificates exist for : " + c3.getCardBrand());
                 c3.ad().setServerCertificates((CertificateInfo[])list.toArray((Object[])new CertificateInfo[list.size()]));
             } else {
-                com.samsung.android.spayfw.b.c.i("CardEnroller", "No certs stored for current card");
+                Log.i("CardEnroller", "No certs stored for current card");
             }
         }
         String string2 = String.valueOf((long)System.currentTimeMillis());
@@ -429,19 +420,19 @@ extends o {
         com.samsung.android.spayfw.payprovider.a a2 = c3.ad().getCasdParameters();
         CertificateInfo[] arrcertificateInfo = c3.ad().getDeviceCertificatesTA();
         if (arrcertificateInfo == null || arrcertificateInfo.length <= 0) {
-            com.samsung.android.spayfw.b.c.w("CardEnroller", "getCerts returns null");
+            Log.w("CardEnroller", "getCerts returns null");
         }
         if ((string = this.P(c3.getCardBrand())) != null && !string.isEmpty()) {
             c2 = c3.ad().getEnrollmentRequestDataTA(this.kQ, this.mBillingInfo);
             JsonObject jsonObject = c2 != null && c2.getErrorCode() == 0 ? c2.ch() : null;
             if (jsonObject == null && !(this.kQ instanceof EnrollCardReferenceInfo)) {
-                com.samsung.android.spayfw.b.c.e("CardEnroller", "provider data is null");
+                Log.e("CardEnroller", "provider data is null");
                 try {
                     this.kP.onFail(-1, null);
                     this.clearSensitiveData();
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("CardEnroller", remoteException.getMessage(), remoteException);
+                    Log.c("CardEnroller", remoteException.getMessage(), remoteException);
                 }
                 this.iJ.s(string2);
                 return;
@@ -452,8 +443,8 @@ extends o {
         DeviceInfo deviceInfo = DeviceInfo.getDefaultDeviceInfo(this.mContext);
         String string3 = this.kQ.getSppId();
         String string4 = this.kQ.getGcmId();
-        com.samsung.android.spayfw.b.c.d("CardEnroller", "spp id= " + string3);
-        com.samsung.android.spayfw.b.c.d("CardEnroller", "gcm id= " + string4);
+        Log.d("CardEnroller", "spp id= " + string3);
+        Log.d("CardEnroller", "gcm id= " + string4);
         if (string3 != null && !string3.isEmpty()) {
             deviceInfo.setSppId(string3);
         } else {
@@ -467,7 +458,7 @@ extends o {
         if (a3 != null) {
             a3.a(this.kQ, this.mBillingInfo);
         } else {
-            com.samsung.android.spayfw.b.c.d("CardEnroller", "Collector: buildFCardRecord cannot get data");
+            Log.d("CardEnroller", "Collector: buildFCardRecord cannot get data");
         }
         this.a(enrollmentRequestData);
         if (this.kQ instanceof EnrollCardPanInfo && (enrollCardPanInfo = (EnrollCardPanInfo)this.kQ).getCVV() != null) {
@@ -475,12 +466,12 @@ extends o {
         }
         com.samsung.android.spayfw.remoteservice.tokenrequester.c c5 = this.lQ.a(c.y(c3.getCardBrand()), enrollmentRequestData);
         String string5 = e.h(this.mContext).getConfig("CONFIG_WALLET_ID");
-        com.samsung.android.spayfw.b.c.d("CardEnroller", "Current Wallet ID = " + string5);
+        Log.d("CardEnroller", "Current Wallet ID = " + string5);
         String string6 = this.kQ.getWalletId();
         if (string5 == null) {
             c5.bl(string6);
         } else if (!string5.equals((Object)string6)) {
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "Current Wallet ID not match");
+            Log.e("CardEnroller", "Current Wallet ID not match");
             this.kP.onFail(-208, null);
             return;
         }
@@ -490,7 +481,7 @@ extends o {
         }
         c5.bk(this.iJ.u(c3.getCardBrand()));
         c5.a(new a(string2, this.kQ, this.mBillingInfo, this.kP));
-        com.samsung.android.spayfw.b.c.i("CardEnroller", "enrollCard request successfully sent");
+        Log.i("CardEnroller", "enrollCard request successfully sent");
     }
 
     private class a
@@ -521,7 +512,7 @@ extends o {
                     block28 : {
                         var3_3 = -3;
                         var4_4 = -11;
-                        com.samsung.android.spayfw.b.c.d("CardEnroller", "EnrollCallback:onRequestComplete: code: " + var1_1);
+                        Log.d("CardEnroller", "EnrollCallback:onRequestComplete: code: " + var1_1);
                         switch (var1_1) {
                             default: {
                                 var3_3 = -1;
@@ -530,20 +521,20 @@ extends o {
                             }
                             case 201: {
                                 if (var2_2 == null || var2_2.getResult() == null || var2_2.getResult().getId() == null) {
-                                    com.samsung.android.spayfw.b.c.e("CardEnroller", "EnrollCallback:onRequestComplete: invalid response from server");
+                                    Log.e("CardEnroller", "EnrollCallback:onRequestComplete: invalid response from server");
                                     var3_3 = -204;
                                     var5_5 = null;
                                 } else {
                                     var21_8 = var2_2.getResult().getId();
                                     if (d.this.iJ.q(this.kR) == null) {
-                                        com.samsung.android.spayfw.b.c.e("CardEnroller", "EnrollCallback:onRequestComplete: unable to find the card ");
+                                        Log.e("CardEnroller", "EnrollCallback:onRequestComplete: unable to find the card ");
                                         var3_3 = -1;
                                         var5_5 = null;
                                     } else {
                                         d.this.iJ.q(this.kR).setEnrollmentId(var21_8);
                                         var22_9 = d.this.iJ.q(var21_8);
                                         if (var22_9 == null) {
-                                            com.samsung.android.spayfw.b.c.e("CardEnroller", "EnrollCallback:onRequestComplete: unable to find the card ");
+                                            Log.e("CardEnroller", "EnrollCallback:onRequestComplete: unable to find the card ");
                                             var3_3 = -1;
                                             var5_5 = null;
                                         } else {
@@ -572,14 +563,14 @@ extends o {
                             }
                             case 409: {
                                 if (var2_2 != null && var2_2.getResult() != null && var2_2.getResult().getId() != null) ** GOTO lbl52
-                                com.samsung.android.spayfw.b.c.e("CardEnroller", "EnrollCallback:onRequestComplete: invalid response from server");
+                                Log.e("CardEnroller", "EnrollCallback:onRequestComplete: invalid response from server");
                                 var3_3 = -204;
                                 var5_5 = null;
                                 break block26;
 lbl52: // 1 sources:
                                 var15_12 = d.this.iJ.q(this.kR);
                                 if (var15_12 != null) ** GOTO lbl58
-                                com.samsung.android.spayfw.b.c.e("CardEnroller", "EnrollCallback:unable to find the card in PF");
+                                Log.e("CardEnroller", "EnrollCallback:unable to find the card in PF");
                                 var3_3 = -1;
                                 var5_5 = null;
                                 break block26;
@@ -598,7 +589,7 @@ lbl58: // 1 sources:
                                 var20_16 = new q();
                                 var20_16.setTokenStatus(var18_15.getTokenStatus());
                                 var15_12.a(var20_16);
-                                com.samsung.android.spayfw.b.c.d("CardEnroller", "EnrollCallback:onRequestComplete: add a new token record " + var18_15.dump());
+                                Log.d("CardEnroller", "EnrollCallback:onRequestComplete: add a new token record " + var18_15.dump());
                                 var5_5 = var17_14;
                                 var3_3 = 0;
                                 break block26;
@@ -652,15 +643,15 @@ lbl58: // 1 sources:
             if (var3_3 != 0) ** GOTO lbl122
             try {
                 block29 : {
-                    com.samsung.android.spayfw.b.c.i("CardEnroller", "EnrollCallback:onRequestComplete: invoking app callback");
+                    Log.i("CardEnroller", "EnrollCallback:onRequestComplete: invoking app callback");
                     if (e.h(d.this.mContext).getConfig("CONFIG_WALLET_ID") == null) {
                         var9_7 = e.h(d.this.mContext).setConfig("CONFIG_WALLET_ID", this.kQ.getWalletId());
-                        com.samsung.android.spayfw.b.c.i("CardEnroller", "Wallet ID Set: " + var9_7);
+                        Log.i("CardEnroller", "Wallet ID Set: " + var9_7);
                     }
                     this.kP.onSuccess(var5_5);
                     break block29;
 lbl122: // 2 sources:
-                    com.samsung.android.spayfw.b.c.e("CardEnroller", "EnrollCard Failed - Error Code = " + var3_3 + "code: " + var1_1);
+                    Log.e("CardEnroller", "EnrollCard Failed - Error Code = " + var3_3 + "code: " + var1_1);
                     this.kP.onFail(var3_3, var5_5);
                     d.this.iJ.s(this.kR);
                 }
@@ -669,7 +660,7 @@ lbl122: // 2 sources:
             catch (Exception var7_19) {
                 block31 : {
                     block30 : {
-                        com.samsung.android.spayfw.b.c.c("CardEnroller", var7_19.getMessage(), var7_19);
+                        Log.c("CardEnroller", var7_19.getMessage(), var7_19);
                         if (var2_2 == null) break block30;
                         m.a(var2_2.getResult(), var5_5);
                         break block31;
@@ -704,27 +695,27 @@ lbl135: // 2 sources:
          */
         @Override
         public void a(int n2, ServerCertificates serverCertificates, com.samsung.android.spayfw.remoteservice.tokenrequester.c c2) {
-            com.samsung.android.spayfw.b.c.d("CardEnroller", "onCertsReceived: called for EnrollCallback");
+            Log.d("CardEnroller", "onCertsReceived: called for EnrollCallback");
             c c3 = d.this.iJ.q(this.kR);
             if (c3 == null) {
-                com.samsung.android.spayfw.b.c.e("CardEnroller", "unable to find card object");
+                Log.e("CardEnroller", "unable to find card object");
                 try {
                     this.kP.onFail(-1, null);
                     return;
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("CardEnroller", remoteException.getMessage(), remoteException);
+                    Log.c("CardEnroller", remoteException.getMessage(), remoteException);
                     return;
                 }
             }
             if (!d.this.a(this.kR, c3, serverCertificates)) {
-                com.samsung.android.spayfw.b.c.e("CardEnroller", "Server certificate update failed. Enrollment aborted");
+                Log.e("CardEnroller", "Server certificate update failed. Enrollment aborted");
                 try {
                     this.kP.onFail(-1, null);
                     return;
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("CardEnroller", remoteException.getMessage(), remoteException);
+                    Log.c("CardEnroller", remoteException.getMessage(), remoteException);
                     return;
                 }
             }
@@ -738,12 +729,12 @@ lbl135: // 2 sources:
                 }
             }
             if (jsonObject == null && !(this.kQ instanceof EnrollCardReferenceInfo)) {
-                com.samsung.android.spayfw.b.c.w("CardEnroller", "provider data is null");
+                Log.w("CardEnroller", "provider data is null");
                 try {
                     this.kP.onFail(-1, null);
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("CardEnroller", remoteException.getMessage(), remoteException);
+                    Log.c("CardEnroller", remoteException.getMessage(), remoteException);
                 }
                 d.this.iJ.s(this.kR);
                 return;
@@ -751,38 +742,38 @@ lbl135: // 2 sources:
             l.a(c4, (EnrollmentRequestData)c2.eT(), d.this.aV());
             c2.bf(d.this.P(c3.getCardBrand()));
             c2.a(this);
-            com.samsung.android.spayfw.b.c.i("CardEnroller", "enrollCard request successfully sent after server cert update");
+            Log.i("CardEnroller", "enrollCard request successfully sent after server cert update");
         }
 
         @Override
         public boolean a(int n2, String string) {
-            com.samsung.android.spayfw.b.c.d("CardEnroller", "onCasdUpdate : called for EnrollCallback");
+            Log.d("CardEnroller", "onCasdUpdate : called for EnrollCallback");
             if (string == null || string.isEmpty()) {
-                com.samsung.android.spayfw.b.c.e("CardEnroller", "CASD certificate is null. Enrollment aborted");
+                Log.e("CardEnroller", "CASD certificate is null. Enrollment aborted");
                 try {
                     this.kP.onFail(-43, null);
                     return false;
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("CardEnroller", remoteException.getMessage(), remoteException);
+                    Log.c("CardEnroller", remoteException.getMessage(), remoteException);
                     return false;
                 }
             }
             c c2 = d.this.iJ.q(this.kR);
             if (c2 == null || c2.ad() == null) {
-                com.samsung.android.spayfw.b.c.e("CardEnroller", "no card, CASD aborted");
+                Log.e("CardEnroller", "no card, CASD aborted");
                 try {
                     this.kP.onFail(-43, null);
                     return false;
                 }
                 catch (RemoteException remoteException) {
-                    com.samsung.android.spayfw.b.c.c("CardEnroller", remoteException.getMessage(), remoteException);
+                    Log.c("CardEnroller", remoteException.getMessage(), remoteException);
                     return false;
                 }
             }
-            com.samsung.android.spayfw.b.c.d("CardEnroller", "onCasdUpdate : " + c2.getCardBrand());
+            Log.d("CardEnroller", "onCasdUpdate : " + c2.getCardBrand());
             boolean bl = c2.ad().setCasdCertificate(string);
-            com.samsung.android.spayfw.b.c.d("CardEnroller", "onCasdUpdate : " + bl);
+            Log.d("CardEnroller", "onCasdUpdate : " + bl);
             if (bl) {
                 EventReport eventReport = new EventReport();
                 eventReport.setCategory("Security");
@@ -797,13 +788,13 @@ lbl135: // 2 sources:
             errorReport.setCode("ERROR-30000");
             errorReport.setDescription("CASD certificate provision failure");
             d.this.lQ.a(c.y(c2.getCardBrand()), errorReport).fe();
-            com.samsung.android.spayfw.b.c.e("CardEnroller", "CASD certificate update faild. Enrollment aborted");
+            Log.e("CardEnroller", "CASD certificate update faild. Enrollment aborted");
             try {
                 this.kP.onFail(-43, null);
                 return false;
             }
             catch (RemoteException remoteException) {
-                com.samsung.android.spayfw.b.c.c("CardEnroller", remoteException.getMessage(), remoteException);
+                Log.c("CardEnroller", remoteException.getMessage(), remoteException);
                 return false;
             }
         }

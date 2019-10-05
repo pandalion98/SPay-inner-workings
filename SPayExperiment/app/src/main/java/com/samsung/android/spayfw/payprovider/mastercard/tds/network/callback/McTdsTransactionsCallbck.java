@@ -20,7 +20,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.e;
 import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.payprovider.i;
@@ -64,10 +64,10 @@ implements a.a {
             StringBuilder stringBuilder = new StringBuilder();
             if (context == null) {
                 stringBuilder.append("tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: Err. Context missing. Cannot store authCode in db");
-                c.e(TDS_TAG_ERROR, stringBuilder.toString());
+                Log.e(TDS_TAG_ERROR, stringBuilder.toString());
                 if (this.pfCallBack == null) return;
                 {
-                    c.e(TDS_TAG_ERROR, "tokenId: " + this.mCardMasterId + "McTdsTransactionsCallbck: Err. Context missing. Cannot store authCode in db");
+                    Log.e(TDS_TAG_ERROR, "tokenId: " + this.mCardMasterId + "McTdsTransactionsCallbck: Err. Context missing. Cannot store authCode in db");
                     e2.as(stringBuilder.toString());
                     this.pfCallBack.a(new f(this.mCardMasterId), -4, null, e2);
                     return;
@@ -75,9 +75,9 @@ implements a.a {
             }
             McTdsMetaDataDaoImpl mcTdsMetaDataDaoImpl = new McTdsMetaDataDaoImpl(context);
             if (this.pfCallBack == null) {
-                c.e(TDS_TAG_ERROR, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: Err. Missing framework callback : pfCallBackError");
+                Log.e(TDS_TAG_ERROR, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: Err. Missing framework callback : pfCallBackError");
             }
-            c.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: statusCode : " + n2);
+            Log.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: statusCode : " + n2);
             switch (n2) {
                 default: {
                     n3 = -36;
@@ -89,7 +89,7 @@ implements a.a {
             }
             if (arrby == null) {
                 stringBuilder.append("tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: responseData empty received: pfCallBackError");
-                c.e(TDS_TAG_ERROR, stringBuilder.toString());
+                Log.e(TDS_TAG_ERROR, stringBuilder.toString());
                 e2.setErrorCode(-7);
                 e2.as(stringBuilder.toString());
                 if (this.pfCallBack == null) return;
@@ -101,7 +101,7 @@ implements a.a {
             String string = new String(arrby);
             if (n2 == 0) {
                 stringBuilder.append("tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: network err responseData:" + string);
-                c.e(TDS_TAG_ERROR, stringBuilder.toString());
+                Log.e(TDS_TAG_ERROR, stringBuilder.toString());
                 e2.setErrorCode(-7);
                 e2.as(stringBuilder.toString());
                 if (this.pfCallBack == null) return;
@@ -110,13 +110,13 @@ implements a.a {
                     return;
                 }
             }
-            c.d(TAG, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: responseJsonString: " + string);
+            Log.d(TAG, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: responseJsonString: " + string);
             Gson gson = new Gson();
             try {
                 McTdsManager mcTdsManager = McTdsManager.getInstance(this.mCardMasterId);
                 if (n2 == 401) {
                     stringBuilder.append("tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: AUTHORIZATION_FAIL_CODE : pfCallBackError");
-                    c.e(TDS_TAG_ERROR, stringBuilder.toString());
+                    Log.e(TDS_TAG_ERROR, stringBuilder.toString());
                     e2.setErrorCode(-8);
                     e2.as(stringBuilder.toString());
                     if (this.pfCallBack != null) {
@@ -128,7 +128,7 @@ implements a.a {
                 mcTdsTransactionResponse = (McTdsTransactionResponse)gson.fromJson(string, McTdsTransactionResponse.class);
                 if (mcTdsTransactionResponse == null || n3 != 0) {
                     stringBuilder.append("tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: Error:  Empty payload : pfCallBackError");
-                    c.e(TDS_TAG_ERROR, stringBuilder.toString());
+                    Log.e(TDS_TAG_ERROR, stringBuilder.toString());
                     e2.setErrorCode(-7);
                     e2.as(stringBuilder.toString());
                     if (this.pfCallBack == null) return;
@@ -139,7 +139,7 @@ implements a.a {
                 }
                 if (!TextUtils.isEmpty((CharSequence)mcTdsTransactionResponse.getErrorCode())) {
                     stringBuilder.append("tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: : pfCallBackError ErrorCode: " + mcTdsTransactionResponse.getErrorCode() + " resultCode:" + n3);
-                    c.e(TDS_TAG_ERROR, stringBuilder.toString());
+                    Log.e(TDS_TAG_ERROR, stringBuilder.toString());
                     e2.setErrorCode(-9);
                     e2.as(stringBuilder.toString());
                     if (this.pfCallBack != null) {
@@ -149,18 +149,18 @@ implements a.a {
                     return;
                 }
                 if (mcTdsTransactionResponse.getTransactions() == null || mcTdsTransactionResponse.getTransactions().length == 0) {
-                    c.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck:  Empty transaction list obtained ");
+                    Log.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck:  Empty transaction list obtained ");
                     stringBuilder.append("Step1");
                     bl = false;
                 } else {
-                    c.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " List Size : " + mcTdsTransactionResponse.getTransactions().length);
+                    Log.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " List Size : " + mcTdsTransactionResponse.getTransactions().length);
                     bl = true;
                 }
             }
             catch (Exception exception) {
                 exception.printStackTrace();
                 stringBuilder.append("tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: : pfCallBackError Exception: " + exception.getMessage() + "StatusCode: " + n2);
-                c.e(TDS_TAG_ERROR, stringBuilder.toString());
+                Log.e(TDS_TAG_ERROR, stringBuilder.toString());
                 e2.setErrorCode(-2);
                 e2.as(stringBuilder.toString());
                 if (this.pfCallBack == null) return;
@@ -175,29 +175,29 @@ implements a.a {
             try {
                 McTdsMetaData mcTdsMetaData = (McTdsMetaData)mcTdsMetaDataDaoImpl.getData(this.mCardMasterId);
                 if (!TextUtils.isEmpty((CharSequence)string4)) {
-                    c.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: responseHost Received: ");
-                    c.d(TAG, "responseHost: " + string4);
+                    Log.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: responseHost Received: ");
+                    Log.d(TAG, "responseHost: " + string4);
                     mcTdsMetaData.setTdsUrl(string4);
                 }
                 if (bl && !TextUtils.isEmpty((CharSequence)string3)) {
-                    c.i(TAG, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: lastUpdatedTag Received: " + string3);
+                    Log.i(TAG, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: lastUpdatedTag Received: " + string3);
                     mcTdsMetaData.setLastUpdateTag(string3);
                 }
                 if (!TextUtils.isEmpty((CharSequence)string2)) {
-                    c.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: authCode Received: ");
-                    c.d(TAG, "authCode: " + string2);
+                    Log.i(TDS_TAG_INFO, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: authCode Received: ");
+                    Log.d(TAG, "authCode: " + string2);
                     mcTdsMetaData.setAuthCode(string2);
                     if (!mcTdsMetaDataDaoImpl.storeAuthCode(string2, this.mCardMasterId)) {
-                        c.e(TDS_TAG_ERROR, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck:Err saving authCode into DB");
+                        Log.e(TDS_TAG_ERROR, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck:Err saving authCode into DB");
                     }
                 }
                 if (mcTdsMetaDataDaoImpl.updateData(mcTdsMetaData, this.mCardMasterId)) break block30;
-                c.e(TDS_TAG_ERROR, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck:Err saving updated data into DB");
+                Log.e(TDS_TAG_ERROR, "tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck:Err saving updated data into DB");
             }
             catch (Exception exception) {
                 exception.printStackTrace();
                 stringBuilder.append("tokenId: " + this.mCardMasterId + " McTdsTransactionsCallbck: pfCallBackError Exception with TDS DB: " + exception.getMessage());
-                c.e(TDS_TAG_ERROR, stringBuilder.toString());
+                Log.e(TDS_TAG_ERROR, stringBuilder.toString());
                 e2.setErrorCode(-2);
                 e2.as(stringBuilder.toString());
                 if (this.pfCallBack == null) return;

@@ -16,7 +16,8 @@ package com.samsung.android.spayfw.core.hce;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,7 +37,7 @@ extends BroadcastReceiver {
      * Enabled aggressive exception aggregation
      */
     public static void aS() {
-        c.d("SPayHCEReceiver", "RF_FIELD_OFF_DETECTED is reset");
+        Log.d("SPayHCEReceiver", "RF_FIELD_OFF_DETECTED is reset");
         Class<SPayHCEReceiver> class_ = SPayHCEReceiver.class;
         synchronized (SPayHCEReceiver.class) {
             kh = false;
@@ -51,12 +52,12 @@ extends BroadcastReceiver {
 
     public static final void disable() {
         PaymentFrameworkApp.a(SPayHCEReceiver.class);
-        c.d("SPayHCEReceiver", "SPayHCEReceiver is disabled");
+        Log.d("SPayHCEReceiver", "SPayHCEReceiver is disabled");
     }
 
     public static final void enable() {
         PaymentFrameworkApp.b(SPayHCEReceiver.class);
-        c.d("SPayHCEReceiver", "SPayHCEReceiver is enabled");
+        Log.d("SPayHCEReceiver", "SPayHCEReceiver is enabled");
     }
 
     /*
@@ -70,7 +71,7 @@ extends BroadcastReceiver {
             string = intent.getAction();
         }
         if ("com.android.nfc_extras.action.RF_FIELD_ON_DETECTED".equals(string)) {
-            c.d("SPayHCEReceiver", "RF_FIELD_ON_DETECTED is detected");
+            Log.d("SPayHCEReceiver", "RF_FIELD_ON_DETECTED is detected");
             TimerTask timerTask = new TimerTask(){
 
                 /*
@@ -79,7 +80,7 @@ extends BroadcastReceiver {
                  * Enabled aggressive exception aggregation
                  */
                 public void run() {
-                    c.d("SPayHCEReceiver", "reset Rd detector");
+                    Log.d("SPayHCEReceiver", "reset Rd detector");
                     Class<SPayHCEReceiver> class_ = SPayHCEReceiver.class;
                     synchronized (SPayHCEReceiver.class) {
                         kh = false;
@@ -103,7 +104,7 @@ extends BroadcastReceiver {
         } else {
             if (!"com.android.nfc_extras.action.RF_FIELD_OFF_DETECTED".equals((Object)string)) return;
             {
-                c.d("SPayHCEReceiver", "RF_FIELD_OFF_DETECTED is detected");
+                Log.d("SPayHCEReceiver", "RF_FIELD_OFF_DETECTED is detected");
                 return;
             }
         }

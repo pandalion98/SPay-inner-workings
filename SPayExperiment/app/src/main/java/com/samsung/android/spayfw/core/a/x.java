@@ -24,21 +24,13 @@ import android.os.RemoteException;
 import com.google.gson.JsonObject;
 import com.samsung.android.spayfw.appinterface.CardState;
 import com.samsung.android.spayfw.appinterface.ICardDataCallback;
-import com.samsung.android.spayfw.appinterface.Token;
-import com.samsung.android.spayfw.appinterface.TokenMetaData;
 import com.samsung.android.spayfw.appinterface.TokenStatus;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
-import com.samsung.android.spayfw.core.a;
-import com.samsung.android.spayfw.core.a.o;
 import com.samsung.android.spayfw.core.c;
 import com.samsung.android.spayfw.core.m;
-import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.PaymentNetworkProvider;
-import com.samsung.android.spayfw.payprovider.e;
-import com.samsung.android.spayfw.payprovider.f;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.g;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.l;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.TokenResponseData;
 import com.samsung.android.spayfw.storage.TokenRecordStorage;
 import java.util.ArrayList;
@@ -77,7 +69,7 @@ extends o {
                 block34 : {
                     block35 : {
                         var3_3 = x.this.iJ.r(string);
-                        com.samsung.android.spayfw.b.c.d("TokenManager", "onRequestComplete: getCardData: code " + var1_1);
+                        Log.d("TokenManager", "onRequestComplete: getCardData: code " + var1_1);
                         switch (var1_1) {
                             default: {
                                 var5_4 = null;
@@ -87,13 +79,13 @@ extends o {
                             case 200: {
                                 var17_8 = x.this.jJ.bq(string);
                                 if (var3_3 != null && var17_8 != null) ** GOTO lbl21
-                                com.samsung.android.spayfw.b.c.e("TokenManager", "unable to get card object ");
+                                Log.e("TokenManager", "unable to get card object ");
                                 if (var17_8 != null) {
-                                    com.samsung.android.spayfw.b.c.i("TokenManager", "delete record from db ");
+                                    Log.i("TokenManager", "delete record from db ");
                                     x.this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Co, string);
                                 }
                                 if (c2 != null) {
-                                    com.samsung.android.spayfw.b.c.e("TokenManager", "delete card object");
+                                    Log.e("TokenManager", "delete card object");
                                     x.this.iJ.t(string);
                                 }
                                 var4_5 = -6;
@@ -101,7 +93,7 @@ extends o {
                                 break block34;
 lbl21: // 1 sources:
                                 if (var2_2 != null && var2_2.getResult() != null) ** GOTO lbl26
-                                com.samsung.android.spayfw.b.c.e("TokenManager", "TokenResponseData is null");
+                                Log.e("TokenManager", "TokenResponseData is null");
                                 var4_5 = -205;
                                 var5_4 = null;
                                 break block34;
@@ -114,14 +106,14 @@ lbl26: // 1 sources:
                                 var22_11 = var20_9.getStatus();
                                 var23_12 = c.y(var3_3.getCardBrand());
                                 if (var22_11 != null && var22_11.getCode() != null) ** GOTO lbl37
-                                com.samsung.android.spayfw.b.c.e("TokenManager", "TokenResponseData:  newTokenStatus is null");
+                                Log.e("TokenManager", "TokenResponseData:  newTokenStatus is null");
                                 var4_5 = -205;
                                 var5_4 = var21_10;
                                 break block34;
 lbl37: // 1 sources:
                                 var24_13 = m.a(var20_9);
-                                com.samsung.android.spayfw.b.c.i("TokenManager", "TokenResponseData:tokenStaus in db  " + var3_3.ac().getTokenStatus());
-                                com.samsung.android.spayfw.b.c.i("TokenManager", "TokenResponseData:tokenStaus from server  " + var22_11.getCode());
+                                Log.i("TokenManager", "TokenResponseData:tokenStaus in db  " + var3_3.ac().getTokenStatus());
+                                Log.i("TokenManager", "TokenResponseData:tokenStaus from server  " + var22_11.getCode());
                                 if (!"PENDING_PROVISION".equals((Object)var3_3.ac().getTokenStatus())) ** GOTO lbl105
                                 if (var20_9.getData() == null || var3_3.ac().aQ() != null) ** GOTO lbl97
                                 var32_14 = new com.samsung.android.spayfw.payprovider.c();
@@ -131,7 +123,7 @@ lbl37: // 1 sources:
                                 if (var33_15 == null || var33_15.getErrorCode() != 0) ** GOTO lbl84
                                 var37_16 = var33_15.getProviderTokenKey();
                                 if (var37_16 != null) ** GOTO lbl53
-                                com.samsung.android.spayfw.b.c.e("TokenManager", "Provision Token- onRequestComplete: provider not returning tokenref ");
+                                Log.e("TokenManager", "Provision Token- onRequestComplete: provider not returning tokenref ");
                                 var4_5 = -1;
                                 var5_4 = var21_10;
                                 break block34;
@@ -143,12 +135,12 @@ lbl53: // 1 sources:
                                 var17_8.H(var3_3.ac().aP());
                                 var35_17 = m.a(var17_8, var20_9, var37_16);
                                 if (!x.this.a(var35_17)) ** GOTO lbl73
-                                com.samsung.android.spayfw.b.c.e("TokenManager", "Duplicate Token Ref Id / Tr Token Id");
+                                Log.e("TokenManager", "Duplicate Token Ref Id / Tr Token Id");
                                 var40_18 = new TokenStatus("DISPOSED", null);
                                 c2.ad().updateTokenStatusTA(null, var40_18);
                                 x.this.iJ.t(string);
                                 x.this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Co, string);
-                                com.samsung.android.spayfw.b.c.e("TokenManager", "processProvision:Send error report to TR server");
+                                Log.e("TokenManager", "processProvision:Send error report to TR server");
                                 x.this.b(null, string, m.F(var35_17.getTokenStatus()), "PROVISION", var23_12, null, false);
                                 var44_19 = new Intent("com.samsung.android.spayfw.action.notification");
                                 var44_19.putExtra("notiType", "syncAllCards");
@@ -165,12 +157,12 @@ lbl73: // 1 sources:
                                 if (var39_22 != null && string != null) {
                                     var39_22.l(string, var22_11.getCode());
                                 } else {
-                                    com.samsung.android.spayfw.b.c.d("TokenManager", "FraudCollector: storeTokenEnrollmentSuccess cannot get data");
+                                    Log.d("TokenManager", "FraudCollector: storeTokenEnrollmentSuccess cannot get data");
                                     var34_20 = 0;
                                 }
                                 ** GOTO lbl88
 lbl84: // 1 sources:
-                                com.samsung.android.spayfw.b.c.e("TokenManager", "Provider unable to store provision info");
+                                Log.e("TokenManager", "Provider unable to store provision info");
                                 var34_20 = -1;
                                 var35_17 = var17_8;
                                 var36_21 = false;
@@ -178,7 +170,7 @@ lbl88: // 3 sources:
                                 if (var36_21) {
                                     x.this.a(null, string, var35_17.getTokenStatus(), "PROVISION", var23_12, var33_15, false);
                                 } else {
-                                    com.samsung.android.spayfw.b.c.e("TokenManager", "processProvision:Send error report to TR server");
+                                    Log.e("TokenManager", "processProvision:Send error report to TR server");
                                     x.this.b(null, string, m.F(var35_17.getTokenStatus()), "PROVISION", var23_12, var33_15, false);
                                 }
                                 var25_23 = false;
@@ -209,9 +201,9 @@ lbl105: // 1 sources:
                             }
                             case 404: 
                             case 410: {
-                                com.samsung.android.spayfw.b.c.w("TokenManager", "unable to find the token on server. something wrong. deleting the token");
+                                Log.w("TokenManager", "unable to find the token on server. something wrong. deleting the token");
                                 if (x.this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Co, string) < 1) {
-                                    com.samsung.android.spayfw.b.c.e("TokenManager", "Not able to delete Token from DB");
+                                    Log.e("TokenManager", "Not able to delete Token from DB");
                                 }
                                 var14_27 = new TokenStatus("DISPOSED", null);
                                 if (var3_3 != null) {
@@ -243,7 +235,7 @@ lbl105: // 1 sources:
                         var26_24 = 0;
                     }
                     if (var25_23) {
-                        com.samsung.android.spayfw.b.c.d("TokenManager", "getCardData: update Card status ");
+                        Log.d("TokenManager", "getCardData: update Card status ");
                         var3_3.ad().updateTokenStatusTA(var20_9.getData(), var22_11);
                         var17_8.setTokenStatus(var24_13);
                         var17_8.H(var22_11.getReason());
@@ -255,11 +247,11 @@ lbl105: // 1 sources:
                         if (var30_26 != null) {
                             var30_26.k(var17_8.getTokenRefId(), var17_8.getTokenStatus());
                         } else {
-                            com.samsung.android.spayfw.b.c.d("TokenManager", "FraudCollector: updateFTokenRecordStatus cannot get data");
+                            Log.d("TokenManager", "FraudCollector: updateFTokenRecordStatus cannot get data");
                         }
                         if ("DISPOSED".equals((Object)var22_11.getCode())) {
                             if (x.this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Co, string) < 1) {
-                                com.samsung.android.spayfw.b.c.e("TokenManager", "Not able to delete Token from DB");
+                                Log.e("TokenManager", "Not able to delete Token from DB");
                             }
                             x.this.iJ.s(var3_3.ac().getTokenId());
                         }
@@ -267,7 +259,7 @@ lbl105: // 1 sources:
                         var5_4 = var21_10;
                         var4_5 = var26_24;
                     } else {
-                        com.samsung.android.spayfw.b.c.d("TokenManager", "getCardData: payprovider update token meta data called ");
+                        Log.d("TokenManager", "getCardData: payprovider update token meta data called ");
                         var3_3.ad().updateTokenMetaDataTA(var20_9.getData(), var21_10);
                         var5_4 = var21_10;
                         var4_5 = var26_24;
@@ -283,13 +275,13 @@ lbl105: // 1 sources:
                 if (var5_4 == null) ** GOTO lbl177
                 try {
                     try {
-                        com.samsung.android.spayfw.b.c.d("TokenManager", "getCardData: " + var5_4.toString());
+                        Log.d("TokenManager", "getCardData: " + var5_4.toString());
 lbl177: // 2 sources:
                         x.a(x.this).onSuccess(string, var5_4);
                         return;
                     }
                     catch (RemoteException var9_28) {
-                        com.samsung.android.spayfw.b.c.c("TokenManager", var9_28.getMessage(), var9_28);
+                        Log.c("TokenManager", var9_28.getMessage(), var9_28);
                         return;
                     }
                 }
@@ -319,23 +311,23 @@ lbl177: // 2 sources:
         if (string == null || iCardDataCallback == null || this.iJ == null) {
             int n2 = -5;
             if (string == null) {
-                com.samsung.android.spayfw.b.c.e("TokenManager", "getCardData Failed - token Id is null");
+                Log.e("TokenManager", "getCardData Failed - token Id is null");
             }
             if (this.iJ == null) {
-                com.samsung.android.spayfw.b.c.e("TokenManager", "getCardData Failed - Failed to initialize account");
+                Log.e("TokenManager", "getCardData Failed - Failed to initialize account");
                 n2 = -1;
             }
             if (iCardDataCallback != null) {
                 iCardDataCallback.onFail(string, n2);
                 return;
             }
-            com.samsung.android.spayfw.b.c.e("TokenManager", "getCardData Failed - Provision Callback is null");
+            Log.e("TokenManager", "getCardData Failed - Provision Callback is null");
             return;
         }
         this.my = iCardDataCallback;
         c c2 = this.iJ.r(string);
         if (c2 == null) {
-            com.samsung.android.spayfw.b.c.e("TokenManager", "getCardData Failed - Invalid token Id");
+            Log.e("TokenManager", "getCardData Failed - Invalid token Id");
             this.my.onFail(string, -6);
             return;
         }
@@ -348,24 +340,24 @@ lbl177: // 2 sources:
     public int clearEnrolledCard(String string) {
         if (this.iJ == null || string == null) {
             if (this.iJ != null) {
-                com.samsung.android.spayfw.b.c.e("TokenManager", "clearEnrolledCard  - enrollmentId is null");
+                Log.e("TokenManager", "clearEnrolledCard  - enrollmentId is null");
                 return -5;
             }
-            com.samsung.android.spayfw.b.c.e("TokenManager", "clearEnrolledCard  - Failed to initialize account");
+            Log.e("TokenManager", "clearEnrolledCard  - Failed to initialize account");
             return -1;
         } else {
             c c2 = this.iJ.q(string);
             if (c2 == null || c2.ac() == null) return -1;
             {
                 if (!"ENROLLED".equals((Object)c2.ac().getTokenStatus())) {
-                    com.samsung.android.spayfw.b.c.w("TokenManager", "Not able to delete : Tokenstatus: " + c2.ac().getTokenStatus());
+                    Log.w("TokenManager", "Not able to delete : Tokenstatus: " + c2.ac().getTokenStatus());
                     return -4;
                 }
-                com.samsung.android.spayfw.b.c.i("TokenManager", "clearEnrolledCard: " + string);
+                Log.i("TokenManager", "clearEnrolledCard: " + string);
                 this.iJ.s(string);
                 if (this.jJ.d(TokenRecordStorage.TokenGroup.TokenColumn.Cn, string) >= 1) return 0;
                 {
-                    com.samsung.android.spayfw.b.c.e("TokenManager", "Not able to delete enrollementId from DB");
+                    Log.e("TokenManager", "Not able to delete enrollementId from DB");
                 }
                 return 0;
             }
@@ -380,20 +372,20 @@ lbl177: // 2 sources:
     public List<CardState> getAllCardState(Bundle var1_1) {
         block10 : {
             if (this.iJ == null) {
-                com.samsung.android.spayfw.b.c.e("TokenManager", "getAllCardState  - mAccount is null");
+                Log.e("TokenManager", "getAllCardState  - mAccount is null");
                 return new ArrayList();
             }
             if (var1_1 == null || var1_1.getStringArray("cardType") == null) {
-                com.samsung.android.spayfw.b.c.e("TokenManager", "getAllCardState - card filter or card type is null. return null");
+                Log.e("TokenManager", "getAllCardState - card filter or card type is null. return null");
                 return null;
             }
             var2_2 = var1_1.getStringArray("cardType");
-            com.samsung.android.spayfw.b.c.d("TokenManager", "getAllCardState: " + Arrays.toString((Object[])var2_2));
+            Log.d("TokenManager", "getAllCardState: " + Arrays.toString((Object[])var2_2));
             var3_3 = this.iJ.W();
             var4_4 = new ArrayList();
             var5_5 = new ArrayList((Collection)Arrays.asList((Object[])var2_2));
             if (var3_3 == null || var3_3.isEmpty()) break block10;
-            com.samsung.android.spayfw.b.c.d("TokenManager", "getAllCards: cardList:" + var3_3.size());
+            Log.d("TokenManager", "getAllCards: cardList:" + var3_3.size());
             for (var6_6 = 0; var6_6 < var3_3.size(); ++var6_6) {
                 block15 : {
                     block14 : {
@@ -403,40 +395,40 @@ lbl177: // 2 sources:
                                     var7_7 = new CardState();
                                     var8_8 = (c)var3_3.get(var6_6);
                                     if (var8_8 == null || var8_8.getCardBrand() == null) {
-                                        com.samsung.android.spayfw.b.c.w("TokenManager", "card or card brand is null");
+                                        Log.w("TokenManager", "card or card brand is null");
                                         continue;
                                     }
-                                    com.samsung.android.spayfw.b.c.d("TokenManager", "getAllCards: card:" + var8_8.toString());
+                                    Log.d("TokenManager", "getAllCards: card:" + var8_8.toString());
                                     if (var8_8.ac() == null || var8_8.ac().getTokenId() == null || !var8_8.ac().getTokenId().equals((Object)"GIFT")) ** GOTO lbl28
                                     if (var5_5.contains((Object)"GIFT")) {
-                                        com.samsung.android.spayfw.b.c.d("TokenManager", "card type is gift and request filter have gift");
+                                        Log.d("TokenManager", "card type is gift and request filter have gift");
                                         var9_9 = true;
                                     } else {
-                                        com.samsung.android.spayfw.b.c.d("TokenManager", "card type is gift and request filter doesn't have gift");
+                                        Log.d("TokenManager", "card type is gift and request filter doesn't have gift");
                                         continue;
 lbl28: // 1 sources:
                                         var9_9 = false;
                                     }
                                     if (!var8_8.getCardBrand().equals((Object)"LO")) break block11;
                                     if (!var5_5.contains((Object)"LOYALTY")) break block12;
-                                    com.samsung.android.spayfw.b.c.d("TokenManager", "card brand is loyalty and request filter have loyalty");
+                                    Log.d("TokenManager", "card brand is loyalty and request filter have loyalty");
                                     var9_9 = true;
                                 }
                                 if (!var8_8.getCardBrand().equals((Object)"GM")) break block13;
                                 if (!var5_5.contains((Object)"GLOBAL_MEMBERSHIP")) break block14;
-                                com.samsung.android.spayfw.b.c.d("TokenManager", "card brand is Global Membership and request filter have Global Membership");
+                                Log.d("TokenManager", "card brand is Global Membership and request filter have Global Membership");
                                 var9_9 = true;
                             }
                             if (!(var5_5.contains((Object)"DEBIT") || var5_5.contains((Object)"CREDIT") || var5_5.contains((Object)"SAMSUNG_REWARD") || var9_9)) {
-                                com.samsung.android.spayfw.b.c.d("TokenManager", "card type is payment.Request filter dose not have payment type");
+                                Log.d("TokenManager", "card type is payment.Request filter dose not have payment type");
                                 continue;
                             }
                             break block15;
                         }
-                        com.samsung.android.spayfw.b.c.d("TokenManager", "card type is loyalty and request filter doesn't have loyalty");
+                        Log.d("TokenManager", "card type is loyalty and request filter doesn't have loyalty");
                         continue;
                     }
-                    com.samsung.android.spayfw.b.c.d("TokenManager", "card type is Global Membership and request filter doesn't have Global Membership");
+                    Log.d("TokenManager", "card type is Global Membership and request filter doesn't have Global Membership");
                     continue;
                 }
                 var7_7.setEnrollmentId(var8_8.getEnrollmentId());
@@ -452,10 +444,10 @@ lbl28: // 1 sources:
             }
         }
         if (!var4_4.isEmpty()) {
-            com.samsung.android.spayfw.b.c.d("TokenManager", "getAllCardState: " + var4_4.toString());
+            Log.d("TokenManager", "getAllCardState: " + var4_4.toString());
             return var4_4;
         }
-        com.samsung.android.spayfw.b.c.e("TokenManager", "getAllCardState is empty");
+        Log.e("TokenManager", "getAllCardState is empty");
         return var4_4;
     }
 
@@ -465,7 +457,7 @@ lbl28: // 1 sources:
     public List<String> getPaymentReadyState(String string) {
         ArrayList arrayList = new ArrayList();
         if (this.iJ == null) {
-            com.samsung.android.spayfw.b.c.e("TokenManager", "getPaymentReadyState  - mAccount is null");
+            Log.e("TokenManager", "getPaymentReadyState  - mAccount is null");
             return arrayList;
         }
         if (string != null && this.iJ.r(string) != null) {
@@ -477,7 +469,7 @@ lbl28: // 1 sources:
                 arrayList.add((Object)string);
                 return arrayList;
             }
-            com.samsung.android.spayfw.b.c.i("TokenManager", "not ready for payment: " + string);
+            Log.i("TokenManager", "not ready for payment: " + string);
             return arrayList;
         }
         List<c> list = this.iJ.W();
@@ -488,7 +480,7 @@ lbl28: // 1 sources:
                 if (c3.ad().getPayReadyState()) {
                     arrayList.add((Object)c3.ac().getTokenId());
                 } else {
-                    com.samsung.android.spayfw.b.c.i("TokenManager", "not ready for payment: " + c3.ac().getTokenId());
+                    Log.i("TokenManager", "not ready for payment: " + c3.ac().getTokenId());
                 }
             }
             ++n2;
@@ -501,9 +493,9 @@ lbl28: // 1 sources:
      * Lifted jumps to return sites
      */
     public TokenStatus getTokenStatus(String string) {
-        com.samsung.android.spayfw.b.c.d("TokenManager", "getTokenStatus()");
+        Log.d("TokenManager", "getTokenStatus()");
         if (string == null || string.isEmpty()) {
-            com.samsung.android.spayfw.b.c.e("TokenManager", "getTokenStatus() token id is empty or null");
+            Log.e("TokenManager", "getTokenStatus() token id is empty or null");
             return null;
         }
         if (this.jJ == null) return null;
@@ -516,10 +508,10 @@ lbl28: // 1 sources:
      * Enabled aggressive block sorting
      */
     public List<String> isDsrpBlobMissing() {
-        com.samsung.android.spayfw.b.c.d("TokenManager", "Entered isDsrpBlobMissing");
+        Log.d("TokenManager", "Entered isDsrpBlobMissing");
         ArrayList arrayList = new ArrayList();
         if (this.iJ == null) {
-            com.samsung.android.spayfw.b.c.e("TokenManager", "isDsrpBlobMissing  - mAccount is null");
+            Log.e("TokenManager", "isDsrpBlobMissing  - mAccount is null");
             return arrayList;
         }
         List<c> list = this.iJ.W();
@@ -527,7 +519,7 @@ lbl28: // 1 sources:
             for (int i2 = 0; i2 < list.size(); ++i2) {
                 c c2 = (c)list.get(i2);
                 if (c2 == null || c2.ac() == null || c2.ac().aQ() == null || c2.ad() == null || !c2.ad().isDsrpBlobMissing()) continue;
-                com.samsung.android.spayfw.b.c.d("TokenManager", "dsrpBlobMissing: tokenId = " + c2.ac().getTokenId());
+                Log.d("TokenManager", "dsrpBlobMissing: tokenId = " + c2.ac().getTokenId());
                 arrayList.add((Object)c2.ac().getTokenId());
             }
         }
@@ -538,16 +530,16 @@ lbl28: // 1 sources:
      * Enabled aggressive block sorting
      */
     public int isDsrpBlobMissingForTokenId(String string) {
-        com.samsung.android.spayfw.b.c.d("TokenManager", "Entered isDsrpBlobMissingForTokenId");
+        Log.d("TokenManager", "Entered isDsrpBlobMissingForTokenId");
         if (this.iJ == null) {
-            com.samsung.android.spayfw.b.c.e("TokenManager", "isDsrpBlobMissingForTokenId  - mAccount is null");
+            Log.e("TokenManager", "isDsrpBlobMissingForTokenId  - mAccount is null");
             return 0;
         } else {
             boolean bl;
             c c2 = this.iJ.r(string);
             if (c2 == null || c2.ac() == null || c2.ac().aQ() == null || c2.ad() == null || !(bl = c2.ad().isDsrpBlobMissing())) return 0;
             {
-                com.samsung.android.spayfw.b.c.d("TokenManager", "dsrpBlobMissing = " + bl);
+                Log.d("TokenManager", "dsrpBlobMissing = " + bl);
                 return -45;
             }
         }

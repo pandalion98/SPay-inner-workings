@@ -15,8 +15,8 @@
 package com.samsung.android.spayfw.payprovider.discover.payment.data;
 
 import android.text.TextUtils;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.discover.payment.data.DiscoverCDCVM;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.payment.data.profile.DiscoverRecord;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.ByteBuffer;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.a;
@@ -48,7 +48,7 @@ public class DiscoverTrackData {
 
     private String b(String string, int n2) {
         if (string == null || TextUtils.isEmpty((CharSequence)string)) {
-            c.e("DCSDK_", "buildTrackValue, wrong value." + string);
+            Log.e("DCSDK_", "buildTrackValue, wrong value." + string);
             StringBuffer stringBuffer = new StringBuffer();
             for (int i2 = 0; i2 < n2; ++i2) {
                 stringBuffer.insert(0, '0');
@@ -88,27 +88,27 @@ public class DiscoverTrackData {
      */
     public String a(String string, TrackLayout trackLayout) {
         if (this.us == null) {
-            c.e("DCSDK_", "buildTrack, ATC is null.");
+            Log.e("DCSDK_", "buildTrack, ATC is null.");
             return null;
         }
         if (this.wh == null) {
-            c.e("DCSDK_", "buildTrack, UN is null.");
+            Log.e("DCSDK_", "buildTrack, UN is null.");
             return null;
         }
         if (this.wi == null) {
-            c.e("DCSDK_", "buildTrack, CDCVM result is null.");
+            Log.e("DCSDK_", "buildTrack, CDCVM result is null.");
             return null;
         }
-        c.d("DCSDK_", "DCVV: " + String.valueOf((long)this.uw));
-        c.d("DCSDK_", "ATC: " + this.us.getInt());
-        c.d("DCSDK_", "UN: " + this.wh.getInt());
+        Log.d("DCSDK_", "DCVV: " + String.valueOf((long)this.uw));
+        Log.d("DCSDK_", "ATC: " + this.us.getInt());
+        Log.d("DCSDK_", "UN: " + this.wh.getInt());
         String string2 = this.b(String.valueOf((int)this.us.getInt()), trackLayout.atcLength);
         String string3 = this.b(this.wh.toHexString(), trackLayout.unLength);
         String string4 = this.b(String.valueOf((long)this.uw), trackLayout.dcvvLength);
-        c.d("DCSDK_", "sTrack1: " + string);
-        c.d("DCSDK_", "sDCVV: " + string4);
-        c.d("DCSDK_", "sATC: " + string2);
-        c.d("DCSDK_", "sUN: " + string3);
+        Log.d("DCSDK_", "sTrack1: " + string);
+        Log.d("DCSDK_", "sDCVV: " + string4);
+        Log.d("DCSDK_", "sATC: " + string2);
+        Log.d("DCSDK_", "sUN: " + string3);
         StringBuilder stringBuilder = new StringBuilder(string);
         try {
             stringBuilder.replace(trackLayout.dcvvPosition, trackLayout.dcvvPosition + trackLayout.dcvvLength, string4);
@@ -120,7 +120,7 @@ public class DiscoverTrackData {
         catch (Exception exception) {
             exception.printStackTrace();
         }
-        c.d("DCSDK_", "TRACK: " + stringBuilder.toString());
+        Log.d("DCSDK_", "TRACK: " + stringBuilder.toString());
         return stringBuilder.toString();
     }
 

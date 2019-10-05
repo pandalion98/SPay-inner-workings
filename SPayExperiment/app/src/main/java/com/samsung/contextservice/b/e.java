@@ -30,16 +30,14 @@
 package com.samsung.contextservice.b;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
-import com.samsung.android.spayfw.appinterface.ConnectionCallback;
+
 import com.samsung.android.spayfw.appinterface.PaymentFramework;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.e.d;
-import com.samsung.contextservice.b.b;
-import com.samsung.contextservice.b.c;
 import com.samsung.contextservice.server.models.UserInfo;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -145,17 +143,17 @@ public class e {
         }
         catch (NoSuchAlgorithmException noSuchAlgorithmException) {
             string = string2;
-            com.samsung.android.spayfw.b.c.c("Utils", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
+            Log.c("Utils", noSuchAlgorithmException.getMessage(), noSuchAlgorithmException);
         }
         catch (UnsupportedEncodingException unsupportedEncodingException) {
             string = string2;
-            com.samsung.android.spayfw.b.c.c("Utils", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
+            Log.c("Utils", unsupportedEncodingException.getMessage(), unsupportedEncodingException);
         }
         catch (Exception exception) {
             string = string2;
-            com.samsung.android.spayfw.b.c.c("Utils", exception.getMessage(), exception);
+            Log.c("Utils", exception.getMessage(), exception);
         }
-        com.samsung.android.spayfw.b.c.d("Utils", "Encoded Device ID : " + string);
+        Log.d("Utils", "Encoded Device ID : " + string);
         return string;
     }
 
@@ -207,7 +205,7 @@ lbl26: // 2 sources:
                     return var8;
                 }
                 catch (IOException var23_10) {
-                    com.samsung.android.spayfw.b.c.c("Utils", var23_10.getMessage(), var23_10);
+                    Log.c("Utils", var23_10.getMessage(), var23_10);
                     return var8;
                 }
                 break;
@@ -225,7 +223,7 @@ lbl26: // 2 sources:
 lbl44: // 3 sources:
             do {
                 var8 = d.get("ro.csc.countryiso_code");
-                com.samsung.android.spayfw.b.c.c("Utils", var9_14.getMessage(), var9_14);
+                Log.c("Utils", var9_14.getMessage(), var9_14);
                 e.HM = var8;
                 if (var7_13 == null) ** continue;
                 try {
@@ -233,7 +231,7 @@ lbl44: // 3 sources:
                     return var8;
                 }
                 catch (IOException var11_15) {
-                    com.samsung.android.spayfw.b.c.c("Utils", var11_15.getMessage(), var11_15);
+                    Log.c("Utils", var11_15.getMessage(), var11_15);
                     return var8;
                 }
                 break;
@@ -255,7 +253,7 @@ lbl65: // 4 sources:
                     break;
                 } while (true);
                 catch (IOException var5_20) {
-                    com.samsung.android.spayfw.b.c.c("Utils", var5_20.getMessage(), var5_20);
+                    Log.c("Utils", var5_20.getMessage(), var5_20);
                     ** continue;
                 }
                 break;
@@ -347,7 +345,7 @@ lbl65: // 4 sources:
                 }
                 catch (PackageManager.NameNotFoundException var3_8) lbl-1000: // 2 sources:
                 {
-                    com.samsung.android.spayfw.b.c.e("getPackageVersion", "Exception = " + (Object)var3_9);
+                    Log.e("getPackageVersion", "Exception = " + (Object)var3_9);
                     return var2_2;
                 }
                 try {
@@ -365,7 +363,7 @@ lbl65: // 4 sources:
             }
             var2_2 = var6_5;
         }
-        com.samsung.android.spayfw.b.c.d("Utils", "You are using new version scheme");
+        Log.d("Utils", "You are using new version scheme");
         return var2_2;
     }
 }

@@ -18,18 +18,13 @@ package com.samsung.android.spayfw.payprovider.mastercard.tzsvc;
 import android.content.Context;
 import android.os.Build;
 import android.spay.CertInfo;
-import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McDeviceCert;
-import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McTACommands;
-import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McTAError;
-import com.samsung.android.spayfw.payprovider.mastercard.tzsvc.McTAInfo;
-import com.samsung.android.spaytzsvc.api.Blob;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.TAController;
 import com.samsung.android.spaytzsvc.api.TAInfo;
 import java.util.Arrays;
-import java.util.Map;
+
 import javolution.io.Struct;
 
 public class McTAController
@@ -100,15 +95,15 @@ extends TAController {
 
     public long authenticateTransaction(byte[] arrby) {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: authenticateTransaction");
+            Log.d(TAG, "MCTAController: authenticateTransaction");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "MCTAController: in authenticateTransaction: TA is not loaded.");
+            Log.e(TAG, "MCTAController: in authenticateTransaction: TA is not loaded.");
             return -1L;
         }
         McTACommands.TATransactionAuth.TATransactionAuthResponse tATransactionAuthResponse = new McTACommands.TATransactionAuth.TATransactionAuthResponse(this.executeNoLoad(new McTACommands.TATransactionAuth.TATransactionAuthRequest(arrby)));
         if (tATransactionAuthResponse.mRetVal == null || tATransactionAuthResponse.mRetVal._result == null) {
-            c.e(TAG, "MC TA authenticate transaction failed.");
+            Log.e(TAG, "MC TA authenticate transaction failed.");
             return -1L;
         }
         return tATransactionAuthResponse.mRetVal._result.get();
@@ -116,24 +111,24 @@ extends TAController {
 
     public long clearMstData() {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: calling clearMstData");
+            Log.d(TAG, "MCTAController: calling clearMstData");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "clearMstData: Error: TA is not loaded.");
+            Log.e(TAG, "clearMstData: Error: TA is not loaded.");
             return -1L;
         }
         TACommandResponse tACommandResponse = this.executeNoLoad(new McTACommands.TAClearMstTracks.ClearMstTracksRequest(0));
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: clearMstData executeNoLoad failed");
+            Log.e(TAG, "Error: clearMstData executeNoLoad failed");
             return -1L;
         }
         if (tACommandResponse.mResponseCode != 0) {
-            c.e(TAG, "clearMstData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+            Log.e(TAG, "clearMstData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
             return -1L;
         }
         McTACommands.TAClearMstTracks.ClearMstTracksResponse clearMstTracksResponse = new McTACommands.TAClearMstTracks.ClearMstTracksResponse(tACommandResponse);
         if (clearMstTracksResponse == null || clearMstTracksResponse.mRetVal == null || clearMstTracksResponse.mRetVal.return_code == null) {
-            c.e(TAG, "MC TA clear MST tracks request failed.");
+            Log.e(TAG, "MC TA clear MST tracks request failed.");
             return -1L;
         }
         return clearMstTracksResponse.mRetVal.return_code.get();
@@ -141,24 +136,24 @@ extends TAController {
 
     public long clearSecureData() {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: calling clearSecureData");
+            Log.d(TAG, "MCTAController: calling clearSecureData");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "clearSecureData: Error: TA is not loaded.");
+            Log.e(TAG, "clearSecureData: Error: TA is not loaded.");
             return -1L;
         }
         TACommandResponse tACommandResponse = this.executeNoLoad(new McTACommands.TAClearSecureData.ClearSecureDataRequest(0));
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: clearSecureData executeNoLoad failed");
+            Log.e(TAG, "Error: clearSecureData executeNoLoad failed");
             return -1L;
         }
         if (tACommandResponse.mResponseCode != 0) {
-            c.e(TAG, "clearSecureData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+            Log.e(TAG, "clearSecureData: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
             return -1L;
         }
         McTACommands.TAClearSecureData.ClearSecureDataResponse clearSecureDataResponse = new McTACommands.TAClearSecureData.ClearSecureDataResponse(tACommandResponse);
         if (clearSecureDataResponse == null || clearSecureDataResponse.mRetVal == null || clearSecureDataResponse.mRetVal.return_code == null) {
-            c.e(TAG, "MC TA clearSecureData request failed.");
+            Log.e(TAG, "MC TA clearSecureData request failed.");
             return -1L;
         }
         return clearSecureDataResponse.mRetVal.return_code.get();
@@ -166,24 +161,24 @@ extends TAController {
 
     public McTACommands.TAComputeCC.TAComputeCCResponse.TAComputeCCOut computeCC(int n2, int n3, byte[] arrby, byte[] arrby2) {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: computeCC");
+            Log.d(TAG, "MCTAController: computeCC");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "computeCC: in generateMAC: TA is not loaded.");
+            Log.e(TAG, "computeCC: in generateMAC: TA is not loaded.");
             return null;
         }
         TACommandResponse tACommandResponse = this.executeNoLoad(new McTACommands.TAComputeCC.TAComputeCCRequest(n2, n3, arrby, arrby2));
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: computeCC executeNoLoad failed");
+            Log.e(TAG, "Error: computeCC executeNoLoad failed");
             return null;
         }
         if (tACommandResponse.mResponseCode != 0) {
-            c.e(TAG, "computeCC: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+            Log.e(TAG, "computeCC: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
             return null;
         }
         McTACommands.TAComputeCC.TAComputeCCResponse tAComputeCCResponse = new McTACommands.TAComputeCC.TAComputeCCResponse(tACommandResponse);
         if (tAComputeCCResponse.mRetVal == null || tAComputeCCResponse.mRetVal.result == null || tAComputeCCResponse.mRetVal.result.get() != 0L) {
-            c.e(TAG, "computeCC: Error: command returned parsing error");
+            Log.e(TAG, "computeCC: Error: command returned parsing error");
             return null;
         }
         return tAComputeCCResponse.mRetVal;
@@ -191,19 +186,19 @@ extends TAController {
 
     public byte[] copyACKey(byte[] arrby) {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: copyACKey");
+            Log.d(TAG, "MCTAController: copyACKey");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "copyACKey: Error: TA is not loaded.");
+            Log.e(TAG, "copyACKey: Error: TA is not loaded.");
             return null;
         }
         McTACommands.TACopyACKey.TACopyACKeyResponse tACopyACKeyResponse = new McTACommands.TACopyACKey.TACopyACKeyResponse(this.executeNoLoad(new McTACommands.TACopyACKey.TACopyACKeyRequest(arrby)));
         if (tACopyACKeyResponse.getErrorCode() != 0L) {
-            c.e(TAG, "MC TA copyACKey command error: keys are valid, not copied: " + tACopyACKeyResponse.getErrorCode());
+            Log.e(TAG, "MC TA copyACKey command error: keys are valid, not copied: " + tACopyACKeyResponse.getErrorCode());
             return null;
         }
         if (tACopyACKeyResponse.getSecureProfile() == null) {
-            c.e(TAG, "MC TA copyACKey command failed.");
+            Log.e(TAG, "MC TA copyACKey command failed.");
             return null;
         }
         return tACopyACKeyResponse.getSecureProfile();
@@ -214,7 +209,7 @@ extends TAController {
      */
     public McTACommands.CardInfoEncryption.Response.CardData encryptCardInfo(byte[] arrby, byte[] arrby2) {
         if (!this.isTALoaded()) {
-            c.e(TAG, "encryptCardInfo: TA is not loaded.");
+            Log.e(TAG, "encryptCardInfo: TA is not loaded.");
             return null;
         }
         if (arrby == null || arrby2 == null) return null;
@@ -222,7 +217,7 @@ extends TAController {
             McTACommands.CardInfoEncryption.Response response = new McTACommands.CardInfoEncryption.Response(this.executeNoLoad(new McTACommands.CardInfoEncryption.Request(arrby, arrby2)));
             if (response != null) return response.mRetVal;
             {
-                c.e(TAG, "encryptCardInfo: response is null");
+                Log.e(TAG, "encryptCardInfo: response is null");
                 return null;
             }
         }
@@ -233,43 +228,43 @@ extends TAController {
      */
     public byte[] generateMAC(int n2, byte[] arrby, byte[] arrby2, byte[] arrby3) {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: generateMAC");
+            Log.d(TAG, "MCTAController: generateMAC");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "MCTAController: in generateMAC: TA is not loaded.");
+            Log.e(TAG, "MCTAController: in generateMAC: TA is not loaded.");
             return null;
         }
         McTACommands.TAGenerateMAC.TAGenerateMACResponse tAGenerateMACResponse = new McTACommands.TAGenerateMAC.TAGenerateMACResponse(this.executeNoLoad(new McTACommands.TAGenerateMAC.TAGenerateMACRequest(n2, arrby, arrby2, arrby3)));
         if (tAGenerateMACResponse.mRetVal == null || tAGenerateMACResponse.mRetVal.result == null || tAGenerateMACResponse.mRetVal.result.get() != 0L || tAGenerateMACResponse.mRetVal._taMAC == null) {
-            c.e(TAG, "MC TA generateMAC command failed.");
+            Log.e(TAG, "MC TA generateMAC command failed.");
             if (tAGenerateMACResponse.mRetVal == null || tAGenerateMACResponse.mRetVal.result == null) return null;
             {
-                c.e(TAG, "MC TA generateMAC: Error: TA command returned error = " + tAGenerateMACResponse.mRetVal.result.get());
+                Log.e(TAG, "MC TA generateMAC: Error: TA command returned error = " + tAGenerateMACResponse.mRetVal.result.get());
                 return null;
             }
         }
         if (!DEBUG) return tAGenerateMACResponse.mRetVal._taMAC.getData();
         {
-            c.d(TAG, "MCTAController: generateMAC - ending");
+            Log.d(TAG, "MCTAController: generateMAC - ending");
         }
         return tAGenerateMACResponse.mRetVal._taMAC.getData();
     }
 
     public byte[] generateUN() {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: generate UN");
+            Log.d(TAG, "MCTAController: generate UN");
         }
         if (!this.isTALoaded()) {
-            c.d(TAG, "MCTAController: in generateUN: TA is not loaded.");
+            Log.d(TAG, "MCTAController: in generateUN: TA is not loaded.");
             return null;
         }
         McTACommands.TAGenerateUN.TAGenerateUNResponse tAGenerateUNResponse = new McTACommands.TAGenerateUN.TAGenerateUNResponse(this.executeNoLoad(new McTACommands.TAGenerateUN.TAGenerateUNRequest()));
         if (tAGenerateUNResponse.mRetVal == null || tAGenerateUNResponse.mRetVal._un == null || tAGenerateUNResponse.mRetVal._returnCode.get() != 0L) {
-            c.d(TAG, "MC TA generateMAC command failed.");
+            Log.d(TAG, "MC TA generateMAC command failed.");
             return null;
         }
         if (DEBUG) {
-            c.d(TAG, "MCTAController: generateUN - ending");
+            Log.d(TAG, "MCTAController: generateUN - ending");
         }
         return tAGenerateUNResponse.mRetVal._un.getData();
     }
@@ -289,15 +284,15 @@ extends TAController {
                         block12 : {
                             TACommandResponse tACommandResponse;
                             if (DEBUG) {
-                                c.d(TAG, "Calling getCasdParameters");
+                                Log.d(TAG, "Calling getCasdParameters");
                             }
                             if (!this.isTALoaded()) {
-                                c.e(TAG, "getCasdParameters: TA is not loaded.");
+                                Log.e(TAG, "getCasdParameters: TA is not loaded.");
                                 return null;
                             }
                             CertInfo certInfo = this.mMcDeviceCert.getDeviceMcSignCert();
                             if (certInfo == null || certInfo.mCerts.isEmpty()) {
-                                c.e(TAG, "Error : getCertInfo is null ");
+                                Log.e(TAG, "Error : getCertInfo is null ");
                                 return null;
                             }
                             if (certInfo.mCerts.get((Object)MC_PAY_CERT_SIGN_FILENAME) != null) break block12;
@@ -305,23 +300,23 @@ extends TAController {
                             if (certInfo.mCerts.get((Object)"/efs/mc/rst.dat") != null) break block14;
                             byte[] arrby = (byte[])certInfo.mCerts.get((Object)MC_PAY_CASD_CERTIFICATE_PATH);
                             if (arrby == null) {
-                                c.e(TAG, "Error : CASD certs is null");
+                                Log.e(TAG, "Error : CASD certs is null");
                                 return null;
                             }
                             if (DEBUG) {
-                                c.d(TAG, "CASD cert length : " + arrby.length);
+                                Log.d(TAG, "CASD cert length : " + arrby.length);
                             }
                             if ((tACommandResponse = this.executeNoLoad(new McTACommands.CasdUpdateGetUid.Request(arrby))) == null) {
-                                c.e(TAG, "getCasdParameters: Error: executeNoLoad failed");
+                                Log.e(TAG, "getCasdParameters: Error: executeNoLoad failed");
                                 return null;
                             }
                             response = new McTACommands.CasdUpdateGetUid.Response(tACommandResponse);
                             if (DEBUG) {
-                                c.d(TAG, "getCasdParameters called Successfully : " + response.mRetVal.return_code.get());
+                                Log.d(TAG, "getCasdParameters called Successfully : " + response.mRetVal.return_code.get());
                             }
                             if (response.mRetVal.return_code.get() == 24578L) {
                                 if (DEBUG) {
-                                    c.d(TAG, "Copying mc to rst");
+                                    Log.d(TAG, "Copying mc to rst");
                                 }
                                 this.copyMctoRst();
                                 return null;
@@ -329,15 +324,15 @@ extends TAController {
                             break block15;
                         }
                         if (!DEBUG) return null;
-                        c.d(TAG, "Device image is M-Version, x509 cert present. No need for mc.dat to rst.dat conversion");
+                        Log.d(TAG, "Device image is M-Version, x509 cert present. No need for mc.dat to rst.dat conversion");
                         return null;
                     }
                     if (!DEBUG) return null;
-                    c.d(TAG, "x509 cert present. No need for mc.dat to rst.dat conversion");
+                    Log.d(TAG, "x509 cert present. No need for mc.dat to rst.dat conversion");
                     return null;
                 }
                 if (!DEBUG) return null;
-                c.d(TAG, "Already Updated");
+                Log.d(TAG, "Already Updated");
                 return null;
             }
             CasdParams casdParams = new CasdParams();
@@ -349,19 +344,19 @@ extends TAController {
 
     public byte[] getDsrpCnccData(byte[] arrby, byte[] arrby2) {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: getDsrpCnccData");
+            Log.d(TAG, "MCTAController: getDsrpCnccData");
         }
         if (!this.isTALoaded() || arrby == null) {
-            c.e(TAG, "MCTAController: in getDsrpCnccData: TA is not loaded.");
+            Log.e(TAG, "MCTAController: in getDsrpCnccData: TA is not loaded.");
             return null;
         }
         McTACommands.TAEncryptDsrpCnccPaymentInfo.TAEncryptDsrpCnccPaymentInfoResponse tAEncryptDsrpCnccPaymentInfoResponse = new McTACommands.TAEncryptDsrpCnccPaymentInfo.TAEncryptDsrpCnccPaymentInfoResponse(this.executeNoLoad(new McTACommands.TAEncryptDsrpCnccPaymentInfo.TAEncryptDsrpCnccPaymentInfoRequest(arrby, arrby2)));
         if (tAEncryptDsrpCnccPaymentInfoResponse == null || tAEncryptDsrpCnccPaymentInfoResponse.mRetVal == null || tAEncryptDsrpCnccPaymentInfoResponse.mRetVal._taJweData == null) {
-            c.e(TAG, "MCTAController: getDsrpCnccData : response is null");
+            Log.e(TAG, "MCTAController: getDsrpCnccData : response is null");
             return null;
         }
         if (tAEncryptDsrpCnccPaymentInfoResponse.mRetVal.result.get() != McTAError.MC_PAY_OK.getValue()) {
-            c.e(TAG, "MCTAController: getDsrpCnccData : TA error : " + tAEncryptDsrpCnccPaymentInfoResponse.mRetVal.result.get());
+            Log.e(TAG, "MCTAController: getDsrpCnccData : TA error : " + tAEncryptDsrpCnccPaymentInfoResponse.mRetVal.result.get());
             return null;
         }
         return tAEncryptDsrpCnccPaymentInfoResponse.mRetVal._taJweData.getData();
@@ -369,19 +364,19 @@ extends TAController {
 
     public byte[] getDsrpJweData(byte[] arrby, byte[] arrby2, byte[] arrby3) {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: getDsrpJweData");
+            Log.d(TAG, "MCTAController: getDsrpJweData");
         }
         if (!this.isTALoaded() || arrby == null || arrby2 == null || arrby3 == null) {
-            c.e(TAG, "MCTAController: in getDsrpJweData: TA is not loaded.");
+            Log.e(TAG, "MCTAController: in getDsrpJweData: TA is not loaded.");
             return null;
         }
         McTACommands.TAEncryptDsrpPaymentInfo.TAEncryptDsrpPaymentInfoResponse tAEncryptDsrpPaymentInfoResponse = new McTACommands.TAEncryptDsrpPaymentInfo.TAEncryptDsrpPaymentInfoResponse(this.executeNoLoad(new McTACommands.TAEncryptDsrpPaymentInfo.TAEncryptDsrpPaymentInfoRequest(arrby, arrby2, arrby3)));
         if (tAEncryptDsrpPaymentInfoResponse == null || tAEncryptDsrpPaymentInfoResponse.mRetVal == null || tAEncryptDsrpPaymentInfoResponse.mRetVal._taJweData == null) {
-            c.e(TAG, "MCTAController: getDsrpJweData : response is null");
+            Log.e(TAG, "MCTAController: getDsrpJweData : response is null");
             return null;
         }
         if (tAEncryptDsrpPaymentInfoResponse.mRetVal.result.get() != McTAError.MC_PAY_OK.getValue()) {
-            c.e(TAG, "MCTAController: getDsrpJweData : TA error : " + tAEncryptDsrpPaymentInfoResponse.mRetVal.result.get());
+            Log.e(TAG, "MCTAController: getDsrpJweData : TA error : " + tAEncryptDsrpPaymentInfoResponse.mRetVal.result.get());
             return null;
         }
         return tAEncryptDsrpPaymentInfoResponse.mRetVal._taJweData.getData();
@@ -389,15 +384,15 @@ extends TAController {
 
     public byte[] getNonce(byte[] arrby, byte[] arrby2) {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: getNonce");
+            Log.d(TAG, "MCTAController: getNonce");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "MCTAController: in getNonce: TA is not loaded.");
+            Log.e(TAG, "MCTAController: in getNonce: TA is not loaded.");
             return null;
         }
         McTACommands.TAGetNonce.TAGetNonceResponse tAGetNonceResponse = new McTACommands.TAGetNonce.TAGetNonceResponse(this.executeNoLoad(new McTACommands.TAGetNonce.TAGetNonceRequest(arrby, arrby2)));
         if (tAGetNonceResponse.mRetVal == null || tAGetNonceResponse.mRetVal._nonce == null) {
-            c.e(TAG, "MC TA getNonce command failed.");
+            Log.e(TAG, "MC TA getNonce command failed.");
             return null;
         }
         return tAGetNonceResponse.mRetVal._nonce.getData();
@@ -408,7 +403,7 @@ extends TAController {
      */
     public McTACommands.GetSpsd.Response.SpsdResponse getSpsdInfo(byte[] arrby, byte[] arrby2) {
         if (!this.isTALoaded()) {
-            c.e(TAG, "getSpsdInfo: TA is not loaded.");
+            Log.e(TAG, "getSpsdInfo: TA is not loaded.");
             return null;
         }
         McCertInfo mcCertInfo = this.mMcDeviceCert.getCASDCertEx();
@@ -417,7 +412,7 @@ extends TAController {
             McTACommands.GetSpsd.Response response = new McTACommands.GetSpsd.Response(this.executeNoLoad(new McTACommands.GetSpsd.Request(mcCertInfo.type, mcCertInfo.blob, arrby, arrby2)));
             if (response != null) return response.mRetVal;
             {
-                c.e(TAG, "getSpsdInfo : response is null");
+                Log.e(TAG, "getSpsdInfo : response is null");
                 return null;
             }
         }
@@ -426,7 +421,7 @@ extends TAController {
     @Override
     protected boolean init() {
         if (!super.init()) {
-            c.e(TAG, "Error: init failed");
+            Log.e(TAG, "Error: init failed");
             return false;
         }
         this.mMcDeviceCert = new McDeviceCert(this);
@@ -435,35 +430,35 @@ extends TAController {
 
     public boolean pingTA() {
         if (DEBUG) {
-            c.d(TAG, "pingTA...");
+            Log.d(TAG, "pingTA...");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "MCTAController:pingTA Error: TA is not loaded.");
+            Log.e(TAG, "MCTAController:pingTA Error: TA is not loaded.");
             return false;
         }
         TACommandResponse tACommandResponse = this.executeNoLoad(new McTACommands.PingTA.Request(this.PING_DATA));
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: executeNoLoad failed");
+            Log.e(TAG, "Error: executeNoLoad failed");
             return false;
         }
         byte[] arrby = new McTACommands.PingTA.Response((TACommandResponse)tACommandResponse).mRetVal.mPingRespData.getData();
         if (DEBUG) {
-            c.d(TAG, "Ping Response" + Arrays.toString((byte[])arrby));
+            Log.d(TAG, "Ping Response" + Arrays.toString((byte[])arrby));
         }
         return true;
     }
 
     public long prepareMSTtracks(long l2) {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: prepareMSTtracks");
+            Log.d(TAG, "MCTAController: prepareMSTtracks");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "MCTAController: in authenticateTransaction: TA is not loaded.");
+            Log.e(TAG, "MCTAController: in authenticateTransaction: TA is not loaded.");
             return -1L;
         }
         McTACommands.TAPrepareMSTtracks.TAPrepareMSTtracksResponse tAPrepareMSTtracksResponse = new McTACommands.TAPrepareMSTtracks.TAPrepareMSTtracksResponse(this.executeNoLoad(new McTACommands.TAPrepareMSTtracks.TAPrepareMSTtracksRequest(l2)));
         if (tAPrepareMSTtracksResponse.mRetVal == null || tAPrepareMSTtracksResponse.mRetVal._result == null) {
-            c.e(TAG, "MC TA prepare MST tracks request failed.");
+            Log.e(TAG, "MC TA prepare MST tracks request failed.");
             return -1L;
         }
         return tAPrepareMSTtracksResponse.mRetVal._result.get();
@@ -471,24 +466,24 @@ extends TAController {
 
     public long processMST(int n2, byte[] arrby) {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: processMST");
+            Log.d(TAG, "MCTAController: processMST");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "MCTAController: in processMST: TA is not loaded.");
+            Log.e(TAG, "MCTAController: in processMST: TA is not loaded.");
             return -1L;
         }
         TACommandResponse tACommandResponse = this.executeNoLoad(new McTACommands.TAProcessMST.TAProcessMSTRequest(n2, arrby));
         if (tACommandResponse == null) {
-            c.e(TAG, "Error: processMST executeNoLoad failed");
+            Log.e(TAG, "Error: processMST executeNoLoad failed");
             return -1L;
         }
         if (tACommandResponse.mResponseCode != 0) {
-            c.e(TAG, "processMST: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
+            Log.e(TAG, "processMST: Error: TA command returned error! resp.mResponseCode = " + tACommandResponse.mResponseCode);
             return -1L;
         }
         McTACommands.TAProcessMST.TAProcessMSTResponse tAProcessMSTResponse = new McTACommands.TAProcessMST.TAProcessMSTResponse(tACommandResponse);
         if (tAProcessMSTResponse == null || tAProcessMSTResponse.mRetVal == null || tAProcessMSTResponse.mRetVal._result == null) {
-            c.e(TAG, "MC TA processMST command failed.");
+            Log.e(TAG, "MC TA processMST command failed.");
             return -1L;
         }
         return tAProcessMSTResponse.mRetVal._result.get();
@@ -500,34 +495,34 @@ extends TAController {
     public byte[] processSignatureData(byte[] arrby, int n2) {
         int n3 = 1;
         if (DEBUG) {
-            c.d(TAG, "MCTAController:processSignatureData");
+            Log.d(TAG, "MCTAController:processSignatureData");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "MCTAController:processSignatureData Error: TA is not loaded");
+            Log.e(TAG, "MCTAController:processSignatureData Error: TA is not loaded");
             return null;
         }
         if (arrby == null) {
-            c.e(TAG, "MCTAController:processSignatureData Error: input data is null");
+            Log.e(TAG, "MCTAController:processSignatureData Error: input data is null");
             return null;
         }
         if (arrby.length >= 8192) {
-            c.e(TAG, "Input Signature data size is too big : " + arrby.length);
+            Log.e(TAG, "Input Signature data size is too big : " + arrby.length);
             return null;
         }
         if (n2 != n3 && n2 != 2) {
             n3 = 0;
         }
         if (n3 == 0) {
-            c.e(TAG, "processSignatureData : wrong input data");
+            Log.e(TAG, "processSignatureData : wrong input data");
             return null;
         }
         McTACommands.ProcessSignature.ProcessSignatureResponse processSignatureResponse = new McTACommands.ProcessSignature.ProcessSignatureResponse(this.executeNoLoad(new McTACommands.ProcessSignature.ProcessSignatureRequest(arrby, n2)));
         if (processSignatureResponse == null || processSignatureResponse.mRetVal == null || processSignatureResponse.mRetVal.mSignatureResponse == null) {
-            c.e(TAG, "processSignatureData : response is null");
+            Log.e(TAG, "processSignatureData : response is null");
             return null;
         }
         if ((long)processSignatureResponse.mResponseCode != McTAError.MC_PAY_OK.getValue()) {
-            c.e(TAG, "processSignatureData : error => " + processSignatureResponse.mResponseCode);
+            Log.e(TAG, "processSignatureData : error => " + processSignatureResponse.mResponseCode);
             return null;
         }
         return processSignatureResponse.mRetVal.mSignatureResponse.getData();
@@ -535,16 +530,16 @@ extends TAController {
 
     public McTACommands.ProvisionToken.Response provisionToken(byte[] arrby, byte[] arrby2, byte[] arrby3) {
         if (!this.isTALoaded()) {
-            c.e(TAG, "provisionToken: TA is not loaded.");
+            Log.e(TAG, "provisionToken: TA is not loaded.");
             return null;
         }
         if (arrby.length > 8192) {
-            c.e(TAG, "apdu size is too big to handle : " + arrby.length);
+            Log.e(TAG, "apdu size is too big to handle : " + arrby.length);
             return null;
         }
         McTACommands.ProvisionToken.Response response = new McTACommands.ProvisionToken.Response(this.executeNoLoad(new McTACommands.ProvisionToken.Request(arrby, arrby2, arrby3)));
         if (response == null) {
-            c.e(TAG, "provisionToken : response is null");
+            Log.e(TAG, "provisionToken : response is null");
             return null;
         }
         return response;
@@ -552,19 +547,19 @@ extends TAController {
 
     public McTACommands.TASetContext.TASetContextResponse.SetContextOut setContext(int n2) {
         if (DEBUG) {
-            c.d(TAG, "MCTAController: setContext");
+            Log.d(TAG, "MCTAController: setContext");
         }
         if (!this.isTALoaded()) {
-            c.e(TAG, "MCTAController: in setContext: TA is not loaded.");
+            Log.e(TAG, "MCTAController: in setContext: TA is not loaded.");
             return null;
         }
         McTACommands.TASetContext.TASetContextResponse tASetContextResponse = new McTACommands.TASetContext.TASetContextResponse(this.executeNoLoad(new McTACommands.TASetContext.TASetContextRequest(n2)));
         if (tASetContextResponse.mRetVal == null || tASetContextResponse.mRetVal._returnCode == null || tASetContextResponse.mRetVal._returnCode.get() != 0L) {
-            c.e(TAG, "MC TA setContext command failed.");
+            Log.e(TAG, "MC TA setContext command failed.");
             return null;
         }
         if (DEBUG) {
-            c.d(TAG, "MCTAController: setContext - ending");
+            Log.d(TAG, "MCTAController: setContext - ending");
         }
         return tASetContextResponse.mRetVal;
     }
@@ -579,25 +574,25 @@ extends TAController {
         synchronized (mcTAController) {
             long l2;
             if (DEBUG) {
-                c.d(TAG, "Calling writeCasdCert");
+                Log.d(TAG, "Calling writeCasdCert");
             }
             if (!this.isTALoaded()) {
-                c.e(TAG, "writeCasdCert: TA is not loaded.");
+                Log.e(TAG, "writeCasdCert: TA is not loaded.");
                 return -1;
             }
             byte[] arrby2 = this.mMcDeviceCert.loadOldCasdCerts();
             if (arrby2 == null) {
-                c.e(TAG, "CasdCertData is null");
+                Log.e(TAG, "CasdCertData is null");
                 return -1;
             }
             TACommandResponse tACommandResponse = this.executeNoLoad(new McTACommands.CasdUpdateWriteKey.Request(arrby, arrby2));
             if (tACommandResponse == null) {
-                c.e(TAG, "writeCasdCert: Error: executeNoLoad failed");
+                Log.e(TAG, "writeCasdCert: Error: executeNoLoad failed");
                 return -1;
             }
             McTACommands.CasdUpdateWriteKey.Response response = new McTACommands.CasdUpdateWriteKey.Response(tACommandResponse);
             if (DEBUG) {
-                c.d(TAG, "writeCasdCert called Successfully : " + response.mRetVal.return_code.get());
+                Log.d(TAG, "writeCasdCert called Successfully : " + response.mRetVal.return_code.get());
             }
             if (response.mRetVal.return_code.get() != 0L) {
                 return -1;
@@ -608,22 +603,22 @@ extends TAController {
             this.setCertInfo(certInfo);
             CertInfo certInfo2 = this.mMcDeviceCert.getDeviceCasdCert();
             if (certInfo2 == null || certInfo2.mCerts.isEmpty()) {
-                c.e(TAG, "Error : getCertInfo is null ");
+                Log.e(TAG, "Error : getCertInfo is null ");
                 return -1;
             }
             byte[] arrby4 = (byte[])certInfo2.mCerts.get((Object)"/efs/mc/rst.dat");
             if (arrby4 == null) {
-                c.e(TAG, "Write Failed");
+                Log.e(TAG, "Write Failed");
                 return -1;
             }
             TACommandResponse tACommandResponse2 = this.executeNoLoad(new McTACommands.CasdUpdateVerifyKey.Request(arrby4));
             if (tACommandResponse2 == null) {
-                c.e(TAG, "verifyCasdCert: Error: executeNoLoad failed");
+                Log.e(TAG, "verifyCasdCert: Error: executeNoLoad failed");
                 return -1;
             }
             McTACommands.CasdUpdateVerifyKey.Response response2 = new McTACommands.CasdUpdateVerifyKey.Response(tACommandResponse2);
             if (DEBUG) {
-                c.d(TAG, "verifyCasdCert called Successfully : " + response2.mRetVal.return_code.get());
+                Log.d(TAG, "verifyCasdCert called Successfully : " + response2.mRetVal.return_code.get());
             }
             if ((l2 = response2.mRetVal.return_code.get()) == 0L) return 0;
             return -1;

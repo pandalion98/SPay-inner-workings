@@ -19,10 +19,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import com.samsung.android.spayfw.b.c;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.e.a.a;
 import com.samsung.android.spayfw.interfacelibrary.db.DBName;
-import com.samsung.android.spayfw.payprovider.mastercard.dao.McCommonDao;
 
 public abstract class MCAbstractDaoImpl<T>
 implements McCommonDao<T> {
@@ -51,7 +51,7 @@ implements McCommonDao<T> {
         }
         int n2 = this.db.delete(this.getTableName(), this.getQuerySearch(l2), null);
         if (n2 < 1) {
-            c.e(TAG, "deleteData: " + n2);
+            Log.e(TAG, "deleteData: " + n2);
             return false;
         }
         return true;
@@ -94,7 +94,7 @@ implements McCommonDao<T> {
                         }
                     }
                     try {
-                        c.e("MCAbstractDaoImpl<T>", "NPE occured during getData");
+                        Log.e("MCAbstractDaoImpl<T>", "NPE occured during getData");
                         if (var6_7 == null) return null;
                     }
                     catch (Throwable var7_11) {
@@ -137,7 +137,7 @@ lbl-1000: // 3 sources:
             return l2;
         }
         catch (SQLException sQLException) {
-            c.e("MCAbstractDaoImpl<T>", "SQLException during insert" + sQLException.getMessage());
+            Log.e("MCAbstractDaoImpl<T>", "SQLException during insert" + sQLException.getMessage());
             sQLException.printStackTrace();
             return -1L;
         }
@@ -154,7 +154,7 @@ lbl-1000: // 3 sources:
             return l3;
         }
         catch (SQLException sQLException) {
-            c.e("MCAbstractDaoImpl<T>", "SQLException during insert" + sQLException.getMessage());
+            Log.e("MCAbstractDaoImpl<T>", "SQLException during insert" + sQLException.getMessage());
             sQLException.printStackTrace();
             return -1L;
         }
@@ -167,7 +167,7 @@ lbl-1000: // 3 sources:
         }
         int n2 = this.db.update(this.getTableName(), this.getContentValues(t2), this.getQuerySearch(l2), null);
         if (n2 != 1) {
-            c.e("MCAbstractDaoImpl<T>", "updateData: MultipleRows Updated: " + n2);
+            Log.e("MCAbstractDaoImpl<T>", "updateData: MultipleRows Updated: " + n2);
             return false;
         }
         return true;

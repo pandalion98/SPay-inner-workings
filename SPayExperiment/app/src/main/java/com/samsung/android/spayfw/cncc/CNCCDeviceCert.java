@@ -12,16 +12,13 @@
  */
 package com.samsung.android.spayfw.cncc;
 
-import android.content.Context;
 import android.spay.CertInfo;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.cncc.CNCCTAController;
-import com.samsung.android.spayfw.cncc.SpayDRKManager;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spaytzsvc.api.TAController;
-import com.samsung.android.spaytzsvc.api.TAInfo;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class CNCCDeviceCert {
     public static final String CNCC_CERTSIGN_FILENAME = "spaydcmcert.dat";
@@ -45,7 +42,7 @@ public class CNCCDeviceCert {
 
     public boolean load() {
         if (!SpayDRKManager.isSupported(this.mTAController.getContext())) {
-            c.e(TAG, "SpayDRKManager.isDRKExist failed");
+            Log.e(TAG, "SpayDRKManager.isDRKExist failed");
             return false;
         }
         ArrayList arrayList = new ArrayList();
@@ -53,7 +50,7 @@ public class CNCCDeviceCert {
         this.certloader.init(this.mTAController, CNCC_SERVICE_NAME, CNCC_SERVICE_NAME, CNCCTAController.getInstance().getTAInfo().getTAId(), (List<SpayDRKManager.CertFileInfo>)arrayList);
         this.mDevicePrivateCerts = this.certloader.getCertInfo();
         if (this.mDevicePrivateCerts == null || this.mDevicePrivateCerts.mCerts.isEmpty() || this.getSPayDCMDevicePrivateSignCert() == null) {
-            c.e(TAG, "load: Error: get Wrapped Certificate Data from file system failed");
+            Log.e(TAG, "load: Error: get Wrapped Certificate Data from file system failed");
             this.mDevicePrivateCerts = null;
             return false;
         }

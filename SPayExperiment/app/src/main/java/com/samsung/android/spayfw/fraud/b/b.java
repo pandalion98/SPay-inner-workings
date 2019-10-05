@@ -20,8 +20,10 @@
 package com.samsung.android.spayfw.fraud.b;
 
 import android.database.Cursor;
+
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,15 +35,15 @@ public class b {
      * Enabled aggressive block sorting
      */
     public static int a(b b2, List<b> list) {
-        com.samsung.android.spayfw.b.c.d("ModelUtils", "found " + list.size() + " existing addresses");
+        Log.d("ModelUtils", "found " + list.size() + " existing addresses");
         Iterator iterator = list.iterator();
         int n2 = 0;
         while (iterator.hasNext()) {
             int n3;
             b b3 = (b)iterator.next();
-            com.samsung.android.spayfw.b.c.d("ModelUtils", "comparing |" + b2.street + "| against |" + b3.street + "|");
+            Log.d("ModelUtils", "comparing |" + b2.street + "| against |" + b3.street + "|");
             if (b.a(b2.street, b3.street, 10) && b.a(b2.zip, b3.zip, 10)) {
-                com.samsung.android.spayfw.b.c.d("ModelUtils", b2.street + " (and zip) matches " + b3.street);
+                Log.d("ModelUtils", b2.street + " (and zip) matches " + b3.street);
                 n3 = n2 + 1;
             } else {
                 n3 = n2;
@@ -57,7 +59,7 @@ public class b {
     public static int a(c c2, List<c> list) {
         String string = b.aj(c2.nM);
         String string2 = b.aj(c2.nN);
-        com.samsung.android.spayfw.b.c.d("ModelUtils", "found " + list.size() + " existing names");
+        Log.d("ModelUtils", "found " + list.size() + " existing names");
         Iterator iterator = list.iterator();
         int n2 = 0;
         while (iterator.hasNext()) {
@@ -65,9 +67,9 @@ public class b {
             c c3 = (c)iterator.next();
             String string3 = b.aj(c3.nM);
             String string4 = b.aj(c3.nN);
-            com.samsung.android.spayfw.b.c.d("ModelUtils", "comparing |" + string + "| against |" + string3 + "|");
+            Log.d("ModelUtils", "comparing |" + string + "| against |" + string3 + "|");
             if (b.a(string, string3, 2) && b.a(string2, string4, 2)) {
-                com.samsung.android.spayfw.b.c.d("ModelUtils", string + " matches " + string3);
+                Log.d("ModelUtils", string + " matches " + string3);
                 n3 = n2 + 1;
             } else {
                 n3 = n2;
@@ -88,7 +90,7 @@ public class b {
 
     private static Integer a(Cursor cursor, int n2, Integer n3) {
         if (cursor == null || !cursor.moveToNext()) {
-            com.samsung.android.spayfw.b.c.d("ModelUtils", "Expected to read an integer where none exists");
+            Log.d("ModelUtils", "Expected to read an integer where none exists");
             return n3;
         }
         return b.b(cursor, n2, n3);
@@ -130,15 +132,15 @@ public class b {
      * Enabled aggressive block sorting
      */
     public static int b(b b2, List<b> list) {
-        com.samsung.android.spayfw.b.c.d("ModelUtils", "found " + list.size() + " existing addresses");
+        Log.d("ModelUtils", "found " + list.size() + " existing addresses");
         Iterator iterator = list.iterator();
         int n2 = 0;
         while (iterator.hasNext()) {
             int n3;
             b b3 = (b)iterator.next();
-            com.samsung.android.spayfw.b.c.d("ModelUtils", "comparing |" + b2.street + "| against |" + b3.street + "|");
+            Log.d("ModelUtils", "comparing |" + b2.street + "| against |" + b3.street + "|");
             if (!b.a(b2.street, b3.street, 10) || !b.a(b2.zip, b3.zip, 10)) {
-                com.samsung.android.spayfw.b.c.d("ModelUtils", b2.street + " (or zip) contradicts " + b3.street);
+                Log.d("ModelUtils", b2.street + " (or zip) contradicts " + b3.street);
                 n3 = n2 + 1;
             } else {
                 n3 = n2;
@@ -154,7 +156,7 @@ public class b {
     public static int b(c c2, List<c> list) {
         String string = b.aj(c2.nM);
         String string2 = b.aj(c2.nN);
-        com.samsung.android.spayfw.b.c.d("ModelUtils", "found " + list.size() + " existing names");
+        Log.d("ModelUtils", "found " + list.size() + " existing names");
         Iterator iterator = list.iterator();
         int n2 = 0;
         while (iterator.hasNext()) {
@@ -162,9 +164,9 @@ public class b {
             c c3 = (c)iterator.next();
             String string3 = b.aj(c3.nM);
             String string4 = b.aj(c3.nN);
-            com.samsung.android.spayfw.b.c.d("ModelUtils", "comparing |" + string + "| against |" + string3 + "|");
+            Log.d("ModelUtils", "comparing |" + string + "| against |" + string3 + "|");
             if (!b.a(string, string3, 2) || !b.a(string2, string4, 2)) {
-                com.samsung.android.spayfw.b.c.d("ModelUtils", string + " contradicts " + string3);
+                Log.d("ModelUtils", string + " contradicts " + string3);
                 n3 = n2 + 1;
             } else {
                 n3 = n2;
@@ -218,7 +220,7 @@ public class b {
             }
             return b2;
         }
-        com.samsung.android.spayfw.b.c.d("ModelUtils", "cannot get current card");
+        Log.d("ModelUtils", "cannot get current card");
         return null;
     }
 

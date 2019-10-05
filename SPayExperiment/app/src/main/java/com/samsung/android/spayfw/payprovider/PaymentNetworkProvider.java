@@ -56,20 +56,11 @@ import com.samsung.android.spayfw.appinterface.TokenStatus;
 import com.samsung.android.spayfw.appinterface.TransactionData;
 import com.samsung.android.spayfw.appinterface.TransactionDetails;
 import com.samsung.android.spayfw.appinterface.VerifyIdvInfo;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.hce.SPayHCEReceiver;
 import com.samsung.android.spayfw.core.k;
 import com.samsung.android.spayfw.core.o;
-import com.samsung.android.spayfw.core.q;
-import com.samsung.android.spayfw.payprovider.MerchantServerRequester;
-import com.samsung.android.spayfw.payprovider.PaymentProviderException;
-import com.samsung.android.spayfw.payprovider.c;
-import com.samsung.android.spayfw.payprovider.d;
-import com.samsung.android.spayfw.payprovider.e;
-import com.samsung.android.spayfw.payprovider.f;
-import com.samsung.android.spayfw.payprovider.g;
-import com.samsung.android.spayfw.payprovider.i;
-import com.samsung.android.spayfw.payprovider.j;
 import com.samsung.android.spayfw.payprovider.plcc.tzsvc.ExtractCardDetailResult;
 import com.samsung.android.spayfw.remoteservice.commerce.models.PaymentRequestData;
 import com.samsung.android.spayfw.remoteservice.commerce.models.PaymentResponseData;
@@ -80,7 +71,7 @@ import com.samsung.android.spaytui.AuthResult;
 import com.samsung.android.spaytui.SpayTuiTAController;
 import com.samsung.android.spaytzsvc.api.TAController;
 import com.samsung.android.spaytzsvc.api.TAException;
-import com.samsung.android.spaytzsvc.api.TAInfo;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -168,18 +159,18 @@ public abstract class PaymentNetworkProvider {
         this.mCardBrand = string;
         this.mContext = context;
         if (string != null && (string.equals((Object)"PL") || string.equals((Object)"GI") || string.equals((Object)"LO"))) {
-            com.samsung.android.spayfw.b.c.d(LOG_TAG, "cardType =  " + string + " Plcc TA is used: Use Plcc unload " + "timer/TA Counter");
+            Log.d(LOG_TAG, "cardType =  " + string + " Plcc TA is used: Use Plcc unload " + "timer/TA Counter");
             this.mTACounter = mTACounterFactory.at("PL");
             this.mUnloadTimer = new j("PL");
         } else {
-            com.samsung.android.spayfw.b.c.d(LOG_TAG, "cardType =  " + string + " Use card specific unload timer/TA " + "Counter");
+            Log.d(LOG_TAG, "cardType =  " + string + " Use card specific unload timer/TA " + "Counter");
             this.mTACounter = mTACounterFactory.at(string);
             this.mUnloadTimer = new j(this.mCardBrand);
         }
         if ((file = new File(TUI_DATA_DIR, TUIPINSECUREOBJECTFILE)).exists()) {
             if (!file.isDirectory()) return;
         }
-        com.samsung.android.spayfw.b.c.i(LOG_TAG, "Creating Pin Random files");
+        Log.i(LOG_TAG, "Creating Pin Random files");
         try {
             mAuthTAController = SpayTuiTAController.createOnlyInstance(this.mContext);
             if (mAuthTAController == null) return;
@@ -188,7 +179,7 @@ public abstract class PaymentNetworkProvider {
             return;
         }
         catch (TAException tAException) {
-            com.samsung.android.spayfw.b.c.c(LOG_TAG, tAException.getMessage(), (Throwable)((Object)tAException));
+            Log.c(LOG_TAG, tAException.getMessage(), (Throwable)((Object)tAException));
             return;
         }
     }
@@ -219,13 +210,13 @@ public abstract class PaymentNetworkProvider {
             }
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.e(LOG_TAG, "Exception in checkIfStopInAppPayInvoked");
+            Log.e(LOG_TAG, "Exception in checkIfStopInAppPayInvoked");
         }
         return false;
     }
 
     private void clearCardState() {
-        com.samsung.android.spayfw.b.c.d(LOG_TAG, "clearCardState:");
+        Log.d(LOG_TAG, "clearCardState:");
         this.clearSecureObjectInputForPayment();
         this.mJwtRetryTriggered = false;
         try {
@@ -240,7 +231,7 @@ public abstract class PaymentNetworkProvider {
     }
 
     private void clearPayState() {
-        com.samsung.android.spayfw.b.c.d(LOG_TAG, "clearPayState");
+        Log.d(LOG_TAG, "clearPayState");
         this.mPayCallback = null;
         mMstPayThread = null;
         mPayTASelectedCard = null;
@@ -252,12 +243,12 @@ public abstract class PaymentNetworkProvider {
     }
 
     private void loadTAwithCounter(boolean bl) {
-        com.samsung.android.spayfw.b.c.d(LOG_TAG, "load payment TA request : asyncTAloadUnload " + bl);
+        Log.d(LOG_TAG, "load payment TA request : asyncTAloadUnload " + bl);
         this.mUnloadTimer.cancel();
         this.loadTA();
         if (bl) {
             this.mTACounter.co();
-            com.samsung.android.spayfw.b.c.i(LOG_TAG, "load payment TA request with asyncTAloadUnload: count  " + this.mTACounter.getCount());
+            Log.i(LOG_TAG, "load payment TA request with asyncTAloadUnload: count  " + this.mTACounter.getCount());
         }
     }
 
@@ -269,7 +260,7 @@ public abstract class PaymentNetworkProvider {
         var1_1 = null;
         switch (var0) {
             default: {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "UNKNOWN Command ID: " + var0);
+                Log.e("PaymentNetworkProvider", "UNKNOWN Command ID: " + var0);
                 return false;
             }
             case 1: {
@@ -278,7 +269,7 @@ public abstract class PaymentNetworkProvider {
 lbl9: // 5 sources:
                 do {
                     if (PaymentNetworkProvider.DEBUG) {
-                        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "Writting \"" + var3_3 + "\" to -> " + var2_2);
+                        Log.d("PaymentNetworkProvider", "Writting \"" + var3_3 + "\" to -> " + var2_2);
                     }
                     var4_4 = new FileWriter(new File(var2_2).getAbsoluteFile());
                     var5_5 = new BufferedWriter((Writer)var4_4);
@@ -318,15 +309,15 @@ lbl23: // 4 sources:
         var3_3 = "b0";
         ** while (true)
         catch (IOException var10_6) {
-            com.samsung.android.spayfw.b.c.c("PaymentNetworkProvider", var10_6.getMessage(), var10_6);
+            Log.c("PaymentNetworkProvider", var10_6.getMessage(), var10_6);
             ** continue;
         }
         catch (IOException var6_7) {
             var5_5 = null;
 lbl46: // 3 sources:
             do {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "Error writting \"" + var3_3 + "\" to file -> " + var2_2);
-                com.samsung.android.spayfw.b.c.c("PaymentNetworkProvider", var6_8.getMessage(), (Throwable)var6_8);
+                Log.e("PaymentNetworkProvider", "Error writting \"" + var3_3 + "\" to file -> " + var2_2);
+                Log.c("PaymentNetworkProvider", var6_8.getMessage(), (Throwable)var6_8);
                 if (var5_5 == null) ** GOTO lbl53
                 try {
                     var5_5.close();
@@ -341,7 +332,7 @@ lbl55: // 4 sources:
                     } while (true);
                 }
                 catch (IOException var9_11) {
-                    com.samsung.android.spayfw.b.c.c("PaymentNetworkProvider", var9_11.getMessage(), var9_11);
+                    Log.c("PaymentNetworkProvider", var9_11.getMessage(), var9_11);
                     ** continue;
                 }
                 break;
@@ -360,7 +351,7 @@ lbl66: // 2 sources:
                         var1_1.close();
                     }
                     catch (IOException var8_17) {
-                        com.samsung.android.spayfw.b.c.c("PaymentNetworkProvider", var8_17.getMessage(), var8_17);
+                        Log.c("PaymentNetworkProvider", var8_17.getMessage(), var8_17);
                         ** continue;
                     }
                 }
@@ -398,7 +389,7 @@ lbl72: // 2 sources:
     }
 
     private boolean prepareMstPayInternal() {
-        com.samsung.android.spayfw.b.c.d(LOG_TAG, "prepareMstPayInternal : Retry Mode : " + mRetryMode);
+        Log.d(LOG_TAG, "prepareMstPayInternal : Retry Mode : " + mRetryMode);
         if (!mRetryMode) {
             return this.prepareMstPay();
         }
@@ -406,7 +397,7 @@ lbl72: // 2 sources:
     }
 
     private boolean prepareNfcPayInternal() {
-        com.samsung.android.spayfw.b.c.d(LOG_TAG, "prepareNfcPayInternal : " + mRetryMode);
+        Log.d(LOG_TAG, "prepareNfcPayInternal : " + mRetryMode);
         return this.prepareNfcPay();
     }
 
@@ -415,10 +406,10 @@ lbl72: // 2 sources:
             mMstPayThread.interrupt();
         }
         if (PaymentNetworkProvider.makeSysCallInternal(3)) {
-            com.samsung.android.spayfw.b.c.d(LOG_TAG, "stop mst transimission");
+            Log.d(LOG_TAG, "stop mst transimission");
             return;
         }
-        com.samsung.android.spayfw.b.c.d(LOG_TAG, "cannot stop mst transimission");
+        Log.d(LOG_TAG, "cannot stop mst transimission");
     }
 
     private static void providerResetMstPayIfPossible() {
@@ -426,63 +417,63 @@ lbl72: // 2 sources:
             mMstPayThread.interrupt();
         }
         if (PaymentNetworkProvider.makeSysCallInternal(4)) {
-            com.samsung.android.spayfw.b.c.d(LOG_TAG, "reset mst transimission");
+            Log.d(LOG_TAG, "reset mst transimission");
             return;
         }
-        com.samsung.android.spayfw.b.c.d(LOG_TAG, "cannot reset mst transimission");
+        Log.d(LOG_TAG, "cannot reset mst transimission");
     }
 
     private SelectCardResult selectCardForPayment() {
-        com.samsung.android.spayfw.b.c.d(LOG_TAG, "selectCardForPayment: mPayTASelectedCard " + mPayTASelectedCard);
+        Log.d(LOG_TAG, "selectCardForPayment: mPayTASelectedCard " + mPayTASelectedCard);
         this.loadTAwithCounter(true);
         return this.selectCard();
     }
 
     private byte[] sendIndirectPaymentRequest(MerchantServerRequester.MerchantInfo merchantInfo, String string) {
-        com.samsung.android.spayfw.b.c.d(LOG_TAG, "Indirect payment");
+        Log.d(LOG_TAG, "Indirect payment");
         if (merchantInfo.getPgInfo() == null || merchantInfo.getPgInfo().getName() == null) {
-            com.samsung.android.spayfw.b.c.e(LOG_TAG, "Payment pgInfo Name null ");
+            Log.e(LOG_TAG, "Payment pgInfo Name null ");
             throw new PaymentProviderException(-36);
         }
         com.samsung.android.spayfw.remoteservice.commerce.a a2 = com.samsung.android.spayfw.remoteservice.commerce.b.J(this.mContext).a(new PaymentRequestData(new PaymentRequestData.Card(null, string), new PaymentRequestData.Payment(merchantInfo.getPgInfo().getName())));
         if (a2 == null) {
-            com.samsung.android.spayfw.b.c.e(LOG_TAG, "paymentRequest null ");
+            Log.e(LOG_TAG, "paymentRequest null ");
             throw new PaymentProviderException(-36);
         }
         com.samsung.android.spayfw.remoteservice.c c2 = a2.eS();
         if (c2 == null) {
-            com.samsung.android.spayfw.b.c.e(LOG_TAG, "response null ");
+            Log.e(LOG_TAG, "response null ");
             throw new PaymentProviderException(-36);
         }
         int n2 = c2.getStatusCode();
         switch (n2) {
             default: {
-                com.samsung.android.spayfw.b.c.e(LOG_TAG, "error make payment " + n2);
+                Log.e(LOG_TAG, "error make payment " + n2);
                 throw new PaymentProviderException(-202);
             }
             case 200: 
             case 201: {
                 PaymentResponseData paymentResponseData = (PaymentResponseData)c2.getResult();
                 if (paymentResponseData == null || paymentResponseData.getCard() == null) {
-                    com.samsung.android.spayfw.b.c.e(LOG_TAG, "responseData or getCard null ");
+                    Log.e(LOG_TAG, "responseData or getCard null ");
                     throw new PaymentProviderException(-36);
                 }
                 String string2 = paymentResponseData.getCard().toJson();
                 if (string2 == null) {
-                    com.samsung.android.spayfw.b.c.e(LOG_TAG, "serverCardReference null ");
+                    Log.e(LOG_TAG, "serverCardReference null ");
                     throw new PaymentProviderException(-36);
                 }
                 byte[] arrby = string2.getBytes();
-                com.samsung.android.spayfw.b.c.d(LOG_TAG, "paymentPayloadJsonBytes " + string2);
+                Log.d(LOG_TAG, "paymentPayloadJsonBytes " + string2);
                 return arrby;
             }
             case 0: {
-                com.samsung.android.spayfw.b.c.e(LOG_TAG, "error unable to connect " + n2);
+                Log.e(LOG_TAG, "error unable to connect " + n2);
                 throw new PaymentProviderException(-9);
             }
             case -2: 
         }
-        com.samsung.android.spayfw.b.c.e(LOG_TAG, "error Jwt token invalid " + n2);
+        Log.e(LOG_TAG, "error Jwt token invalid " + n2);
         throw new PaymentProviderException(-206);
     }
 
@@ -490,7 +481,7 @@ lbl72: // 2 sources:
         if (mRetryMode) {
             this.stopMstPayLocked(bl);
         }
-        com.samsung.android.spayfw.b.c.d(LOG_TAG, "stopMstPayInternal : Retry Mode : " + mRetryMode);
+        Log.d(LOG_TAG, "stopMstPayInternal : Retry Mode : " + mRetryMode);
     }
 
     private void stopMstPayLocked(boolean bl) {
@@ -502,22 +493,22 @@ lbl72: // 2 sources:
     }
 
     private Bundle stopNfcPayInternal(int n2) {
-        com.samsung.android.spayfw.b.c.d(LOG_TAG, "stopNfcPayInternal : " + mRetryMode);
+        Log.d(LOG_TAG, "stopNfcPayInternal : " + mRetryMode);
         return this.stopNfcPay(n2);
     }
 
     private void unloadTAwithCounter(boolean bl) {
         if (bl) {
             this.mTACounter.cp();
-            com.samsung.android.spayfw.b.c.i(LOG_TAG, "unload payment TA request with  asyncTAloadUnload. decerment asyncloadUnload count ");
+            Log.i(LOG_TAG, "unload payment TA request with  asyncTAloadUnload. decerment asyncloadUnload count ");
         }
-        com.samsung.android.spayfw.b.c.i(LOG_TAG, "unload payment TA request: asyncLoadUnloadCount: " + this.mTACounter.getCount());
+        Log.i(LOG_TAG, "unload payment TA request: asyncLoadUnloadCount: " + this.mTACounter.getCount());
         if (this.mTACounter.getCount() <= 0) {
             this.mUnloadTimer.schedule(new b(), 60000L);
             this.mTACounter.reset();
             return;
         }
-        com.samsung.android.spayfw.b.c.i(LOG_TAG, "unload payment TA is delayed becasue of asyncLoadUnload : ");
+        Log.i(LOG_TAG, "unload payment TA is delayed becasue of asyncLoadUnload : ");
     }
 
     protected boolean allowPaymentRetry() {
@@ -541,9 +532,9 @@ lbl72: // 2 sources:
      */
     public final void clearPay() {
         Object object;
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "clearPay:");
+        Log.d("PaymentNetworkProvider", "clearPay:");
         if (!this.mTAController.makeSystemCall(2)) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "Error: Failed to turn OFF MST");
+            Log.e("PaymentNetworkProvider", "Error: Failed to turn OFF MST");
         }
         this.mTAController.moveSecOsToDefaultCore();
         PaymentNetworkProvider.providerResetMstPayIfPossible();
@@ -552,7 +543,7 @@ lbl72: // 2 sources:
             mNfcWait.open();
         }
         if (mPayTASelectedCard == null) {
-            com.samsung.android.spayfw.b.c.w("PaymentNetworkProvider", "clearPay: mPayTASelectedCard " + mPayTASelectedCard);
+            Log.w("PaymentNetworkProvider", "clearPay: mPayTASelectedCard " + mPayTASelectedCard);
             return;
         }
         Object object2 = object = mPaymentModeObj;
@@ -576,11 +567,11 @@ lbl72: // 2 sources:
      */
     public final void clearRetryPay() {
         Object object;
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "clearRetryPay:");
+        Log.d("PaymentNetworkProvider", "clearRetryPay:");
         mRetryMode = true;
         this.stopMstPayInternal(true);
         if (!this.mTAController.makeSystemCall(2)) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "Error: Failed to turn OFF MST");
+            Log.e("PaymentNetworkProvider", "Error: Failed to turn OFF MST");
         }
         this.mTAController.moveSecOsToDefaultCore();
         PaymentNetworkProvider.providerResetMstPayIfPossible();
@@ -589,7 +580,7 @@ lbl72: // 2 sources:
             mNfcWait.open();
         }
         if (mPayTASelectedCard == null) {
-            com.samsung.android.spayfw.b.c.w("PaymentNetworkProvider", "clearPay: mPayTASelectedCard " + mPayTASelectedCard);
+            Log.w("PaymentNetworkProvider", "clearPay: mPayTASelectedCard " + mPayTASelectedCard);
             this.clearPayState();
             return;
         }
@@ -608,7 +599,7 @@ lbl72: // 2 sources:
     }
 
     public final void clearSecureObjectInputForPayment() {
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "clearSecureObjectInputForPayment: mAuthTASelectedCard " + mAuthTASelectedCard);
+        Log.d("PaymentNetworkProvider", "clearSecureObjectInputForPayment: mAuthTASelectedCard " + mAuthTASelectedCard);
         if (mAuthTAController != null) {
             mAuthTAController.unloadTA();
         }
@@ -673,30 +664,30 @@ lbl72: // 2 sources:
     }
 
     public final GiftCardDetail extractGiftCardDetailTA(byte[] arrby, byte[] arrby2, SecuredObject securedObject, boolean bl) {
-        com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "extractGiftCardDetailTA:");
+        Log.i("PaymentNetworkProvider", "extractGiftCardDetailTA:");
         GiftCardDetail giftCardDetail = new GiftCardDetail();
         giftCardDetail.setErrorCode(-1);
         if (securedObject == null || arrby2 == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "extractGiftCardDetailTA:invalid input");
+            Log.e("PaymentNetworkProvider", "extractGiftCardDetailTA:invalid input");
             giftCardDetail.setErrorCode(-5);
             return giftCardDetail;
         }
         if (!o.p(2)) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "extractGiftCardDetailTA: invalid state");
+            Log.e("PaymentNetworkProvider", "extractGiftCardDetailTA: invalid state");
             return giftCardDetail;
         }
         if (mAuthTAController == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "extractGiftCardDetailTA:auth TA controller instance is null ");
+            Log.e("PaymentNetworkProvider", "extractGiftCardDetailTA:auth TA controller instance is null ");
             return giftCardDetail;
         }
         mPayTASelectedCard = mAuthTASelectedCard;
         if (mPayTASelectedCard == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "extractGiftCardDetailTA:selectCard is not called ");
+            Log.e("PaymentNetworkProvider", "extractGiftCardDetailTA:selectCard is not called ");
             return giftCardDetail;
         }
         SelectCardResult selectCardResult = this.selectCardForPayment();
         if (selectCardResult == null || selectCardResult.getNonce() == null || selectCardResult.getTaid() == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "extractGiftCardDetailTA:selectCard result from pay provider is not valid ");
+            Log.e("PaymentNetworkProvider", "extractGiftCardDetailTA:selectCard result from pay provider is not valid ");
             this.clearCardState();
             return giftCardDetail;
         }
@@ -705,10 +696,10 @@ lbl72: // 2 sources:
         if (authResult != null) {
             arrby3 = authResult.getSecObjData();
             this.mAuthType = authResult.getAuthType();
-            com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "extractGiftCardDetailTA:auth type =  " + this.mAuthType);
+            Log.i("PaymentNetworkProvider", "extractGiftCardDetailTA:auth type =  " + this.mAuthType);
         }
         if (arrby3 == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "extractGiftCardDetailTA:authentication failed from auth TA ");
+            Log.e("PaymentNetworkProvider", "extractGiftCardDetailTA:authentication failed from auth TA ");
             giftCardDetail.setErrorCode(-35);
             this.clearCardState();
             return giftCardDetail;
@@ -716,17 +707,17 @@ lbl72: // 2 sources:
         SecuredObject securedObject2 = new SecuredObject();
         securedObject2.setSecureObjectData(arrby3);
         if (!this.authenticateTransaction(securedObject2)) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "extractGiftCardDetailTA:authentication failed ");
+            Log.e("PaymentNetworkProvider", "extractGiftCardDetailTA:authentication failed ");
             this.clearCardState();
             return giftCardDetail;
         }
         if (!o.q(16)) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "extractGiftCardDetailTA: cannot go to pay IDLE state");
+            Log.e("PaymentNetworkProvider", "extractGiftCardDetailTA: cannot go to pay IDLE state");
             this.clearCardState();
             return giftCardDetail;
         }
         if (!o.q(8192)) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "extractGiftCardDetailTA: cannot go to pay PAY_EXTRACT_CARDDETAIL state");
+            Log.e("PaymentNetworkProvider", "extractGiftCardDetailTA: cannot go to pay PAY_EXTRACT_CARDDETAIL state");
             this.clearCardState();
             return giftCardDetail;
         }
@@ -735,14 +726,14 @@ lbl72: // 2 sources:
         PaymentFrameworkApp.az().c(false);
         if (bl) {
             if (!o.q(2)) {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "extractGiftCardDetailTA: cannot go to pay Selected state");
+                Log.e("PaymentNetworkProvider", "extractGiftCardDetailTA: cannot go to pay Selected state");
                 this.clearCardState();
                 return giftCardDetail2;
             }
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "extractGiftCardDetailTA: Start MST Pay Requested. State changed to NPAY_SELECTED");
+            Log.d("PaymentNetworkProvider", "extractGiftCardDetailTA: Start MST Pay Requested. State changed to NPAY_SELECTED");
             return giftCardDetail2;
         }
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "extractGiftCardDetailTA: No MST Pay Requested. Clear Card State");
+        Log.d("PaymentNetworkProvider", "extractGiftCardDetailTA: No MST Pay Requested. Clear Card State");
         this.clearCardState();
         return giftCardDetail2;
     }
@@ -913,17 +904,17 @@ lbl72: // 2 sources:
      * Enabled aggressive exception aggregation
      */
     public void getInAppToken(String string, MerchantServerRequester.MerchantInfo merchantInfo, String string2, IInAppPayCallback iInAppPayCallback) {
-        com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "getInAppToken: start");
+        Log.i("PaymentNetworkProvider", "getInAppToken: start");
         try {
             byte[] arrby = this.sendIndirectPaymentRequest(merchantInfo, string2);
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "paymentPayloadJsonBytes " + new String(arrby));
+            Log.d("PaymentNetworkProvider", "paymentPayloadJsonBytes " + new String(arrby));
             iInAppPayCallback.onSuccess(string, arrby);
         }
         catch (PaymentProviderException paymentProviderException) {
             int n2 = paymentProviderException.getErrorCode();
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startInAppPay: PaymentProviderException: " + n2);
+            Log.e("PaymentNetworkProvider", "startInAppPay: PaymentProviderException: " + n2);
             if (this.checkIfStopInAppPayInvoked(iInAppPayCallback, string)) {
-                com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "Stop Pay invoked");
+                Log.d("PaymentNetworkProvider", "Stop Pay invoked");
                 return;
             }
             iInAppPayCallback.onFail(string, n2);
@@ -932,7 +923,7 @@ lbl72: // 2 sources:
             PaymentFrameworkApp.az().c(false);
             this.clearCardState();
         }
-        com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "getInAppToken: end");
+        Log.i("PaymentNetworkProvider", "getInAppToken: end");
     }
 
     public String getMerchantId() {
@@ -995,17 +986,17 @@ lbl72: // 2 sources:
         int n2 = 1;
         int n3 = 0;
         if (this.mProviderTokenKey == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "providerTokenKey is null. can't get secObj input");
+            Log.e("PaymentNetworkProvider", "providerTokenKey is null. can't get secObj input");
             return null;
         }
         if (bl) {
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "skipping loading auth TA");
+            Log.d("PaymentNetworkProvider", "skipping loading auth TA");
             SelectCardResult selectCardResult2 = new SelectCardResult();
             selectCardResult2.setStatus(0);
             mAuthTASelectedCard = this.mProviderTokenKey;
             return selectCardResult2;
         }
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "getSecureObjectInputForPayment: ");
+        Log.d("PaymentNetworkProvider", "getSecureObjectInputForPayment: ");
         mAuthTAController = SpayTuiTAController.createOnlyInstance(this.mContext);
         if (mAuthTAController == null) {
             return null;
@@ -1014,8 +1005,8 @@ lbl72: // 2 sources:
         AuthNonce authNonce = mAuthTAController.getCachedNonce(32, (boolean)n2);
         String string = mAuthTAController.getTAInfo().getTAId();
         if (authNonce != null && string != null && (arrby = authNonce.getNonce()) != null && arrby.length > 0) {
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "nonce: " + Arrays.toString((byte[])arrby));
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "taid: " + string);
+            Log.d("PaymentNetworkProvider", "nonce: " + Arrays.toString((byte[])arrby));
+            Log.d("PaymentNetworkProvider", "taid: " + string);
             if (!authNonce.isFromCache()) {
                 n2 = 0;
             }
@@ -1030,7 +1021,7 @@ lbl72: // 2 sources:
             selectCardResult = null;
         }
         if (n3 == 0) return selectCardResult;
-        com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "Error occurred unloading auth TA");
+        Log.e("PaymentNetworkProvider", "Error occurred unloading auth TA");
         mAuthTAController.unloadTA();
         return selectCardResult;
     }
@@ -1081,10 +1072,10 @@ lbl72: // 2 sources:
 
     public final boolean isMstThreadStarted() {
         if (mMstPayThread != null && mMstPayThread.isAlive()) {
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "isMstThreadStarted true ");
+            Log.d("PaymentNetworkProvider", "isMstThreadStarted true ");
             return true;
         }
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "isMstThreadStarted false ");
+        Log.d("PaymentNetworkProvider", "isMstThreadStarted false ");
         return false;
     }
 
@@ -1104,7 +1095,7 @@ lbl72: // 2 sources:
 
     protected void onPaySwitch(int n2, int n3) {
         if (n2 == 2 && n3 == 1) {
-            com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "switch payment method from MST to NFC");
+            Log.i("PaymentNetworkProvider", "switch payment method from MST to NFC");
         }
     }
 
@@ -1135,12 +1126,12 @@ lbl72: // 2 sources:
             mNfcWait.open();
         }
         if (!o.r(32)) {
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "cannot continue the payment, state has changed");
+            Log.d("PaymentNetworkProvider", "cannot continue the payment, state has changed");
             return null;
         }
         if (o.p(82)) {
             if (!this.prepareNfcPayInternal()) {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "prepareNfcPay: setup error ");
+                Log.e("PaymentNetworkProvider", "prepareNfcPay: setup error ");
                 if (this.mPayCallback == null) return null;
                 {
                     this.mPayCallback.a(null, -11, this.mAuthType);
@@ -1157,17 +1148,17 @@ lbl72: // 2 sources:
             }
             PaymentNetworkProvider.providerInterruptMstPayIfPossible();
             if (bl) {
-                com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "onPaySwitch (MST -> NFC): start: " + System.currentTimeMillis());
+                Log.i("PaymentNetworkProvider", "onPaySwitch (MST -> NFC): start: " + System.currentTimeMillis());
                 this.onPaySwitch(2, 1);
                 if (this.mPayCallback != null) {
                     this.mPayCallback.a(null, 2, 1, this.mAuthType);
                 }
-                com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "onPaySwitch end= " + System.currentTimeMillis());
+                Log.d("PaymentNetworkProvider", "onPaySwitch end= " + System.currentTimeMillis());
             }
         }
-        com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "handleApdu SDK start: currentTime" + System.currentTimeMillis());
+        Log.i("PaymentNetworkProvider", "handleApdu SDK start: currentTime" + System.currentTimeMillis());
         byte[] arrby2 = this.handleApdu(arrby, bundle);
-        com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "handleApdu SDK end:  currentTime" + System.currentTimeMillis());
+        Log.i("PaymentNetworkProvider", "handleApdu SDK end:  currentTime" + System.currentTimeMillis());
         return arrby2;
     }
 
@@ -1178,12 +1169,12 @@ lbl72: // 2 sources:
     }
 
     public final e processIdvOptionsDataTA(IdvMethod idvMethod) {
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "processIdvOptionsDataTA");
+        Log.d("PaymentNetworkProvider", "processIdvOptionsDataTA");
         return this.processIdvOptionsData(idvMethod);
     }
 
     public final Bundle processTransacionComplete(int n2) {
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "processTransacionComplete: stop nfc flag " + n2);
+        Log.d("PaymentNetworkProvider", "processTransacionComplete: stop nfc flag " + n2);
         return this.stopNfcPayInternal(n2);
     }
 
@@ -1231,14 +1222,14 @@ lbl72: // 2 sources:
             boolean bl = PaymentFrameworkApp.az().aK();
             if (bl) {
                 try {
-                    com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "Paymentmode is ON: putting replenish thread to sleep");
+                    Log.i("PaymentNetworkProvider", "Paymentmode is ON: putting replenish thread to sleep");
                     mPaymentModeObj.wait();
                 }
                 catch (InterruptedException interruptedException) {
-                    com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "switch obj wait interrupt exception");
-                    com.samsung.android.spayfw.b.c.c("PaymentNetworkProvider", interruptedException.getMessage(), interruptedException);
+                    Log.d("PaymentNetworkProvider", "switch obj wait interrupt exception");
+                    Log.c("PaymentNetworkProvider", interruptedException.getMessage(), interruptedException);
                 }
-                com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "Paymentmode is OFF: replenish thread to awake from sleep");
+                Log.i("PaymentNetworkProvider", "Paymentmode is OFF: replenish thread to awake from sleep");
             }
         }
         try {
@@ -1257,35 +1248,35 @@ lbl72: // 2 sources:
      * Enabled aggressive exception aggregation
      */
     public final int retryPay(PayConfig payConfig) {
-        com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "retryPay:");
+        Log.i("PaymentNetworkProvider", "retryPay:");
         if (this.mPayCallback == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "retryPay : invalid input");
+            Log.e("PaymentNetworkProvider", "retryPay : invalid input");
             return -44;
         }
         if (!o.p(2)) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", " retryPay: already pay in progress.can't start one more retryPay");
+            Log.e("PaymentNetworkProvider", " retryPay: already pay in progress.can't start one more retryPay");
             this.mPayCallback.a(null, -4, this.mAuthType);
             return -4;
         }
         if (mAuthTAController == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "retryPay : auth TA controller instance is null ");
+            Log.e("PaymentNetworkProvider", "retryPay : auth TA controller instance is null ");
             this.mPayCallback.a(null, -36, this.mAuthType);
             return -36;
         }
         mPayTASelectedCard = mAuthTASelectedCard;
         mPayConfig = payConfig;
         if (mPayTASelectedCard == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "retryPay : selectCard is not called ");
+            Log.e("PaymentNetworkProvider", "retryPay : selectCard is not called ");
             this.mPayCallback.a(null, -36, this.mAuthType);
             return -36;
         }
         if (!o.q(16)) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "retryPay : cannot go to pay ilde");
+            Log.e("PaymentNetworkProvider", "retryPay : cannot go to pay ilde");
             this.mPayCallback.a(null, -4, this.mAuthType);
             return -4;
         }
         if (payConfig != null && payConfig.getPayType() == 1) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "retryPay : payType should not be NFC");
+            Log.e("PaymentNetworkProvider", "retryPay : payType should not be NFC");
             this.mPayCallback.a(null, -4, this.mAuthType);
             return -4;
         }
@@ -1293,7 +1284,7 @@ lbl72: // 2 sources:
         if (payConfig != null && payConfig.getPayType() == 2) {
             this.mMstSequenceId = com.samsung.android.spayfw.core.h.f("retry1", this.mCardBrand);
             if (mMstPayThread != null && mMstPayThread.isAlive()) {
-                com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "wait for MST pay thread");
+                Log.i("PaymentNetworkProvider", "wait for MST pay thread");
                 try {
                     mMstPayThread.join();
                 }
@@ -1304,7 +1295,7 @@ lbl72: // 2 sources:
             mRetryMode = true;
             mMstPayThread = new Thread((Runnable)new a());
             mMstPayThread.start();
-            com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "started MST pay thread");
+            Log.i("PaymentNetworkProvider", "started MST pay thread");
         }
         return 0;
     }
@@ -1353,7 +1344,7 @@ lbl72: // 2 sources:
             return;
         }
         catch (Exception exception) {
-            com.samsung.android.spayfw.b.c.c("PaymentNetworkProvider", exception.getMessage(), exception);
+            Log.c("PaymentNetworkProvider", exception.getMessage(), exception);
             return;
         }
     }
@@ -1367,18 +1358,18 @@ lbl72: // 2 sources:
         Object object;
         boolean bl = false;
         if (!o.p(8)) {
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "nfc is done, no need to transit mst again");
+            Log.d("PaymentNetworkProvider", "nfc is done, no need to transit mst again");
         } else {
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "contine to transit mst but stopping nfc");
+            Log.d("PaymentNetworkProvider", "contine to transit mst but stopping nfc");
             if (this.mPayCallback != null) {
-                com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "onPaySwitch (NFC -> MST): start: " + System.currentTimeMillis());
+                Log.i("PaymentNetworkProvider", "onPaySwitch (NFC -> MST): start: " + System.currentTimeMillis());
                 this.mPayCallback.a(null, 1, 2, this.mAuthType);
             }
             if (!PaymentNetworkProvider.makeSysCallInternal(4)) {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "Error: cannot reset mst transimission");
+                Log.e("PaymentNetworkProvider", "Error: cannot reset mst transimission");
             }
             if (!this.mTAController.makeSystemCall(1)) {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "Error: Failed to turn MST Driver on");
+                Log.e("PaymentNetworkProvider", "Error: Failed to turn MST Driver on");
             }
             bl = true;
         }
@@ -1424,9 +1415,9 @@ lbl72: // 2 sources:
      */
     public final void startPay(PayConfig payConfig, SecuredObject securedObject, com.samsung.android.spayfw.payprovider.b b2, boolean bl) {
         int n2 = 1;
-        com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "startPay:");
+        Log.i("PaymentNetworkProvider", "startPay:");
         if (!bl && securedObject == null || b2 == null) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startPay:invalid input");
+            Log.e("PaymentNetworkProvider", "startPay:invalid input");
             if (b2 != null) {
                 b2.a(null, -36, this.mAuthType);
             }
@@ -1434,49 +1425,49 @@ lbl72: // 2 sources:
         }
         this.mPayCallback = b2;
         if (mRetryMode) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startPay: In Retry Mode. Do not call Start Pay, call Retry Pay or Stop Pay.");
+            Log.e("PaymentNetworkProvider", "startPay: In Retry Mode. Do not call Start Pay, call Retry Pay or Stop Pay.");
             this.mPayCallback.a(null, -4, this.mAuthType);
             return;
         }
         if (!o.p(2)) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startPay: already pay in progress.can't start one more startPay");
+            Log.e("PaymentNetworkProvider", "startPay: already pay in progress.can't start one more startPay");
             this.mPayCallback.a(null, -4, this.mAuthType);
             return;
         }
         mPayConfig = payConfig;
         if (bl) {
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "startPay: auth alive: skip authentication process");
+            Log.d("PaymentNetworkProvider", "startPay: auth alive: skip authentication process");
             if (mPayTASelectedCard == null) {
                 mPayTASelectedCard = mAuthTASelectedCard;
                 if (mPayTASelectedCard == null) {
-                    com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startPay:selectCard is not called ");
+                    Log.e("PaymentNetworkProvider", "startPay:selectCard is not called ");
                     this.mPayCallback.a(null, -36, this.mAuthType);
                     return;
                 }
                 SelectCardResult selectCardResult = this.selectCardForPayment();
                 if (selectCardResult == null || selectCardResult.getNonce() == null || selectCardResult.getTaid() == null) {
-                    com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startPay:selectCard result from pay provider is not valid ");
+                    Log.e("PaymentNetworkProvider", "startPay:selectCard result from pay provider is not valid ");
                     this.mPayCallback.a(null, -36, this.mAuthType);
                     return;
                 }
             }
         } else {
             byte[] arrby;
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "startPay: perform authentication");
+            Log.d("PaymentNetworkProvider", "startPay: perform authentication");
             mPayTASelectedCard = mAuthTASelectedCard;
             if (mPayTASelectedCard == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startPay:selectCard is not called ");
+                Log.e("PaymentNetworkProvider", "startPay:selectCard is not called ");
                 this.mPayCallback.a(null, -36, this.mAuthType);
                 return;
             }
             if (mAuthTAController == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startPay:auth TA controller instance is null ");
+                Log.e("PaymentNetworkProvider", "startPay:auth TA controller instance is null ");
                 this.mPayCallback.a(null, -36, this.mAuthType);
                 return;
             }
             SelectCardResult selectCardResult = this.selectCardForPayment();
             if (selectCardResult == null || selectCardResult.getNonce() == null || selectCardResult.getTaid() == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startPay:selectCard result from pay provider is not valid ");
+                Log.e("PaymentNetworkProvider", "startPay:selectCard result from pay provider is not valid ");
                 this.mPayCallback.a(null, -36, this.mAuthType);
                 return;
             }
@@ -1484,30 +1475,30 @@ lbl72: // 2 sources:
             if (authResult != null) {
                 arrby = authResult.getSecObjData();
                 this.mAuthType = authResult.getAuthType();
-                com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "startPay:auth type =  " + this.mAuthType);
+                Log.i("PaymentNetworkProvider", "startPay:auth type =  " + this.mAuthType);
             } else {
                 arrby = null;
             }
             if (arrby == null) {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startPay:authentication failed from auth TA ");
+                Log.e("PaymentNetworkProvider", "startPay:authentication failed from auth TA ");
                 this.mPayCallback.a(null, -35, this.mAuthType);
                 return;
             }
             SecuredObject securedObject2 = new SecuredObject();
             securedObject2.setSecureObjectData(arrby);
             if (!this.authenticateTransaction(securedObject2)) {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startPay:authentication failed ");
+                Log.e("PaymentNetworkProvider", "startPay:authentication failed ");
                 this.mPayCallback.a(null, -35, this.mAuthType);
                 return;
             }
         }
         if (!o.q(16)) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "startPay: cannot go to pay ilde");
+            Log.e("PaymentNetworkProvider", "startPay: cannot go to pay ilde");
             this.mPayCallback.a(null, -4, this.mAuthType);
             return;
         }
         int n3 = payConfig != null && payConfig.getPayType() == n2 ? n2 : 0;
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "isNFCPaymentOnly= " + (boolean)n3);
+        Log.d("PaymentNetworkProvider", "isNFCPaymentOnly= " + (boolean)n3);
         this.setPayAuthenticationMode(this.mAuthType);
         if (this.getAuthType().equalsIgnoreCase("None")) {
             n2 = 0;
@@ -1517,16 +1508,16 @@ lbl72: // 2 sources:
             this.mMstSequenceId = com.samsung.android.spayfw.core.h.f("default", this.mCardBrand);
             mMstPayThread = new Thread((Runnable)new a());
             mMstPayThread.start();
-            com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "started MST pay thread");
+            Log.i("PaymentNetworkProvider", "started MST pay thread");
             return;
         }
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "Utils.isMstAvailable(mContext) " + h.ao(this.mContext));
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "isPayAllowedForPresentationMode(PaymentFramework.CARD_PRESENT_MODE_MST) " + this.isPayAllowedForPresentationMode(2));
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "MST not supported.");
+        Log.d("PaymentNetworkProvider", "Utils.isMstAvailable(mContext) " + h.ao(this.mContext));
+        Log.d("PaymentNetworkProvider", "isPayAllowedForPresentationMode(PaymentFramework.CARD_PRESENT_MODE_MST) " + this.isPayAllowedForPresentationMode(2));
+        Log.d("PaymentNetworkProvider", "MST not supported.");
         new Thread(){
 
             public void run() {
-                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "Wait for NFC.");
+                Log.d(PaymentNetworkProvider.LOG_TAG, "Wait for NFC.");
                 mNfcWait = new ConditionVariable();
                 if (!mNfcWait.block(30000L) && PaymentNetworkProvider.this.mPayCallback != null) {
                     PaymentNetworkProvider.this.mPayCallback.a(null, -46, -46, PaymentNetworkProvider.this.mAuthType, null);
@@ -1544,19 +1535,19 @@ lbl72: // 2 sources:
      * Lifted jumps to return sites
      */
     public final void stopInAppPay(String var1_1, ICommonCallback var2_2) {
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "stopInAppPay");
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "State : " + o.getState());
+        Log.d("PaymentNetworkProvider", "stopInAppPay");
+        Log.d("PaymentNetworkProvider", "State : " + o.getState());
         if (var2_2 == null) ** GOTO lbl7
         try {
             this.mStopPayCallback = var2_2;
             this.mStopPaySelectedCard = var1_1;
 lbl7: // 2 sources:
             if (o.q(4096) != false) return;
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "state change prohibited");
+            Log.e("PaymentNetworkProvider", "state change prohibited");
             return;
         }
         catch (Exception var3_3) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "Exception in stop in-app pay");
+            Log.e("PaymentNetworkProvider", "Exception in stop in-app pay");
             return;
         }
     }
@@ -1566,50 +1557,50 @@ lbl7: // 2 sources:
     protected abstract Bundle stopNfcPay(int var1);
 
     public final void stopPay() {
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "stopPay");
+        Log.d("PaymentNetworkProvider", "stopPay");
         this.forceQuit = false;
         SPayHCEReceiver.aS();
         if (o.p(72)) {
             if (!o.q(24320)) {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "state cannot be changed from MST");
+                Log.e("PaymentNetworkProvider", "state cannot be changed from MST");
             }
-            com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "stopped MST pay thread");
+            Log.i("PaymentNetworkProvider", "stopped MST pay thread");
             if (this.mPayCallback != null) {
                 this.mPayCallback.a(null, -7, this.mAuthType);
                 this.mPayCallback = null;
                 return;
             }
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "stopPay callback is null");
+            Log.d("PaymentNetworkProvider", "stopPay callback is null");
             return;
         }
         if (o.p(32)) {
             if (!o.q(24320)) {
-                com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "state cannot be changed from NFC");
+                Log.e("PaymentNetworkProvider", "state cannot be changed from NFC");
             }
-            com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "stopped NFC pay ");
+            Log.i("PaymentNetworkProvider", "stopped NFC pay ");
             return;
         }
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "State : " + o.getState());
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "Retry Mode : " + mRetryMode);
+        Log.d("PaymentNetworkProvider", "State : " + o.getState());
+        Log.d("PaymentNetworkProvider", "Retry Mode : " + mRetryMode);
         if (mRetryMode) {
-            com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "stopMstPay in Retry Mode");
+            Log.d("PaymentNetworkProvider", "stopMstPay in Retry Mode");
             this.stopMstPayLocked(true);
         }
         if (!o.q(24320)) {
-            com.samsung.android.spayfw.b.c.e("PaymentNetworkProvider", "state cannot be changed from IDLE");
+            Log.e("PaymentNetworkProvider", "state cannot be changed from IDLE");
         }
         if (this.mPayCallback != null) {
             this.mPayCallback.a(null, -7, this.mAuthType);
             this.mPayCallback = null;
             return;
         }
-        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "stopPay callback is null");
+        Log.d("PaymentNetworkProvider", "stopPay callback is null");
     }
 
     protected abstract void unloadTA();
 
     public void updateJwtToken() {
-        com.samsung.android.spayfw.b.c.i("PaymentNetworkProvider", "updateJwtToken: start");
+        Log.i("PaymentNetworkProvider", "updateJwtToken: start");
         Intent intent = new Intent("com.samsung.android.spayfw.action.notification");
         intent.putExtra("notiType", "updateJwtToken");
         PaymentFrameworkApp.a(intent);
@@ -1660,12 +1651,12 @@ lbl7: // 2 sources:
         if (var2_2 == null) ** GOTO lbl11
         try {
             if (var2_2.getCode() != null) {
-                com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "Token Status = " + var2_2.getCode());
+                Log.d("PaymentNetworkProvider", "Token Status = " + var2_2.getCode());
                 if (var2_2.getCode().equals((Object)"DISPOSED") && this.mProviderTokenKey != null && PaymentNetworkProvider.mAuthTASelectedCard != null) {
-                    com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "providerTokenKey = " + this.mProviderTokenKey.cn());
-                    com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "mAuthTASelectedCard = " + PaymentNetworkProvider.mAuthTASelectedCard.cn());
+                    Log.d("PaymentNetworkProvider", "providerTokenKey = " + this.mProviderTokenKey.cn());
+                    Log.d("PaymentNetworkProvider", "mAuthTASelectedCard = " + PaymentNetworkProvider.mAuthTASelectedCard.cn());
                     if (Objects.equals((Object)this.mProviderTokenKey.cn(), (Object)PaymentNetworkProvider.mAuthTASelectedCard.cn())) {
-                        com.samsung.android.spayfw.b.c.d("PaymentNetworkProvider", "Clearing Secure Object Input for Payment");
+                        Log.d("PaymentNetworkProvider", "Clearing Secure Object Input for Payment");
                         this.clearSecureObjectInputForPayment();
                     }
                 }
@@ -1730,11 +1721,11 @@ lbl11: // 8 sources:
                         mSwitchObj.wait();
                     }
                     catch (InterruptedException interruptedException) {
-                        com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "switch obj wait interrupt exception");
-                        com.samsung.android.spayfw.b.c.c(PaymentNetworkProvider.LOG_TAG, interruptedException.getMessage(), interruptedException);
+                        Log.d(PaymentNetworkProvider.LOG_TAG, "switch obj wait interrupt exception");
+                        Log.c(PaymentNetworkProvider.LOG_TAG, interruptedException.getMessage(), interruptedException);
                     }
                     if (o.p(8)) {
-                        com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "continue to transimit MST");
+                        Log.d(PaymentNetworkProvider.LOG_TAG, "continue to transimit MST");
                         return true;
                     }
                 }
@@ -1745,7 +1736,7 @@ lbl11: // 8 sources:
         private boolean cf() {
             if (SPayHCEReceiver.aR()) {
                 SPayHCEReceiver.aS();
-                com.samsung.android.spayfw.b.c.w(PaymentNetworkProvider.LOG_TAG, "RF is detected");
+                Log.w(PaymentNetworkProvider.LOG_TAG, "RF is detected");
             }
             return false;
         }
@@ -1763,16 +1754,16 @@ lbl11: // 8 sources:
                 block45 : {
                     block44 : {
                         if (this.cf()) {
-                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits, not in payment state");
+                            Log.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits, not in payment state");
                             return;
                         }
                         if (!PaymentNetworkProvider.this.prepareMstPayInternal()) {
-                            com.samsung.android.spayfw.b.c.e(PaymentNetworkProvider.LOG_TAG, "startPay:prepareMstPay() failed ");
+                            Log.e(PaymentNetworkProvider.LOG_TAG, "startPay:prepareMstPay() failed ");
                             if (PaymentNetworkProvider.this.mPayCallback != null) {
                                 PaymentNetworkProvider.this.mPayCallback.a(null, this.oP, PaymentNetworkProvider.this.mAuthType);
                                 return;
                             }
-                            com.samsung.android.spayfw.b.c.e(PaymentNetworkProvider.LOG_TAG, "pay callback is null");
+                            Log.e(PaymentNetworkProvider.LOG_TAG, "pay callback is null");
                             return;
                         }
                         int n2 = 1500;
@@ -1780,21 +1771,21 @@ lbl11: // 8 sources:
                             if (mPayConfig != null) {
                                 n2 = mPayConfig.getPayIdleTime();
                             } else {
-                                com.samsung.android.spayfw.b.c.e(PaymentNetworkProvider.LOG_TAG, "pay config is null");
+                                Log.e(PaymentNetworkProvider.LOG_TAG, "pay config is null");
                             }
                             mShouldInterrupt = true;
-                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "mst idle time=" + n2);
+                            Log.d(PaymentNetworkProvider.LOG_TAG, "mst idle time=" + n2);
                             Thread.sleep((long)n2);
                             mShouldInterrupt = false;
                         }
                         catch (InterruptedException interruptedException) {
                             mShouldInterrupt = false;
-                            com.samsung.android.spayfw.b.c.i(PaymentNetworkProvider.LOG_TAG, "interrupt MST because nfc is detected");
+                            Log.i(PaymentNetworkProvider.LOG_TAG, "interrupt MST because nfc is detected");
                         }
                         if (!o.q(64) && !o.p(72)) {
-                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "cannot start mst");
+                            Log.d(PaymentNetworkProvider.LOG_TAG, "cannot start mst");
                             if (!this.ce()) {
-                                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits");
+                                Log.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits");
                                 return;
                             }
                         }
@@ -1806,35 +1797,35 @@ lbl11: // 8 sources:
                         if (mRetryMode) break block45;
                         PayConfig payConfig = com.samsung.android.spayfw.core.f.j(PaymentNetworkProvider.this.mContext).ak();
                         if (payConfig != null && payConfig.getMstPayConfig() != null) {
-                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "MstConfigurationManager provides new pay configuration in Main Mode");
+                            Log.d(PaymentNetworkProvider.LOG_TAG, "MstConfigurationManager provides new pay configuration in Main Mode");
                             mstPayConfig2 = payConfig.getMstPayConfig();
                             PaymentNetworkProvider.this.mMstSequenceId = com.samsung.android.spayfw.core.f.j(PaymentNetworkProvider.this.mContext).am();
-                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "Mst Sequence Id from RSC = " + PaymentNetworkProvider.this.mMstSequenceId);
+                            Log.d(PaymentNetworkProvider.LOG_TAG, "Mst Sequence Id from RSC = " + PaymentNetworkProvider.this.mMstSequenceId);
                         } else {
                             PayConfig payConfig2 = PaymentNetworkProvider.this.getPayConfig();
                             if (payConfig2 != null && payConfig2.getMstPayConfig() != null && payConfig2.getMstPayConfig().getMstPayConfigEntry() != null && payConfig2.getMstPayConfig().getMstPayConfigEntry().size() > 0) {
-                                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "SDK provides new pay configuration in Main Mode");
+                                Log.d(PaymentNetworkProvider.LOG_TAG, "SDK provides new pay configuration in Main Mode");
                                 mstPayConfig2 = payConfig2.getMstPayConfig();
                             }
                         }
                         mstPayConfig = mstPayConfig2;
                         break block46;
                     }
-                    com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "Gift Card - Use Config from App");
+                    Log.d(PaymentNetworkProvider.LOG_TAG, "Gift Card - Use Config from App");
                     mstPayConfig = mstPayConfig2;
                     break block46;
                 }
                 PayConfig payConfig = com.samsung.android.spayfw.core.f.j(PaymentNetworkProvider.this.mContext).al();
                 if (payConfig != null && payConfig.getMstPayConfig() != null) {
-                    com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "MstConfigurationManager provides new pay configuration in Retry Mode");
+                    Log.d(PaymentNetworkProvider.LOG_TAG, "MstConfigurationManager provides new pay configuration in Retry Mode");
                     MstPayConfig mstPayConfig3 = payConfig.getMstPayConfig();
                     PaymentNetworkProvider.this.mMstSequenceId = com.samsung.android.spayfw.core.f.j(PaymentNetworkProvider.this.mContext).an();
-                    com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "Mst Sequence Id from RSC= " + PaymentNetworkProvider.this.mMstSequenceId);
+                    Log.d(PaymentNetworkProvider.LOG_TAG, "Mst Sequence Id from RSC= " + PaymentNetworkProvider.this.mMstSequenceId);
                     mstPayConfig = mstPayConfig3;
                 } else {
                     PayConfig payConfig3 = PaymentNetworkProvider.this.getPayConfig();
                     if (payConfig3 != null && payConfig3.getMstPayConfig() != null && payConfig3.getMstPayConfig().getMstPayConfigEntry() != null && payConfig3.getMstPayConfig().getMstPayConfigEntry().size() > 0) {
-                        com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "SDK provides new pay configuration in Retry Mode");
+                        Log.d(PaymentNetworkProvider.LOG_TAG, "SDK provides new pay configuration in Retry Mode");
                         mstPayConfig = payConfig3.getMstPayConfig();
                     } else {
                         mstPayConfig = mstPayConfig2;
@@ -1842,33 +1833,33 @@ lbl11: // 8 sources:
                 }
             }
             if (mstPayConfig.getMstPayConfigEntry() == null || mstPayConfig.getMstPayConfigEntry().size() <= 0) {
-                com.samsung.android.spayfw.b.c.e(PaymentNetworkProvider.LOG_TAG, "startPay:configuration is missing ");
+                Log.e(PaymentNetworkProvider.LOG_TAG, "startPay:configuration is missing ");
                 if (PaymentNetworkProvider.this.mPayCallback != null) {
                     PaymentNetworkProvider.this.mPayCallback.a(null, -36, PaymentNetworkProvider.this.mAuthType);
                     return;
                 }
-                com.samsung.android.spayfw.b.c.e(PaymentNetworkProvider.LOG_TAG, "pay callback is null");
+                Log.e(PaymentNetworkProvider.LOG_TAG, "pay callback is null");
                 return;
             }
             if (!o.p(72)) {
-                com.samsung.android.spayfw.b.c.i(PaymentNetworkProvider.LOG_TAG, " Mst stopped");
+                Log.i(PaymentNetworkProvider.LOG_TAG, " Mst stopped");
                 if (!this.ce()) {
-                    com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits before preparing MST");
+                    Log.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits before preparing MST");
                     return;
                 }
             }
             this.oQ = mstPayConfig.getMstPayConfigEntry().size();
             if (this.cf()) {
-                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits, rf is detected");
+                Log.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits, rf is detected");
                 return;
             }
             if (!PaymentNetworkProvider.this.mTAController.makeSystemCall(1)) {
-                com.samsung.android.spayfw.b.c.e(PaymentNetworkProvider.LOG_TAG, "Error: Failed to turn MST Driver on");
+                Log.e(PaymentNetworkProvider.LOG_TAG, "Error: Failed to turn MST Driver on");
                 if (PaymentNetworkProvider.this.mPayCallback != null) {
                     PaymentNetworkProvider.this.mPayCallback.a(null, this.oP, PaymentNetworkProvider.this.mAuthType);
                     return;
                 }
-                com.samsung.android.spayfw.b.c.e(PaymentNetworkProvider.LOG_TAG, "pay callback is null");
+                Log.e(PaymentNetworkProvider.LOG_TAG, "pay callback is null");
                 return;
             }
             PaymentNetworkProvider.this.mTAController.moveSecOsToCore4();
@@ -1889,46 +1880,46 @@ lbl11: // 8 sources:
                                         MstPayConfigEntry mstPayConfigEntry;
                                         block48 : {
                                             block47 : {
-                                                com.samsung.android.spayfw.b.c.i(PaymentNetworkProvider.LOG_TAG, "MstPayloop: start: " + System.currentTimeMillis());
+                                                Log.i(PaymentNetworkProvider.LOG_TAG, "MstPayloop: start: " + System.currentTimeMillis());
                                                 if (o.p(72)) break block47;
-                                                com.samsung.android.spayfw.b.c.i(PaymentNetworkProvider.LOG_TAG, " MstPayloop: end: at start of loop: " + System.currentTimeMillis());
+                                                Log.i(PaymentNetworkProvider.LOG_TAG, " MstPayloop: end: at start of loop: " + System.currentTimeMillis());
                                                 if (!this.ce()) {
-                                                    com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits after preparing MST");
+                                                    Log.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits after preparing MST");
                                                     if (PaymentNetworkProvider.this.forceQuit) return;
                                                     PaymentNetworkProvider.this.stopMstPayLocked(true);
                                                     return;
                                                 }
-                                                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "restart MST");
+                                                Log.d(PaymentNetworkProvider.LOG_TAG, "restart MST");
                                                 i2 = 0;
                                                 n3 = -1;
                                                 bl3 = bl2;
                                                 break block43;
                                             }
-                                            com.samsung.android.spayfw.b.c.i(PaymentNetworkProvider.LOG_TAG, "startPayMst: count: " + i2);
+                                            Log.i(PaymentNetworkProvider.LOG_TAG, "startPayMst: count: " + i2);
                                             mstPayConfigEntry = (MstPayConfigEntry)mstPayConfig.getMstPayConfigEntry().get(n3);
-                                            com.samsung.android.spayfw.b.c.i(PaymentNetworkProvider.LOG_TAG, "startPayMst: config: " + mstPayConfigEntry.toString());
+                                            Log.i(PaymentNetworkProvider.LOG_TAG, "startPayMst: config: " + mstPayConfigEntry.toString());
                                             arrby = com.samsung.android.spayfw.core.g.a(mstPayConfigEntry);
                                             if (o.p(72)) break block48;
-                                            com.samsung.android.spayfw.b.c.i(PaymentNetworkProvider.LOG_TAG, " MstPayloop end: before transmitMst: " + System.currentTimeMillis());
+                                            Log.i(PaymentNetworkProvider.LOG_TAG, " MstPayloop end: before transmitMst: " + System.currentTimeMillis());
                                             if (!this.ce()) {
-                                                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits before transimiting MST");
+                                                Log.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits before transimiting MST");
                                                 if (PaymentNetworkProvider.this.forceQuit) return;
                                                 PaymentNetworkProvider.this.stopMstPayLocked(true);
                                                 return;
                                             }
-                                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "restart MST before transimiting MST");
+                                            Log.d(PaymentNetworkProvider.LOG_TAG, "restart MST before transimiting MST");
                                             n3 = -1;
                                             bl3 = bl2;
                                             i2 = 0;
                                             break block43;
                                         }
-                                        com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "transmitMstPay: start: " + System.currentTimeMillis());
+                                        Log.d(PaymentNetworkProvider.LOG_TAG, "transmitMstPay: start: " + System.currentTimeMillis());
                                         bl5 = PaymentNetworkProvider.this.startMstPay(mstPayConfigEntry.getBaudRate(), arrby);
-                                        com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "transmitMstPay: end: " + System.currentTimeMillis());
+                                        Log.d(PaymentNetworkProvider.LOG_TAG, "transmitMstPay: end: " + System.currentTimeMillis());
                                         if (o.p(72)) break block49;
-                                        com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, " MstPayloop: end: after transmitMst: " + System.currentTimeMillis());
+                                        Log.d(PaymentNetworkProvider.LOG_TAG, " MstPayloop: end: after transmitMst: " + System.currentTimeMillis());
                                         if (!this.ce()) {
-                                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits after transimiting MST");
+                                            Log.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits after transimiting MST");
                                             if (PaymentNetworkProvider.this.forceQuit) return;
                                             PaymentNetworkProvider.this.stopMstPayLocked(true);
                                             return;
@@ -1939,51 +1930,51 @@ lbl11: // 8 sources:
                                         break block43;
                                     }
                                     if (!bl5) break block50;
-                                    com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "startMstPay: success: count: " + i2);
+                                    Log.d(PaymentNetworkProvider.LOG_TAG, "startMstPay: success: count: " + i2);
                                     if (PaymentNetworkProvider.this.mPayCallback != null) {
-                                        com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "onPay: start: " + System.currentTimeMillis());
+                                        Log.d(PaymentNetworkProvider.LOG_TAG, "onPay: start: " + System.currentTimeMillis());
                                         if (i2 == this.oQ && !mRetryMode && PaymentNetworkProvider.this.allowPaymentRetry()) {
-                                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "Send Retry Callback");
+                                            Log.d(PaymentNetworkProvider.LOG_TAG, "Send Retry Callback");
                                             PaymentNetworkProvider.this.mPayCallback.g(null);
                                             bl4 = true;
                                         } else {
                                             if (i2 == this.oQ) {
-                                                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "Send Finish Callback");
+                                                Log.d(PaymentNetworkProvider.LOG_TAG, "Send Finish Callback");
                                                 bl4 = false;
                                             } else {
                                                 bl4 = bl;
                                             }
                                             PaymentNetworkProvider.this.mPayCallback.a(null, i2, this.oQ, PaymentNetworkProvider.this.mAuthType, PaymentNetworkProvider.this.mMstSequenceId);
                                         }
-                                        com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "onPay: end: " + System.currentTimeMillis());
+                                        Log.d(PaymentNetworkProvider.LOG_TAG, "onPay: end: " + System.currentTimeMillis());
                                     } else {
-                                        com.samsung.android.spayfw.b.c.e(PaymentNetworkProvider.LOG_TAG, "pay callback is null");
+                                        Log.e(PaymentNetworkProvider.LOG_TAG, "pay callback is null");
                                         bl4 = bl;
                                     }
                                     if (i2 >= this.oQ) break block51;
                                     if (o.p(72)) break block52;
                                     if (!this.ce()) {
-                                        com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits when sleeping");
+                                        Log.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits when sleeping");
                                         if (PaymentNetworkProvider.this.forceQuit) return;
                                         PaymentNetworkProvider.this.stopMstPayLocked(true);
                                         return;
                                     }
                                     break block53;
                                 }
-                                com.samsung.android.spayfw.b.c.e(PaymentNetworkProvider.LOG_TAG, "startPayMst: transmission error ");
-                                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "stopMstPay start:  currentTime " + System.currentTimeMillis());
+                                Log.e(PaymentNetworkProvider.LOG_TAG, "startPayMst: transmission error ");
+                                Log.d(PaymentNetworkProvider.LOG_TAG, "stopMstPay start:  currentTime " + System.currentTimeMillis());
                                 if (!PaymentNetworkProvider.this.forceQuit) {
                                     PaymentNetworkProvider.this.stopMstPayLocked(bl5);
                                 }
-                                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "stopMstPay end:  currentTime " + System.currentTimeMillis());
+                                Log.d(PaymentNetworkProvider.LOG_TAG, "stopMstPay end:  currentTime " + System.currentTimeMillis());
                                 if (PaymentNetworkProvider.this.mPayCallback != null) {
                                     PaymentNetworkProvider.this.mPayCallback.a(null, -37, PaymentNetworkProvider.this.mAuthType);
                                     return;
                                 }
-                                com.samsung.android.spayfw.b.c.e(PaymentNetworkProvider.LOG_TAG, "pay callback is null");
+                                Log.e(PaymentNetworkProvider.LOG_TAG, "pay callback is null");
                                 return;
                             }
-                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "restart MST when sleeping");
+                            Log.d(PaymentNetworkProvider.LOG_TAG, "restart MST when sleeping");
                             n3 = -1;
                             bl = bl4;
                             bl3 = bl2;
@@ -1991,8 +1982,8 @@ lbl11: // 8 sources:
                             break block43;
                         }
                         try {
-                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "next transmission will happen after :" + ((MstPayConfigEntry)mstPayConfig.getMstPayConfigEntry().get(n3)).getDelayBetweenRepeat() + "Ms");
-                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "current time before sleep in ms: " + System.currentTimeMillis());
+                            Log.d(PaymentNetworkProvider.LOG_TAG, "next transmission will happen after :" + ((MstPayConfigEntry)mstPayConfig.getMstPayConfigEntry().get(n3)).getDelayBetweenRepeat() + "Ms");
+                            Log.d(PaymentNetworkProvider.LOG_TAG, "current time before sleep in ms: " + System.currentTimeMillis());
                             Thread.sleep((long)((MstPayConfigEntry)mstPayConfig.getMstPayConfigEntry().get(n3)).getDelayBetweenRepeat());
                             if (bl2 && o.p(8)) {
                                 n3 = -1;
@@ -2001,31 +1992,31 @@ lbl11: // 8 sources:
                                 bl3 = false;
                                 break block43;
                             }
-                            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "current time after wake up in ms: " + System.currentTimeMillis() + "\n next transmission started after delay:");
+                            Log.d(PaymentNetworkProvider.LOG_TAG, "current time after wake up in ms: " + System.currentTimeMillis() + "\n next transmission started after delay:");
                         }
                         catch (InterruptedException interruptedException) {
-                            com.samsung.android.spayfw.b.c.w(PaymentNetworkProvider.LOG_TAG, "premature wake up from sleep: currentTime " + System.currentTimeMillis());
+                            Log.w(PaymentNetworkProvider.LOG_TAG, "premature wake up from sleep: currentTime " + System.currentTimeMillis());
                         }
                     }
-                    com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "MstPayloop: end: " + System.currentTimeMillis());
+                    Log.d(PaymentNetworkProvider.LOG_TAG, "MstPayloop: end: " + System.currentTimeMillis());
                     bl = bl4;
                     bl3 = bl2;
                 }
                 bl2 = bl3;
             }
-            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "stopMstPay start:  currentTime " + System.currentTimeMillis());
+            Log.d(PaymentNetworkProvider.LOG_TAG, "stopMstPay start:  currentTime " + System.currentTimeMillis());
             if (bl) {
-                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "Enable Retry Mode");
+                Log.d(PaymentNetworkProvider.LOG_TAG, "Enable Retry Mode");
                 mRetryMode = true;
-                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "Set Pay Type to Default - MST");
+                Log.d(PaymentNetworkProvider.LOG_TAG, "Set Pay Type to Default - MST");
             } else {
-                com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "Disable Retry Mode");
+                Log.d(PaymentNetworkProvider.LOG_TAG, "Disable Retry Mode");
                 mRetryMode = false;
                 if (!PaymentNetworkProvider.this.forceQuit) {
                     PaymentNetworkProvider.this.stopMstPayLocked(true);
                 }
             }
-            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "stopMstPay end:  currentTime " + System.currentTimeMillis());
+            Log.d(PaymentNetworkProvider.LOG_TAG, "stopMstPay end:  currentTime " + System.currentTimeMillis());
         }
     }
 
@@ -2035,7 +2026,7 @@ lbl11: // 8 sources:
         }
 
         public void run() {
-            com.samsung.android.spayfw.b.c.d(PaymentNetworkProvider.LOG_TAG, "TimerExpired::run: unloading TA");
+            Log.d(PaymentNetworkProvider.LOG_TAG, "TimerExpired::run: unloading TA");
             PaymentNetworkProvider.this.unloadTA();
             PaymentNetworkProvider.this.mUnloadTimer.cancel();
         }

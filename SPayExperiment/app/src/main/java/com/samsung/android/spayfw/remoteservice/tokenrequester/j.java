@@ -11,14 +11,14 @@
 package com.samsung.android.spayfw.remoteservice.tokenrequester;
 
 import android.content.Intent;
+
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.PaymentFrameworkApp;
 import com.samsung.android.spayfw.core.retry.RetryRequestData;
 import com.samsung.android.spayfw.core.retry.d;
 import com.samsung.android.spayfw.remoteservice.Client;
 import com.samsung.android.spayfw.remoteservice.Request;
 import com.samsung.android.spayfw.remoteservice.c;
-import com.samsung.android.spayfw.remoteservice.models.ErrorResponseData;
-import com.samsung.android.spayfw.remoteservice.tokenrequester.m;
 import com.samsung.android.spayfw.remoteservice.tokenrequester.models.ReportData;
 
 public class j
@@ -46,7 +46,7 @@ extends m<ReportData, String, c<String>, j> {
              */
             @Override
             public void a(int n2, c<String> c2) {
-                com.samsung.android.spayfw.b.c.d("ReportRequest", "Report Sent : " + n2);
+                Log.d("ReportRequest", "Report Sent : " + n2);
                 switch (n2) {
                     default: {
                         d.a((ReportData)j.this.eT());
@@ -82,7 +82,7 @@ extends m<ReportData, String, c<String>, j> {
              */
             @Override
             public void f(int var1_1, String var2_2) {
-                com.samsung.android.spayfw.b.c.d("ReportRequest", "Report Sent : onServiceNotAvailable : " + var1_1 + "; retry-after = " + var2_2);
+                Log.d("ReportRequest", "Report Sent : onServiceNotAvailable : " + var1_1 + "; retry-after = " + var2_2);
                 if (var1_1 != 503) return;
                 var3_3 = d.b((ReportData)j.this.eT());
                 if (var3_3 == null) {
@@ -104,7 +104,7 @@ lbl16: // 1 sources:
                     return;
                 }
                 catch (NumberFormatException var5_5) {
-                    com.samsung.android.spayfw.b.c.c("ReportRequest", var5_5.getMessage(), var5_5);
+                    Log.c("ReportRequest", var5_5.getMessage(), var5_5);
                     d.b(var4_4);
                     return;
                 }
@@ -121,7 +121,7 @@ lbl16: // 1 sources:
              */
             @Override
             public void a(int n2, c<String> c2) {
-                com.samsung.android.spayfw.b.c.d("ReportRequest", "Report Sent : " + n2);
+                Log.d("ReportRequest", "Report Sent : " + n2);
                 switch (n2) {
                     default: {
                         d.a((ReportData)j.this.eT());
@@ -157,7 +157,7 @@ lbl16: // 1 sources:
              */
             @Override
             public void f(int var1_1, String var2_2) {
-                com.samsung.android.spayfw.b.c.d("ReportRequest", "Report Sent : onServiceNotAvailable : " + var1_1 + "; retry-after = " + var2_2);
+                Log.d("ReportRequest", "Report Sent : onServiceNotAvailable : " + var1_1 + "; retry-after = " + var2_2);
                 if (var1_1 != 503) return;
                 var3_3 = d.b((ReportData)j.this.eT());
                 if (var3_3 == null) {
@@ -179,7 +179,7 @@ lbl16: // 1 sources:
                     return;
                 }
                 catch (NumberFormatException var5_5) {
-                    com.samsung.android.spayfw.b.c.c("ReportRequest", var5_5.getMessage(), var5_5);
+                    Log.c("ReportRequest", var5_5.getMessage(), var5_5);
                     d.b(var4_4);
                     return;
                 }

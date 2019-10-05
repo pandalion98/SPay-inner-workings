@@ -20,11 +20,9 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.os.Message;
 import com.samsung.android.spayfw.appinterface.ICommonCallback;
-import com.samsung.android.spayfw.b.c;
-import com.samsung.android.spayfw.core.PaymentFrameworkApp;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.core.hce.SPayHCEReceiver;
 import com.samsung.android.spayfw.core.hce.SPayHCEService;
-import com.samsung.android.spayfw.core.j;
 
 public class PackageStateReceiver
 extends BroadcastReceiver {
@@ -42,11 +40,11 @@ extends BroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
         String string = this.getPackageName(intent);
-        c.i("PackageStateReceiver", "PackageName : " + string);
-        c.i("PackageStateReceiver", "Data Removed : " + intent.getBooleanExtra("android.intent.extra.DATA_REMOVED", false));
+        Log.i("PackageStateReceiver", "PackageName : " + string);
+        Log.i("PackageStateReceiver", "Data Removed : " + intent.getBooleanExtra("android.intent.extra.DATA_REMOVED", false));
         if (string != null && "com.samsung.android.spay".equals((Object)string) && intent.getBooleanExtra("android.intent.extra.DATA_REMOVED", false)) {
-            c.i("PackageStateReceiver", "Initiate Reset");
-            c.i("PackageStateReceiver", "PF detects wallet app uninstall and triggers reset notification");
+            Log.i("PackageStateReceiver", "Initiate Reset");
+            Log.i("PackageStateReceiver", "PF detects wallet app uninstall and triggers reset notification");
             Message message = j.a(13, "FACTORY_RESET:PFE0BR01", new ICommonCallback(){
 
                 public IBinder asBinder() {
@@ -55,12 +53,12 @@ extends BroadcastReceiver {
 
                 @Override
                 public void onFail(String string, int n2) {
-                    c.i("PackageStateReceiver", "onFail : " + n2);
+                    Log.i("PackageStateReceiver", "onFail : " + n2);
                 }
 
                 @Override
                 public void onSuccess(String string) {
-                    c.i("PackageStateReceiver", "onSuccess");
+                    Log.i("PackageStateReceiver", "onSuccess");
                 }
             });
             PaymentFrameworkApp.az().sendMessage(message);

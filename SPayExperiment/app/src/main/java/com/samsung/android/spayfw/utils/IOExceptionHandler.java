@@ -16,7 +16,8 @@
  */
 package com.samsung.android.spayfw.utils;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -105,7 +106,7 @@ lbl53: // 6 sources:
         }
         catch (ExceptionChain exceptionChain) {
             if (bl) {
-                c.c("IOProcessor", exceptionChain.getMessage(), (Throwable)((Object)exceptionChain));
+                Log.c("IOProcessor", exceptionChain.getMessage(), (Throwable)((Object)exceptionChain));
                 return;
             }
             throw exceptionChain;

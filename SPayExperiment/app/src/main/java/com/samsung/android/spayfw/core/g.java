@@ -14,10 +14,10 @@ package com.samsung.android.spayfw.core;
 import android.os.Bundle;
 import com.samsung.android.spayfw.appinterface.MstPayConfigEntry;
 import com.samsung.android.spayfw.appinterface.MstPayConfigEntryItem;
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
+
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 public class g {
     /*
@@ -32,14 +32,14 @@ public class g {
             int n4 = g.l(mstPayConfigEntryItem.getTrackIndex()) ? n3 + 3 : n3;
             n2 = n4;
         }
-        c.d("MstPayConfigHelper", "mstPayConfigEntry2ByteArray: size = " + n2);
+        Log.d("MstPayConfigHelper", "mstPayConfigEntry2ByteArray: size = " + n2);
         byte[] arrby = new byte[n2];
         Iterator iterator2 = mstPayConfigEntry.getMstPayConfigEntry().iterator();
         int n5 = 0;
         do {
             int n6;
             if (!iterator2.hasNext()) {
-                c.v("MstPayConfigHelper", "mstPayConfigEntry2ByteArray: ret = " + Arrays.toString((byte[])arrby));
+                Log.v("MstPayConfigHelper", "mstPayConfigEntry2ByteArray: ret = " + Arrays.toString((byte[])arrby));
                 return arrby;
             }
             MstPayConfigEntryItem mstPayConfigEntryItem = (MstPayConfigEntryItem)iterator2.next();

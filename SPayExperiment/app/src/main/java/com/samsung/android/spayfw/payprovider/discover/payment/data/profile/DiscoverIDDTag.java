@@ -8,7 +8,7 @@
  */
 package com.samsung.android.spayfw.payprovider.discover.payment.data.profile;
 
-import com.samsung.android.spayfw.b.c;
+import com.samsung.android.spayfw.b.Log;
 import com.samsung.android.spayfw.payprovider.discover.payment.utils.ByteBuffer;
 import java.text.ParseException;
 
@@ -27,11 +27,11 @@ public class DiscoverIDDTag {
 
     public DiscoverIDDTag(ByteBuffer byteBuffer, ByteBuffer byteBuffer2) {
         if (byteBuffer == null || byteBuffer.getSize() < 3) {
-            c.e(TAG, "DiscoverIDDTag, data is empty or null...");
+            Log.e(TAG, "DiscoverIDDTag, data is empty or null...");
             throw new ParseException("DiscoverIDDTag, data is empty or null.", 0);
         }
         if (byteBuffer2 == null || byteBuffer2.getSize() != 2) {
-            c.e(TAG, "DiscoverIDDTag, tag is empty or has a wrong length...");
+            Log.e(TAG, "DiscoverIDDTag, tag is empty or has a wrong length...");
             throw new ParseException("DiscoverIDDTag, tag is empty or has a wrong length.", 0);
         }
         this.mTag = byteBuffer2;
@@ -41,14 +41,14 @@ public class DiscoverIDDTag {
     private void parse(ByteBuffer byteBuffer) {
         this.mSize = byteBuffer.getByte(0);
         this.mAccess = byteBuffer.getByte(1);
-        c.d(TAG, "DiscoverIDDTag, tag size: " + this.mSize);
-        c.d(TAG, "DiscoverIDDTag, tag access: " + this.mAccess);
+        Log.d(TAG, "DiscoverIDDTag, tag size: " + this.mSize);
+        Log.d(TAG, "DiscoverIDDTag, tag access: " + this.mAccess);
         if (this.mSize != -2 + byteBuffer.getSize()) {
-            c.e(TAG, "DiscoverIDDTag, wrong length defined by the tag, tag size = " + this.mSize + ", actual length = " + (-2 + byteBuffer.getSize()));
+            Log.e(TAG, "DiscoverIDDTag, wrong length defined by the tag, tag size = " + this.mSize + ", actual length = " + (-2 + byteBuffer.getSize()));
             throw new ParseException("DiscoverIDDTag, wrong length defined by the tag, tag size = " + this.mSize + ", actual length = " + (-2 + byteBuffer.getSize()), 0);
         }
         this.mData = byteBuffer.copyBytes(2, byteBuffer.getSize());
-        c.d(TAG, "DiscoverIDDTag, tag data: " + this.mData.toHexString());
+        Log.d(TAG, "DiscoverIDDTag, tag data: " + this.mData.toHexString());
     }
 
     public byte getAccess() {
