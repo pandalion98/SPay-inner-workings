@@ -23,6 +23,7 @@ import com.samsung.android.spayfw.e.d;
 import com.samsung.android.spaytzsvc.api.TACommands;
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class TAInfo {
     private static String DUMMY_QC_ROOT;
@@ -135,7 +136,7 @@ public class TAInfo {
         }
     }
 
-    public PaymentTZServiceConfig.TAConfig createNewTAConfig() {
+    public PaymentTZServiceConfig.TAConfig createNewTAConfig() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         TACommands.CommandsInfo commandsInfo;
         Constructor constructor;
         block4 : {
@@ -157,7 +158,7 @@ public class TAInfo {
         return tAConfig;
     }
 
-    public PaymentTZServiceConfig.TAConfig createOldTAConfig() {
+    public PaymentTZServiceConfig.TAConfig createOldTAConfig() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         TACommands.CommandsInfo commandsInfo;
         Constructor constructor;
         block4 : {
@@ -194,7 +195,7 @@ public class TAInfo {
         return string;
     }
 
-    public PaymentTZServiceConfig.TAConfig getTAConfig() {
+    public PaymentTZServiceConfig.TAConfig getTAConfig() throws IllegalAccessException, InstantiationException, InvocationTargetException {
         this.mCommands.getCommandsInfo();
         if (!this.isNewTAConfigPresent()) {
             return this.createOldTAConfig();

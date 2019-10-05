@@ -54,14 +54,14 @@ public class Utils {
      */
     public static boolean writeFile(byte[] var0, String var1_1) {
         c.d("spaytzsvc.api.Utils", "Out writeFile - Path " + var1_1);
-        var2_2 = new File(var1_1);
-        var3_3 = var2_2.getParentFile();
-        var4_4 = false;
+        File var2_2 = new File(var1_1);
+        File var3_3 = var2_2.getParentFile();
+        boolean var4_4 = false;
         if (var3_3 != null) {
-            var11_5 = var3_3.exists();
+            boolean var11_5 = var3_3.exists();
             var4_4 = false;
             if (!var11_5) {
-                var12_6 = var3_3.mkdirs();
+                boolean var12_6 = var3_3.mkdirs();
                 if (!var12_6) {
                     c.e("spaytzsvc.api.Utils", "Error: mkdirs fail for " + var3_3.getAbsolutePath());
 lbl12: // 3 sources:
@@ -73,7 +73,7 @@ lbl12: // 3 sources:
                 var4_4 = var12_6;
             }
         }
-        var5_7 = new FileOutputStream(var2_2);
+        FileOutputStream var5_7 = new FileOutputStream(var2_2);
         c.d("spaytzsvc.api.Utils", "File Write - Length = " + var0.length);
         var5_7.write(var0);
         var4_4 = true;

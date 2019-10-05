@@ -1,6 +1,6 @@
 /*
  * Decompiled with CFR 0.0.
- * 
+ *
  * Could not load the following classes:
  *  android.content.Context
  *  android.content.SharedPreferences
@@ -46,6 +46,7 @@ import android.spay.CertInfo;
 import android.spay.ITAController;
 import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
+
 import com.samsung.android.spayfw.b.c;
 import com.samsung.android.spaytzsvc.api.Blob;
 import com.samsung.android.spaytzsvc.api.IPaymentSvcDeathReceiver;
@@ -53,6 +54,7 @@ import com.samsung.android.spaytzsvc.api.PaymentTZServiceIF;
 import com.samsung.android.spaytzsvc.api.TACommands;
 import com.samsung.android.spaytzsvc.api.TAException;
 import com.samsung.android.spaytzsvc.api.TAInfo;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -60,17 +62,18 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+
 import javolution.io.Struct;
 
 public class TAController
-implements IPaymentSvcDeathReceiver {
+        implements IPaymentSvcDeathReceiver {
     public static final int CMD_ABORT_MST = 3;
     public static final int CMD_MOVE_SEC_OS_CORE0 = 6;
     public static final int CMD_MOVE_SEC_OS_CORE4 = 5;
     public static final int CMD_MST_OFF = 2;
     public static final int CMD_MST_ON = 1;
     public static final int CMD_RESET_MST = 4;
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = "eng".equals((Object) Build.TYPE);
     private static final String PF_EFS_ROOT_DIR_SPAY_UID = "/efs/pfw_data";
     private static final String PF_EFS_ROOT_DIR_SYSTEM_UID = "/efs/prov_data/pfw_data";
     private static final String TAG = "TAController";
@@ -83,7 +86,6 @@ implements IPaymentSvcDeathReceiver {
     protected TAInfo mTAInfo;
 
     static {
-        DEBUG = "eng".equals((Object)Build.TYPE);
         bQC = Build.BOARD.matches("(?i)msm[a-z0-9]*");
     }
 
@@ -96,8 +98,7 @@ implements IPaymentSvcDeathReceiver {
         try {
             ParcelFileDescriptor parcelFileDescriptor = this.mContext.getAssets().openFd(this.mTAInfo.getDummyTAPath()).getParcelFileDescriptor();
             return parcelFileDescriptor;
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
             return null;
         }
@@ -121,66 +122,53 @@ implements IPaymentSvcDeathReceiver {
      * Lifted jumps to return sites
      */
     private AssetFileDescriptor getTaFd() {
-        var1_1 = this.mContext.getAssets();
-        var2_2 = null;
-        if (var1_1 == null) {
-        }
-        var3_3 = this.shouldLoadTAFromSystem();
-        var2_2 = null;
-        if (var3_3) {
-        }
+        AssetManager var1_1 = this.mContext.getAssets();
+        AssetFileDescriptor taFileDescriptor = null;
+        boolean var3_3 = this.shouldLoadTAFromSystem();
+        taFileDescriptor = null;
         try {
             if (TAController.DEBUG) {
                 c.d("TAController", "getTA: " + this.mTAInfo.getTAFileName());
             }
-            var8_4 = TAController.DEBUG;
-            var2_2 = null;
+            boolean var8_4 = TAController.DEBUG;
+            taFileDescriptor = null;
             if (var8_4) {
-                var9_5 = var1_1.list(TAInfo.getTARootDir());
-                var2_2 = null;
+                String[] var9_5 = var1_1.list(TAInfo.getTARootDir());
+                taFileDescriptor = null;
                 if (var9_5 != null) {
-                    var10_6 = var9_5.length;
-                    var11_7 = 0;
+                    int var10_6 = var9_5.length;
+                    int var11_7 = 0;
                     do {
-                        var2_2 = null;
+                        taFileDescriptor = null;
                         if (var11_7 >= var10_6) break;
-                        var12_8 = var9_5[var11_7];
+                        String var12_8 = var9_5[var11_7];
                         c.d("TAController", "File : " + var12_8);
                         ++var11_7;
                     } while (true);
                 }
             }
             try {
-                var5_10 = var13_9 = this.findTAByDeviceModel(var1_1);
+                String var5_10 = this.findTAByDeviceModel(var1_1);
                 try {
-                    var2_2 = var1_1.openFd(var5_10);
-                    if (!TAController.DEBUG) {
-                    }
+                    taFileDescriptor = var1_1.openFd(var5_10);
                     c.d("TAController", "Found TA file: " + var5_10);
-                    return var2_2;
+                    return taFileDescriptor;
+                } catch (FileNotFoundException var14_11) {
+                    c.e("TAController", "TA file not found: " + var5_10);
+                    return taFileDescriptor;
                 }
-                catch (FileNotFoundException var14_11) {}
-                ** GOTO lbl-1000
-            }
-            catch (Exception var7_12) {
+            } catch (Exception var7_12) {
                 c.e("TAController", "general exception");
                 var7_12.printStackTrace();
-                return var2_2;
+                return taFileDescriptor;
             }
-            catch (FileNotFoundException var4_13) {
-                var2_2 = null;
-                var5_10 = null;
-            }
-lbl-1000: // 2 sources:
-            {
-                c.e("TAController", "TA file not found: " + var5_10);
-                return var2_2;
-            }
+        } catch (Throwable var6_14) {
         }
-        catch (Throwable var6_14) {}
+
+        return taFileDescriptor;
     }
 
-    private void initTA(int n2, byte[] arrby) {
+    private void initTA(int n2, byte[] arrby) throws TAException {
         TACommandResponse tACommandResponse;
         long l2;
         if (this.bMeasurementVerified) {
@@ -239,101 +227,94 @@ lbl-1000: // 2 sources:
      * Enabled unnecessary exception pruning
      * Enabled aggressive exception aggregation
      */
-    private int loadPinRandom() {
+    // WARNING: Hand-reconstruction unverified.
+    private int loadPinRandom() throws FileNotFoundException {
         if (!this.usesPinRandom()) {
             c.i("TAController", "No need to load PIN random for TA " + this.mTAInfo);
             return 0;
         }
-        var1_1 = this.mTAInfo.getPinRandomFileName();
-        var2_2 = new File(TAController.getEfsDirectory(), var1_1);
-        if (!var2_2.isFile()) {
-            c.e("TAController", "Cannot load PIN random for TA " + this.mTAInfo + ", file " + var2_2.getAbsolutePath() + " not found");
+        String randPinFileName = this.mTAInfo.getPinRandomFileName();
+        File pinFile = new File(TAController.getEfsDirectory(), randPinFileName);
+        if (!pinFile.isFile()) {
+            c.e("TAController", "Cannot load PIN random for TA " + this.mTAInfo + ", file " + pinFile.getAbsolutePath() + " not found");
             return 0;
         }
-        var3_3 = new byte[(int)var2_2.length()];
-        var4_4 = new FileInputStream(var2_2);
+        byte[] pinFileReadBuffer = new byte[(int) pinFile.length()];
+
+        FileInputStream pinFis = null;
+        TACommandResponse taCommandResponse = new TACommandResponse();
+
         try {
-            block22 : {
-                var10_6 = 0;
-                break block22;
-                catch (Throwable var5_15) {
-                    var4_4 = null;
-                    ** GOTO lbl-1000
-                }
-                catch (Exception var7_11) {
-                    var4_4 = null;
-                    ** GOTO lbl40
-                }
+            pinFis = new FileInputStream(pinFile);
+
+            int curReadOffset = 0;
+            int bytesRead;
+            for (int readLength = (int) pinFile.length();
+                 readLength > 0;
+                 curReadOffset += bytesRead, readLength -= bytesRead) {
+                bytesRead = pinFis.read(pinFileReadBuffer, curReadOffset, readLength);
             }
-            for (var9_5 = (int)var2_2.length(); var9_5 > 0; var10_6 += var11_7, var9_5 -= var11_7) {
-                var11_7 = var4_4.read(var3_3, var10_6, var9_5);
+
+            taCommandResponse =
+                    this.executeNoLoad(new TACommands.LoadPinRandom.Request(pinFileReadBuffer));
+            if (taCommandResponse != null) {
+                c.e("TAController", "Error: execute failed");
+                throw new TAException("Error: executeNoLoad failed", 1);
             }
-            var12_8 = this.executeNoLoad(new TACommands.LoadPinRandom.Request(var3_3));
-            if (var12_8 != null) ** GOTO lbl-1000
-            c.e("TAController", "Error: execute failed");
-            throw new TAException("Error: executeNoLoad failed", 1);
-lbl-1000: // 1 sources:
-            {
-                block21 : {
-                    block20 : {
-                        if (new TACommands.LoadPinRandom.Response((TACommandResponse)var12_8).mRetVal.result.get() == 0L) break block20;
-                        c.e("TAController", "Load PIN random failed for TA " + this.mTAInfo);
-                        break block21;
-                    }
-                    try {
-                        if (TAController.DEBUG) {
-                            c.d("TAController", "Load PIN random succeeded for TA " + this.mTAInfo);
-                        }
-                        break block21;
-                    }
-                    catch (Exception var7_9) {}
-lbl40: // 2 sources:
-                    c.e("TAController", "Cannot load PIN random for TA " + this.mTAInfo);
-                    var7_10.printStackTrace();
-                    if (var4_4 == null) return 0;
-                    try {
-                        var4_4.close();
-                        return 0;
-                    }
-                    catch (IOException var8_16) {
-                        var8_16.printStackTrace();
-                        return 0;
-                    }
-                }
-                if (var4_4 == null) return 0;
-                try {
-                    var4_4.close();
-                    return 0;
-                }
-                catch (IOException var13_12) {
-                    var13_12.printStackTrace();
-                    return 0;
-                }
-            }
-        }
-        catch (Throwable var5_13) lbl-1000: // 2 sources:
-        {
-            if (var4_4 == null) throw var5_14;
+
+        } catch (FileNotFoundException e) {
+            c.e("TAController", "Cannot load PIN random for TA " + this.mTAInfo);
+            e.printStackTrace();
+
+            if (pinFis == null) return 0;
+
             try {
-                var4_4.close();
+                pinFis.close();
+                return 0;
+            } catch (IOException var8_16) {
+                var8_16.printStackTrace();
+                return 0;
             }
-            catch (IOException var6_17) {
-                var6_17.printStackTrace();
-                throw var5_14;
+        } catch (IOException e) {
+            if (new TACommands.LoadPinRandom.Response(taCommandResponse).mRetVal.result.get() == 0L) {
+                c.e("TAController", "Load PIN random failed for TA " + this.mTAInfo);
+                return 0;
             }
-            throw var5_14;
+
+            if (TAController.DEBUG) {
+                c.d("TAController", "Load PIN random succeeded for TA " + this.mTAInfo);
+            }
+
+
+            try {
+                pinFis.close();
+                return 0;
+            } catch (IOException var13_12) {
+                var13_12.printStackTrace();
+                return 0;
+            }
+
+        } catch (TAException e) {
+
         }
+
+        return 0;
     }
 
     /*
      * Enabled aggressive block sorting
      */
     private boolean shouldLoadTAFromSystem() {
-        block6 : {
-            block5 : {
-                block4 : {
+        block6:
+        {
+            block5:
+            {
+                block4:
+                {
                     if (!DEBUG) break block4;
-                    SharedPreferences sharedPreferences = this.mContext.getSharedPreferences("shared_preferences_test", 4);
+                    SharedPreferences sharedPreferences =
+                            this.mContext.getSharedPreferences(
+                                    "shared_preferences_test", Context.MODE_MULTI_PROCESS);
                     int n2 = sharedPreferences.getInt(this.mTAInfo.getTAFileName(), 1000);
                     c.d(TAG, "fromSystem=" + n2);
                     if (n2 == 1) break block5;
@@ -372,15 +353,11 @@ lbl40: // 2 sources:
             if (this.mPaymentHandle != null) {
                 Method method = this.mPaymentHandle.getClass().getMethod("checkCertInfo", new Class[]{List.class});
                 c.d(TAG, "Using checkCertInfo API");
-                return (CertInfo)method.invoke((Object)this.mPaymentHandle, new Object[]{list});
+                return (CertInfo) method.invoke((Object) this.mPaymentHandle, new Object[]{list});
             }
             c.e(TAG, "mPaymentHandle is null");
-            do {
-                return null;
-                break;
-            } while (true);
-        }
-        catch (Exception exception) {
+            return null;
+        } catch (Exception exception) {
             exception.printStackTrace();
             return null;
         }
@@ -400,13 +377,12 @@ lbl40: // 2 sources:
             if (string != null) {
                 Method method = this.mPaymentHandle.getClass().getMethod("clearDeviceCertificates", new Class[]{String.class});
                 c.i(TAG, "Using NEW clearDeviceCertificates API");
-                return (Boolean)method.invoke((Object)this.mPaymentHandle, new Object[]{string});
+                return (Boolean) method.invoke((Object) this.mPaymentHandle, new Object[]{string});
             }
             Method method = this.mPaymentHandle.getClass().getMethod("clearDeviceCertificates", new Class[0]);
             c.i(TAG, "Using OLD clearDeviceCertificates API");
-            return (Boolean)method.invoke((Object)this.mPaymentHandle, new Object[0]);
-        }
-        catch (Exception exception) {
+            return (Boolean) method.invoke((Object) this.mPaymentHandle, new Object[0]);
+        } catch (Exception exception) {
             exception.printStackTrace();
             return false;
         }
@@ -421,21 +397,17 @@ lbl40: // 2 sources:
             if (this.mPaymentHandle != null) {
                 Method method = this.mPaymentHandle.getClass().getMethod("copyMctoRst", new Class[0]);
                 c.d(TAG, "Using copyMctoRst API");
-                return (Boolean)method.invoke((Object)this.mPaymentHandle, new Object[0]);
+                return (Boolean) method.invoke((Object) this.mPaymentHandle, new Object[0]);
             }
             c.e(TAG, "mPaymentHandle is null");
-            do {
-                return false;
-                break;
-            } while (true);
-        }
-        catch (Exception exception) {
+            return false;
+        } catch (Exception exception) {
             exception.printStackTrace();
             return false;
         }
     }
 
-    public byte[] decapsulateAndWrap(byte[] arrby) {
+    public byte[] decapsulateAndWrap(byte[] arrby) throws TAException {
         TACommandResponse tACommandResponse = this.executeNoLoad(new TACommands.MoveServiceKey.Request(arrby));
         if (tACommandResponse == null) {
             c.e(TAG, "Error: execute failed");
@@ -459,7 +431,7 @@ lbl40: // 2 sources:
         StringBuilder stringBuilder = new StringBuilder();
         for (byte by : arrby) {
             Object[] arrobject = new Object[]{by};
-            stringBuilder.append(String.format((String)"%02X ", (Object[])arrobject));
+            stringBuilder.append(String.format((String) "%02X ", (Object[]) arrobject));
         }
         c.d(string, string2 + " " + stringBuilder.toString());
     }
@@ -485,12 +457,11 @@ lbl40: // 2 sources:
                         if (!DEBUG) return tACommandResponse;
                         c.d(TAG, "executeNoLoad: Response Code = " + tACommandResponse.mResponseCode);
                         c.d(TAG, "executeNoLoad: Error Message = " + tACommandResponse.mErrorMsg);
-                        c.d(TAG, "executeNoLoad: Response Len = " + tACommandResponse.mResponse.length + " Buf = " + Arrays.toString((byte[])tACommandResponse.mResponse));
+                        c.d(TAG, "executeNoLoad: Response Len = " + tACommandResponse.mResponse.length + " Buf = " + Arrays.toString((byte[]) tACommandResponse.mResponse));
                     }
                     c.e(TAG, "executeNoLoad: mPaymentHandle is null");
                     return null;
-                }
-                catch (Exception exception) {
+                } catch (Exception exception) {
                     exception.printStackTrace();
                 }
             }
@@ -514,11 +485,10 @@ lbl40: // 2 sources:
                 if (this.mPaymentHandle != null) {
                     Method method = this.mPaymentHandle.getClass().getMethod("getCertInfo", null);
                     c.d(TAG, "Using getCertInfo API");
-                    return (CertInfo)method.invoke((Object)this.mPaymentHandle, null);
+                    return (CertInfo) method.invoke((Object) this.mPaymentHandle, null);
                 }
                 c.e(TAG, "mPaymentHandle is null");
-            }
-            catch (Exception exception) {
+            } catch (Exception exception) {
                 exception.printStackTrace();
             }
             return null;
@@ -545,8 +515,7 @@ lbl40: // 2 sources:
         try {
             this.initTA(0, TACommands.TL_MAGIC_NUM);
             return true;
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
             return false;
         }
@@ -559,12 +528,10 @@ lbl40: // 2 sources:
                 return false;
             }
             return true;
-        }
-        catch (NoSuchMethodException noSuchMethodException) {
+        } catch (NoSuchMethodException noSuchMethodException) {
             c.d(TAG, "API checkCertInfo Not found");
             return false;
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
             return false;
         }
@@ -586,49 +553,31 @@ lbl40: // 2 sources:
      * Converted monitor instructions to comments
      * Lifted jumps to return sites
      */
-    public TACommandResponse loadExecuteUnload(TACommandRequest tACommandRequest) {
+    public TACommandResponse loadExecuteUnload(TACommandRequest tACommandRequest) throws RemoteException {
         TACommandResponse tACommandResponse;
-        block11 : {
-            block10 : {
-                tACommandResponse = null;
-                TAController tAController = this;
-                // MONITORENTER : tAController
-                if (!this.loadTA()) {
-                    c.e(TAG, "TA Loading failed");
-                    // MONITOREXIT : tAController
-                    return tACommandResponse;
-                }
-                if (this.mPaymentHandle == null) break block10;
-                TACommandResponse tACommandResponse2 = this.mPaymentHandle.processTACommand(tACommandRequest);
-                tACommandResponse = tACommandResponse2;
-                if (tACommandResponse == null) break block11;
-                if (DEBUG) {
-                    c.d(TAG, "execute: Response Code = " + tACommandResponse.mResponseCode);
-                    c.d(TAG, "execute: Error Message = " + tACommandResponse.mErrorMsg);
-                    c.d(TAG, "execute: Response Len = " + tACommandResponse.mResponse.length + " Buf = " + Arrays.toString((byte[])tACommandResponse.mResponse));
-                }
-                break block11;
-            }
-            try {
-                c.e(TAG, "execute: mPaymentHandle is null");
-                tACommandResponse = null;
-            }
-            catch (Exception exception) {
-                TACommandResponse tACommandResponse3;
-                Exception exception2;
-                block12 : {
-                    tACommandResponse3 = null;
-                    exception2 = exception;
-                    break block12;
-                    catch (Exception exception3) {
-                        tACommandResponse3 = tACommandResponse;
-                        exception2 = exception3;
-                    }
-                }
-                exception2.printStackTrace();
-                tACommandResponse = tACommandResponse3;
-            }
+
+        tACommandResponse = null;
+        TAController tAController = this;
+        // MONITORENTER : tAController
+
+        if (!this.loadTA()) {
+            c.e(TAG, "TA Loading failed");
+            // MONITOREXIT : tAController
+            return tACommandResponse;
         }
+
+        if (this.mPaymentHandle == null) {
+            c.e(TAG, "execute: mPaymentHandle is null");
+        }
+
+        tACommandResponse = this.mPaymentHandle.processTACommand(tACommandRequest);
+        if (tACommandResponse != null && DEBUG) {
+            c.d(TAG, "execute: Response Code = " + tACommandResponse.mResponseCode);
+            c.d(TAG, "execute: Error Message = " + tACommandResponse.mErrorMsg);
+            c.d(TAG, "execute: Response Len = " + tACommandResponse.mResponse.length + " Buf = " + Arrays.toString((byte[]) tACommandResponse.mResponse));
+        }
+
+
         this.unloadTA();
         return tACommandResponse;
     }
@@ -671,12 +620,8 @@ lbl40: // 2 sources:
                 return this.mPaymentHandle.makeSystemCall(n2);
             }
             c.e(TAG, "mPaymentHandle is null");
-            do {
-                return false;
-                break;
-            } while (true);
-        }
-        catch (RemoteException remoteException) {
+            return false;
+        } catch (RemoteException remoteException) {
             remoteException.printStackTrace();
             return false;
         }
@@ -776,15 +721,11 @@ lbl40: // 2 sources:
             if (this.mPaymentHandle != null) {
                 Method method = this.mPaymentHandle.getClass().getMethod("setCertInfo", new Class[]{CertInfo.class});
                 c.d(TAG, "Using setCertInfo API");
-                return (Boolean)method.invoke((Object)this.mPaymentHandle, new Object[]{certInfo});
+                return (Boolean) method.invoke((Object) this.mPaymentHandle, new Object[]{certInfo});
             }
             c.e(TAG, "mPaymentHandle is null");
-            do {
-                return false;
-                break;
-            } while (true);
-        }
-        catch (Exception exception) {
+            return false;
+        } catch (Exception exception) {
             exception.printStackTrace();
             return false;
         }
@@ -834,8 +775,7 @@ lbl40: // 2 sources:
                 try {
                     this.mPaymentHandle.unloadTA();
                     this.bLoaded = false;
-                }
-                catch (RemoteException remoteException) {
+                } catch (RemoteException remoteException) {
                     remoteException.printStackTrace();
                 }
             }

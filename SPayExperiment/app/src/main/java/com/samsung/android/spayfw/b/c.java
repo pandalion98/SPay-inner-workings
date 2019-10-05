@@ -23,6 +23,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+// Looks like some sort of logger.
 public final class c {
     private static ArrayList<d> oJ = new ArrayList();
 
@@ -70,10 +71,10 @@ public final class c {
                 // ** MonitorExit[var5_1] (shouldn't be in output)
                 return bl;
             }
-            boolean bl2 = oJ.contains((Object)d2);
+            boolean bl2 = oJ.contains(d2);
             bl = false;
             if (bl2) return bl;
-            boolean bl3 = oJ.add((Object)d2);
+            boolean bl3 = oJ.add(d2);
             return bl3;
         }
     }

@@ -1,6 +1,6 @@
 /*
  * Decompiled with CFR 0.0.
- * 
+ *
  * Could not load the following classes:
  *  android.spay.TACommandRequest
  *  android.spay.TACommandResponse
@@ -15,11 +15,14 @@ package com.samsung.android.spaytzsvc.api;
 
 import android.spay.TACommandRequest;
 import android.spay.TACommandResponse;
+
 import com.samsung.android.spaytzsvc.api.Blob;
 import com.samsung.android.spaytzsvc.api.TAStruct;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 import javolution.io.Struct;
 
 public class TACommands {
@@ -29,7 +32,10 @@ public class TACommands {
     public static final int CMD_SPAY_SETUP_PIN_RANDOM = 2147483636;
     private static final String TAG = "TACommands";
     public static final byte[] TL_MAGIC_NUM = new byte[]{0, 0, 0, 0};
-    public static final int TL_VERSION;
+
+    // TODO: From build number, not really sure what this is for
+    public static final int TL_VERSION = 273801000;
+
     Map<Integer, CommandInfo> mCmdInfo = new HashMap();
 
     public TACommands() {
@@ -39,7 +45,7 @@ public class TACommands {
     }
 
     public void addCommandInfo(Integer n2, CommandInfo commandInfo) {
-        this.mCmdInfo.put((Object)n2, (Object)commandInfo);
+        this.mCmdInfo.put(n2, commandInfo);
     }
 
     public void addCommands(Map<Integer, CommandInfo> map) {
@@ -51,7 +57,7 @@ public class TACommands {
     }
 
     public CommandsInfo getCommandsInfo() {
-        return new CommandsInfo(this.getMaxRequestSize((CommandInfo[])this.mCmdInfo.values().toArray((Object[])new CommandInfo[this.mCmdInfo.size()])), this.getMaxResponseSize((CommandInfo[])this.mCmdInfo.values().toArray((Object[])new CommandInfo[this.mCmdInfo.size()])));
+        return new CommandsInfo(this.getMaxRequestSize((CommandInfo[]) this.mCmdInfo.values().toArray((Object[]) new CommandInfo[this.mCmdInfo.size()])), this.getMaxResponseSize((CommandInfo[]) this.mCmdInfo.values().toArray((Object[]) new CommandInfo[this.mCmdInfo.size()])));
     }
 
     public int getMaxRequestSize(CommandInfo[] arrcommandInfo) {
@@ -123,14 +129,14 @@ public class TACommands {
         }
 
         public static class Request
-        extends TACommandRequest {
+                extends TACommandRequest {
             public Request(byte[] arrby) {
                 byte[] arrby2 = new Data(arrby).serialize();
                 this.init(0, TACommands.TL_MAGIC_NUM, 2147483633, arrby2);
             }
 
             public static class Data
-            extends TAStruct {
+                    extends TAStruct {
                 Blob measurement = this.inner(new Blob(1024));
 
                 public Data() {
@@ -144,7 +150,7 @@ public class TACommands {
         }
 
         public static class Response
-        extends TACommandResponse {
+                extends TACommandResponse {
             public Data mRetVal = new Data();
 
             public Response(TACommandResponse tACommandResponse) {
@@ -153,7 +159,7 @@ public class TACommands {
             }
 
             public static class Data
-            extends TAStruct {
+                    extends TAStruct {
                 public Struct.Unsigned32 result = new Struct.Unsigned32();
             }
 
@@ -173,14 +179,14 @@ public class TACommands {
         }
 
         public static class Request
-        extends TACommandRequest {
+                extends TACommandRequest {
             Request(byte[] arrby) {
                 byte[] arrby2 = new Data(arrby).serialize();
                 this.init(0, TACommands.TL_MAGIC_NUM, 2147483634, arrby2);
             }
 
             public static class Data
-            extends TAStruct {
+                    extends TAStruct {
                 Blob pin_random_so = this.inner(new Blob(1024));
 
                 public Data() {
@@ -194,7 +200,7 @@ public class TACommands {
         }
 
         public static class Response
-        extends TACommandResponse {
+                extends TACommandResponse {
             public Data mRetVal = new Data();
 
             public Response(TACommandResponse tACommandResponse) {
@@ -203,7 +209,7 @@ public class TACommands {
             }
 
             public static class Data
-            extends TAStruct {
+                    extends TAStruct {
                 Struct.Unsigned32 result = new Struct.Unsigned32();
             }
 
@@ -234,14 +240,14 @@ public class TACommands {
         }
 
         public static class Request
-        extends TACommandRequest {
+                extends TACommandRequest {
             Request(byte[] arrby) {
                 byte[] arrby2 = new Data(arrby).serialize();
                 this.init(0, TACommands.TL_MAGIC_NUM, 2147483635, arrby2);
             }
 
             public static class Data
-            extends TAStruct {
+                    extends TAStruct {
                 Blob skmm_encap_msg = this.inner(new Blob(8192));
 
                 public Data() {
@@ -255,7 +261,7 @@ public class TACommands {
         }
 
         public static class Response
-        extends TACommandResponse {
+                extends TACommandResponse {
             public Data mRetVal = new Data();
 
             public Response(TACommandResponse tACommandResponse) {
@@ -264,8 +270,8 @@ public class TACommands {
             }
 
             public static class Data
-            extends TAStruct {
-                Struct.Unsigned8[] error_msg = (Struct.Unsigned8[])this.array((Struct.Member[])new Struct.Unsigned8[256]);
+                    extends TAStruct {
+                Struct.Unsigned8[] error_msg = (Struct.Unsigned8[]) this.array((Struct.Member[]) new Struct.Unsigned8[256]);
                 Struct.Unsigned32 return_code = new Struct.Unsigned32();
                 Blob wrapped_msg = this.inner(new Blob(8192));
             }
@@ -286,14 +292,14 @@ public class TACommands {
         }
 
         public static class Request
-        extends TACommandRequest {
+                extends TACommandRequest {
             Request(byte[] arrby) {
                 byte[] arrby2 = new Data(arrby).serialize();
                 this.init(0, TACommands.TL_MAGIC_NUM, 2147483636, arrby2);
             }
 
             public static class Data
-            extends TAStruct {
+                    extends TAStruct {
                 Blob pin_random_so = this.inner(new Blob(1024));
 
                 public Data() {
@@ -307,7 +313,7 @@ public class TACommands {
         }
 
         public static class Response
-        extends TACommandResponse {
+                extends TACommandResponse {
             public Data mRetVal = new Data();
 
             public Response(TACommandResponse tACommandResponse) {
@@ -316,7 +322,7 @@ public class TACommands {
             }
 
             public static class Data
-            extends TAStruct {
+                    extends TAStruct {
                 Blob pin_random_so = this.inner(new Blob(1024));
                 Struct.Unsigned32 result = new Struct.Unsigned32();
             }
@@ -324,6 +330,5 @@ public class TACommands {
         }
 
     }
-
 }
 
