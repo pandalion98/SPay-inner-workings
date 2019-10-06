@@ -1,6 +1,6 @@
 /*
  * Decompiled with CFR 0.0.
- * 
+ *
  * Could not load the following classes:
  *  android.content.Context
  *  android.content.Intent
@@ -31,6 +31,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ConditionVariable;
+
 import com.google.gson.JsonObject;
 import com.samsung.android.spayfw.appinterface.BillingInfo;
 import com.samsung.android.spayfw.appinterface.EnrollCardInfo;
@@ -70,7 +71,6 @@ import com.samsung.android.spaytui.AuthNonce;
 import com.samsung.android.spaytui.AuthResult;
 import com.samsung.android.spaytui.SpayTuiTAController;
 import com.samsung.android.spaytzsvc.api.TAController;
-import com.samsung.android.spaytzsvc.api.TAException;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -82,6 +82,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.TimerTask;
 
+// TODO: Seems like MstPayThreadRunnable juicy class
 public abstract class PaymentNetworkProvider {
     public static final String AUTHTYPE_BACKUPPASSWORD = "BACKUP PASSWORD";
     public static final String AUTHTYPE_FP = "FP";
@@ -96,7 +97,7 @@ public abstract class PaymentNetworkProvider {
     public static final int CREATE_TOKEN_SRC_IDV_RESPONSE = 3;
     public static final int CREATE_TOKEN_SRC_PROV_PUSH = 2;
     public static final int CREATE_TOKEN_SRC_PROV_RESPONSE = 1;
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = h.DEBUG;
     private static final String FILE_MIGRATE_SEC_OS = "/sys/devices/system/sec_os_ctrl/migrate_os";
     private static final String FILE_MST_INTERRUPT = "/dev/mst_ctrl";
     private static final String FILE_MST_POWER_ON_OFF = "/sys/class/mstldo/mst_drv/transmit";
@@ -134,7 +135,6 @@ public abstract class PaymentNetworkProvider {
     private j mUnloadTimer;
 
     static {
-        DEBUG = h.DEBUG;
         mSwitchObj = new Object();
         mPaymentModeObj = new Object();
         mShouldInterrupt = false;
@@ -158,7 +158,7 @@ public abstract class PaymentNetworkProvider {
         File file;
         this.mCardBrand = string;
         this.mContext = context;
-        if (string != null && (string.equals((Object)"PL") || string.equals((Object)"GI") || string.equals((Object)"LO"))) {
+        if (string != null && (string.equals((Object) "PL") || string.equals((Object) "GI") || string.equals((Object) "LO"))) {
             Log.d(LOG_TAG, "cardType =  " + string + " Plcc TA is used: Use Plcc unload " + "timer/TA Counter");
             this.mTACounter = mTACounterFactory.at("PL");
             this.mUnloadTimer = new j("PL");
@@ -176,10 +176,6 @@ public abstract class PaymentNetworkProvider {
             if (mAuthTAController == null) return;
             mAuthTAController.loadTA();
             mAuthTAController.unloadTA();
-            return;
-        }
-        catch (TAException tAException) {
-            Log.c(LOG_TAG, tAException.getMessage(), (Throwable)((Object)tAException));
             return;
         }
     }
@@ -208,8 +204,7 @@ public abstract class PaymentNetworkProvider {
                 this.mStopPaySelectedCard = null;
                 return true;
             }
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             Log.e(LOG_TAG, "Exception in checkIfStopInAppPayInvoked");
         }
         return false;
@@ -222,8 +217,7 @@ public abstract class PaymentNetworkProvider {
         try {
             this.clearPayState();
             return;
-        }
-        finally {
+        } finally {
             this.clearCard();
             this.unloadTAwithCounter(true);
             o.q(1);
@@ -257,7 +251,10 @@ public abstract class PaymentNetworkProvider {
      * Enabled aggressive exception aggregation
      */
     private static boolean makeSysCallInternal(int var0) {
-        var1_1 = null;
+        FileWriter var1_1 = null;
+        String var2_2;
+        String var3_3;
+
         switch (var0) {
             default: {
                 Log.e("PaymentNetworkProvider", "UNKNOWN Command ID: " + var0);
@@ -266,125 +263,49 @@ public abstract class PaymentNetworkProvider {
             case 1: {
                 var2_2 = "/sys/class/mstldo/mst_drv/transmit";
                 var3_3 = "1";
-lbl9: // 5 sources:
-                do {
-                    if (PaymentNetworkProvider.DEBUG) {
-                        Log.d("PaymentNetworkProvider", "Writting \"" + var3_3 + "\" to -> " + var2_2);
-                    }
-                    var4_4 = new FileWriter(new File(var2_2).getAbsoluteFile());
-                    var5_5 = new BufferedWriter((Writer)var4_4);
-                    var5_5.write(var3_3);
-                    if (var5_5 == null) ** GOTO lbl21
-                    var5_5.close();
-lbl21: // 2 sources:
-                    if (var4_4 != null) {
-                        var4_4.close();
-                    }
-lbl23: // 4 sources:
-                    do {
-                        return true;
-                        break;
-                    } while (true);
-                    break;
-                } while (true);
+                break;
             }
             case 2: {
                 var2_2 = "/sys/class/mstldo/mst_drv/transmit";
                 var3_3 = "0";
-                ** GOTO lbl9
+                break;
+                //**GOTO lbl9
             }
             case 3: {
                 var2_2 = "/dev/mst_ctrl";
                 var3_3 = "1";
-                ** GOTO lbl9
+                break;
+                //**GOTO lbl9
             }
             case 4: {
                 var2_2 = "/dev/mst_ctrl";
                 var3_3 = "0";
-                ** GOTO lbl9
-            }
-            case 5: 
-        }
-        var2_2 = "/sys/devices/system/sec_os_ctrl/migrate_os";
-        var3_3 = "b0";
-        ** while (true)
-        catch (IOException var10_6) {
-            Log.c("PaymentNetworkProvider", var10_6.getMessage(), var10_6);
-            ** continue;
-        }
-        catch (IOException var6_7) {
-            var5_5 = null;
-lbl46: // 3 sources:
-            do {
-                Log.e("PaymentNetworkProvider", "Error writting \"" + var3_3 + "\" to file -> " + var2_2);
-                Log.c("PaymentNetworkProvider", var6_8.getMessage(), (Throwable)var6_8);
-                if (var5_5 == null) ** GOTO lbl53
-                try {
-                    var5_5.close();
-lbl53: // 2 sources:
-                    if (var1_1 != null) {
-                        var1_1.close();
-                    }
-lbl55: // 4 sources:
-                    do {
-                        return false;
-                        break;
-                    } while (true);
-                }
-                catch (IOException var9_11) {
-                    Log.c("PaymentNetworkProvider", var9_11.getMessage(), var9_11);
-                    ** continue;
-                }
                 break;
-            } while (true);
-        }
-        catch (Throwable var7_12) {
-            var5_5 = null;
-lbl62: // 4 sources:
-            do {
-                block33 : {
-                    if (var5_5 == null) ** GOTO lbl66
-                    try {
-                        var5_5.close();
-lbl66: // 2 sources:
-                        if (var1_1 == null) break block33;
-                        var1_1.close();
-                    }
-                    catch (IOException var8_17) {
-                        Log.c("PaymentNetworkProvider", var8_17.getMessage(), var8_17);
-                        ** continue;
-                    }
-                }
-lbl72: // 2 sources:
-                do {
-                    throw var7_13;
-                    break;
-                } while (true);
-                break;
-            } while (true);
-        }
-        catch (Throwable var7_14) {
-            var1_1 = var4_4;
-            var5_5 = null;
-            ** GOTO lbl62
-        }
-        catch (Throwable var7_15) {
-            var1_1 = var4_4;
-            ** GOTO lbl62
-        }
-        {
-            catch (Throwable var7_16) {
-                ** continue;
+                //**GOTO lbl9
             }
+            case 5:
+                var2_2 = "/sys/devices/system/sec_os_ctrl/migrate_os";
+                var3_3 = "b0";
+                break;
         }
-        catch (IOException var6_9) {
-            var1_1 = var4_4;
-            var5_5 = null;
-            ** GOTO lbl46
-        }
-        catch (IOException var6_10) {
-            var1_1 = var4_4;
-            ** continue;
+
+        try {
+            if (PaymentNetworkProvider.DEBUG) {
+                Log.d("PaymentNetworkProvider", "Writting \"" + var3_3 + "\" to -> " + var2_2);
+            }
+
+            FileWriter var4_4 = new FileWriter(new File(var2_2).getAbsoluteFile());
+            BufferedWriter var5_5 = new BufferedWriter((Writer) var4_4);
+            var5_5.write(var3_3);
+
+            var5_5.close();
+            var4_4.close();
+            return true;
+        } catch (IOException e) {
+            Log.e("PaymentNetworkProvider", "Error writting \"" + var3_3 + "\" to file -> " + var2_2);
+            Log.c("PaymentNetworkProvider", e.getMessage(), e);
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -429,7 +350,7 @@ lbl72: // 2 sources:
         return this.selectCard();
     }
 
-    private byte[] sendIndirectPaymentRequest(MerchantServerRequester.MerchantInfo merchantInfo, String string) {
+    private byte[] sendIndirectPaymentRequest(MerchantServerRequester.MerchantInfo merchantInfo, String string) throws PaymentProviderException {
         Log.d(LOG_TAG, "Indirect payment");
         if (merchantInfo.getPgInfo() == null || merchantInfo.getPgInfo().getName() == null) {
             Log.e(LOG_TAG, "Payment pgInfo Name null ");
@@ -451,9 +372,9 @@ lbl72: // 2 sources:
                 Log.e(LOG_TAG, "error make payment " + n2);
                 throw new PaymentProviderException(-202);
             }
-            case 200: 
+            case 200:
             case 201: {
-                PaymentResponseData paymentResponseData = (PaymentResponseData)c2.getResult();
+                PaymentResponseData paymentResponseData = (PaymentResponseData) c2.getResult();
                 if (paymentResponseData == null || paymentResponseData.getCard() == null) {
                     Log.e(LOG_TAG, "responseData or getCard null ");
                     throw new PaymentProviderException(-36);
@@ -471,7 +392,7 @@ lbl72: // 2 sources:
                 Log.e(LOG_TAG, "error unable to connect " + n2);
                 throw new PaymentProviderException(-9);
             }
-            case -2: 
+            case -2:
         }
         Log.e(LOG_TAG, "error Jwt token invalid " + n2);
         throw new PaymentProviderException(-206);
@@ -553,8 +474,7 @@ lbl72: // 2 sources:
         try {
             this.clearPayState();
             return;
-        }
-        finally {
+        } finally {
             this.clearCard();
             this.unloadTAwithCounter(true);
         }
@@ -591,8 +511,7 @@ lbl72: // 2 sources:
         try {
             this.clearPayState();
             return;
-        }
-        finally {
+        } finally {
             this.clearCard();
             this.unloadTAwithCounter(true);
         }
@@ -609,17 +528,19 @@ lbl72: // 2 sources:
     protected abstract e createToken(String var1, c var2, int var3);
 
     public final e createTokenTA(String string, c c2, int n2) {
-        e e2;
-        block4 : {
-            this.loadTAwithCounter(false);
-            e2 = this.createToken(string, c2, n2);
-            if (e2 == null) break block4;
-            if (e2.getProviderTokenKey() == null) break block4;
-            e2.getProviderTokenKey().setTrTokenId(string);
-            this.mProviderTokenKey = e2.getProviderTokenKey();
-        }
-        return e2;
-        finally {
+        try {
+            e e2;
+            block4:
+            {
+                this.loadTAwithCounter(false);
+                e2 = this.createToken(string, c2, n2);
+                if (e2 == null) break block4;
+                if (e2.getProviderTokenKey() == null) break block4;
+                e2.getProviderTokenKey().setTrTokenId(string);
+                this.mProviderTokenKey = e2.getProviderTokenKey();
+            }
+            return e2;
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -633,8 +554,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             byte[] arrby2 = this.decryptUserSignature(new String(arrby));
             return arrby2;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -650,8 +570,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             String string = this.encryptUserSignature(arrby);
             return string;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -747,8 +666,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             List<GlobalMembershipCardDetail> list = this.extractGlobalMembershipCardDetail(arrstring, arrby);
             return list;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -762,8 +680,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             ExtractCardDetailResult extractCardDetailResult = this.extractLoyaltyCardDetail(extractLoyaltyCardDetailRequest);
             return extractCardDetailResult;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -806,8 +723,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             c c2 = this.getDeleteRequestData(bundle);
             return c2;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -819,8 +735,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             CertificateInfo[] arrcertificateInfo = this.getDeviceCertificates();
             return arrcertificateInfo;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -832,8 +747,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             c c2 = this.getEnrollmentRequestData(enrollCardInfo, billingInfo);
             return c2;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -847,8 +761,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             GiftCardRegisterResponseData giftCardRegisterResponseData = this.getGiftCardRegisterData(giftCardRegisterRequestData);
             return giftCardRegisterResponseData;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -862,8 +775,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             GiftCardRegisterResponseData giftCardRegisterResponseData = this.getGiftCardTzEncData(giftCardRegisterRequestData);
             return giftCardRegisterResponseData;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -877,8 +789,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             GlobalMembershipCardRegisterResponseData globalMembershipCardRegisterResponseData = this.getGlobalMembershipCardRegisterData(globalMembershipCardRegisterRequestData);
             return globalMembershipCardRegisterResponseData;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -892,8 +803,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             GlobalMembershipCardRegisterResponseData globalMembershipCardRegisterResponseData = this.getGlobalMembershipCardTzEncData(globalMembershipCardRegisterRequestData);
             return globalMembershipCardRegisterResponseData;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -909,8 +819,7 @@ lbl72: // 2 sources:
             byte[] arrby = this.sendIndirectPaymentRequest(merchantInfo, string2);
             Log.d("PaymentNetworkProvider", "paymentPayloadJsonBytes " + new String(arrby));
             iInAppPayCallback.onSuccess(string, arrby);
-        }
-        catch (PaymentProviderException paymentProviderException) {
+        } catch (PaymentProviderException paymentProviderException) {
             int n2 = paymentProviderException.getErrorCode();
             Log.e("PaymentNetworkProvider", "startInAppPay: PaymentProviderException: " + n2);
             if (this.checkIfStopInAppPayInvoked(iInAppPayCallback, string)) {
@@ -918,8 +827,7 @@ lbl72: // 2 sources:
                 return;
             }
             iInAppPayCallback.onFail(string, n2);
-        }
-        finally {
+        } finally {
             PaymentFrameworkApp.az().c(false);
             this.clearCardState();
         }
@@ -958,8 +866,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             c c2 = this.getProvisionRequestData(provisionTokenInfo);
             return c2;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -971,8 +878,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             c c2 = this.getReplenishmentRequestData();
             return c2;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -1002,10 +908,10 @@ lbl72: // 2 sources:
             return null;
         }
         mAuthTAController.loadTA();
-        AuthNonce authNonce = mAuthTAController.getCachedNonce(32, (boolean)n2);
+        AuthNonce authNonce = mAuthTAController.getCachedNonce(32, n2 == 1);
         String string = mAuthTAController.getTAInfo().getTAId();
         if (authNonce != null && string != null && (arrby = authNonce.getNonce()) != null && arrby.length > 0) {
-            Log.d("PaymentNetworkProvider", "nonce: " + Arrays.toString((byte[])arrby));
+            Log.d("PaymentNetworkProvider", "nonce: " + Arrays.toString((byte[]) arrby));
             Log.d("PaymentNetworkProvider", "taid: " + string);
             if (!authNonce.isFromCache()) {
                 n2 = 0;
@@ -1037,8 +943,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             int n2 = this.getTransactionData(bundle, i2);
             return n2;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -1054,8 +959,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             c c2 = this.getVerifyIdvRequestData(verifyIdvInfo);
             return c2;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -1108,8 +1012,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             String string2 = this.prepareLoyaltyDataForServer(string);
             return string2;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -1185,8 +1088,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             TransactionDetails transactionDetails = this.processTransactionData(object);
             return transactionDetails;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -1196,8 +1098,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             this.init();
             return;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -1224,8 +1125,7 @@ lbl72: // 2 sources:
                 try {
                     Log.i("PaymentNetworkProvider", "Paymentmode is ON: putting replenish thread to sleep");
                     mPaymentModeObj.wait();
-                }
-                catch (InterruptedException interruptedException) {
+                } catch (InterruptedException interruptedException) {
                     Log.d("PaymentNetworkProvider", "switch obj wait interrupt exception");
                     Log.c("PaymentNetworkProvider", interruptedException.getMessage(), interruptedException);
                 }
@@ -1236,8 +1136,7 @@ lbl72: // 2 sources:
             this.loadTAwithCounter(false);
             e e2 = this.replenishToken(jsonObject, tokenStatus);
             return e2;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -1287,13 +1186,12 @@ lbl72: // 2 sources:
                 Log.i("PaymentNetworkProvider", "wait for MST pay thread");
                 try {
                     mMstPayThread.join();
-                }
-                catch (InterruptedException interruptedException) {
+                } catch (InterruptedException interruptedException) {
                     interruptedException.printStackTrace();
                 }
             }
             mRetryMode = true;
-            mMstPayThread = new Thread((Runnable)new a());
+            mMstPayThread = new Thread((Runnable) new MstPayThreadRunnable());
             mMstPayThread.start();
             Log.i("PaymentNetworkProvider", "started MST pay thread");
         }
@@ -1342,8 +1240,7 @@ lbl72: // 2 sources:
             if (c2.ac() == null || c2.ac().getTokenId() == null) return;
             this.setupReplenishAlarm();
             return;
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             Log.c("PaymentNetworkProvider", exception.getMessage(), exception);
             return;
         }
@@ -1384,20 +1281,20 @@ lbl72: // 2 sources:
      * Exception decompiling
      */
     public final void startInAppPay(SecuredObject var1_1, InAppTransactionInfo var2_2, IInAppPayCallback var3_3) {
-        // This method has failed to decompile.  When submitting a bug report, please provide this stack trace, and (if you hold appropriate legal rights) the relevant class file.
+        // This method has failed to decompile.  When submitting MstPayThreadRunnable bug report, please provide this stack trace, and (if you hold appropriate legal rights) the relevant class file.
         // org.benf.cfr.reader.util.ConfusedCFRException: Started 2 blocks at once
-        // org.benf.cfr.reader.b.a.a.j.b(Op04StructuredStatement.java:409)
-        // org.benf.cfr.reader.b.a.a.j.d(Op04StructuredStatement.java:487)
-        // org.benf.cfr.reader.b.a.a.i.a(Op03SimpleStatement.java:607)
-        // org.benf.cfr.reader.b.f.a(CodeAnalyser.java:692)
-        // org.benf.cfr.reader.b.f.a(CodeAnalyser.java:182)
-        // org.benf.cfr.reader.b.f.a(CodeAnalyser.java:127)
+        // org.benf.cfr.reader.b.MstPayThreadRunnable.MstPayThreadRunnable.j.b(Op04StructuredStatement.java:409)
+        // org.benf.cfr.reader.b.MstPayThreadRunnable.MstPayThreadRunnable.j.d(Op04StructuredStatement.java:487)
+        // org.benf.cfr.reader.b.MstPayThreadRunnable.MstPayThreadRunnable.i.MstPayThreadRunnable(Op03SimpleStatement.java:607)
+        // org.benf.cfr.reader.b.f.MstPayThreadRunnable(CodeAnalyser.java:692)
+        // org.benf.cfr.reader.b.f.MstPayThreadRunnable(CodeAnalyser.java:182)
+        // org.benf.cfr.reader.b.f.MstPayThreadRunnable(CodeAnalyser.java:127)
         // org.benf.cfr.reader.entities.attributes.f.c(AttributeCode.java:96)
         // org.benf.cfr.reader.entities.g.p(Method.java:396)
         // org.benf.cfr.reader.entities.d.e(ClassFile.java:890)
         // org.benf.cfr.reader.entities.d.b(ClassFile.java:792)
-        // org.benf.cfr.reader.b.a(Driver.java:128)
-        // org.benf.cfr.reader.a.a(CfrDriverImpl.java:63)
+        // org.benf.cfr.reader.b.MstPayThreadRunnable(Driver.java:128)
+        // org.benf.cfr.reader.MstPayThreadRunnable.MstPayThreadRunnable(CfrDriverImpl.java:63)
         // com.njlabs.showjava.decompilers.JavaExtractionWorker.decompileWithCFR(JavaExtractionWorker.kt:61)
         // com.njlabs.showjava.decompilers.JavaExtractionWorker.doWork(JavaExtractionWorker.kt:130)
         // com.njlabs.showjava.decompilers.BaseDecompiler.withAttempt(BaseDecompiler.kt:108)
@@ -1498,15 +1395,15 @@ lbl72: // 2 sources:
             return;
         }
         int n3 = payConfig != null && payConfig.getPayType() == n2 ? n2 : 0;
-        Log.d("PaymentNetworkProvider", "isNFCPaymentOnly= " + (boolean)n3);
+        Log.d("PaymentNetworkProvider", "isNFCPaymentOnly= " + (boolean) n3);
         this.setPayAuthenticationMode(this.mAuthType);
         if (this.getAuthType().equalsIgnoreCase("None")) {
             n2 = 0;
         }
-        this.beginPay((boolean)n2, h.ap(this.mContext));
+        this.beginPay((boolean) n2, h.ap(this.mContext));
         if (n3 == 0 && h.ao(this.mContext) && this.isPayAllowedForPresentationMode(2)) {
             this.mMstSequenceId = com.samsung.android.spayfw.core.h.f("default", this.mCardBrand);
-            mMstPayThread = new Thread((Runnable)new a());
+            mMstPayThread = new Thread((Runnable) new MstPayThreadRunnable());
             mMstPayThread.start();
             Log.i("PaymentNetworkProvider", "started MST pay thread");
             return;
@@ -1514,7 +1411,7 @@ lbl72: // 2 sources:
         Log.d("PaymentNetworkProvider", "Utils.isMstAvailable(mContext) " + h.ao(this.mContext));
         Log.d("PaymentNetworkProvider", "isPayAllowedForPresentationMode(PaymentFramework.CARD_PRESENT_MODE_MST) " + this.isPayAllowedForPresentationMode(2));
         Log.d("PaymentNetworkProvider", "MST not supported.");
-        new Thread(){
+        new Thread() {
 
             public void run() {
                 Log.d(PaymentNetworkProvider.LOG_TAG, "Wait for NFC.");
@@ -1537,18 +1434,16 @@ lbl72: // 2 sources:
     public final void stopInAppPay(String var1_1, ICommonCallback var2_2) {
         Log.d("PaymentNetworkProvider", "stopInAppPay");
         Log.d("PaymentNetworkProvider", "State : " + o.getState());
-        if (var2_2 == null) ** GOTO lbl7
         try {
-            this.mStopPayCallback = var2_2;
-            this.mStopPaySelectedCard = var1_1;
-lbl7: // 2 sources:
-            if (o.q(4096) != false) return;
-            Log.e("PaymentNetworkProvider", "state change prohibited");
-            return;
-        }
-        catch (Exception var3_3) {
+            if (var2_2 == null) {
+                if (o.q(4096)) return;
+                Log.e("PaymentNetworkProvider", "state change prohibited");
+            } else {
+                this.mStopPayCallback = var2_2;
+                this.mStopPaySelectedCard = var1_1;
+            }
+        } catch (Exception e) {
             Log.e("PaymentNetworkProvider", "Exception in stop in-app pay");
-            return;
         }
     }
 
@@ -1615,8 +1510,7 @@ lbl7: // 2 sources:
             this.loadTAwithCounter(false);
             String string = this.updateLoyaltyCard(jsonObject);
             return string;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -1632,8 +1526,7 @@ lbl7: // 2 sources:
             this.loadTAwithCounter(false);
             this.updateTokenMetaData(jsonObject, token);
             return;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
@@ -1648,31 +1541,31 @@ lbl7: // 2 sources:
      * Lifted jumps to return sites
      */
     public final e updateTokenStatusTA(JsonObject var1_1, TokenStatus var2_2) {
-        if (var2_2 == null) ** GOTO lbl11
+        if (var2_2 == null) **GOTO lbl11
         try {
             if (var2_2.getCode() != null) {
                 Log.d("PaymentNetworkProvider", "Token Status = " + var2_2.getCode());
-                if (var2_2.getCode().equals((Object)"DISPOSED") && this.mProviderTokenKey != null && PaymentNetworkProvider.mAuthTASelectedCard != null) {
+                if (var2_2.getCode().equals((Object) "DISPOSED") && this.mProviderTokenKey != null && PaymentNetworkProvider.mAuthTASelectedCard != null) {
                     Log.d("PaymentNetworkProvider", "providerTokenKey = " + this.mProviderTokenKey.cn());
                     Log.d("PaymentNetworkProvider", "mAuthTASelectedCard = " + PaymentNetworkProvider.mAuthTASelectedCard.cn());
-                    if (Objects.equals((Object)this.mProviderTokenKey.cn(), (Object)PaymentNetworkProvider.mAuthTASelectedCard.cn())) {
+                    if (Objects.equals((Object) this.mProviderTokenKey.cn(), (Object) PaymentNetworkProvider.mAuthTASelectedCard.cn())) {
                         Log.d("PaymentNetworkProvider", "Clearing Secure Object Input for Payment");
                         this.clearSecureObjectInputForPayment();
                     }
                 }
             }
-lbl11: // 8 sources:
+            lbl11:
+            // 8 sources:
             this.loadTAwithCounter(false);
-            var4_3 = this.updateTokenStatus(var1_1, var2_2);
+            e var4_3 = this.updateTokenStatus(var1_1, var2_2);
             return var4_3;
-        }
-        finally {
+        } finally {
             this.unloadTAwithCounter(false);
         }
     }
 
     public static class InAppDetailedTransactionInfo
-    extends InAppTransactionInfo {
+            extends InAppTransactionInfo {
         private String merchantCertificate;
         private byte[] nonce = null;
 
@@ -1698,12 +1591,12 @@ lbl11: // 8 sources:
         }
     }
 
-    private class a
-    implements Runnable {
+    private class MstPayThreadRunnable
+            implements Runnable {
         int oP = -36;
         int oQ = 0;
 
-        private a() {
+        private MstPayThreadRunnable() {
         }
 
         /*
@@ -1719,8 +1612,7 @@ lbl11: // 8 sources:
                 if (bl) {
                     try {
                         mSwitchObj.wait();
-                    }
-                    catch (InterruptedException interruptedException) {
+                    } catch (InterruptedException interruptedException) {
                         Log.d(PaymentNetworkProvider.LOG_TAG, "switch obj wait interrupt exception");
                         Log.c(PaymentNetworkProvider.LOG_TAG, interruptedException.getMessage(), interruptedException);
                     }
@@ -1749,10 +1641,13 @@ lbl11: // 8 sources:
          */
         public void run() {
             MstPayConfig mstPayConfig;
-            block46 : {
+            block46:
+            {
                 MstPayConfig mstPayConfig2;
-                block45 : {
-                    block44 : {
+                block45:
+                {
+                    block44:
+                    {
                         if (this.cf()) {
                             Log.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits, not in payment state");
                             return;
@@ -1775,10 +1670,9 @@ lbl11: // 8 sources:
                             }
                             mShouldInterrupt = true;
                             Log.d(PaymentNetworkProvider.LOG_TAG, "mst idle time=" + n2);
-                            Thread.sleep((long)n2);
+                            Thread.sleep((long) n2);
                             mShouldInterrupt = false;
-                        }
-                        catch (InterruptedException interruptedException) {
+                        } catch (InterruptedException interruptedException) {
                             mShouldInterrupt = false;
                             Log.i(PaymentNetworkProvider.LOG_TAG, "interrupt MST because nfc is detected");
                         }
@@ -1793,7 +1687,8 @@ lbl11: // 8 sources:
                         if (mPayConfig.getPayType() != 2) return;
                         if (mPayConfig.getMstPayConfig() == null) return;
                         mstPayConfig2 = mPayConfig.getMstPayConfig();
-                        if (mAuthTASelectedCard != null && "GIFT".equals((Object)mAuthTASelectedCard.cn())) break block44;
+                        if (mAuthTASelectedCard != null && "GIFT".equals((Object) mAuthTASelectedCard.cn()))
+                            break block44;
                         if (mRetryMode) break block45;
                         PayConfig payConfig = com.samsung.android.spayfw.core.f.j(PaymentNetworkProvider.this.mContext).ak();
                         if (payConfig != null && payConfig.getMstPayConfig() != null) {
@@ -1868,24 +1763,33 @@ lbl11: // 8 sources:
             boolean bl2 = true;
             for (int i2 = 1; i2 <= this.oQ; ++i2, ++n3) {
                 boolean bl3;
-                block43 : {
+                block43:
+                {
                     boolean bl4;
-                    block51 : {
-                        block52 : {
-                            block53 : {
+                    block51:
+                    {
+                        block52:
+                        {
+                            block53:
+                            {
                                 boolean bl5;
-                                block50 : {
-                                    block49 : {
+                                block50:
+                                {
+                                    block49:
+                                    {
                                         byte[] arrby;
                                         MstPayConfigEntry mstPayConfigEntry;
-                                        block48 : {
-                                            block47 : {
+                                        block48:
+                                        {
+                                            block47:
+                                            {
                                                 Log.i(PaymentNetworkProvider.LOG_TAG, "MstPayloop: start: " + System.currentTimeMillis());
                                                 if (o.p(72)) break block47;
                                                 Log.i(PaymentNetworkProvider.LOG_TAG, " MstPayloop: end: at start of loop: " + System.currentTimeMillis());
                                                 if (!this.ce()) {
                                                     Log.d(PaymentNetworkProvider.LOG_TAG, "MST thread exits after preparing MST");
-                                                    if (PaymentNetworkProvider.this.forceQuit) return;
+                                                    if (PaymentNetworkProvider.this.forceQuit)
+                                                        return;
                                                     PaymentNetworkProvider.this.stopMstPayLocked(true);
                                                     return;
                                                 }
@@ -1896,7 +1800,7 @@ lbl11: // 8 sources:
                                                 break block43;
                                             }
                                             Log.i(PaymentNetworkProvider.LOG_TAG, "startPayMst: count: " + i2);
-                                            mstPayConfigEntry = (MstPayConfigEntry)mstPayConfig.getMstPayConfigEntry().get(n3);
+                                            mstPayConfigEntry = (MstPayConfigEntry) mstPayConfig.getMstPayConfigEntry().get(n3);
                                             Log.i(PaymentNetworkProvider.LOG_TAG, "startPayMst: config: " + mstPayConfigEntry.toString());
                                             arrby = com.samsung.android.spayfw.core.g.a(mstPayConfigEntry);
                                             if (o.p(72)) break block48;
@@ -1982,9 +1886,9 @@ lbl11: // 8 sources:
                             break block43;
                         }
                         try {
-                            Log.d(PaymentNetworkProvider.LOG_TAG, "next transmission will happen after :" + ((MstPayConfigEntry)mstPayConfig.getMstPayConfigEntry().get(n3)).getDelayBetweenRepeat() + "Ms");
+                            Log.d(PaymentNetworkProvider.LOG_TAG, "next transmission will happen after :" + ((MstPayConfigEntry) mstPayConfig.getMstPayConfigEntry().get(n3)).getDelayBetweenRepeat() + "Ms");
                             Log.d(PaymentNetworkProvider.LOG_TAG, "current time before sleep in ms: " + System.currentTimeMillis());
-                            Thread.sleep((long)((MstPayConfigEntry)mstPayConfig.getMstPayConfigEntry().get(n3)).getDelayBetweenRepeat());
+                            Thread.sleep((long) ((MstPayConfigEntry) mstPayConfig.getMstPayConfigEntry().get(n3)).getDelayBetweenRepeat());
                             if (bl2 && o.p(8)) {
                                 n3 = -1;
                                 bl = bl4;
@@ -1993,8 +1897,7 @@ lbl11: // 8 sources:
                                 break block43;
                             }
                             Log.d(PaymentNetworkProvider.LOG_TAG, "current time after wake up in ms: " + System.currentTimeMillis() + "\n next transmission started after delay:");
-                        }
-                        catch (InterruptedException interruptedException) {
+                        } catch (InterruptedException interruptedException) {
                             Log.w(PaymentNetworkProvider.LOG_TAG, "premature wake up from sleep: currentTime " + System.currentTimeMillis());
                         }
                     }
@@ -2021,7 +1924,7 @@ lbl11: // 8 sources:
     }
 
     private class b
-    extends TimerTask {
+            extends TimerTask {
         private b() {
         }
 

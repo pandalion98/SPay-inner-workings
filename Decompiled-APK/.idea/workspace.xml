@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="90abedab-f657-4c2e-ac12-8d5f6bc053fe" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../SPayExperiment/app/src/main/java/com/samsung/android/spaytzsvc/api/TAController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SPayExperiment/app/src/main/java/com/samsung/android/spaytzsvc/api/TAController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SPayExperiment/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../SPayExperiment/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SPayExperiment/app/src/main/java/com/samsung/android/spayfw/payprovider/PaymentNetworkProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/../SPayExperiment/app/src/main/java/com/samsung/android/spayfw/payprovider/PaymentNetworkProvider.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
