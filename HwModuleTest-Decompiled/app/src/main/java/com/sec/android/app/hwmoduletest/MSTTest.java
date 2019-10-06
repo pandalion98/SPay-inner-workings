@@ -10,13 +10,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.sec.android.app.hwmoduletest.support.BaseActivity;
 import com.sec.android.app.hwmoduletest.support.LtUtil;
 import com.sec.xmldata.support.NVAccessor;
 import com.sec.xmldata.support.Support.Feature;
 import com.sec.xmldata.support.Support.HwTestMenu;
 import com.sec.xmldata.support.Support.Kernel;
+
 import egis.client.api.EgisFingerprint;
+
+import static com.sec.xmldata.support.Support.Kernel.BATTERY_WPC_CTRL;
 
 public class MSTTest extends BaseActivity implements OnClickListener {
     protected static final String CLASS_NAME = "MSTTest";
@@ -164,6 +168,49 @@ public class MSTTest extends BaseActivity implements OnClickListener {
     /* access modifiers changed from: private */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean ChangeWPCStatus(java.lang.String r7) {
+
+        if (r7.equals("0")) {
+            LtUtil.log_d("MSTTest", "ChangeWPCStatus ", "0");
+            Kernel.write(BATTERY_WPC_CTRL, "0");
+            this.WpcStatus = Kernel.read(BATTERY_WPC_CTRL);
+
+            if (this.WpcStatus.equals("0")) {
+                boolean r0 = this.wpcOffFirstTime;
+
+                if (r0) {
+                    com.sec.android.app.hwmoduletest.support.LtUtil.log_i("MSTTest", "ChangeWPCStatus", "no delay(wpc)");
+                    this.wpcOffFirstTime = false;
+                    return true;
+                } else {
+                    LtUtil.Sleep.sleep(this.WPC_OFF_DELAY);
+
+                    String xR4 = "off delay(wpc) : " + WPC_OFF_DELAY;
+                    LtUtil.log_i("MSTTest", "ChangeWPCStatus", xR4);
+                    this.WPC_OFF_DELAY = 1;
+                    this.wpcOffFirstTime = false;
+                    return true;
+                }
+            } else {
+                LtUtil.log_i("MSTTest", "ChangeWPCStatus", "fail to turn off WPC ");
+                this.mHandler.sendEmptyMessage(6);
+                return false;
+            }
+        } else if (r7.equals("1")) {
+            LtUtil.log_d("MSTTest", "ChangeWPCStatus ", "0");
+            Kernel.write(BATTERY_WPC_CTRL, "1");
+            this.WpcStatus = Kernel.read(BATTERY_WPC_CTRL);
+
+            if (this.WpcStatus.equals("1")) {
+                return true;
+            } else {
+                LtUtil.log_i("MSTTest", "ChangeWPCStatus", "fail to turn on WPC ");
+                return false;
+            }
+        } else {
+            return true;
+        }
+
+
         /*
             r6 = this;
             int r0 = r7.hashCode()
@@ -268,7 +315,6 @@ public class MSTTest extends BaseActivity implements OnClickListener {
         L_0x00b2:
             return r1
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.sec.android.app.hwmoduletest.MSTTest.ChangeWPCStatus(java.lang.String):boolean");
     }
 
     /* access modifiers changed from: protected */
