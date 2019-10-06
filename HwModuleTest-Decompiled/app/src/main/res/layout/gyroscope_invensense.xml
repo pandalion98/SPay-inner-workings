@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:background="@color/background" android:padding="20dp" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="30sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/gyroscope_title"/>
+    <TableLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="30dp">
+        <TableRow android:id="@+id/tablerow_initialized" android:visibility="gone">
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/gyroscope_initialized" android:layout_weight="1"/>
+            <TextView android:textSize="15sp" android:textColor="@color/black" android:id="@+id/initialized" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/gyroscope_temperature" android:layout_weight="1"/>
+            <TextView android:textSize="15sp" android:textColor="@color/black" android:id="@+id/temperature" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+        </TableRow>
+    </TableLayout>
+    <TableLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="30dp">
+        <TableRow android:gravity="center_vertical">
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="center" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/gyroscope_x" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/gyroscope_y" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/gyroscope_z" android:layout_weight="1"/>
+        </TableRow>
+        <TableRow android:gravity="center_vertical">
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/gyroscope_noise_bias" android:layout_weight="1"/>
+            <TextView android:textSize="15sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/noise_bias_x" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <TextView android:textSize="15sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/noise_bias_y" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <TextView android:textSize="15sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/noise_bias_z" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+        </TableRow>
+        <TableRow android:gravity="center_vertical">
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/gyroscope_rms" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/noise_power_x" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/noise_power_y" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/noise_power_z" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+        </TableRow>
+        <TableRow android:gravity="center_vertical">
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hw_self" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/hw_self_x" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/hw_self_y" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/hw_self_z" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+        </TableRow>
+        <TableRow android:gravity="center_vertical">
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/result" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/result" android:padding="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="3"/>
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

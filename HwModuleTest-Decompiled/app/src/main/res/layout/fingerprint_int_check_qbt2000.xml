@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/frameLayout" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:orientation="vertical" android:id="@+id/linearLayout" android:layout_width="match_parent" android:layout_height="match_parent">
+        <TextView android:textSize="25sp" android:textStyle="bold" android:textColor="@android:color/black" android:gravity="center" android:id="@+id/mainTitle" android:padding="5dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/fingerprint_int._check_title"/>
+        <View style="@style/ui_separator_land_black"/>
+        <TableLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="15dp" android:layout_marginTop="40dp" android:layout_marginRight="15dp" android:stretchColumns="1">
+            <TableRow>
+                <TextView android:textSize="30sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:id="@+id/testNameInt2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="10dp" android:text="@string/INT2_WUHB"/>
+                <TextView android:textSize="30sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:id="@+id/int2Status" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="10dp" android:text="@string/READY"/>
+            </TableRow>
+        </TableLayout>
+        <Button android:textSize="30sp" android:textStyle="bold" android:textColor="@android:color/black" android:gravity="center" android:layout_gravity="center_horizontal" android:id="@+id/exitButton" android:padding="30dp" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="100dp" android:text="@string/EXIT" android:onClick="onExitButtonClicked"/>
+    </LinearLayout>
+</FrameLayout>

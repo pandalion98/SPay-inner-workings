@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:background="@color/background" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:padding="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/magnetic_title"/>
+    <View style="@style/ui_separator_land_black"/>
+    <TableLayout android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TableRow android:gravity="center_vertical" android:id="@+id/tablerow_initialized" android:visibility="gone" android:layout_weight="1">
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/magnetic_initialized" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="right" android:id="@+id/initialized" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+        </TableRow>
+        <TableRow android:gravity="center_vertical" android:id="@+id/tablerow_bmz" android:visibility="gone" android:layout_weight="1">
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/magnetic_bmz" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="right" android:id="@+id/bmz" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+        </TableRow>
+    </TableLayout>
+    <View style="@style/ui_separator_land_black"/>
+    <TableLayout android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TableRow android:gravity="center_vertical" android:layout_weight="1">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="right" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/magnetic_x" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="right" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/magnetic_y" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="right" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/magnetic_z" android:layout_weight="1"/>
+        </TableRow>
+        <TableRow android:gravity="center_vertical" android:id="@+id/tablerow_adc" android:visibility="gone" android:layout_weight="1">
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="left" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/magnetic_adc" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="right" android:id="@+id/adc_x" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="right" android:id="@+id/adc_y" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+            <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="right" android:id="@+id/adc_z" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"/>
+        </TableRow>
+    </TableLayout>
+    <View style="@style/ui_separator_land_black"/>
+    <TextView android:textSize="60sp" android:textStyle="bold" android:gravity="center" android:id="@+id/result" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/magnetic_result"/>
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:id="@+id/sensorHub_test" android:padding="20sp" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="50sp" android:paddingBottom="5dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/SensorHub_Test"/>
+    <LinearLayout android:orientation="vertical" android:id="@+id/linearLayout1" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
+        <TextView android:textSize="15sp" android:id="@+id/intcheck" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/INT_Check" android:layout_weight="1"/>
+        <TextView android:textSize="15sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/SensorHubFirmwareCheck" android:layout_weight="1"/>
+        <TextView android:textSize="15sp" android:id="@+id/mcufirmversion" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/Mcu_Firm_Version" android:layout_weight="1"/>
+        <TextView android:textSize="15sp" android:id="@+id/binfirmversion" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/Bin_Firm_Version" android:layout_weight="1"/>
+        <TextView android:textSize="30sp" android:id="@+id/MCUchip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/MCU" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout android:gravity="center_horizontal" android:id="@+id/linearLayout2" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
+        <TextView android:textSize="60sp" android:textColor="@color/blue" android:id="@+id/sensorHubpassfail" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1"/>
+    </LinearLayout>
+</LinearLayout>

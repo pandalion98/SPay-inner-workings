@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="15dp" android:layout_weight="1">
+        <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:id="@+id/msttest_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:text="@string/mst_title" android:layout_alignParentLeft="true" android:layout_centerVertical="true"/>
+        <View android:layout_alignBottom="@+id/msttest_title" style="@style/ui_separator_land_black"/>
+    </RelativeLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:background="@color/background" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="15dp" android:layout_weight="2">
+        <TextView android:textSize="20sp" android:textColor="@color/red" android:gravity="center" android:layout_gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/mst_sample_data" android:layout_weight="1"/>
+        <LinearLayout android:gravity="center" android:orientation="vertical" android:background="@color/background" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="20dp">
+            <TextView android:textSize="13sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:id="@+id/mst_sample_data_track_1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="15dp" android:layout_weight="1"/>
+            <TextView android:textSize="13sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:id="@+id/mst_sample_data_track_2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:background="@color/background" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:layout_weight="2">
+        <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:id="@+id/mst_one_time_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/mst_one_time"/>
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:background="@color/background" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <Button android:textSize="15sp" android:id="@+id/btn_mst_track_1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/mst_track_1"/>
+            <Button android:textSize="15sp" android:id="@+id/btn_mst_track_2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/mst_track_2"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:background="@color/background" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:layout_weight="2">
+        <TextView android:textSize="20sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:id="@+id/mst_continuous_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/mst_continuous"/>
+        <LinearLayout android:gravity="center" android:orientation="horizontal" android:background="@color/background" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <Button android:textSize="15sp" android:id="@+id/btn_mst_continuous_track1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/mst_track_1"/>
+            <Button android:textSize="15sp" android:id="@+id/btn_mst_continuous_track2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/mst_track_2"/>
+            <Button android:textSize="15sp" android:id="@+id/btn_mst_continuous_track1plus2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/mst_track_1plus2"/>
+        </LinearLayout>
+        <Button android:textSize="15sp" android:id="@+id/btn_mst_off" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/mst_off"/>
+    </LinearLayout>
+</LinearLayout>

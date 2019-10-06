@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/background" android:background="@color/black" android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+        <TextView android:textSize="25sp" android:textStyle="bold" android:textColor="@color/dark_gray" android:gravity="center" android:id="@+id/main_title" android:padding="5dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/fingerprint_cal_title_optical"/>
+        <View android:id="@+id/serparator_darkgray" style="@style/ui_separator_land_darkgray"/>
+        <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/dark_gray" android:gravity="center" android:id="@+id/current_step" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp"/>
+        <LinearLayout android:orientation="horizontal" android:id="@+id/button_group" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp">
+            <Button android:textSize="20sp" android:textStyle="bold" android:gravity="center" android:id="@+id/button_start" android:visibility="invisible" android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/START"/>
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+            <Button android:textSize="20sp" android:textStyle="bold" android:gravity="center" android:id="@+id/button_exit" android:visibility="visible" android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/EXIT"/>
+        </LinearLayout>
+        <LinearLayout android:orientation="vertical" android:id="@+id/status" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView android:textSize="50sp" android:textStyle="bold" android:textColor="@color/dark_gray" android:gravity="center" android:id="@+id/cal_status" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/READY"/>
+            <TextView android:textSize="25sp" android:textStyle="bold" android:textColor="@color/red" android:gravity="center" android:id="@+id/touchGuide" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="50dp" android:text="@string/fingerprint_do_not_touch"/>
+        </LinearLayout>
+        <ImageView android:layout_gravity="center_horizontal" android:id="@+id/fingerprint_snrimage" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:scaleType="fitCenter"/>
+        <com.sec.android.app.hwmoduletest.FingerPrintResultView_touch android:layout_gravity="center_horizontal" android:id="@+id/fingerprint_resultview" android:paddingTop="10dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1"/>
+    </LinearLayout>
+    <AbsoluteLayout android:id="@+id/fingerprint_area" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent">
+        <ImageView android:id="@+id/fingerprint_area_image" android:background="@drawable/circle_green" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <ImageView android:id="@+id/fingerprint_area_rect" android:background="@drawable/rect_empty_light" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    </AbsoluteLayout>
+</FrameLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="center" android:orientation="vertical" android:background="@android:color/black" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1">
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/background_layout_grip1" android:background="@android:color/black" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1">
+        <TextView android:textSize="50sp" android:textColor="@color/release" android:gravity="center" android:id="@+id/grip_str_sen1" android:paddingLeft="30dp" android:paddingTop="40dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/sensor1"/>
+        <TextView android:textSize="80sp" android:textColor="@color/release" android:gravity="center" android:id="@+id/info1" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/release"/>
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/background_layout_grip2" android:background="@android:color/black" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1">
+        <TextView android:textSize="50sp" android:textColor="@color/release" android:gravity="center" android:id="@+id/grip_str_sen2" android:paddingLeft="30dp" android:paddingTop="40dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/sensor2"/>
+        <TextView android:textSize="80sp" android:textColor="@color/release" android:gravity="center" android:id="@+id/info2" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/release"/>
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/background_layout_grip3" android:background="@android:color/black" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1">
+        <TextView android:textSize="50sp" android:textColor="@color/release" android:gravity="center" android:id="@+id/grip_str_sen3" android:paddingLeft="30dp" android:paddingTop="40dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/sensor3"/>
+        <TextView android:textSize="80sp" android:textColor="@color/release" android:gravity="center" android:id="@+id/info3" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/release"/>
+    </LinearLayout>
+</LinearLayout>

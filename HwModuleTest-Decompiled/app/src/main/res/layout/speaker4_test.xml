@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="end" android:orientation="vertical" android:background="@color/white" android:padding="5dp" android:layout_width="match_parent" android:layout_height="match_parent" android:keepScreenOn="true">
+    <TextView android:textSize="30sp" android:textColor="@color/black" android:gravity="center" android:layout_gravity="center" android:id="@+id/title" android:background="@color/gray_light" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="4"/>
+    <LinearLayout android:layout_gravity="top" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="4">
+        <LinearLayout android:gravity="left" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="2">
+            <Button android:textSize="30sp" android:textStyle="bold" android:textColor="@color/black" android:layout_gravity="center" android:id="@+id/button_upperSPKL" android:layout_width="150dp" android:layout_height="wrap_content" android:text="@string/PASS" android:soundEffectsEnabled="false"/>
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:layout_gravity="center" android:id="@+id/txt_upperL" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/Top_SPK_L"/>
+        </LinearLayout>
+        <LinearLayout android:gravity="right" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="2">
+            <Button android:textSize="30sp" android:textStyle="bold" android:textColor="@color/black" android:layout_gravity="center" android:id="@+id/button_upperSPKR" android:layout_width="150dp" android:layout_height="wrap_content" android:text="@string/PASS" android:soundEffectsEnabled="false"/>
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:layout_gravity="center" android:id="@+id/txt_upperR" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/Top_SPK_R"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="4">
+        <TextView android:textSize="30sp" android:textStyle="bold" android:textColor="@color/black" android:layout_gravity="center" android:id="@+id/test_msg" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <Button android:textSize="30sp" android:textStyle="bold" android:textColor="@color/black" android:layout_gravity="center" android:id="@+id/button_fail" android:layout_width="150dp" android:layout_height="wrap_content" android:text="@string/FAIL" android:soundEffectsEnabled="false"/>
+    </LinearLayout>
+    <LinearLayout android:layout_gravity="bottom" android:orientation="horizontal" android:id="@+id/spk4lower_btlayout" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="4">
+        <LinearLayout android:gravity="left" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="2">
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:layout_gravity="center" android:id="@+id/txt_lowerL" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/Bottom_SPK_L"/>
+            <Button android:textSize="30sp" android:textStyle="bold" android:textColor="@color/black" android:layout_gravity="center" android:id="@+id/button_lowerSPKL" android:layout_width="150dp" android:layout_height="wrap_content" android:text="@string/PASS" android:soundEffectsEnabled="false"/>
+        </LinearLayout>
+        <LinearLayout android:gravity="right" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="2">
+            <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:layout_gravity="center" android:id="@+id/txt_lowerR" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/Bottom_SPK_R"/>
+            <Button android:textSize="30sp" android:textStyle="bold" android:textColor="@color/black" android:layout_gravity="center" android:id="@+id/button_lowerSPKR" android:layout_width="150dp" android:layout_height="wrap_content" android:text="@string/PASS" android:soundEffectsEnabled="false"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

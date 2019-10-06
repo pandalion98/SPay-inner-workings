@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:background="@color/background" android:layout_width="match_parent" android:layout_height="match_parent" android:keepScreenOn="true">
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:layout_marginTop="10dp">
+        <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spen_title" android:layout_alignParentLeft="true" android:layout_centerVertical="true"/>
+    </RelativeLayout>
+    <View android:layout_marginTop="3dp" style="@style/ui_separator_land_black"/>
+    <LinearLayout android:gravity="center" android:orientation="horizontal" android:background="@color/background" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:weightSum="1" android:keepScreenOn="true">
+        <Button android:textSize="20sp" android:id="@+id/spen_draw_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spen_draw" android:layout_weight="0.3"/>
+        <Button android:textSize="20sp" android:id="@+id/spen_hover_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spen_hover" android:layout_weight="0.3"/>
+        <Button android:textSize="20sp" android:id="@+id/spen_key_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spen_key" android:layout_weight="0.3"/>
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="horizontal" android:background="@color/background" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:weightSum="1" android:keepScreenOn="true">
+        <Button android:textSize="20sp" android:id="@+id/spen_draw2_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spen_draw2" android:layout_weight="0.3"/>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:background="#ffcccccc" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="25sp" android:textColor="#ff000000" android:gravity="center" android:orientation="horizontal" android:background="#ffffffff" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="55sp" android:text="@string/testTitle"/>
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="match_parent">
+        <TableLayout android:gravity="left|center_vertical|center_horizontal|center" android:orientation="horizontal" android:id="@+id/hallic_test_table" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_marginLeft="40px" android:layout_marginRight="40px">
+            <TableRow>
+                <TextView android:textSize="25sp" android:textColor="#ff000000" android:id="@+id/hallic_1st" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="15dp" android:text="@string/hallic_1st"/>
+            </TableRow>
+            <TableRow>
+                <TextView android:textSize="25sp" android:textColor="#ff000000" android:id="@+id/hallic_test" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="15dp" android:text="@string/hallic_test_text"/>
+            </TableRow>
+            <TableRow>
+                <TextView android:textSize="25sp" android:textColor="#ff000000" android:gravity="left" android:id="@+id/working_title" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="15dp" android:text="@string/working" android:layout_weight="1"/>
+                <TextView android:textSize="25sp" android:gravity="center" android:id="@+id/working_text" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1"/>
+            </TableRow>
+            <TableRow>
+                <TextView android:textSize="25sp" android:textColor="#ff000000" android:gravity="left" android:id="@+id/release_title" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="15dp" android:text="@string/release" android:layout_weight="1"/>
+                <TextView android:textSize="25sp" android:gravity="center" android:id="@+id/release_text" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1"/>
+            </TableRow>
+            <TableRow>
+                <TextView android:textSize="25sp" android:textColor="#ff000000" android:id="@+id/hallic_2nd" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="15dp" android:text="@string/hallic_2nd"/>
+            </TableRow>
+            <TableRow>
+                <TextView android:textSize="25sp" android:textColor="#ff000000" android:id="@+id/hallic_test2" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="15dp" android:text="@string/hallic_test_text"/>
+            </TableRow>
+            <TableRow>
+                <TextView android:textSize="25sp" android:textColor="#ff000000" android:gravity="left" android:id="@+id/working_title2" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="15dp" android:text="@string/working" android:layout_weight="1"/>
+                <TextView android:textSize="25sp" android:gravity="center" android:id="@+id/working_text2" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1"/>
+            </TableRow>
+            <TableRow>
+                <TextView android:textSize="25sp" android:textColor="#ff000000" android:gravity="left" android:id="@+id/release_title2" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginLeft="15dp" android:text="@string/release" android:layout_weight="1"/>
+                <TextView android:textSize="25sp" android:gravity="center" android:id="@+id/release_text2" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1"/>
+            </TableRow>
+        </TableLayout>
+        <Button android:textSize="40sp" android:textStyle="bold" android:layout_gravity="center" android:id="@+id/exit" android:paddingLeft="20dp" android:paddingRight="20dp" android:focusable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/EXIT"/>
+    </LinearLayout>
+    <com.sec.android.app.hwmoduletest.HallICPoint android:id="@+id/hallicpoint" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <com.sec.android.app.hwmoduletest.HallICPoint android:id="@+id/hallicpoint2" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+</AbsoluteLayout>

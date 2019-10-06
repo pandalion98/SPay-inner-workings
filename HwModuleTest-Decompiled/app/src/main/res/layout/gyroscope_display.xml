@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="19sp" android:gravity="center" android:id="@+id/tv_sub_gyro_disp_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:layout_marginBottom="10dp" android:text="@string/gyro_disp_title"/>
+    <TableLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:weightSum="3">
+        <TableRow>
+            <TextView android:textSize="16sp" android:layout_height="wrap_content" android:layout_column="1" android:text="@string/gyro_disp_try_count"/>
+            <TextView android:textSize="16sp" android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:layout_column="1" android:text="@string/gyro_disp_x_value"/>
+            <TextView android:textSize="16sp" android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:layout_column="2" android:text="@string/gyro_disp_y_value"/>
+            <TextView android:textSize="16sp" android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:layout_column="3" android:text="@string/gyro_disp_z_value"/>
+        </TableRow>
+    </TableLayout>
+    <View android:background="@android:color/white" android:layout_width="match_parent" android:layout_height="2dp"/>
+    <View android:background="@android:color/darker_gray" android:layout_width="match_parent" android:layout_height="3dp"/>
+    <ListView android:gravity="center" android:id="@+id/hist_nv_list" android:layout_width="wrap_content" android:layout_height="wrap_content" android:cacheColorHint="#00000000"/>
+</LinearLayout>

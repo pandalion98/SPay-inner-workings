@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android" android:textSize="10sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/finger_print_qbt2000_table_text_view_data_row" android:background="@android:color/white" android:paddingTop="3dp" android:paddingBottom="3dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="1dp"/>

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android" android:textSize="40sp" android:textColor="@android:color/black" android:gravity="center" android:layout_gravity="center" android:background="@android:color/white" android:layout_width="300dp" android:layout_height="150dp" android:text="@string/touch_fail"/>

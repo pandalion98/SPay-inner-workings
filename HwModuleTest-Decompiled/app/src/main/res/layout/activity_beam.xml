@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:background="#bbb" android:layout_width="match_parent" android:layout_height="match_parent" android:keepScreenOn="true">
+    <ImageView android:id="@+id/imageBarcode" android:layout_width="match_parent" android:layout_height="wrap_content" android:src="@drawable/ic_launcher" android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/textDigits" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:layout_below="@+id/imageBarcode" android:layout_centerHorizontal="true"/>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:textStyle="bold" android:id="@+id/textSymbology" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="30dp" android:layout_below="@+id/textDigits" android:layout_centerHorizontal="true"/>
+    <LinearLayout android:id="@+id/btnGroup" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:layout_below="@+id/textSymbology" android:layout_centerHorizontal="true">
+        <Button android:id="@+id/buttonStart" android:background="@drawable/btn_blue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="20dp" android:text="@string/btn_start" style="@style/ButtonText"/>
+        <Button android:id="@+id/buttonStop" android:background="@drawable/btn_blue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="20dp" android:text="@string/btn_stop" style="@style/ButtonText"/>
+    </LinearLayout>
+    <TextView android:textAppearance="?android:attr/textAppearanceMedium" android:id="@+id/textStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/btnGroup" android:layout_centerHorizontal="true"/>
+</RelativeLayout>

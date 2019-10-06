@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="40sp" android:textStyle="bold" android:gravity="center" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="20dp" android:text="@string/grip_title"/>
+    <View android:layout_width="match_parent" android:layout_height="30dp" android:layout_column="0"/>
+    <TableLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="60dp">
+        <TableRow>
+            <TextView android:textSize="16sp" android:gravity="left" android:id="@+id/gripsensor_cspercent_str" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_column="0" android:text="@string/gripsensor_RAW_Count_str"/>
+            <TextView android:textSize="16sp" android:gravity="left" android:id="@+id/gripsensor_cspercent" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_column="1"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:textSize="16sp" android:gravity="left" android:id="@+id/gripsensor_crcount_null" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_column="0"/>
+            <TextView android:textSize="16sp" android:gravity="left" android:id="@+id/gripsensor_crcount" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_column="1"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:textSize="16sp" android:gravity="left" android:id="@+id/gripsensor_proxpercent_str" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_column="0" android:text="@string/gripsensor_SPEC_str"/>
+            <TextView android:textSize="16sp" android:gravity="left" android:id="@+id/gripsensor_proxpercent" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_column="1"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:textSize="16sp" android:gravity="left" android:id="@+id/gripsensor_caldata_str" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_column="0" android:text="@string/gripsensor_caldata_str"/>
+            <TextView android:textSize="16sp" android:gravity="left" android:id="@+id/gripsensor_caldata" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_column="1"/>
+        </TableRow>
+    </TableLayout>
+    <View android:layout_width="match_parent" android:layout_height="30dp" android:layout_column="0"/>
+    <LinearLayout android:layout_gravity="center" android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="10dp">
+        <Button android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/gripsensor_cal_btn" android:layout_width="100dp" android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:layout_marginRight="20dp" android:layout_column="0" android:text="@string/gripsensor_cal"/>
+        <Button android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/gripsensor_calerase_btn" android:layout_width="150dp" android:layout_height="wrap_content" android:layout_marginLeft="20dp" android:layout_marginRight="20dp" android:layout_column="0" android:text="@string/gripsensor_cal_erase"/>
+    </LinearLayout>
+    <LinearLayout android:layout_gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="10dp">
+        <Button android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/gripsensor_onoff_btn" android:layout_width="100dp" android:layout_height="wrap_content" android:layout_column="1" android:text="@string/gripsensor_on"/>
+    </LinearLayout>
+    <LinearLayout android:layout_gravity="center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="10dp">
+        <Button android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/gripsensor_skip_btn" android:layout_width="100dp" android:layout_height="wrap_content" android:layout_column="1" android:text="@string/gripsensor_cal_skip"/>
+    </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="30dp" android:layout_column="0"/>
+    <TextView android:textSize="60sp" android:textStyle="bold" android:gravity="center" android:id="@+id/result" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/gripsensor_result"/>
+</LinearLayout>

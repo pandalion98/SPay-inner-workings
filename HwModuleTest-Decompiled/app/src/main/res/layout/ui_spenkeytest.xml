@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:background="#ffcccccc" android:layout_width="match_parent" android:layout_height="match_parent" android:keepScreenOn="true">
+    <TextView android:textSize="30sp" android:textColor="#000000" android:gravity="center" android:paddingTop="30dp" android:paddingBottom="30dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/spen_keytest_title"/>
+    <LinearLayout android:orientation="horizontal" android:background="#ffcccccc" android:layout_width="match_parent" android:layout_height="match_parent" android:keepScreenOn="true">
+        <TableLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="300dp" android:layout_weight="1">
+            <TableRow android:gravity="center" android:id="@+id/tableRow1" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="20sp" android:textColor="#000000" android:gravity="center" android:id="@+id/spen_menu_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spen_menu"/>
+            </TableRow>
+            <TableRow android:gravity="center" android:id="@+id/tableRow2" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="20sp" android:textColor="#000000" android:gravity="center" android:id="@+id/spen_menu_press" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spen_press"/>
+            </TableRow>
+            <TableRow android:gravity="center" android:id="@+id/tableRow3" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="20sp" android:textColor="#000000" android:gravity="center" android:id="@+id/spen_menu_release" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spen_release"/>
+            </TableRow>
+        </TableLayout>
+        <Button android:id="@+id/exit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="350dp" android:text="@string/key_exit" android:layout_weight="1"/>
+        <TableLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="300dp" android:layout_weight="1">
+            <TableRow android:gravity="center" android:id="@+id/TableRow04" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="20sp" android:textColor="#000000" android:gravity="center" android:id="@+id/spen_back_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spen_back"/>
+            </TableRow>
+            <TableRow android:gravity="center" android:id="@+id/TableRow05" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="20sp" android:textColor="#000000" android:gravity="center" android:id="@+id/spen_back_press" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spen_press"/>
+            </TableRow>
+            <TableRow android:gravity="center" android:id="@+id/TableRow06" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="20sp" android:textColor="#000000" android:gravity="center" android:id="@+id/spen_back_release" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/spen_release"/>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</LinearLayout>

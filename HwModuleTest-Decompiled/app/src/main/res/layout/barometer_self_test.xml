@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:paddingTop="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="30sp" android:gravity="center" android:id="@+id/barometer_title" android:paddingLeft="4dp" android:paddingBottom="30dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/baro_self_test_title"/>
+    <View android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+    <LinearLayout android:orientation="horizontal" android:paddingTop="10dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:textSize="20sp" android:id="@+id/barometer_temperature" android:paddingLeft="4dp" android:paddingBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/baro_self_test_NA"/>
+        <TextView android:textSize="20sp" android:id="@+id/barometer_temperature_result" android:paddingLeft="4dp" android:paddingBottom="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/baro_self_test_NA"/>
+    </LinearLayout>
+    <View android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+    <TextView android:textSize="20sp" android:id="@+id/barometer_pressure" android:paddingLeft="4dp" android:paddingBottom="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/baro_self_test_NA"/>
+    <View android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+    <TextView android:textSize="20sp" android:id="@+id/barometer_altitude" android:paddingLeft="4dp" android:paddingBottom="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/baro_self_test_NA"/>
+    <View android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+    <View android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+    <TextView android:textSize="80sp" android:gravity="center" android:id="@+id/result_text" android:paddingLeft="4dp" android:paddingTop="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:layout_marginBottom="4dp"/>
+</LinearLayout>

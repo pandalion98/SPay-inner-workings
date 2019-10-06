@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="animationDuration" format="integer">
+    </attr>
+    <attr name="position">
+        <enum name="bottom" value="1" />
+        <enum name="left" value="2" />
+        <enum name="right" value="3" />
+        <enum name="top" value="0" />
+    </attr>
+    <attr name="handle" format="reference">
+    </attr>
+    <attr name="content" format="reference">
+    </attr>
+    <attr name="linearFlying" format="boolean">
+    </attr>
+    <attr name="weight" format="fraction">
+    </attr>
+    <attr name="openedHandle" format="reference|color">
+    </attr>
+    <attr name="closedHandle" format="reference|color">
+    </attr>
+</resources>

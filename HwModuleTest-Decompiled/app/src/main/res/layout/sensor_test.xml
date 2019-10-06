@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+    <ScrollView android:id="@+id/ScrollView" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true">
+        <LinearLayout android:orientation="vertical" android:id="@+id/background" android:layout_width="match_parent" android:layout_height="match_parent">
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/acce_title" android:paddingLeft="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/acce_sensor"/>
+            <View android:id="@+id/acce_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/tv_acc_value" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_acc_image_test" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/acce_image_test_button" android:layout_alignParentRight="true"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_acc_graph" android:layout_width="wrap_content" android:layout_height="30dp" android:layout_marginTop="15dp" android:text="@string/acc_graph_button" android:layout_below="@+id/btn_acc_image_test" android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/sub_acce_title" android:paddingLeft="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/sub_acce_sensor"/>
+            <View android:id="@+id/sub_acce_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/tv_sub_acc_value" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true"/>
+                <TextView android:textSize="14sp" android:id="@+id/tv_sub_acc_sleep_value" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/tv_sub_acc_value" android:layout_alignParentLeft="true"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_sub_acc_graph" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/sub_acc_graph_button" android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/cp_acce_title" android:paddingLeft="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/cp_acce_sensor"/>
+            <View android:id="@+id/cp_acce_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/cp_tv_acc_value" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true"/>
+            </RelativeLayout>
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/prox_title" android:paddingLeft="10dp" android:paddingTop="7dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/prox_sensor"/>
+            <View android:id="@+id/prox_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <LinearLayout android:orientation="horizontal" android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/tv_prox_status" android:paddingLeft="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:textSize="14sp" android:id="@+id/tv_prox_adc_avg" android:paddingLeft="20dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <TextView android:textSize="14sp" android:id="@+id/tv_prox_tsp_color_id" android:paddingLeft="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/tv_prox_default_trim" android:paddingLeft="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:textSize="14sp" android:id="@+id/tv_prox_offset" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/tv_prox_high_threshold" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <TextView android:textSize="14sp" android:id="@+id/tv_prox_low_threshold" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <TextView android:textSize="14sp" android:id="@+id/tv_prox_threshold_1st" android:paddingLeft="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:textSize="14sp" android:id="@+id/tv_prox_threshold_2nd" android:paddingLeft="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:textSize="14sp" android:id="@+id/tv_prox_device_id" android:paddingLeft="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/iris_prox_title" android:paddingLeft="10dp" android:paddingTop="7dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/iris_prox_sensor"/>
+            <View android:id="@+id/iris_prox_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <LinearLayout android:orientation="horizontal" android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/iris_tv_prox_status" android:paddingLeft="10dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/barom_title" android:paddingLeft="10dp" android:paddingTop="7dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/baro_sensor"/>
+            <View android:id="@+id/barom_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/tv_barom_altitude_setting" android:paddingLeft="10dp" android:paddingRight="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/baro_ref_altitude" android:layout_alignParentLeft="true"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_barom_altitude" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/baro_ref_altitude_button" android:layout_alignParentRight="true"/>
+                <EditText android:id="@+id/et_barom_altitude" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minWidth="50dp" android:numeric="decimal" android:layout_toLeftOf="@+id/btn_barom_altitude"/>
+            </RelativeLayout>
+            <RelativeLayout android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:id="@+id/tv_barom_pressure" android:paddingLeft="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentLeft="true"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_barom_selftest" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/baro_self_test_button" android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+            <RelativeLayout android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/tv_barom_altitude" android:paddingLeft="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_alignParentLeft="true"/>
+            </RelativeLayout>
+            <TextView android:textSize="18sp" android:textStyle="bold" android:id="@+id/light_title" android:paddingLeft="10dp" android:paddingTop="7dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/ligh_sensor"/>
+            <View android:id="@+id/light_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/tv_light_lux" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true"/>
+                <TextView android:textSize="14sp" android:id="@+id/tv_light_adc" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/tv_light_lux" android:layout_alignParentLeft="true"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_light_test" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/ligh_test_button" android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+            <TextView android:textSize="14sp" android:id="@+id/flicker_sensor" android:paddingLeft="10dp" android:paddingTop="7dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/gyro_title" android:paddingLeft="10dp" android:paddingTop="7dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/gyro_sensor"/>
+            <View android:id="@+id/gyro_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <TextView android:textSize="14sp" android:id="@+id/tv_gyro_value" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <Button android:textSize="8sp" android:id="@+id/btn_gyro_selftest" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/gyro_self_test_button" android:layout_alignParentLeft="true"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_gyro_display" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/gyro_display_button" android:layout_toRightOf="@+id/btn_gyro_selftest"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_gyro_graph" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/gyro_graph_button" android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/sub_gyro_title" android:paddingLeft="10dp" android:paddingTop="7dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/sub_gyro_sensor"/>
+            <View android:id="@+id/sub_gyro_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <TextView android:textSize="14sp" android:id="@+id/tv_sub_gyro_value" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <Button android:textSize="8sp" android:id="@+id/btn_sub_gyro_selftest" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/gyro_self_test_button" android:layout_alignParentLeft="true"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_sub_gyro_display" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/sub_gyro_display_button" android:layout_toRightOf="@+id/btn_sub_gyro_selftest"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_sub_gyro_graph" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/gyro_sub_graph_button" android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+            <TextView android:textSize="14sp" android:id="@+id/ois_gyro_value" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/ois_gyro_self_test"/>
+            <Button android:textSize="8sp" android:id="@+id/btn_ois_gyro_selftest" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/gyro_self"/>
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/ultra_title" android:paddingLeft="10dp" android:paddingTop="7dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/ultra_sensor"/>
+            <View android:id="@+id/ultra_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <RelativeLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/tv_ultra_sensor_company_fw_value" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <TextView android:textSize="14sp" android:id="@+id/tv_ultra_sensor_adc_distance_value" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@+id/tv_ultra_sensor_company_fw_value"/>
+            </RelativeLayout>
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/magn_title" android:paddingLeft="10dp" android:paddingTop="7dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/magn_Sensor"/>
+            <View android:id="@+id/magn_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <TextView android:textSize="14sp" android:id="@+id/tv_magn_sensor_value" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+            <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="14sp" android:id="@+id/tv_orie_azimuth" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:textSize="14sp" android:id="@+id/tv_orie_pitch" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:textSize="14sp" android:id="@+id/tv_orie_roll" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="30dp">
+                <Button android:textSize="8sp" android:id="@+id/btn_magn_self_test" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/magn_self_test_button" android:layout_alignParentLeft="true"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_magn_power_noise_test" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/magn_power_noise_button" android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+            <com.sec.android.app.hwmoduletest.view.SensorArrow android:layout_gravity="center" android:id="@+id/sensor_arrow" android:paddingTop="7dp" android:layout_width="match_parent" android:layout_height="match_parent"/>
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/hrm_title" android:paddingLeft="10dp" android:paddingTop="7dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hrm_sensor"/>
+            <View android:id="@+id/hrm_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <Button android:textSize="8sp" android:id="@+id/btn_hrm_start" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/hrm_start_button" android:layout_alignParentLeft="true"/>
+                <Button android:textSize="8sp" android:id="@+id/btn_hrm_eoltest" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/hrm_eoltest_button" android:layout_toRightOf="@+id/btn_hrm_start"/>
+            </RelativeLayout>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView android:textSize="13sp" android:id="@+id/hrm_lib" android:paddingRight="10dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true"/>
+                <TextView android:textSize="13sp" android:id="@+id/hrm_driver" android:paddingRight="10dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@+id/hrm_lib"/>
+                <TextView android:textSize="13sp" android:id="@+id/hrm_device_id" android:paddingRight="10dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@+id/hrm_driver"/>
+            </RelativeLayout>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView android:textSize="13sp" android:id="@+id/hrm_lib_eol" android:paddingRight="10dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentLeft="true"/>
+                <TextView android:textSize="13sp" android:id="@+id/hrm_lib_elf" android:paddingRight="10dp" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_toRightOf="@+id/hrm_lib_eol"/>
+            </RelativeLayout>
+            <TextView android:textSize="16sp" android:textStyle="bold" android:id="@+id/fingerprint_test_title" android:paddingLeft="10dp" android:paddingTop="7dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/fingerprint_test"/>
+            <View android:id="@+id/fingerprint_separator" android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <Button android:textSize="8sp" android:gravity="center" android:id="@+id/btn_fingerprint_normalscan" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/fingerprint_normalscan" android:layout_alignParentLeft="true"/>
+                <Button android:textSize="8sp" android:gravity="center" android:id="@+id/btn_fingerprint_snr" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/fingerprint_snr" android:layout_toRightOf="@+id/btn_fingerprint_normalscan"/>
+                <Button android:textSize="8sp" android:gravity="center" android:id="@+id/btn_fingerprint_sensorinfo" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/fingerprint_sensorinfo" android:layout_toRightOf="@+id/btn_fingerprint_snr"/>
+                <Button android:textSize="8sp" android:gravity="center" android:id="@+id/btn_fingerprint_intcheck" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="30dp" android:text="@string/fingerprint_intcheck" android:layout_toRightOf="@+id/btn_fingerprint_sensorinfo"/>
+            </RelativeLayout>
+            <TextView android:textSize="13sp" android:id="@+id/fingerprint_lib_version" android:paddingLeft="10dp" android:paddingTop="2dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

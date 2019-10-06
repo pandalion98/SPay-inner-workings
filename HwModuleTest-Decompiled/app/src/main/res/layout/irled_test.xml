@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:screenOrientation="landscape" android:orientation="vertical" android:background="@color/white" android:padding="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="35sp" android:textColor="#000000" android:paddingLeft="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/ired_title"/>
+    <TextView android:textSize="25sp" android:textColor="#000000" android:id="@+id/ired_vendor_text" android:paddingLeft="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/ired_vendor"/>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:id="@+id/layout2" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="1">
+        <Button android:textSize="40sp" android:gravity="center" android:id="@+id/clr_button" android:visibility="gone" android:layout_width="200dp" android:layout_height="100dp" android:text="@string/irled_clr_button"/>
+        <TextView android:textSize="20sp" android:textColor="#fdff3f" android:gravity="center" android:layout_gravity="center" android:id="@+id/counter" android:paddingTop="10dp" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:lines="1"/>
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
+        <TextView android:textSize="20sp" android:gravity="center" android:layout_gravity="center" android:id="@+id/channel_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/channel_up_down" android:lines="1"/>
+        <Button android:textSize="20sp" android:gravity="center" android:id="@+id/channel_up" android:layout_width="200dp" android:layout_height="match_parent" android:text="@string/up" android:layout_weight="1"/>
+        <Button android:textSize="20sp" android:gravity="center" android:id="@+id/channel_down" android:layout_width="200dp" android:layout_height="match_parent" android:text="@string/down" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
+        <TextView android:textSize="20sp" android:gravity="center" android:layout_gravity="center" android:id="@+id/volume_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/volume_up_down" android:lines="1"/>
+        <Button android:textSize="20sp" android:gravity="center" android:id="@+id/volume_up" android:layout_width="200dp" android:layout_height="match_parent" android:text="@string/up" android:layout_weight="1"/>
+        <Button android:textSize="20sp" android:gravity="center" android:id="@+id/volume_down" android:layout_width="200dp" android:layout_height="match_parent" android:text="@string/down" android:layout_weight="1"/>
+    </LinearLayout>
+    <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1">
+        <TextView android:textSize="20sp" android:gravity="center" android:layout_gravity="center" android:id="@+id/onoff_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/on_off" android:lines="1"/>
+        <Button android:textSize="20sp" android:gravity="center" android:id="@+id/button_on" android:layout_width="200dp" android:layout_height="match_parent" android:text="@string/ired_on" android:layout_weight="1"/>
+        <Button android:textSize="20sp" android:gravity="center" android:id="@+id/button_off" android:layout_width="200dp" android:layout_height="match_parent" android:text="@string/ired_off" android:layout_weight="1"/>
+        <Button android:textSize="20sp" android:gravity="center" android:id="@+id/on_off_repeat" android:layout_width="200dp" android:layout_height="match_parent" android:text="@string/ired_repeat" android:layout_weight="1"/>
+    </LinearLayout>
+</LinearLayout>

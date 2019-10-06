@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="fingerprint_qbt2000_normal_scan_item_list_shown">
+        <item>HISTORY_CHECK</item>
+        <item>BGE_CAL_CHECK</item>
+        <item>OFFSET_OTP</item>
+        <item>OFFSET_CNT</item>
+        <item>CALIBRATED_TEMP</item>
+        <item>COMP_TEMP</item>
+        <item>TUNED_DBIAS_VOLTAGE</item>
+        <item>MEAN_GRAY_SCALE_LEVEL</item>
+        <item>MAX_GRAY_SCALE_LEVEL</item>
+        <item>MIN_GRAY_SCALE_LEVEL</item>
+        <item>TUNED_DBIAS_OTP</item>
+        <item>BG_DEFECTPIXEL_TOTAL</item>
+        <item>BG_MAX_DEFECT_SIZE</item>
+        <item>BG_DEFECT_CIR</item>
+        <item>BG_DEFECT_DENSITY</item>
+        <item>BG_DEFECT_HLO</item>
+        <item>BG_DEFECT_VLO</item>
+        <item>UNIFORMITY</item>
+        <item>M_MAX_GRADIENT</item>
+    </array>
+    <array name="fingerprint_qbt2000_normal_scan_item_list_read">
+        <item>History Check</item>
+        <item>BGE Cal Check</item>
+        <item>Offset OTP</item>
+        <item>Offset CNT</item>
+        <item>Calibrated Temp</item>
+        <item>Comp Temp</item>
+        <item>Tuned Dbias Voltage</item>
+        <item>Mean Gray Scale Level</item>
+        <item>Max Gray Scale Level</item>
+        <item>Min Gray Scale Level</item>
+        <item>Tuned Dbias OTP</item>
+        <item>dm_dp_bg_total</item>
+        <item>dm_max_bg_defS</item>
+        <item>dm_dp_cir</item>
+        <item>dm_dp_bg_density</item>
+        <item>dm_dp_bg_hlo</item>
+        <item>dm_dp_bg_vlo</item>
+        <item>L_pct_d</item>
+        <item>M_gmag_max</item>
+    </array>
+    <array name="fingerprint_qbt2000_normal_scan_item_list_shown_user_bin">
+        <item>HISTORY_CHECK</item>
+        <item>BGE_CAL_CHECK</item>
+        <item>OFFSET_OTP</item>
+        <item>OFFSET_CNT</item>
+        <item>CALIBRATED_TEMP</item>
+        <item>COMP_TEMP</item>
+        <item>TUNED_DBIAS_VOLTAGE</item>
+        <item>MEAN_GRAY_SCALE_LEVEL</item>
+        <item>MAX_GRAY_SCALE_LEVEL</item>
+        <item>MIN_GRAY_SCALE_LEVEL</item>
+        <item>TUNED_DBIAS_OTP</item>
+    </array>
+    <array name="fingerprint_qbt2000_normal_scan_item_list_read_user_bin">
+        <item>History Check</item>
+        <item>BGE Cal Check</item>
+        <item>Offset OTP</item>
+        <item>Offset CNT</item>
+        <item>Calibrated Temp</item>
+        <item>Comp Temp</item>
+        <item>Tuned Dbias Voltage</item>
+        <item>Mean Gray Scale Level</item>
+        <item>Max Gray Scale Level</item>
+        <item>Min Gray Scale Level</item>
+        <item>Tuned Dbias OTP</item>
+    </array>
+    <array name="fingerprint_qbt2000_snr_scan_item_list_shown">
+        <item>SIGNAL</item>
+        <item>NOISE</item>
+        <item>SNR</item>
+        <item>TARGET_COVERAGE</item>
+        <item>X_POSITION</item>
+        <item>Y_POSITION</item>
+        <item>ROTATION</item>
+        <item>BARE_SENSOR_SNR</item>
+        <item>UD_SNR</item>
+        <item>CUTOFF_LPMM</item>
+        <item>DELAY</item>
+        <item>PHASE</item>
+        <item>TARGET_DEFECT_TOTAL</item>
+        <item>TARGET_MAX_DEFECT_SIZE</item>
+        <item>TARGET_DEFECT_HLO</item>
+        <item>TARGET_DEFECT_VLO</item>
+    </array>
+    <array name="fingerprint_qbt2000_snr_scan_item_list_read">
+        <item>Signal</item>
+        <item>Noise</item>
+        <item>SNR</item>
+        <item>Target Coverage</item>
+        <item>X Position</item>
+        <item>Y Position</item>
+        <item>Rotation</item>
+        <item>Bare Sensor SNR</item>
+        <item>Cover Glass SNR</item>
+        <item>Cutoff Lpmm</item>
+        <item>Delay</item>
+        <item>Phase</item>
+        <item>dm_dp_tgt_total</item>
+        <item>dm_max_tgt_defS</item>
+        <item>dm_dp_tgt_hlo</item>
+        <item>dm_dp_tgt_vlo</item>
+    </array>
+</resources>

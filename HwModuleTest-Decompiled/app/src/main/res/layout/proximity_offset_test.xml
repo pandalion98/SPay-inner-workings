@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:id="@+id/backview" android:background="@color/background" android:padding="10dp" android:layout_width="match_parent" android:layout_height="match_parent" android:keepScreenOn="true">
+    <TextView android:textSize="25dp" android:textColor="@color/black" android:id="@+id/title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/proximity_title"/>
+    <LinearLayout android:layout_gravity="center_horizontal" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="50dp">
+        <TextView android:textSize="20dp" android:textColor="@color/black" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/proximity_ADC"/>
+        <TextView android:textSize="20dp" android:textColor="@color/black" android:id="@+id/ADC" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="100dp" android:text="@string/adc_value_11"/>
+    </LinearLayout>
+    <LinearLayout android:layout_gravity="center_horizontal" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:textSize="20dp" android:textColor="@color/black" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/proximity_Offset"/>
+        <TextView android:textSize="20dp" android:textColor="@color/black" android:id="@+id/Offset" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="100dp"/>
+        <TextView android:textSize="20dp" android:textColor="@color/black" android:id="@+id/offset_result" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="50dp"/>
+    </LinearLayout>
+    <TextView android:textSize="50dp" android:textColor="@color/black" android:layout_gravity="center" android:id="@+id/WorkView" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="50dp" android:layout_marginBottom="50dp"/>
+    <LinearLayout android:layout_gravity="fill_horizontal" android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp">
+        <Button android:id="@+id/Offset_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/proximity_Offset" android:layout_weight="1"/>
+        <Button android:id="@+id/Reset_btn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/proximity_Reset" android:layout_weight="1"/>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content" android:layout_height="wrap_content">
+    <com.sec.android.app.hwmoduletest.view.AccGraph android:layout_gravity="center" android:id="@+id/acc_sensor_graph" android:paddingTop="10dp" android:layout_width="match_parent" android:layout_height="match_parent"/>
+    <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+        <Button android:textSize="10sp" android:layout_gravity="right" android:id="@+id/acc_lpf_onoff" android:layout_width="wrap_content" android:layout_height="30dp" android:layout_marginTop="35dp" android:text="@string/motor_blank"/>
+    </LinearLayout>
+</FrameLayout>

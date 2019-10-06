@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:background="@color/background" android:paddingTop="10dp" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="30sp" android:gravity="center" android:id="@+id/magnetic2" android:paddingLeft="4dp" android:paddingBottom="30dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/GYROSCOPE_Sensor"/>
+    <TableRow android:id="@+id/tableRow1" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:textSize="17dp" android:id="@+id/magnetic3" android:paddingLeft="4dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/gyro_disp_title_sub"/>
+        <TextView android:textSize="17dp" android:id="@+id/magnetic4" android:paddingLeft="4dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    </TableRow>
+    <TextView android:textSize="16sp" android:id="@+id/gyro_zero_rate" android:paddingLeft="4dp" android:paddingBottom="30dp" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <View android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+    <TableLayout android:id="@+id/menu" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <View android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+        <TableRow>
+            <TextView android:textSize="16sp" android:id="@+id/invisible" android:padding="3dp" android:visibility="invisible"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/strX" android:padding="3dp" android:text="@string/X"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/strY" android:padding="3dp" android:text="@string/Y"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/strZ" android:padding="3dp" android:text="@string/Z"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/sub1_str" android:padding="3dp" android:text="@string/XYZ"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/xyz_x_str" android:padding="3dp"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/xyz_y_str" android:padding="3dp"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/xyz_z_str" android:padding="3dp"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/xyz_add_str" android:padding="3dp"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/sub2_str" android:padding="3dp" android:text="@string/XYZ_PRIME"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/prime_x_str" android:padding="3dp"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/prime_y_str" android:padding="3dp"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/prime_z_str" android:padding="3dp"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/xyzprime_add_str" android:padding="3dp"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/sub3_str" android:padding="3dp" android:text="@string/XYZ_DIFF"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/diff_x_str" android:padding="3dp"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/diff_y_str" android:padding="3dp"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/diff_z_str" android:padding="3dp"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/sub4_str" android:padding="3dp" android:text="@string/XYZ_ZERO_RATE"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/zero_x_str" android:padding="3dp"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/zero_y_str" android:padding="3dp"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/zero_z_str" android:padding="3dp"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/sub5_str" android:padding="3dp" android:text="@string/CALIB"/>
+            <TextView android:textSize="16sp" android:layout_gravity="center_horizontal" android:id="@+id/calibration_str" android:padding="3dp"/>
+        </TableRow>
+    </TableLayout>
+    <View android:background="@drawable/separator" android:layout_width="match_parent" android:layout_height="1dp"/>
+    <TextView android:textSize="80sp" android:gravity="center" android:id="@+id/result" android:paddingLeft="4dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:text="@string/FAIL"/>
+</LinearLayout>

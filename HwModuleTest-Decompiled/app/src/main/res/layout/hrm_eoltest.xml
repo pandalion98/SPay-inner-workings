@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="center_horizontal" android:background="@color/background" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="30sp" android:textColor="@color/black" android:gravity="center" android:id="@+id/title" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/hrm_eoltest_title"/>
+    <View android:id="@+id/seperator" android:layout_marginTop="5dp" android:layout_below="@+id/title" style="@style/ui_separator_land_darkgray"/>
+    <TableLayout android:id="@+id/table" android:background="@color/black" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:stretchColumns="*" android:layout_below="@+id/seperator"/>
+    <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@+id/table_button" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="32dp" android:layout_below="@+id/table">
+        <Button android:id="@+id/start_button" android:layout_width="70dp" android:layout_height="match_parent" android:text="@string/hrm_btn_start"/>
+        <Button android:id="@+id/exit_button" android:layout_width="70dp" android:layout_height="match_parent" android:text="@string/hrm_btn_exit"/>
+    </LinearLayout>
+    <TextView android:textSize="25dp" android:id="@+id/final_result" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="32dp" android:layout_below="@+id/table_button" android:layout_centerHorizontal="true"/>
+</RelativeLayout>

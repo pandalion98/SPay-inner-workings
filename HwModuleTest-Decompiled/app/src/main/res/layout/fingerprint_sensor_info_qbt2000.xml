@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:id="@+id/linearLayout" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="25sp" android:textStyle="bold" android:textColor="@android:color/black" android:gravity="center" android:id="@+id/mainTitle" android:padding="5dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/fingerprint_test"/>
+    <View style="@style/ui_separator_land_black"/>
+    <TextView android:textSize="20sp" android:textColor="@android:color/black" android:gravity="center" android:id="@+id/subTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/fingerprint_sensorinfo"/>
+    <TextView android:textSize="15sp" android:textColor="@android:color/black" android:gravity="start" android:id="@+id/sensorInfo" android:background="@color/pink" android:padding="10dp" android:visibility="invisible" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:lineSpacingExtra="3dp"/>
+</LinearLayout>

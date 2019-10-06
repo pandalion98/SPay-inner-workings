@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+    <TextView android:textSize="20sp" android:textStyle="bold" android:textColor="@color/black" android:gravity="center" android:padding="10dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hrmtest_title"/>
+    <View style="@style/ui_separator_land_black"/>
+    <LinearLayout android:orientation="vertical" android:id="@+id/linear" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="32dp" android:stretchColumns="*" android:layout_below="@+id/seperator"/>
+    <com.sec.android.app.hwmoduletest.view.HrmGraph android:layout_gravity="center" android:id="@+id/hrm_sensor_graph" android:paddingTop="30dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+</LinearLayout>
